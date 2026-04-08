@@ -102,4 +102,8 @@ app.use(picks);
 import broadcasts from "./components/broadcasts/convex.config";
 app.use(broadcasts);
 
+// DigiPicks: disputes (creator-subscriber dispute resolution center)
+import disputes from "./components/disputes/convex.config";
+app.use(disputes);
+
 export default app;

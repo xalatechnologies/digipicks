@@ -513,6 +513,80 @@ export const processEvents = internalMutation({
                     }
 
                 // =============================================================
+                // DISPUTE EVENTS
+                // =============================================================
+
+                } else if (event.topic === "disputes.dispute.created") {
+                    // Notify the respondent (creator) that a dispute was filed against them
+                    if (payload.respondentUserId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.respondentUserId as string,
+                            type: "dispute_filed",
+                            title: "Tvist opprettet",
+                            body: "En abonnent har opprettet en tvist mot deg. Vennligst sjekk detaljene.",
+                            link: `/disputes/${payload.disputeId ?? ""}`,
+                            metadata: { disputeId: payload.disputeId, category: payload.category },
+                        });
+                    }
+
+                } else if (event.topic === "disputes.dispute.resolved") {
+                    // Notify both filer and respondent
+                    if (payload.filedByUserId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.filedByUserId as string,
+                            type: "dispute_resolved",
+                            title: "Tvist løst",
+                            body: `Din tvist er nå løst. Vedtak: ${payload.resolution ?? "se detaljer"}.`,
+                            link: `/disputes/${payload.disputeId ?? ""}`,
+                            metadata: { disputeId: payload.disputeId, resolution: payload.resolution },
+                        });
+                    }
+                    if (payload.respondentUserId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.respondentUserId as string,
+                            type: "dispute_resolved",
+                            title: "Tvist løst",
+                            body: `En tvist mot deg er nå løst. Vedtak: ${payload.resolution ?? "se detaljer"}.`,
+                            link: `/disputes/${payload.disputeId ?? ""}`,
+                            metadata: { disputeId: payload.disputeId, resolution: payload.resolution },
+                        });
+                    }
+
+                } else if (event.topic === "disputes.dispute.escalated") {
+                    // Notify the filer that their dispute has been escalated
+                    if (payload.filedByUserId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.filedByUserId as string,
+                            type: "dispute_escalated",
+                            title: "Tvist eskalert",
+                            body: "Din tvist er eskalert til en overordnet mediator.",
+                            link: `/disputes/${payload.disputeId ?? ""}`,
+                            metadata: { disputeId: payload.disputeId },
+                        });
+                    }
+
+                } else if (event.topic === "disputes.dispute.appealed") {
+                    // Notify the respondent that the filer has appealed
+                    if (payload.respondentUserId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.respondentUserId as string,
+                            type: "dispute_appealed",
+                            title: "Tvist anket",
+                            body: "Abonnenten har anket vedtaket i tvisten.",
+                            link: `/disputes/${payload.disputeId ?? ""}`,
+                            metadata: { disputeId: payload.disputeId },
+                        });
+                    }
+
+                } else if (event.topic === "disputes.message.added") {
+                    // No async notification — handled in facade
+
+                // =============================================================
                 // CATCH-ALL — unhandled topics are no-ops
                 // =============================================================
 
@@ -521,7 +595,8 @@ export const processEvents = internalMutation({
                     event.topic.startsWith("giftcards.") ||
                     event.topic.startsWith("subscriptions.") ||
                     event.topic.startsWith("resale.") ||
-                    event.topic.startsWith("picks.")
+                    event.topic.startsWith("picks.") ||
+                    event.topic.startsWith("disputes.")
                 ) {
                     // Known domain prefix, no handler yet — no-op
                 }
