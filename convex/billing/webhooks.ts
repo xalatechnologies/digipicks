@@ -1,6 +1,7 @@
 import { internalAction, internalMutation } from "../_generated/server";
 import { v } from "convex/values";
 import { internal, components } from "../_generated/api";
+import { emitEvent } from "../lib/eventBus";
 
 /**
  * Stripe Webhook Handler
@@ -341,6 +342,15 @@ export const activateSubscription = internalMutation({
                 delta: 1,
             });
         }
+
+        // Emit event for notification pipeline (welcome + new subscriber alerts)
+        await emitEvent(ctx, "subscriptions.membership.created", args.tenantId, "subscriptions", {
+            userId: args.userId,
+            creatorId: args.creatorId,
+            membershipId: args.stripeSubscriptionId,
+            tierId: args.tierId,
+            tierName: tier?.name,
+        });
     },
 });
 

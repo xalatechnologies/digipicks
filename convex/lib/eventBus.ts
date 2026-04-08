@@ -325,10 +325,70 @@ export const processEvents = internalMutation({
                     }
 
                 // =============================================================
+                // PICKS EVENTS
+                // =============================================================
+
+                } else if (event.topic === "picks.pick.created") {
+                    // Notify all active subscribers of the creator that a new pick was posted
+                    if (payload.creatorId) {
+                        const subscribers = await ctx.runQuery(
+                            components.subscriptions.functions.listCreatorSubscribers,
+                            { creatorId: payload.creatorId as string, status: "active" }
+                        );
+                        for (const sub of subscribers as any[]) {
+                            if (sub.userId) {
+                                await ctx.runMutation(components.notifications.functions.create, {
+                                    tenantId: event.tenantId,
+                                    userId: sub.userId as string,
+                                    type: "pick_posted",
+                                    title: "Ny pick publisert!",
+                                    body: `Ny ${payload.sport ?? ""} pick: ${payload.event ?? ""}`.trim(),
+                                    link: `/picks/${payload.pickId ?? ""}`,
+                                    metadata: { pickId: payload.pickId, creatorId: payload.creatorId, sport: payload.sport },
+                                });
+                            }
+                        }
+                    }
+
+                } else if (event.topic === "picks.pick.graded") {
+                    // Notify all active subscribers of the creator that a pick was graded
+                    if (payload.creatorId) {
+                        const resultLabels: Record<string, string> = {
+                            won: "Vunnet",
+                            lost: "Tapt",
+                            push: "Push",
+                            void: "Void",
+                        };
+                        const resultLabel = resultLabels[payload.result as string] ?? payload.result;
+
+                        const subscribers = await ctx.runQuery(
+                            components.subscriptions.functions.listCreatorSubscribers,
+                            { creatorId: payload.creatorId as string, status: "active" }
+                        );
+                        for (const sub of subscribers as any[]) {
+                            if (sub.userId) {
+                                await ctx.runMutation(components.notifications.functions.create, {
+                                    tenantId: event.tenantId,
+                                    userId: sub.userId as string,
+                                    type: "pick_graded",
+                                    title: `Pick resultat: ${resultLabel}`,
+                                    body: `${payload.sport ?? ""} pick ${payload.event ?? ""}: ${resultLabel}`.trim(),
+                                    link: `/picks/${payload.pickId ?? ""}`,
+                                    metadata: { pickId: payload.pickId, creatorId: payload.creatorId, result: payload.result, sport: payload.sport },
+                                });
+                            }
+                        }
+                    }
+
+                } else if (event.topic === "picks.pick.updated") {
+                    // No subscriber notification for pick edits — creator-only action
+
+                // =============================================================
                 // SUBSCRIPTION EVENTS
                 // =============================================================
 
                 } else if (event.topic === "subscriptions.membership.created") {
+                    // Notify subscriber with welcome message
                     if (payload.userId) {
                         await ctx.runMutation(components.notifications.functions.create, {
                             tenantId: event.tenantId,
@@ -338,6 +398,18 @@ export const processEvents = internalMutation({
                             body: `Du er nå ${payload.tierName ?? "medlem"}. Nyt fordelene dine!`,
                             link: "/medlemskap",
                             metadata: { membershipId: payload.membershipId, tierId: payload.tierId },
+                        });
+                    }
+                    // Notify creator that they have a new subscriber
+                    if (payload.creatorId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.creatorId as string,
+                            type: "new_subscriber",
+                            title: "Ny abonnent!",
+                            body: "Du har fått en ny abonnent.",
+                            link: "/dashboard/subscribers",
+                            metadata: { membershipId: payload.membershipId, subscriberUserId: payload.userId },
                         });
                     }
 
@@ -448,7 +520,8 @@ export const processEvents = internalMutation({
                     event.topic.startsWith("ticketing.") ||
                     event.topic.startsWith("giftcards.") ||
                     event.topic.startsWith("subscriptions.") ||
-                    event.topic.startsWith("resale.")
+                    event.topic.startsWith("resale.") ||
+                    event.topic.startsWith("picks.")
                 ) {
                     // Known domain prefix, no handler yet — no-op
                 }
