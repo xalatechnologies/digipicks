@@ -1,0 +1,7 @@
+node_modules/
+dist/
+build/
+convex/_generated/
+pnpm-lock.yaml
+*.min.js
+*.min.css

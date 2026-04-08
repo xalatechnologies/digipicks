@@ -106,6 +106,35 @@ jobs:
         run: pnpm test:convex
 
   # ============================================================================
+  # Convex Deploy Dry-Run (PR gate)
+  # ============================================================================
+  convex-dry-run:
+    name: Convex Deploy Dry-Run
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Convex deploy --dry-run
+        run: npx convex deploy --dry-run
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+  # ============================================================================
   # Build Verification
   # ============================================================================
   build:

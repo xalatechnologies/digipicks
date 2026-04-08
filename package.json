@@ -42,7 +42,16 @@
         "seed:all": "pnpm seed && pnpm seed:components",
         "xala": "tsx packages/cli/src/index.ts",
         "xala:legacy": "tsx scripts/cli/index.ts",
-        "setup": "node scripts/setup.mjs"
+        "setup": "node scripts/setup.mjs",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx,mjs}": [
+            "prettier --write"
+        ],
+        "*.{json,md,yml,yaml,css}": [
+            "prettier --write"
+        ]
     },
     "devDependencies": {
         "@axe-core/playwright": "^4.11.1",
@@ -58,7 +67,10 @@
         "tsx": "^4.7.0",
         "typescript": "^5.4.5",
         "uuid": "^10.0.0",
-        "vitest": "^2.0.0"
+        "vitest": "^2.0.0",
+        "husky": "^9.1.0",
+        "lint-staged": "^15.2.0",
+        "prettier": "^3.3.0"
     },
     "engines": {
         "node": ">=20.0.0"
