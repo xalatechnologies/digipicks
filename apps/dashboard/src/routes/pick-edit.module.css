@@ -1,0 +1,83 @@
+.page {
+    padding: var(--ds-size-6);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--ds-size-6);
+}
+
+.formCard {
+    padding: var(--ds-size-6);
+}
+
+.formSection {
+    margin-bottom: var(--ds-size-6);
+}
+
+.sectionTitle {
+    margin-bottom: var(--ds-size-3);
+    color: var(--ds-color-text-default);
+    font-weight: 600;
+    font-size: var(--ds-size-3);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ds-size-4);
+}
+
+.formRow3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--ds-size-4);
+}
+
+.fullWidth {
+    grid-column: 1 / -1;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--ds-size-3);
+    margin-top: var(--ds-size-6);
+    padding-top: var(--ds-size-4);
+    border-top: 1px solid var(--ds-color-border-default);
+}
+
+.confidenceLabel {
+    display: block;
+    font-size: var(--ds-size-2);
+    margin-bottom: var(--ds-size-1);
+    color: var(--ds-color-text-subtle);
+}
+
+.confidenceGroup {
+    display: flex;
+    gap: var(--ds-size-2);
+}
+
+.confidenceButton {
+    flex: 1;
+}
+
+.oddsPreview {
+    padding: var(--ds-size-3);
+    background: var(--ds-color-surface-subtle);
+    border-radius: var(--ds-border-radius-md);
+    margin-top: var(--ds-size-3);
+    font-size: var(--ds-size-2);
+    color: var(--ds-color-text-subtle);
+}
+
+.oddsPreviewValue {
+    font-weight: 600;
+    color: var(--ds-color-text-default);
+    font-size: var(--ds-size-4);
+}

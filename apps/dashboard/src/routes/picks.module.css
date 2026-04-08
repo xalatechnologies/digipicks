@@ -1,0 +1,64 @@
+.page {
+    padding: var(--ds-size-6);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--ds-size-6);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--ds-size-4);
+    margin-bottom: var(--ds-size-6);
+}
+
+.statCard {
+    padding: var(--ds-size-4);
+}
+
+.statValue {
+    font-size: var(--ds-size-5);
+    font-weight: 600;
+    color: var(--ds-color-text-default);
+}
+
+.statLabel {
+    font-size: var(--ds-size-2);
+    color: var(--ds-color-text-subtle);
+    margin-top: var(--ds-size-1);
+}
+
+.filters {
+    display: flex;
+    gap: var(--ds-size-3);
+    margin-bottom: var(--ds-size-4);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.resultWon {
+    color: var(--ds-color-success-text-default);
+}
+
+.resultLost {
+    color: var(--ds-color-danger-text-default);
+}
+
+.resultPush {
+    color: var(--ds-color-warning-text-default);
+}
+
+.resultPending {
+    color: var(--ds-color-neutral-text-default);
+}
+
+.emptyState {
+    padding: var(--ds-size-10) 0;
+    text-align: center;
+}
