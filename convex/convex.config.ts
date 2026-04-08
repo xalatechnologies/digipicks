@@ -98,4 +98,8 @@ app.use(classification);
 import picks from "./components/picks/convex.config";
 app.use(picks);
 
+// DigiPicks: broadcasts (creator-to-subscriber messaging)
+import broadcasts from "./components/broadcasts/convex.config";
+app.use(broadcasts);
+
 export default app;

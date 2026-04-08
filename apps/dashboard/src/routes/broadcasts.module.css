@@ -1,0 +1,53 @@
+.page {
+    padding: var(--ds-size-6);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--ds-size-6);
+}
+
+.broadcastCard {
+    padding: var(--ds-size-4);
+    margin-bottom: var(--ds-size-3);
+}
+
+.broadcastMeta {
+    display: flex;
+    gap: var(--ds-size-3);
+    align-items: center;
+    margin-top: var(--ds-size-2);
+}
+
+.emptyState {
+    padding: var(--ds-size-10) 0;
+    text-align: center;
+}
+
+.composerForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-4);
+    max-width: 700px;
+}
+
+.composerActions {
+    display: flex;
+    gap: var(--ds-size-3);
+    justify-content: flex-end;
+    margin-top: var(--ds-size-2);
+}
+
+.recipientInfo {
+    padding: var(--ds-size-3);
+    background: var(--ds-color-neutral-surface-default);
+    border-radius: var(--ds-border-radius-md);
+}
+
+.unread {
+    border-left: 3px solid var(--ds-color-accent-border-default);
+}

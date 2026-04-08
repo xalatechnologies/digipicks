@@ -91,6 +91,10 @@ import { HelpPage } from '@/routes/help';
 import { PicksPage } from '@/routes/picks';
 import { PickEditPage } from '@/routes/pick-edit';
 
+// DigiPicks — broadcast messaging
+import { BroadcastsPage, BroadcastInboxPage } from '@/routes/broadcasts';
+import { BroadcastComposePage } from '@/routes/broadcast-compose';
+
 // DigiPicks — Stripe integration (payouts & subscribers)
 import { PayoutsPage } from '@/routes/payouts';
 import { SubscribersPage } from '@/routes/subscribers';
@@ -295,6 +299,11 @@ function AppWithTheme() {
                                 <Route path="picks" element={<PicksPage />} />
                                 <Route path="picks/new" element={<PickEditPage />} />
                                 <Route path="picks/:id" element={<PickEditPage />} />
+
+                                {/* ─── DigiPicks: Broadcast messaging ─── */}
+                                <Route path="broadcasts" element={<BroadcastsPage />} />
+                                <Route path="broadcasts/compose" element={<BroadcastComposePage />} />
+                                <Route path="broadcasts/inbox" element={<BroadcastInboxPage />} />
 
                                 {/* ─── DigiPicks: Stripe integration ─── */}
                                 <Route path="payouts" element={<PayoutsPage />} />

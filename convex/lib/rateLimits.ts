@@ -432,6 +432,15 @@ export const RATE_LIMITS = {
     },
 
     // -------------------------------------------------------------------------
+    // Broadcast operations (per-creator)
+    // -------------------------------------------------------------------------
+    sendBroadcast: {
+        kind: "fixed window" as const,
+        rate: 10,
+        period: 86_400_000, // 24 hours — max 10 broadcasts per day per creator
+    },
+
+    // -------------------------------------------------------------------------
     // GDPR operations (per-tenant)
     // -------------------------------------------------------------------------
     gdprPurge: {

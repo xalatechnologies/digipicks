@@ -37,6 +37,7 @@ import externalReviewsSchema from "../../components/externalReviews/schema";
 import classificationSchema from "../../components/classification/schema";
 import subscriptionsSchema from "../../components/subscriptions/schema";
 import picksSchema from "../../components/picks/schema";
+import broadcastsSchema from "../../components/broadcasts/schema";
 
 // Component modules (import.meta.glob)
 import { modules as auditModules } from "../../components/audit/testSetup.test-util";
@@ -60,6 +61,7 @@ import { modules as externalReviewsModules } from "../../components/externalRevi
 import { modules as classificationModules } from "../../components/classification/testSetup.test-util";
 import { modules as subscriptionsModules } from "../../components/subscriptions/testSetup.test-util";
 import { modules as picksModules } from "../../components/picks/testSetup.test-util";
+import { modules as broadcastsModules } from "../../components/broadcasts/testSetup.test-util";
 
 /**
  * Registry mapping component names (matching convex.config.ts variable names)
@@ -87,6 +89,7 @@ const COMPONENT_REGISTRY = {
     classification: { schema: classificationSchema, modules: classificationModules },
     subscriptions: { schema: subscriptionsSchema, modules: subscriptionsModules },
     picks: { schema: picksSchema, modules: picksModules },
+    broadcasts: { schema: broadcastsSchema, modules: broadcastsModules },
 } as const;
 
 export type ComponentName = keyof typeof COMPONENT_REGISTRY;

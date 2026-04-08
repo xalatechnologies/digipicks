@@ -54,6 +54,7 @@ import type * as domain_monitoring from "../domain/monitoring.js";
 import type * as domain_notifications from "../domain/notifications.js";
 import type * as domain_organizationVerify from "../domain/organizationVerify.js";
 import type * as domain_payouts from "../domain/payouts.js";
+import type * as domain_broadcasts from "../domain/broadcasts.js";
 import type * as domain_picks from "../domain/picks.js";
 import type * as domain_platformAdmin from "../domain/platformAdmin.js";
 import type * as domain_pricing from "../domain/pricing.js";
@@ -168,6 +169,7 @@ declare const fullApi: ApiFromModules<{
   "domain/notifications": typeof domain_notifications;
   "domain/organizationVerify": typeof domain_organizationVerify;
   "domain/payouts": typeof domain_payouts;
+  "domain/broadcasts": typeof domain_broadcasts;
   "domain/picks": typeof domain_picks;
   "domain/platformAdmin": typeof domain_platformAdmin;
   "domain/pricing": typeof domain_pricing;
@@ -4767,6 +4769,66 @@ export declare const components: {
         "internal",
         { tenantId: string },
         Array<any>
+      >;
+    };
+  };
+  broadcasts: {
+    functions: {
+      get: FunctionReference<"query", "internal", { id: string }, any>;
+      listByCreator: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId: string;
+          limit?: number;
+          status?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
+      listForSubscriber: FunctionReference<
+        "query",
+        "internal",
+        {
+          limit?: number;
+          tenantId: string;
+          unreadOnly?: boolean;
+          userId: string;
+        },
+        Array<any>
+      >;
+      markAsRead: FunctionReference<
+        "mutation",
+        "internal",
+        { broadcastId: string; userId: string },
+        { success: boolean }
+      >;
+      remove: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      send: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          body: string;
+          creatorId: string;
+          messageType: string;
+          metadata?: any;
+          pickId?: string;
+          recipientIds: Array<string>;
+          tenantId: string;
+          title: string;
+        },
+        { id: string; recipientCount: number }
+      >;
+      unreadCount: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string; userId: string },
+        { count: number }
       >;
     };
   };
