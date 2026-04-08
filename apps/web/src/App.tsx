@@ -37,6 +37,7 @@ import { AboutPage } from '@/routes/about';
 import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
 import { PickTrackerPage } from '@/routes/pick-tracker';
+import LeaderboardPage from '@/routes/leaderboard';
 
 import {
   AuthProvider,
@@ -232,6 +233,7 @@ function ThemedApp() {
                       <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
                       <Route path="/picks" element={<PicksFeedPage />} />
                       <Route path="/tracker" element={<PickTrackerPage />} />
+                      <Route path="/leaderboard" element={<LeaderboardPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}
                       <Route path="/min-side" element={<MinsideRedirect />} />
