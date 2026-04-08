@@ -807,3 +807,87 @@ export const myTrackerStats = query({
         });
     },
 });
+
+// =============================================================================
+// SPORT-SPECIFIC ANALYTICS FACADES
+// =============================================================================
+
+/**
+ * Sport dashboard — aggregate stats for a single sport.
+ * Enriches top creators with user data from core tables.
+ */
+export const sportDashboard = query({
+    args: {
+        tenantId: v.id("tenants"),
+        sport: v.string(),
+        timeframe: v.optional(v.union(v.literal("7d"), v.literal("30d"), v.literal("90d"), v.literal("all"))),
+    },
+    handler: async (ctx, { tenantId, sport, timeframe }) => {
+        const dashboard = await ctx.runQuery(components.picks.functions.sportDashboard, {
+            tenantId: tenantId as string,
+            sport,
+            timeframe,
+        });
+
+        // Enrich top creators with user data
+        const creatorIds = (dashboard as any).topCreators.map((c: any) => c.creatorId);
+        const users = await Promise.all(
+            creatorIds.map((id: string) => ctx.db.get(id as Id<"users">).catch(() => null))
+        );
+        const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id as string, u]));
+
+        return {
+            ...dashboard,
+            topCreators: (dashboard as any).topCreators.map((entry: any, index: number) => {
+                const user = userMap.get(entry.creatorId);
+                return {
+                    rank: index + 1,
+                    ...entry,
+                    creator: user
+                        ? {
+                            id: user._id,
+                            name: user.name,
+                            displayName: user.displayName,
+                            email: user.email,
+                            avatarUrl: user.avatarUrl,
+                        }
+                        : null,
+                };
+            }),
+        };
+    },
+});
+
+/**
+ * Sport overview — aggregate stats across ALL sports for comparison.
+ * Used to render a multi-sport comparison dashboard / grid.
+ */
+export const sportOverview = query({
+    args: {
+        tenantId: v.id("tenants"),
+        timeframe: v.optional(v.union(v.literal("7d"), v.literal("30d"), v.literal("90d"), v.literal("all"))),
+    },
+    handler: async (ctx, { tenantId, timeframe }) => {
+        return ctx.runQuery(components.picks.functions.sportOverview, {
+            tenantId: tenantId as string,
+            timeframe,
+        });
+    },
+});
+
+/**
+ * Creator stats broken down by sport — used on creator profile pages.
+ * Shows per-sport performance metrics for a single creator.
+ */
+export const creatorStatsBySport = query({
+    args: {
+        tenantId: v.id("tenants"),
+        creatorId: v.string(),
+    },
+    handler: async (ctx, { tenantId, creatorId }) => {
+        return ctx.runQuery(components.picks.functions.creatorStatsBySport, {
+            tenantId: tenantId as string,
+            creatorId,
+        });
+    },
+});
