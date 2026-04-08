@@ -1,0 +1,219 @@
+/* Pick Feed — Customer-facing pick feed page */
+
+.pageContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: var(--ds-size-6);
+}
+
+.title {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabSection {
+  margin-bottom: var(--ds-size-5);
+}
+
+/* Filters */
+.filterRow {
+  display: flex;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-4);
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  min-width: 140px;
+}
+
+/* Feed list */
+.feedList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+}
+
+/* Pick Card */
+.pickCard {
+  padding: var(--ds-size-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.pickCardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-3);
+}
+
+.creatorAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.creatorInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.creatorName {
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-default);
+  font-size: 14px;
+}
+
+.pickTimestamp {
+  font-size: 12px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.pickBody {
+  margin-bottom: var(--ds-size-3);
+}
+
+.pickEvent {
+  font-weight: 600;
+  margin-bottom: var(--ds-size-1);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.pickMeta {
+  display: flex;
+  gap: var(--ds-size-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--ds-size-3);
+}
+
+.pickDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--ds-size-2);
+  padding: var(--ds-size-3);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.detailValue {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ds-color-neutral-text-default);
+}
+
+/* Locked overlay */
+.lockedOverlay {
+  position: relative;
+}
+
+.lockedContent {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.lockedCta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-size-2);
+  background: color-mix(in srgb, var(--ds-color-neutral-surface-default) 70%, transparent);
+  border-radius: var(--ds-border-radius-md);
+  z-index: 1;
+}
+
+.lockIcon {
+  font-size: 24px;
+}
+
+.lockText {
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-default);
+  font-size: 14px;
+}
+
+/* Result badge */
+.resultBadge {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+/* Confidence indicator */
+.confidenceHigh {
+  color: var(--ds-color-success-text-default);
+}
+.confidenceMedium {
+  color: var(--ds-color-warning-text-default);
+}
+.confidenceLow {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-4);
+}
+
+/* Load more */
+.loadMoreSection {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--ds-size-4);
+}
+
+/* Login prompt */
+.loginPrompt {
+  text-align: center;
+  padding: var(--ds-size-6) var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+  margin-bottom: var(--ds-size-4);
+}
+
+.loginPromptText {
+  margin-bottom: var(--ds-size-3);
+  color: var(--ds-color-neutral-text-subtle);
+}

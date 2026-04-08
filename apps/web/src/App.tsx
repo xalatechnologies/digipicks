@@ -34,6 +34,8 @@ import { BlogPage } from '@/routes/blog';
 import { BlogGuidePage } from '@/routes/blog-guide';
 import { BlogArticlePage } from '@/routes/blog-article';
 import { AboutPage } from '@/routes/about';
+import { CreatorProfilePage } from '@/routes/creator-profile';
+import { PicksFeedPage } from '@/routes/picks-feed';
 
 import {
   AuthProvider,
@@ -119,6 +121,7 @@ function MainLayout() {
         actions={
           <HeaderActions spacing="16px">
             <nav className="header-nav-links">
+              <Link to="/picks" className="header-nav-link">{t('nav.picks', 'Picks')}</Link>
               <Link to="/pricing" className="header-nav-link">{t('nav.pricing', 'Pricing')}</Link>
               <Link to="/blog" className="header-nav-link">{t('nav.blog', 'Blog')}</Link>
               <Link to="/about" className="header-nav-link">{t('nav.about', 'About')}</Link>
@@ -224,6 +227,8 @@ function ThemedApp() {
                       <Route path="/blog/:guideSlug" element={<BlogGuidePage />} />
                       <Route path="/blog/:guideSlug/:articleSlug" element={<BlogArticlePage />} />
                       <Route path="/about" element={<AboutPage />} />
+                      <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
+                      <Route path="/picks" element={<PicksFeedPage />} />
 
 
 

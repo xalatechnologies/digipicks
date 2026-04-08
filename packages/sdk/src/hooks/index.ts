@@ -816,3 +816,39 @@ export type {
     SignUpInput,
     SignUpResult,
 } from './use-signup';
+
+// Picks (DigiPicks — creator pick posting & result tracking)
+export {
+    usePicks,
+    usePick,
+    useCreatorStats,
+    useCreatorProfile,
+    useCreatePick,
+    useUpdatePick,
+    useGradePick,
+    useDeletePick,
+} from './use-picks';
+
+export type {
+    Pick as PickType,
+    PickType as PickCategory,
+    Confidence,
+    PickResult,
+    PickStatus,
+    CreatePickInput,
+    UpdatePickInput,
+    GradePickInput,
+    CreatorStats,
+    CreatorProfile,
+} from './use-picks';
+
+// Pick Feed (DigiPicks — customer-facing pick feed with subscription gating)
+export {
+    usePickFeedFollowing,
+    usePickFeedForYou,
+} from './use-pick-feed';
+
+export type {
+    FeedPick,
+    FeedParams,
+} from './use-pick-feed';
