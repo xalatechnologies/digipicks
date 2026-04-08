@@ -1,0 +1,64 @@
+/* RoleSelector - design tokens only */
+
+.root {
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  margin-bottom: var(--ds-size-2);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-6);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-4);
+  width: 100%;
+  padding: var(--ds-size-5);
+  height: auto;
+  text-align: left;
+  justify-content: flex-start;
+  min-height: 88px;
+}
+
+.optionIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionTitle {
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.optionDesc {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-top: var(--ds-size-1);
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+}

@@ -1,0 +1,12 @@
+.filterTabs {
+  margin-bottom: var(--ds-size-4);
+}
+
+.loadingWrapper {
+  padding: var(--ds-size-8);
+}
+
+.notificationList {
+  padding: 0;
+  overflow: hidden;
+}

@@ -1,0 +1,49 @@
+/**
+ * SkipLinks Styles
+ *
+ * Accessibility-focused styles for keyboard skip navigation.
+ * Uses design tokens for consistency with the design system.
+ */
+
+/* Container for skip links */
+.skipLinks {
+  position: relative;
+  z-index: 10000;
+}
+
+/* Individual skip link - hidden by default */
+.skipLink {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10000;
+  padding: var(--ds-size-3) var(--ds-size-4);
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  text-decoration: none;
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-medium);
+  border-radius: var(--digilist-radius-md, 8px);
+  box-shadow: var(--ds-shadow-lg);
+  white-space: nowrap;
+}
+
+/* Visible on keyboard focus */
+.skipLink:focus {
+  left: var(--ds-size-4);
+  top: var(--ds-size-4);
+  outline: 3px solid var(--ds-color-focus-outer);
+  outline-offset: 2px;
+}
+
+.skipLink:focus-visible {
+  outline: 3px solid var(--ds-color-focus-outer);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .skipLink:focus {
+    outline-width: 4px;
+  }
+}

@@ -1,0 +1,111 @@
+/* SearchFilter Component Styles */
+
+.searchFilter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+    max-width: 400px;
+}
+
+.icon {
+    position: absolute;
+    left: var(--ds-size-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-neutral-text-subtle);
+    pointer-events: none;
+}
+
+.input {
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--ds-size-10) 0 var(--ds-size-10);
+    font-size: var(--ds-font-size-sm);
+    font-family: var(--ds-font-family-base);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+    background-color: var(--ds-color-neutral-surface-hover);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+    transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+    box-shadow: none !important;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.input:hover {
+    border-color: var(--ds-color-neutral-border-hover);
+}
+
+.input:focus {
+    outline: none !important;
+    border-color: var(--ds-color-accent-border-default);
+    box-shadow: none !important;
+}
+
+.input:focus-visible,
+.input:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.input::placeholder {
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.clearButton {
+    position: absolute;
+    right: var(--ds-size-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-sm, 4px);
+    color: var(--ds-color-neutral-text-subtle);
+    cursor: pointer;
+    transition: all var(--ds-transition-duration-fast) var(--ds-transition-timing-default);
+}
+
+.clearButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.clearButton:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .searchFilter {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .input,
+    .clearButton {
+        transition: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .input {
+        border-width: 2px;
+    }
+
+    .clearButton {
+        border: 1px solid currentColor;
+    }
+}

@@ -1,0 +1,23 @@
+/* FilterDrawer - Footer and header utilities for filter drawers */
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.footerInfo {
+  text-align: center;
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  font-size: var(--ds-font-size-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--ds-size-2);
+}
+
+.actionBtn {
+  flex: 1;
+}

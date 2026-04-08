@@ -1,0 +1,295 @@
+/* UserMenu Component Styles */
+
+.userMenu {
+    position: relative;
+    display: inline-block;
+}
+
+/* Trigger Button */
+.trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-2);
+    background: transparent !important;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    cursor: pointer;
+    transition: background-color var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.trigger:hover {
+    background-color: var(--ds-color-neutral-surface-hover) !important;
+}
+
+.trigger:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+.trigger.open {
+    background-color: var(--ds-color-neutral-surface-hover) !important;
+}
+
+/* Avatar */
+.avatar {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ds-border-radius-full);
+    overflow: hidden;
+    background-color: var(--ds-color-neutral-surface-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatarInitials {
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-bold);
+    color: var(--ds-color-neutral-text-inverse);
+}
+
+/* User Info in Trigger */
+.trigger .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.trigger .userName {
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.trigger .userEmail {
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+/* Dropdown */
+.dropdown {
+    position: absolute;
+    top: calc(100% + var(--ds-size-2));
+    right: 0;
+    min-width: 280px;
+    background-color: var(--ds-color-neutral-surface-default);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+    box-shadow: var(--ds-shadow-lg);
+    z-index: 1000;
+    animation: slideDown 0.2s var(--ds-transition-timing-default);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Section */
+.section {
+    padding: var(--ds-size-2);
+}
+
+.sectionLabel {
+    padding: var(--ds-size-2) var(--ds-size-3);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-semibold);
+    color: var(--ds-color-neutral-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--ds-color-neutral-border-subtle);
+    margin: var(--ds-size-2) 0;
+}
+
+/* User Header in Dropdown */
+.userHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-2) var(--ds-size-3);
+}
+
+.userDetails {
+    flex: 1;
+    min-width: 0;
+}
+
+.userDetails .userName {
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-semibold);
+    color: var(--ds-color-neutral-text-default);
+    margin-bottom: var(--ds-size-1);
+}
+
+.userDetails .userEmail {
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Account Item */
+.accountItem {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    width: 100%;
+    padding: var(--ds-size-2) var(--ds-size-3);
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--ds-transition-duration-fast) var(--ds-transition-timing-default);
+}
+
+.accountItem:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.accountItem:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: -2px;
+}
+
+.accountItem.active {
+    background-color: var(--ds-color-accent-surface-default);
+}
+
+.accountIcon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.accountName {
+    flex: 1;
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.checkIcon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-accent-text-default);
+}
+
+/* Menu Item */
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    width: 100%;
+    padding: var(--ds-size-2) var(--ds-size-3);
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    font-family: var(--ds-font-family-base);
+    color: var(--ds-color-neutral-text-default);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--ds-transition-duration-fast) var(--ds-transition-timing-default);
+}
+
+.menuItem:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.menuItem:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: -2px;
+}
+
+.menuIcon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.menuItem.logout {
+    color: var(--ds-color-danger-text-default);
+}
+
+.menuItem.logout .menuIcon {
+    color: var(--ds-color-danger-text-default);
+}
+
+.menuItem.logout:hover {
+    background-color: var(--ds-color-danger-surface-default);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .trigger .userInfo {
+        display: none;
+    }
+
+    .dropdown {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .dropdown {
+        animation: none;
+    }
+
+    .trigger,
+    .accountItem,
+    .menuItem {
+        transition: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+
+    .trigger,
+    .accountItem,
+    .menuItem {
+        border: 1px solid currentColor;
+    }
+
+    .dropdown {
+        border-width: 2px;
+    }
+}

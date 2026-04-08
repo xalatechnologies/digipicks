@@ -1,0 +1,32 @@
+.saveButton {
+  min-height: 44px;
+}
+
+.sectionCard {
+  padding: var(--ds-size-5);
+}
+
+.sectionHeading {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.fullWidthInput {
+  width: 100%;
+}
+
+.toggleRow {
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.toggleLabel {
+  margin: 0;
+  font-weight: 500;
+}
+
+.toggleDescription {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

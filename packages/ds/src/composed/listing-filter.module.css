@@ -1,0 +1,291 @@
+/* =============================================================================
+   listing-filter.module.css
+   Two-row layout:
+     Row 1 = [Location + Sort] left | [Categories] center | [Mobile filter] right
+     Row 2 = [Filter dropdowns] left | [View toggle] right
+   ============================================================================= */
+
+/* ---- Row 1: Location + Sort | Categories | Mobile filter ---- */
+.topRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.leftGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+/* Reduce horizontal padding on location/sort dropdowns */
+.compactDropdown button {
+    padding-left: var(--ds-size-3, 12px);
+    padding-right: var(--ds-size-3, 12px);
+}
+
+.centerGroup {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+.rightGroup {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex: 0 0 auto;
+    padding-left: 12px;
+    border-left: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.afterTabsWrapper {
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+}
+
+/* ---- Row 2: filter dropdowns left + view toggle right ---- */
+.filterRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+/* Inner flex container for the filter dropdowns (left side of Row 2) */
+.filterDropdowns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.filterDivider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--ds-color-neutral-border-default);
+    margin: 0 6px;
+    flex-shrink: 0;
+}
+
+/* ---- Active filter chips ---- */
+.activeChips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--ds-size-1, 4px) var(--ds-size-3, 12px);
+    background-color: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-text-default);
+    border-radius: var(--digilist-radius-pill, 100px);
+    font-size: var(--ds-font-size-xs, 0.75rem);
+    font-weight: var(--ds-font-weight-medium, 500);
+    white-space: nowrap;
+}
+
+.chipRemove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--ds-color-accent-text-default);
+    font-size: var(--digilist-font-size-sm, 14px);
+    line-height: 1;
+    border-radius: 50%;
+    opacity: 0.7;
+    transition: opacity 0.15s ease;
+}
+
+.chipRemove:hover {
+    opacity: 1;
+    background-color: var(--ds-color-accent-surface-hover, rgba(0, 0, 0, 0.08));
+}
+
+.clearAll {
+    padding: var(--ds-size-1, 4px) var(--ds-size-2, 8px);
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: var(--ds-font-size-xs, 0.75rem);
+    font-weight: var(--ds-font-weight-medium, 500);
+    color: var(--ds-color-danger-text-default, #c00);
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+}
+
+.clearAll:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+/* ---- Mobile filter button ---- */
+.mobileFilterButton {
+    display: none;
+    /* shown via CSS on mobile */
+    align-items: center;
+    gap: var(--ds-size-2, 8px);
+    padding: var(--ds-size-3, 12px) var(--ds-size-5, 20px);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    cursor: pointer;
+    font-size: var(--ds-font-size-sm, 0.875rem);
+    font-weight: var(--ds-font-weight-medium, 500);
+    white-space: nowrap;
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.mobileFilterButton:hover {
+    opacity: 0.9;
+}
+
+/* Filter badge on mobile button */
+.filterBadge {
+    padding: 2px 6px;
+    border-radius: var(--digilist-radius-md, 8px);
+    font-size: 0.75rem;
+    font-weight: var(--digilist-font-weight-semibold, 600);
+    margin-left: 4px;
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--ds-color-accent-base-contrast-default);
+}
+
+/* ---- Favorites button (pill style with label) ---- */
+.favoriteButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: var(--ds-size-2, 8px) var(--ds-size-4, 16px);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-pill, 100px);
+    cursor: pointer;
+    background-color: var(--ds-color-neutral-background-default);
+    color: var(--ds-color-neutral-text-default);
+    font-size: var(--ds-font-size-sm, 0.875rem);
+    font-weight: var(--ds-font-weight-medium, 500);
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.favoriteButton:hover {
+    border-color: var(--ds-color-danger-border-default, #e5484d);
+    color: var(--ds-color-danger-text-default, #e5484d);
+}
+
+.favoriteButtonActive {
+    background-color: var(--ds-color-danger-surface-default, #ffe5e7);
+    border-color: var(--ds-color-danger-border-default, #e5484d);
+    color: var(--ds-color-danger-text-default, #e5484d);
+}
+
+.favoriteBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: var(--ds-font-weight-semibold, 600);
+    background-color: var(--ds-color-danger-base-default, #e5484d);
+    color: white;
+}
+
+/* ---- View toggle ---- */
+.viewToggle {
+    display: flex;
+    gap: 4px;
+    background-color: var(--ds-color-pilltabs-bg, var(--ds-color-neutral-surface-hover));
+    padding: var(--ds-size-2, 8px);
+    border-radius: var(--digilist-radius-lg, 12px);
+    border: 1px solid var(--ds-color-pilltabs-border, var(--ds-color-neutral-border-default));
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.viewButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    padding: var(--ds-size-3, 12px);
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    cursor: pointer;
+    background-color: transparent;
+    color: var(--ds-color-pilltabs-text, var(--ds-color-neutral-text-default));
+    transition: all 0.2s ease;
+}
+
+.viewButton[aria-pressed="true"] {
+    background-color: var(--ds-color-pilltabs-active-bg, var(--ds-color-accent-base-default));
+    color: var(--ds-color-pilltabs-active-text, var(--ds-color-accent-base-contrast-default));
+    box-shadow: var(--ds-shadow-sm);
+}
+
+.viewButton:hover:not([aria-pressed="true"]) {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+/* ---- Mobile responsive ---- */
+@media (max-width: 767px) {
+    .topRow {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .leftGroup {
+        order: 1;
+        flex: 0 0 auto;
+    }
+
+    .centerGroup {
+        flex: 1 1 100%;
+        order: 2;
+        overflow-x: auto;
+    }
+
+    .rightGroup {
+        flex: 0 0 auto;
+        order: 1;
+    }
+
+    .filterRow {
+        display: none;
+    }
+
+    .viewToggle {
+        display: none;
+    }
+
+    .mobileFilterButton {
+        display: inline-flex;
+    }
+}

@@ -1,0 +1,90 @@
+/* LoadingScreen */
+.loadingScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--ds-size-4);
+    background-color: var(--ds-color-neutral-background-default);
+}
+
+.loadingMessage {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Shared centered screen layout */
+.centeredScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 400px;
+    gap: var(--ds-size-4);
+    padding: var(--ds-size-6);
+    text-align: center;
+}
+
+/* Icon circle */
+.iconCircle {
+    width: var(--ds-size-16);
+    height: var(--ds-size-16);
+    border-radius: var(--ds-border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconCircleDanger {
+    composes: iconCircle;
+    background-color: var(--ds-color-danger-surface-default);
+    color: var(--ds-color-danger-text-default);
+}
+
+.iconCircleWarning {
+    composes: iconCircle;
+    background-color: var(--ds-color-warning-surface-default);
+    color: var(--ds-color-warning-text-default);
+}
+
+/* Titles */
+.screenTitle {
+    margin: 0;
+}
+
+.dangerTitle {
+    margin: 0;
+    color: var(--ds-color-danger-text-default);
+}
+
+.notFoundCode {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+    font-size: var(--ds-font-size-4xl);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: 1;
+}
+
+/* Description */
+.screenDescription {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+    max-width: 400px;
+}
+
+/* Error details */
+.errorDetails {
+    padding: var(--ds-size-3) var(--ds-size-4);
+    background-color: var(--ds-color-neutral-surface-hover);
+    border-radius: var(--digilist-radius-md, 8px);
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+    max-width: 100%;
+    overflow: auto;
+}
+
+/* Button spacing */
+.screenAction {
+    margin-top: var(--ds-size-2);
+}

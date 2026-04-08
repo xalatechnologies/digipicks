@@ -1,0 +1,22 @@
+/* AppShell - Application shell layout */
+
+.header {
+    margin-bottom: var(--ds-size-8);
+}
+
+.title {
+    margin-bottom: var(--ds-size-2);
+}
+
+.title[data-no-subtitle="true"] {
+    margin-bottom: 0;
+}
+
+.subtitle {
+    opacity: 0.8;
+    margin-top: 0;
+}
+
+.footer {
+    margin-top: var(--ds-size-16);
+}

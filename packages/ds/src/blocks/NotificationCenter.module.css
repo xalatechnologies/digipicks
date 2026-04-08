@@ -1,0 +1,211 @@
+/* ─── Backdrop ─── */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ─── Drawer ─── */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 420px;
+    max-width: 100vw;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--ds-color-neutral-background-default);
+    box-shadow: var(--digilist-shadow-xl);
+    animation: slideIn 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* ─── Header ─── */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ds-size-5) var(--ds-size-5) var(--ds-size-4);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+    flex-shrink: 0;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+}
+
+.headerTitle {
+    margin: 0;
+    font-weight: var(--digilist-font-weight-bold, 700);
+    letter-spacing: -0.01em;
+}
+
+.unreadBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: var(--digilist-radius-pill, 100px);
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--digilist-color-contrast-light, #fff);
+    font-size: var(--digilist-font-size-mini, 11px);
+    font-weight: var(--digilist-font-weight-bold, 700);
+    letter-spacing: 0.02em;
+}
+
+.headerActions {
+    display: flex;
+    gap: var(--ds-size-1);
+    align-items: center;
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--digilist-radius-md, 8px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--ds-color-neutral-text-subtle);
+    transition: all 0.15s ease;
+}
+
+.closeButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-neutral-text-default);
+}
+
+/* ─── Filter Tabs ─── */
+.filterTabs {
+    display: flex;
+    gap: var(--ds-size-1);
+    padding: var(--ds-size-3) var(--ds-size-5);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+    flex-shrink: 0;
+}
+
+.filterTab {
+    padding: var(--ds-size-2) var(--ds-size-3);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--digilist-font-weight-medium, 500);
+    color: var(--ds-color-neutral-text-subtle);
+    border-radius: var(--digilist-radius-md, 8px);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-1);
+}
+
+.filterTab:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.filterTabActive {
+    composes: filterTab;
+    font-weight: var(--digilist-font-weight-semibold, 600);
+    color: var(--ds-color-accent-text-default);
+    background-color: var(--ds-color-accent-surface-default);
+}
+
+.filterCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--digilist-radius-pill, 100px);
+    background-color: var(--ds-color-neutral-surface-default);
+    color: var(--ds-color-neutral-text-subtle);
+    font-size: var(--digilist-font-size-xs, 10px);
+    font-weight: var(--digilist-font-weight-semibold, 600);
+}
+
+.filterCountActive {
+    composes: filterCount;
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--digilist-color-contrast-light, #fff);
+}
+
+/* ─── Content ─── */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* ─── Loading ─── */
+.loadingWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ds-size-12);
+}
+
+/* ─── Empty state ─── */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ds-size-16) var(--ds-size-8);
+    text-align: center;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.emptyStateIcon {
+    margin-bottom: var(--ds-size-4);
+    opacity: 0.4;
+}
+
+.emptyStateTitle {
+    margin-bottom: var(--ds-size-2);
+}
+
+.emptyStateDescription {
+    max-width: 280px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ─── Responsive: mobile fullscreen ─── */
+@media (max-width: 480px) {
+    .drawer {
+        width: 100vw;
+    }
+}

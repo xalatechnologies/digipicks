@@ -1,0 +1,93 @@
+/* Settings Page — extracted from inline styles */
+
+.loadingWrapper {
+  padding: var(--ds-size-8);
+}
+
+.successAlert {
+  max-width: 400px;
+}
+
+.tabsMargin {
+  margin-bottom: var(--ds-size-6);
+}
+
+.sectionHeading {
+  margin-bottom: var(--ds-size-3);
+}
+
+.sectionHeadingSm {
+  margin-bottom: var(--ds-size-2);
+}
+
+.subtleText {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.avatarContainer {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: var(--ds-border-radius-full);
+  overflow: hidden;
+  background-color: var(--ds-color-neutral-surface-subtle);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarIcon {
+  font-size: var(--ds-font-size-heading-lg);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.formDivider {
+  padding-top: var(--ds-size-3);
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.infoCard {
+  background-color: var(--ds-color-info-surface-default);
+  border: 1px solid var(--ds-color-info-border-subtle);
+}
+
+.infoIcon {
+  color: var(--ds-color-info-text-default);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.verificationTitle {
+  font-weight: var(--ds-font-weight-semibold);
+  margin-bottom: var(--ds-size-1);
+}
+
+.integrationRow {
+  padding: var(--ds-size-3);
+  background-color: var(--ds-color-neutral-surface-subtle);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.integrationName {
+  font-weight: var(--ds-font-weight-medium);
+  margin-bottom: var(--ds-size-1);
+}
+
+.notificationSection {
+  padding: var(--ds-size-4);
+  background-color: var(--ds-color-neutral-surface-subtle);
+  border-radius: var(--ds-border-radius-md);
+  margin-top: var(--ds-size-2);
+}
+
+.notificationSectionTitle {
+  font-weight: var(--ds-font-weight-semibold);
+  margin-bottom: var(--ds-size-3);
+}

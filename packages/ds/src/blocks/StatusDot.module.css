@@ -1,0 +1,35 @@
+/* StatusDot — colored indicator for online/offline status */
+
+.dot {
+  display: inline-block;
+  border-radius: var(--ds-border-radius-full);
+  flex-shrink: 0;
+}
+
+/* Sizes */
+.dot[data-size="sm"] {
+  width: 10px;
+  height: 10px;
+}
+
+.dot[data-size="md"] {
+  width: 14px;
+  height: 14px;
+}
+
+/* Variants */
+.dot[data-variant="success"] {
+  background-color: var(--ds-color-success-base-default);
+}
+
+.dot[data-variant="warning"] {
+  background-color: var(--ds-color-warning-base-default);
+}
+
+.dot[data-variant="danger"] {
+  background-color: var(--ds-color-danger-base-default);
+}
+
+.dot[data-variant="neutral"] {
+  background-color: var(--ds-color-neutral-base-default);
+}

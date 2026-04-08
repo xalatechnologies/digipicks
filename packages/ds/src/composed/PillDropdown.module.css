@@ -1,0 +1,285 @@
+/* PillDropdown — design tokens only */
+
+@keyframes pillDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  position: relative;
+  background-color: var(--ds-color-pilltabs-bg, var(--ds-color-neutral-surface-hover));
+  border-radius: var(--digilist-radius-lg, 12px);
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border: 1px solid var(--ds-color-pilltabs-border, var(--ds-color-neutral-border-default));
+  min-width: 140px;
+}
+
+/* Ghost variant — lightweight, transparent background for secondary filter controls */
+.containerGhost {
+  background-color: transparent;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--digilist-radius-pill, 100px);
+  padding: 0 var(--ds-size-2);
+  min-width: auto;
+}
+
+.containerGhost:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-color: var(--ds-color-neutral-border-default);
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-size-2, 8px);
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--digilist-radius-md, 8px);
+  cursor: pointer;
+  font-weight: var(--ds-font-weight-medium, 500);
+  line-height: normal;
+  color: var(--ds-color-neutral-text-default);
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.triggerSm {
+  padding: var(--ds-size-2, 8px) var(--ds-size-3, 12px);
+  min-height: 40px;
+  font-size: var(--ds-font-size-xs, 0.75rem);
+}
+
+.triggerMd {
+  padding: var(--ds-size-3, 12px) var(--ds-size-5, 20px);
+  min-height: 48px;
+  font-size: var(--ds-font-size-sm, 0.875rem);
+}
+
+.triggerLg {
+  padding: var(--ds-size-3, 12px) var(--ds-size-6, 24px);
+  min-height: var(--ds-size-12, 48px);
+  font-size: var(--ds-font-size-md, 1rem);
+}
+
+
+.triggerContent {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2, 8px);
+  width: 100%;
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-color-accent-base-default);
+  flex-shrink: 0;
+}
+
+.label {
+  font-weight: var(--ds-font-weight-medium, 500);
+}
+
+.suffix {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-color-neutral-text-subtle);
+  transition: transform 0.2s ease;
+  margin-left: auto;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu - position set inline (fixed for body portal, absolute for dialog portal) */
+.menu {
+  z-index: 99999;
+  background-color: var(--ds-color-neutral-background-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--digilist-radius-lg, 12px);
+  box-shadow: var(--ds-shadow-md);
+  animation: pillDropdownFadeIn 0.15s ease;
+  overflow: hidden;
+}
+
+.searchWrap {
+  padding: var(--ds-size-3, 12px);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.searchInner {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2, 8px);
+  padding: var(--ds-size-2, 8px) var(--ds-size-3, 12px);
+  background-color: var(--ds-color-neutral-surface-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--digilist-radius-md, 8px);
+}
+
+.searchIcon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-color-neutral-text-subtle);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  color: var(--ds-color-neutral-text-default);
+}
+
+.searchInput:focus,
+.searchInput:focus-visible,
+.searchInput:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.searchInputSm {
+  font-size: var(--ds-font-size-xs, 0.75rem);
+}
+
+.searchInputMd {
+  font-size: var(--ds-font-size-sm, 0.875rem);
+}
+
+.optionsList {
+  max-height: 280px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: var(--ds-size-1, 4px) 0;
+  background-color: var(--ds-color-neutral-background-default);
+}
+
+.optionsListSearchable {
+  max-height: 220px;
+}
+
+.optionItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-size-3, 12px) var(--ds-size-4, 16px);
+  cursor: pointer;
+  color: var(--ds-color-neutral-text-default);
+  transition: background-color 0.1s ease;
+}
+
+.optionItem:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.optionItemMulti {
+  justify-content: flex-start;
+  gap: var(--ds-size-3, 12px);
+}
+
+.optionItemSelected {
+  background-color: var(--ds-color-accent-surface-default);
+  font-weight: var(--ds-font-weight-semibold, 600);
+}
+
+.optionItemSelected:hover {
+  background-color: var(--ds-color-accent-surface-default);
+}
+
+.optionItemSm {
+  font-size: var(--ds-font-size-xs, 0.75rem);
+}
+
+.optionItemMd {
+  font-size: var(--ds-font-size-sm, 0.875rem);
+}
+
+.optionCount {
+  font-size: 0.75rem;
+  color: var(--ds-color-neutral-text-subtle);
+  background-color: var(--ds-color-neutral-surface-default);
+  padding: 2px 8px;
+  border-radius: var(--digilist-radius-pill, 100px);
+  margin-left: var(--ds-size-2, 8px);
+}
+
+.optionCountSm {
+  font-size: 0.65rem;
+}
+
+.noResults {
+  padding: var(--ds-size-3, 12px) var(--ds-size-4, 16px);
+  color: var(--ds-color-neutral-text-subtle);
+  text-align: center;
+}
+
+.noResultsSm {
+  font-size: var(--ds-font-size-xs, 0.75rem);
+}
+
+.noResultsMd {
+  font-size: var(--ds-font-size-sm, 0.875rem);
+}
+
+/* ---- Multiselect checkbox indicator ---- */
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--digilist-radius-sm, 4px);
+  background-color: transparent;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.checkboxChecked {
+  background-color: var(--ds-color-accent-base-default);
+  border-color: var(--ds-color-accent-base-default);
+  color: var(--ds-color-accent-base-contrast-default, #fff);
+}
+
+/* ---- Clear button for multiselect ---- */
+.clearWrap {
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+  padding: var(--ds-size-2, 8px) var(--ds-size-4, 16px);
+}
+
+.clearOption {
+  display: block;
+  width: 100%;
+  padding: var(--ds-size-2, 8px) 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: var(--ds-font-size-sm, 0.875rem);
+  font-weight: var(--ds-font-weight-medium, 500);
+  color: var(--ds-color-accent-text-default);
+  text-align: center;
+  transition: opacity 0.15s ease;
+}
+
+.clearOption:hover {
+  opacity: 0.7;
+}

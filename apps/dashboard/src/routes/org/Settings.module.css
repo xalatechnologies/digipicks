@@ -1,0 +1,43 @@
+/* Org Settings styles */
+
+.pageTitle {
+  margin: 0;
+}
+
+.pageDesc {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.saveButton {
+  min-height: 44px;
+}
+
+.sectionCard {
+  padding: var(--ds-size-5);
+}
+
+.sectionTitle {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.notificationRow {
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.notificationLabel {
+  margin: 0;
+  font-weight: 500;
+}
+
+.notificationDesc {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

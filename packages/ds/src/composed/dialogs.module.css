@@ -1,0 +1,82 @@
+/* Modal dialog */
+.dialog {
+    border: none;
+    border-radius: var(--digilist-radius-lg, 12px);
+    padding: 0;
+    max-width: 420px;
+    width: 90vw;
+    box-shadow: var(--ds-shadow-lg);
+    background-color: var(--ds-color-neutral-background-default);
+}
+
+.dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dialogInner {
+    /* Prevents click-outside from triggering on inner content */
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-5);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+/* Variant icon circle */
+.iconCircle {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--ds-border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.iconCircle[data-variant="info"] {
+    background-color: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-base-default);
+}
+
+.iconCircle[data-variant="success"] {
+    background-color: var(--ds-color-success-surface-default);
+    color: var(--ds-color-success-base-default);
+}
+
+.iconCircle[data-variant="warning"] {
+    background-color: var(--ds-color-warning-surface-default);
+    color: var(--ds-color-warning-base-default);
+}
+
+.iconCircle[data-variant="danger"] {
+    background-color: var(--ds-color-danger-surface-default);
+    color: var(--ds-color-danger-base-default);
+}
+
+.title {
+    margin: 0;
+}
+
+/* Body */
+.body {
+    padding: var(--ds-size-5);
+}
+
+.description {
+    margin: 0;
+    color: var(--ds-color-neutral-text-default);
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-4) var(--ds-size-5);
+    border-top: 1px solid var(--ds-color-neutral-border-subtle);
+    background-color: var(--ds-color-neutral-background-subtle);
+}

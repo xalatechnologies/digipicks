@@ -1,0 +1,36 @@
+.dialogTitle {
+    margin: 0 0 var(--ds-size-4) 0;
+}
+
+.urlBar {
+    padding: var(--ds-size-3);
+    background-color: var(--ds-color-neutral-surface-hover);
+    border-radius: var(--digilist-radius-md, 8px);
+    margin-bottom: var(--ds-size-4);
+}
+
+.urlText {
+    flex: 1;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.platformGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--ds-size-3);
+}
+
+.platformButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-3);
+}
+
+.platformLabel {
+    margin: 0;
+}

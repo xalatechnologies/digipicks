@@ -1,0 +1,89 @@
+/* =============================================================================
+ * NotificationSettings — Notification preferences page
+ * ============================================================================= */
+
+/* Loading state */
+.loadingCenter {
+  padding: var(--ds-size-8);
+}
+
+/* Section Cards */
+.sectionCard {
+  padding: var(--ds-size-5);
+}
+
+.sectionHeading {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+/* Warning banner (push not supported) */
+.warningBanner {
+  padding: var(--ds-size-4);
+  background-color: var(--ds-color-warning-surface-default);
+  border-radius: var(--ds-border-radius-md);
+  border-left: 4px solid var(--ds-color-warning-base-default);
+}
+
+.warningText {
+  margin: 0;
+  color: var(--ds-color-warning-text-default);
+}
+
+/* Preference row — horizontal with border separator */
+.preferenceRow {
+  padding-bottom: var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.preferenceRowLast {
+  /* No border for last item */
+}
+
+/* Nested preference row (e.g. reminder timing) */
+.nestedGroup {
+  padding-left: var(--ds-size-6);
+  padding-bottom: var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+/* Preference label + description */
+.preferenceLabel {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.preferenceDesc {
+  margin: 0;
+  margin-top: var(--ds-size-1);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Status indicators */
+.statusSuccess {
+  margin: 0;
+  margin-top: var(--ds-size-1);
+  color: var(--ds-color-success-text-default);
+}
+
+.statusDanger {
+  margin: 0;
+  margin-top: var(--ds-size-1);
+  color: var(--ds-color-danger-text-default);
+}
+
+/* Save indicator */
+.saveIndicator {
+  position: fixed;
+  bottom: var(--ds-size-6);
+  right: var(--ds-size-6);
+  padding: var(--ds-size-4);
+  background-color: var(--ds-color-brand-1-surface-default);
+  border-radius: var(--ds-border-radius-md);
+  box-shadow: var(--ds-shadow-lg);
+}
+
+.saveIndicatorText {
+  margin: 0;
+  color: var(--ds-color-brand-1-text-default);
+}

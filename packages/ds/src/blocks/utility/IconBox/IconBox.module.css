@@ -1,0 +1,138 @@
+/* IconBox Component Styles */
+
+.iconBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+/* Sizes */
+.sm {
+    width: 24px;
+    height: 24px;
+}
+
+.md {
+    width: 32px;
+    height: 32px;
+}
+
+.lg {
+    width: 40px;
+    height: 40px;
+}
+
+/* Shapes */
+.rounded {
+    border-radius: var(--digilist-radius-md, 8px);
+}
+
+.square {
+    border-radius: var(--digilist-radius-sm, 4px);
+}
+
+/* Variants */
+.accent {
+    background-color: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-base-default);
+}
+
+.accent:hover {
+    background-color: var(--ds-color-accent-surface-hover);
+}
+
+.success {
+    background-color: var(--ds-color-success-surface-default);
+    color: var(--ds-color-success-base-default);
+}
+
+.success:hover {
+    background-color: var(--ds-color-success-surface-hover);
+}
+
+.warning {
+    background-color: var(--ds-color-warning-surface-default);
+    color: var(--ds-color-warning-base-default);
+}
+
+.warning:hover {
+    background-color: var(--ds-color-warning-surface-hover);
+}
+
+.danger {
+    background-color: var(--ds-color-danger-surface-default);
+    color: var(--ds-color-danger-base-default);
+}
+
+.danger:hover {
+    background-color: var(--ds-color-danger-surface-hover);
+}
+
+.neutral {
+    background-color: var(--ds-color-neutral-surface-default);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.neutral:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+/* Badge */
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ds-color-danger-base-default);
+    color: var(--ds-color-danger-contrast-default);
+    border-radius: var(--ds-border-radius-full);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: 1;
+    border: 2px solid var(--ds-color-neutral-background-default);
+}
+
+/* Icon sizing */
+.iconBox svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+.sm svg {
+    width: 12px;
+    height: 12px;
+}
+
+.lg svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Accessibility */
+.iconBox:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .iconBox {
+        border: 1px solid currentColor;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .iconBox {
+        transition: none;
+    }
+}

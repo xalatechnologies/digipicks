@@ -1,0 +1,37 @@
+/* PageContentLayout - Standard vertical stack for page content */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-6);
+}
+
+/* Gap variants */
+.root[data-gap="sm"] {
+  gap: var(--ds-size-4);
+}
+
+.root[data-gap="md"] {
+  gap: var(--ds-size-6);
+}
+
+.root[data-gap="lg"] {
+  gap: var(--ds-size-8);
+}
+
+.root[data-gap="xl"] {
+  gap: var(--ds-size-10);
+}
+
+/* Padding variants */
+.root[data-padding="none"] {
+  padding: 0;
+}
+
+.root[data-padding="default"] {
+  padding: var(--ds-size-6);
+}
+
+.root[data-padding="lg"] {
+  padding: var(--ds-size-8);
+}

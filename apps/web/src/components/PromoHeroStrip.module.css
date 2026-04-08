@@ -1,0 +1,149 @@
+/* PromoHeroStrip.module.css — Promotional hero strip above filter bar */
+
+.strip {
+    position: relative;
+    background-color: var(--ds-color-neutral-background-subtle);
+    padding: var(--ds-size-5) 0;
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.inner {
+    max-width: var(--ds-size-content-max, 1200px);
+    margin: 0 auto;
+    padding: 0 var(--ds-size-4);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--ds-size-4);
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-4);
+    background-color: var(--ds-color-neutral-background-default);
+    border-radius: var(--ds-border-radius-md, var(--ds-size-1));
+    padding: var(--ds-size-4);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+    animation: promoCardIn 0.4s ease both;
+}
+
+.card:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.card:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+@keyframes promoCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.iconCircle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ds-size-10, 48px);
+    height: var(--ds-size-10, 48px);
+    border-radius: 50%;
+    color: var(--ds-color-accent-text-default, var(--ds-color-accent-base-default));
+}
+
+.iconCircle[data-variant="accent"] {
+    background-color: var(--ds-color-accent-surface-default);
+}
+
+.iconCircle[data-variant="success"] {
+    background-color: var(--ds-color-success-surface-default);
+    color: var(--ds-color-success-text-default, var(--ds-color-success-base-default));
+}
+
+.iconCircle[data-variant="warning"] {
+    background-color: var(--ds-color-warning-surface-default);
+    color: var(--ds-color-warning-text-default, var(--ds-color-warning-base-default));
+}
+
+.textBlock {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    font-weight: var(--ds-font-weight-medium, 500);
+    font-size: var(--ds-font-size-md, 1rem);
+    color: var(--ds-color-neutral-text-default);
+    margin: 0;
+}
+
+.description {
+    font-size: var(--ds-font-size-sm, 0.875rem);
+    color: var(--ds-color-neutral-text-subtle);
+    margin: var(--ds-size-1) 0 0;
+}
+
+.dismissBtn {
+    position: absolute;
+    top: var(--ds-size-2);
+    right: var(--ds-size-4);
+}
+
+.emptyState {
+    max-width: 42rem;
+    padding: var(--ds-size-2) var(--ds-size-10) var(--ds-size-2) 0;
+}
+
+.emptyTitle {
+    font-weight: var(--ds-font-weight-medium, 500);
+    color: var(--ds-color-neutral-text-default);
+    margin: 0;
+}
+
+.emptyDescription {
+    color: var(--ds-color-neutral-text-subtle);
+    margin: var(--ds-size-2) 0 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Tablet breakpoint (600px – 991px)
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Mobile breakpoint (≤ 599px)
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 599px) {
+    .strip {
+        padding: var(--ds-size-3) 0;
+    }
+
+    .inner {
+        padding: 0 var(--ds-size-3);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: var(--ds-size-3);
+    }
+
+    .card {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--ds-size-3);
+    }
+}

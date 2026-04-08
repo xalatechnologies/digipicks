@@ -1,0 +1,28 @@
+/**
+ * Standardized Breakpoint Definitions
+ *
+ * These CSS custom properties document the canonical breakpoint values.
+ * NOTE: CSS custom properties cannot be used in @media queries directly.
+ * They serve as a single source of truth for documentation and JS interop.
+ *
+ * For media queries, always use the literal values:
+ *   @media (min-width: 480px)  { ... }  -- sm: phone landscape
+ *   @media (min-width: 768px)  { ... }  -- md: tablet portrait
+ *   @media (min-width: 1024px) { ... }  -- lg: tablet landscape / small laptop
+ *   @media (min-width: 1280px) { ... }  -- xl: desktop
+ *
+ * PWA Target Devices:
+ *   xs (0-479px):    iPhone SE (375px), iPhone 14 (390px), iPhone 16 Pro Max (430px)
+ *   sm (480-767px):  iPhone landscape, large phones
+ *   md (768-1023px): iPad Mini, iPad Air, iPad Pro 11" (portrait)
+ *   lg (1024-1279px): iPad Pro 12.9" (portrait), small laptops
+ *   xl (1280px+):    Desktop, large laptops
+ */
+
+:root {
+    --ds-breakpoint-xs: 0px;
+    --ds-breakpoint-sm: 480px;
+    --ds-breakpoint-md: 768px;
+    --ds-breakpoint-lg: 1024px;
+    --ds-breakpoint-xl: 1280px;
+}

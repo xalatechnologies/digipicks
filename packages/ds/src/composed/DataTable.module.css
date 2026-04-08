@@ -1,0 +1,91 @@
+/* DataTable — design tokens only */
+
+.tableWrap {
+  overflow-x: auto;
+  position: relative;
+}
+
+.selectCell {
+  width: 48px;
+}
+
+.headerCellContent {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-1);
+}
+
+.sortIndicator {
+  margin-left: var(--ds-size-1);
+}
+
+.sortIndicatorInactive {
+  opacity: 0.3;
+}
+
+.headerSortable {
+  cursor: pointer;
+}
+
+.headerDefault {
+  cursor: default;
+}
+
+.loadingCell,
+.emptyCell {
+  text-align: center;
+  padding: var(--ds-size-8);
+}
+
+.emptyCell {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.rowClickable {
+  cursor: pointer;
+}
+
+.rowSelected {
+  background-color: var(--ds-color-first-surface-default);
+}
+
+.cellLeft { text-align: left; }
+.cellCenter { text-align: center; }
+.cellRight { text-align: right; }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-size-4);
+}
+
+.paginationInfo {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.paginationNav {
+  display: flex;
+  gap: var(--ds-size-2);
+  align-items: center;
+}
+
+.paginationButton {
+  padding: var(--ds-size-2) var(--ds-size-3);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--digilist-radius-md, 8px);
+  background: var(--ds-color-neutral-background-default);
+  cursor: pointer;
+}
+
+.paginationButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.paginationPageInfo {
+  padding: 0 var(--ds-size-3);
+}

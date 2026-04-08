@@ -1,0 +1,55 @@
+.actionButton {
+  min-height: 44px;
+}
+
+.statCard {
+  padding: var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+}
+
+.statLabel {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.statValue {
+  margin: 0;
+}
+
+.tableCard {
+  padding: 0;
+  overflow: hidden;
+  background: var(--ds-color-neutral-surface-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+}
+
+.loadingWrapper {
+  padding: var(--ds-size-8);
+}
+
+.fullWidthTable {
+  width: 100%;
+}
+
+.cellMedium {
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.cellSemibold {
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.cellSubtle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.formLabel {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.drawerButton {
+  flex: 1;
+}

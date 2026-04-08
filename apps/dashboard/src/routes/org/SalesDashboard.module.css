@@ -1,0 +1,46 @@
+/* Org Sales Dashboard styles */
+
+.loadingCenter {
+  height: 50vh;
+}
+
+.tableCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.tableHeader {
+  padding: var(--ds-size-4) var(--ds-size-5);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.tableTitle {
+  margin: 0;
+}
+
+.tableBody {
+  padding: var(--ds-size-4);
+}
+
+.eventRow {
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.eventName {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.eventMeta {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  text-align: center;
+  padding: var(--ds-size-6);
+}

@@ -1,0 +1,191 @@
+/* Sidebar - Config-driven nav sidebar */
+
+.aside {
+  width: 360px;
+  min-width: 360px;
+  flex-shrink: 0;
+  background-color: var(--ds-color-neutral-surface-default);
+  border-right: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logoZone {
+  height: 72px;
+  padding: 0 var(--ds-size-6);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  flex: 1;
+  padding: var(--ds-size-4) var(--ds-size-2);
+  padding-left: var(--ds-size-3);
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: var(--ds-size-6);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: var(--ds-font-letter-spacing-md);
+  padding: var(--ds-size-2) var(--ds-size-3);
+  margin-bottom: var(--ds-size-2);
+}
+
+.sectionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-2);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-4);
+  padding: var(--ds-size-4) var(--ds-size-3);
+  border-radius: var(--digilist-radius-lg, 12px);
+  text-decoration: none;
+  position: relative;
+  transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.navItem:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.navItemActive {
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-left: 3px solid var(--ds-color-accent-base-default);
+}
+
+.navItem:not(.navItemActive) {
+  border-left: 3px solid transparent;
+}
+
+.iconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--digilist-radius-md, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.navItemActive .iconBox {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+.navItem:not(.navItemActive) .iconBox {
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.navItem:hover:not(.navItemActive) .iconBox {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+.textBox {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.navItemActive .name {
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-accent-text-default);
+}
+
+.description {
+  margin: 0;
+  margin-top: 2px;
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.badgeArrowBox {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.badgeBox {
+  min-width: 32px;
+  height: 32px;
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  padding: 0 var(--ds-size-3);
+}
+
+.arrow {
+  color: var(--ds-color-neutral-text-subtle);
+  opacity: 0.5;
+}
+
+.navItemActive .arrow {
+  color: var(--ds-color-accent-text-default);
+  opacity: 1;
+}
+
+/* Mobile hamburger */
+.hamburgerButton {
+  position: fixed;
+  top: var(--ds-size-4);
+  left: var(--ds-size-4);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--digilist-radius-md, 8px);
+  background-color: var(--ds-color-neutral-surface-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  color: var(--ds-color-neutral-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: var(--ds-shadow-md);
+  transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.hamburgerButton:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.hamburgerButton:focus-visible {
+  outline: 2px solid var(--ds-color-focus-outline);
+  outline-offset: 2px;
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--ds-color-neutral-surface-default);
+}

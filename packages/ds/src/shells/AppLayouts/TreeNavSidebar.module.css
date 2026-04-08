@@ -1,0 +1,155 @@
+/* TreeNavSidebar - Tree-type navigation for docs/user-guides */
+
+.aside {
+  width: 280px;
+  min-width: 280px;
+  flex-shrink: 0;
+  background-color: var(--ds-color-neutral-surface-default);
+  border-right: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logoZone {
+  height: 72px;
+  padding: 0 var(--ds-size-6);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  flex: 1;
+  padding: var(--ds-size-4) var(--ds-size-3);
+  overflow-y: auto;
+}
+
+.treeList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.treeItem {
+  margin-bottom: var(--ds-size-1);
+}
+
+.treeItemInner {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  padding: var(--ds-size-3) var(--ds-size-4);
+  border-radius: var(--digilist-radius-md, 8px);
+  text-decoration: none;
+  color: var(--ds-color-neutral-text-default);
+  font-size: var(--ds-font-size-sm);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: background-color var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.treeItemInner:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.treeItemInnerActive,
+.treeItemInner.treeItemInnerActive {
+  font-weight: var(--ds-font-weight-semibold);
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-left: 3px solid var(--ds-color-accent-base-default);
+}
+
+.treeItemInner:not(.treeItemInnerActive) {
+  border-left: 3px solid transparent;
+}
+
+.expandButton {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--ds-color-neutral-text-subtle);
+  cursor: pointer;
+  border-radius: var(--digilist-radius-sm, 4px);
+  transition: transform var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+/* Branch toggle: full-width Digdir Button used as tree branch header */
+.treeToggleButton {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* Inline expand: smaller Button nested inside NavLink */
+.expandButtonInline {
+  padding: var(--ds-size-1);
+}
+
+.treeItemExpanded .expandButton {
+  transform: rotate(90deg);
+}
+
+.spacer {
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.children {
+  list-style: none;
+  margin: 0;
+  padding-left: var(--ds-size-6);
+  border-left: 1px solid var(--ds-color-neutral-border-subtle);
+  margin-left: var(--ds-size-4);
+}
+
+/* Mobile hamburger */
+.hamburgerButton {
+  position: fixed;
+  top: var(--ds-size-4);
+  left: var(--ds-size-4);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--digilist-radius-md, 8px);
+  background-color: var(--ds-color-neutral-surface-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  color: var(--ds-color-neutral-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: var(--ds-shadow-md);
+  transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.hamburgerButton:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.hamburgerButton:focus-visible {
+  outline: 2px solid var(--ds-color-focus-outline);
+  outline-offset: 2px;
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--ds-color-neutral-surface-default);
+}

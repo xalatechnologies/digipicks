@@ -1,0 +1,15 @@
+.layout {
+    container-name: ds-content;
+}
+
+.layout[data-header-offset="sm"] {
+    padding-top: 48px;
+}
+
+.layout[data-header-offset="md"] {
+    padding-top: 64px;
+}
+
+.layout[data-header-offset="lg"] {
+    padding-top: 80px;
+}

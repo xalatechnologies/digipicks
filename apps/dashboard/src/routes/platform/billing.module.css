@@ -1,0 +1,9 @@
+/* Billing page styles */
+
+.tenantName {
+  font-weight: var(--ds-font-weight-medium, 500);
+}
+
+.amount {
+  font-variant-numeric: tabular-nums;
+}

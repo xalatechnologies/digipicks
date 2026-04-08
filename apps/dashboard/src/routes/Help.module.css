@@ -1,0 +1,91 @@
+/* =============================================================================
+ * Help Page — Minside
+ * FAQ, quick links, contact form
+ * ============================================================================= */
+
+.searchCard {
+  padding: var(--ds-size-4);
+}
+
+.searchInput {
+  width: 100%;
+}
+
+/* Quick link topic cards */
+.quickLinkCard {
+  padding: var(--ds-size-5);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.quickLinkCard:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.quickLinkLabel {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+/* FAQ sections */
+.faqCard {
+  padding: var(--ds-size-5);
+}
+
+.faqTitle {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.faqButtonExpanded {
+  width: 100%;
+  padding: var(--ds-size-3);
+  text-align: left;
+  justify-content: space-between;
+  background-color: var(--ds-color-neutral-surface-active);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.faqButtonCollapsed {
+  width: 100%;
+  padding: var(--ds-size-3);
+  text-align: left;
+  justify-content: space-between;
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.faqQuestion {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.faqAnswer {
+  padding: var(--ds-size-4);
+  padding-top: var(--ds-size-3);
+}
+
+.faqAnswerText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  line-height: 1.6;
+}
+
+/* Contact form */
+.contactCard {
+  padding: var(--ds-size-5);
+}
+
+.contactTitle {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.submitButton {
+  align-self: flex-start;
+}

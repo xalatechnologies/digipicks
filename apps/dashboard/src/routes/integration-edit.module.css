@@ -1,0 +1,272 @@
+/* ─── Integration Wizard — Listing‑Wizard‑inspired layout ─── */
+
+.wizardLayout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+}
+
+/* ─── Page title block (matches listing wizard header) ─── */
+.pageHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ds-size-4);
+    margin-bottom: var(--ds-size-6);
+}
+
+.pageHeaderLeft {
+    flex: 1;
+    min-width: 0;
+}
+
+.pageTitle {
+    margin-bottom: var(--ds-size-2);
+}
+
+.pageSubtitle {
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* ─── Save status alerts ─── */
+.saveAlert {
+    padding: var(--ds-size-3);
+    margin-bottom: var(--ds-size-4);
+    border-radius: var(--ds-border-radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+}
+
+.saveSuccess {
+    padding: var(--ds-size-3);
+    margin-bottom: var(--ds-size-4);
+    border-radius: var(--ds-border-radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    background-color: var(--ds-color-success-surface-default);
+    border: 1px solid var(--ds-color-success-border-default);
+}
+
+.saveError {
+    padding: var(--ds-size-3);
+    margin-bottom: var(--ds-size-4);
+    border-radius: var(--ds-border-radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    background-color: var(--ds-color-danger-surface-default);
+    border: 1px solid var(--ds-color-danger-border-default);
+}
+
+.saveIcon {
+    font-size: var(--ds-font-size-heading-sm);
+}
+
+.saveMessage {
+    margin: 0;
+}
+
+/* ─── Stepper tabs ─── */
+.stepper {
+    margin-bottom: var(--ds-size-6);
+}
+
+/* ─── Main content area ─── */
+.content {
+    background-color: var(--ds-color-neutral-background-default);
+    border-radius: var(--ds-border-radius-lg);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+    padding: var(--ds-size-8);
+    margin-bottom: var(--ds-size-6);
+}
+
+/* ─── 3‑zone footer (left · center · right) ─── */
+.wizardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--ds-color-neutral-background-default);
+    border-radius: var(--ds-border-radius-lg);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+    padding: var(--ds-size-4) var(--ds-size-8);
+}
+
+.footerLeft,
+.footerCenter,
+.footerRight {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+}
+
+.footerLeft {
+    min-width: 120px;
+}
+
+.footerCenter {
+    flex: 1;
+    justify-content: center;
+}
+
+.footerRight {
+    min-width: 120px;
+    justify-content: flex-end;
+}
+
+/* ─── Category card grid ─── */
+.categoryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--ds-size-3);
+}
+
+.categoryCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-4) var(--ds-size-3);
+    min-height: 110px;
+    justify-content: center;
+    border-radius: var(--ds-border-radius-lg);
+    transition: all 0.15s ease;
+}
+
+.categoryCard[data-selected="true"] {
+    box-shadow: 0 0 0 2px var(--ds-color-accent-border-default);
+}
+
+.categoryIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ds-size-12);
+    height: var(--ds-size-12);
+    border-radius: var(--ds-border-radius-md);
+    background: var(--ds-color-neutral-surface-subtle);
+    color: var(--ds-color-neutral-text-subtle);
+    transition: all 0.15s ease;
+}
+
+.categoryIcon[data-selected="true"] {
+    background: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-text-default);
+}
+
+.categoryLabel {
+    text-align: center;
+    font-weight: 500;
+}
+
+.categoryLabel[data-selected="true"] {
+    font-weight: 700;
+    color: var(--ds-color-accent-text-default);
+}
+
+/* ─── Card inner + inline header ─── */
+.cardInner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-5);
+    padding: var(--ds-size-5);
+}
+
+.inlineHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+}
+
+.inlineHeaderText {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-1);
+}
+
+/* ─── Provider card grid ─── */
+.providerGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--ds-size-3);
+}
+
+.providerCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-5);
+    min-height: 140px;
+    justify-content: center;
+    border-radius: var(--ds-border-radius-lg);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.providerCard[data-selected="true"] {
+    box-shadow: 0 0 0 2px var(--ds-color-accent-border-default);
+    background: var(--ds-color-accent-surface-hover);
+}
+
+.providerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--ds-border-radius-md);
+    background: var(--ds-color-neutral-surface-subtle);
+    color: var(--ds-color-neutral-text-subtle);
+    transition: all 0.15s ease;
+}
+
+.providerIcon[data-selected="true"] {
+    background: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-text-default);
+}
+
+/* ─── Shared text resets ─── */
+.noMargin {
+    margin: 0;
+}
+
+.subtleText {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.labelText {
+    margin: 0;
+    font-weight: 500;
+}
+
+.providerNameSelected {
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+.providerName {
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+}
+
+.providerDescription {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+    text-align: center;
+}
+
+/* ─── Loading state ─── */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ds-size-10);
+    gap: var(--ds-size-4);
+}

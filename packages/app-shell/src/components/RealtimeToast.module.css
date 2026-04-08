@@ -1,0 +1,104 @@
+/**
+ * RealtimeToast styles
+ * Uses design tokens for consistency.
+ */
+
+.container {
+  position: fixed;
+  bottom: var(--ds-size-6);
+  right: var(--ds-size-6);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+  max-width: 380px;
+  width: 100%;
+}
+
+.toast {
+  display: flex;
+  gap: var(--ds-size-3);
+  align-items: flex-start;
+  padding: var(--ds-size-4);
+  border-radius: var(--ds-border-radius-md);
+  box-shadow: var(--ds-shadow-md);
+  animation: slideIn 0.3s ease-out;
+}
+
+.toast[data-type="success"] {
+  background-color: var(--ds-color-success-surface-default);
+  border: 1px solid var(--ds-color-success-border-default);
+}
+
+.toast[data-type="error"] {
+  background-color: var(--ds-color-danger-surface-default);
+  border: 1px solid var(--ds-color-danger-border-default);
+}
+
+.toast[data-type="warning"] {
+  background-color: var(--ds-color-warning-surface-default);
+  border: 1px solid var(--ds-color-warning-border-default);
+}
+
+.toast[data-type="info"] {
+  background-color: var(--ds-color-info-surface-default);
+  border: 1px solid var(--ds-color-info-border-default);
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast[data-type="success"] .icon {
+  color: var(--ds-color-success-base-default);
+}
+
+.toast[data-type="error"] .icon {
+  color: var(--ds-color-danger-base-default);
+}
+
+.toast[data-type="warning"] .icon {
+  color: var(--ds-color-warning-base-default);
+}
+
+.toast[data-type="info"] .icon {
+  color: var(--ds-color-info-base-default);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-weight: var(--ds-font-weight-medium);
+  margin: 0;
+  color: var(--ds-color-neutral-text-default);
+}
+
+.message {
+  margin: 0;
+  margin-top: var(--ds-size-1);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  padding: var(--ds-size-1);
+  cursor: pointer;
+  color: var(--ds-color-neutral-text-subtle);
+  flex-shrink: 0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

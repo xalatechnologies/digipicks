@@ -1,0 +1,110 @@
+/* Tenant Branding Page — extracted from inline styles */
+
+.cardPaddingLg {
+  padding: var(--ds-size-5);
+}
+
+.sectionHeading {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.subtleText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.labelMedium {
+  margin: 0;
+  font-weight: 500;
+}
+
+.colorPresetDot {
+  width: var(--ds-size-8);
+  height: var(--ds-size-8);
+  border-radius: var(--ds-border-radius-full);
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.colorPresetSelected {
+  composes: colorPresetDot;
+  border-color: var(--ds-color-accent-base-default);
+  box-shadow: 0 0 0 2px var(--ds-color-accent-base-default);
+}
+
+.colorPickerButton {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: var(--ds-border-radius-md);
+  cursor: pointer;
+  padding: 0;
+}
+
+.flexOne {
+  flex: 1;
+}
+
+.dropzone {
+  border: 2px dashed var(--ds-color-neutral-border-default);
+  border-radius: var(--ds-border-radius-md);
+  padding: var(--ds-size-6);
+  cursor: pointer;
+}
+
+.fullWidthInput {
+  width: 100%;
+}
+
+.previewContainer {
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--ds-border-radius-md);
+  overflow: hidden;
+}
+
+.previewContent {
+  padding: var(--ds-size-4);
+  background-color: var(--ds-color-neutral-surface-default);
+}
+
+.previewPlaceholder {
+  flex: 1;
+  height: 60px;
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.previewNavItem {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--ds-border-radius-sm);
+  background-color: var(--ds-color-neutral-surface-default-transparent, rgba(255,255,255,0.2));
+}
+
+.previewFooter {
+  padding: var(--ds-size-2) var(--ds-size-4);
+  background-color: var(--ds-color-neutral-surface-subtle);
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  text-align: center;
+}
+
+.saveButton {
+  min-height: 44px;
+}
+
+.presetsMarginBottom {
+  margin-bottom: var(--ds-size-4);
+}
+
+.labelMarginBottom {
+  margin: 0;
+  margin-bottom: var(--ds-size-3);
+  font-weight: 500;
+}
+
+.uploadHintText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

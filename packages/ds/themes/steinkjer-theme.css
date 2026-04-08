@@ -1,0 +1,539 @@
+/**
+ * Steinkjer Kulturhus Color Theme
+ *
+ * Palette matched to steinkjerkulturhus.no:
+ * White body, cream (#F4F0E5) headers/surfaces, dark forest green (#1C362D) accent.
+ *
+ * Accent: #1C362D (Dark Forest Green)  Header/Surface: #F4F0E5 (Cream)
+ * Brand1: #FFA8C3 (Soft Pink)          Brand2: #FAAF02 (Gold)
+ * Brand3: #64FCB3 (Bright Mint)        Body: #FFFFFF (White)
+ *
+ * This file contains ONLY color tokens. Shared layout tokens,
+ * component CSS, and responsive utilities live in common-extensions.css.
+ *
+ * @layer ds.app - Loaded after ds.theme layers
+ */
+
+@layer ds.app {
+
+    /* ==========================================================================
+   * STEINKJER KULTURHUS - LIGHT MODE
+   * Nature-inspired editorial palette
+   * ========================================================================== */
+
+    :root,
+    [data-color-scheme="light"] {
+
+        /* ── Accent (Dark Forest Green #1C362D) ──────────────────── */
+        --ds-color-accent-background-default: #F4F0E5;
+        --ds-color-accent-background-tinted: #EDE9DD;
+        /* Surface: cream-first, subtle green hint — avoid saturated fill */
+        --ds-color-accent-surface-default: #F0EDE8;
+        --ds-color-accent-surface-tinted: #EDE9DD;
+        --ds-color-accent-surface-hover: #E2ECE8;
+        --ds-color-accent-surface-active: #8BB39C;
+        --ds-color-accent-border-subtle: #8BB39C;
+        --ds-color-accent-border-default: #4A7A62;
+        --ds-color-accent-border-strong: #1C362D;
+        --ds-color-accent-text-subtle: #3A6350;
+        --ds-color-accent-text-default: #1C362D;
+        --ds-color-accent-base-default: #1C362D;
+        --ds-color-accent-base-hover: #254A3C;
+        --ds-color-accent-base-active: #2E5E4B;
+        --ds-color-accent-base-contrast-subtle: #E2ECE8;
+        --ds-color-accent-base-contrast-default: #ffffff;
+        --ds-color-accent-contrast-default: #ffffff;
+
+        /* ── Neutral (White body / Cream #F4F0E5 surfaces) ──────── */
+        --ds-color-neutral-background-default: #FFFFFF;
+        --ds-color-neutral-background-tinted: #F4F0E5;
+        --ds-color-neutral-background-subtle: #EDE9DD;
+        --ds-color-neutral-surface-default: #F4F0E5;
+        --ds-color-neutral-surface-tinted: #EDE9DD;
+        --ds-color-neutral-surface-subtle: #F8F6F1;
+        --ds-color-neutral-surface-hover: #E6E1D4;
+        --ds-color-neutral-surface-active: #DDD8CA;
+        --ds-color-neutral-border-subtle: #E0DCD0;
+        --ds-color-neutral-border-default: #C5C0B3;
+        --ds-color-neutral-border-strong: #939F99;
+        --ds-color-neutral-text-subtle: #4A5550;
+        --ds-color-neutral-text-default: #1C362D;
+        --ds-color-neutral-text-on-inverted: #FFFFFF;
+        --ds-color-neutral-base-default: #1C362D;
+        --ds-color-neutral-base-hover: #254A3C;
+        --ds-color-neutral-base-active: #2E5E4B;
+        --ds-color-neutral-base-contrast-subtle: #F4F0E5;
+        --ds-color-neutral-base-contrast-default: #ffffff;
+        --ds-color-neutral-contrast-default: #ffffff;
+
+        /* ── Success (Forest Green #3D7A4A) ─────────────────────── */
+        --ds-color-success-background-default: #EFF7F0;
+        --ds-color-success-background-tinted: #E0F0E2;
+        --ds-color-success-surface-default: #E0F0E2;
+        --ds-color-success-surface-tinted: #C1E1C5;
+        --ds-color-success-surface-hover: #A2D3A8;
+        --ds-color-success-surface-active: #83C48B;
+        --ds-color-success-border-subtle: #83C48B;
+        --ds-color-success-border-default: #3D7A4A;
+        --ds-color-success-border-strong: #2D5C37;
+        --ds-color-success-text-subtle: #2D5C37;
+        --ds-color-success-text-default: #1E3E25;
+        --ds-color-success-base-default: #3D7A4A;
+        --ds-color-success-base-hover: #2D5C37;
+        --ds-color-success-base-active: #1E3E25;
+        --ds-color-success-base-contrast-subtle: #E0F0E2;
+        --ds-color-success-base-contrast-default: #ffffff;
+
+        /* ── Warning (Gold #FAAF02) ─────────────────────────────── */
+        --ds-color-warning-background-default: #FFF9E6;
+        --ds-color-warning-background-tinted: #FFF3CC;
+        --ds-color-warning-surface-default: #FFF3CC;
+        --ds-color-warning-surface-tinted: #FFE799;
+        --ds-color-warning-surface-hover: #FFDB66;
+        --ds-color-warning-surface-active: #FFCF33;
+        --ds-color-warning-border-subtle: #FFCF33;
+        --ds-color-warning-border-default: #FAAF02;
+        --ds-color-warning-border-strong: #D49500;
+        --ds-color-warning-text-subtle: #9A6C00;
+        --ds-color-warning-text-default: #614400;
+        --ds-color-warning-base-default: #FAAF02;
+        --ds-color-warning-base-hover: #D49500;
+        --ds-color-warning-base-active: #AE7A00;
+        --ds-color-warning-base-contrast-subtle: #FFF3CC;
+        --ds-color-warning-base-contrast-default: #0B0B12;
+
+        /* ── Danger (Deep Red #B83A3A) ──────────────────────────── */
+        --ds-color-danger-background-default: #FEF2F2;
+        --ds-color-danger-background-tinted: #FDE8E8;
+        --ds-color-danger-surface-default: #FDE8E8;
+        --ds-color-danger-surface-tinted: #F9CCCC;
+        --ds-color-danger-surface-hover: #F5B0B0;
+        --ds-color-danger-surface-active: #F19494;
+        --ds-color-danger-border-subtle: #F19494;
+        --ds-color-danger-border-default: #B83A3A;
+        --ds-color-danger-border-strong: #8E2D2D;
+        --ds-color-danger-text-subtle: #8E2D2D;
+        --ds-color-danger-text-default: #5C1D1D;
+        --ds-color-danger-base-default: #B83A3A;
+        --ds-color-danger-base-hover: #8E2D2D;
+        --ds-color-danger-base-active: #6B2222;
+        --ds-color-danger-base-contrast-subtle: #FDE8E8;
+        --ds-color-danger-base-contrast-default: #ffffff;
+
+        /* ── Info (Steinkjer Blue #0066BF) ────────────────────────── */
+        --ds-color-info-background-default: #EFF6FF;
+        --ds-color-info-background-tinted: #DCEEFF;
+        --ds-color-info-surface-default: #DCEEFF;
+        --ds-color-info-surface-tinted: #B8DDFF;
+        --ds-color-info-surface-hover: #94CBFF;
+        --ds-color-info-surface-active: #70BAFF;
+        --ds-color-info-border-subtle: #70BAFF;
+        --ds-color-info-border-default: #0066BF;
+        --ds-color-info-border-strong: #004D8F;
+        --ds-color-info-text-subtle: #004D8F;
+        --ds-color-info-text-default: #003360;
+        --ds-color-info-base-default: #0066BF;
+        --ds-color-info-base-hover: #004D8F;
+        --ds-color-info-base-active: #003360;
+        --ds-color-info-base-contrast-subtle: #DCEEFF;
+        --ds-color-info-base-contrast-default: #ffffff;
+
+        /* ── Brand 1 (Soft Pink #FFA8C3 — decorative surfaces) ─────── */
+        --ds-color-brand1-background-default: #F5EAEA;
+        --ds-color-brand1-background-tinted: #F0E2E2;
+        --ds-color-brand1-surface-default: #FFE8F0;
+        --ds-color-brand1-surface-tinted: #FFD4E2;
+        --ds-color-brand1-surface-hover: #FFC0D4;
+        --ds-color-brand1-surface-active: #FFA8C3;
+        --ds-color-brand1-border-subtle: #FFA8C3;
+        --ds-color-brand1-border-default: #E88AA8;
+        --ds-color-brand1-border-strong: #C96E8D;
+        --ds-color-brand1-text-subtle: #9E5572;
+        --ds-color-brand1-text-default: #6D3A4F;
+        --ds-color-brand1-base-default: #FFA8C3;
+        --ds-color-brand1-base-hover: #FF90B3;
+        --ds-color-brand1-base-active: #FF78A3;
+        --ds-color-brand1-base-contrast-subtle: #FFE8F0;
+        --ds-color-brand1-base-contrast-default: #1C362D;
+
+        /* ── Brand 2 (Gold — warm highlights) ────────────────────── */
+        --ds-color-brand2-background-default: #FFFBF0;
+        --ds-color-brand2-background-tinted: #FFF6E0;
+        --ds-color-brand2-surface-default: #FFF6E0;
+        --ds-color-brand2-surface-tinted: #FFEAB8;
+        --ds-color-brand2-surface-hover: #FFDE90;
+        --ds-color-brand2-surface-active: #FFD268;
+        --ds-color-brand2-border-subtle: #FFD268;
+        --ds-color-brand2-border-default: #FAAF02;
+        --ds-color-brand2-border-strong: #D49500;
+        --ds-color-brand2-text-subtle: #9A6C00;
+        --ds-color-brand2-text-default: #614400;
+        --ds-color-brand2-base-default: #FFE7AB;
+        --ds-color-brand2-base-hover: #FFDB80;
+        --ds-color-brand2-base-active: #FFCF55;
+        --ds-color-brand2-base-contrast-subtle: #FFF6E0;
+        --ds-color-brand2-base-contrast-default: #0B0B12;
+
+        /* ── Brand 3 (Bright Mint #64FCB3 — CTAs & pops) ──────────── */
+        --ds-color-brand3-background-default: #EDFDF5;
+        --ds-color-brand3-background-tinted: #D3FAE8;
+        --ds-color-brand3-surface-default: #D3FAE8;
+        --ds-color-brand3-surface-tinted: #A8F5D3;
+        --ds-color-brand3-surface-hover: #86F0C3;
+        --ds-color-brand3-surface-active: #64FCB3;
+        --ds-color-brand3-border-subtle: #64FCB3;
+        --ds-color-brand3-border-default: #3DD996;
+        --ds-color-brand3-border-strong: #1CB676;
+        --ds-color-brand3-text-subtle: #0D8A58;
+        --ds-color-brand3-text-default: #064E3B;
+        --ds-color-brand3-base-default: #64FCB3;
+        --ds-color-brand3-base-hover: #4AE8A0;
+        --ds-color-brand3-base-active: #30D48D;
+        --ds-color-brand3-base-contrast-subtle: #D3FAE8;
+        --ds-color-brand3-base-contrast-default: #1C362D;
+    }
+
+    /* ==========================================================================
+   * STEINKJER KULTURHUS - DARK MODE
+   * Deep warm charcoal palette
+   * Background: #0B0B12 (near-black)
+   * Surface: #161620 (dark charcoal)
+   * Elevated: #1E1E2A (charcoal)
+   * ========================================================================== */
+
+    [data-color-scheme="dark"] {
+
+        /* ── Accent (Forest Green — dark mode) ──────────────────── */
+        --ds-color-accent-background-default: #0B0B12;
+        --ds-color-accent-background-tinted: #0D1A15;
+        --ds-color-accent-surface-default: #132A22;
+        --ds-color-accent-surface-tinted: #1C3A2F;
+        --ds-color-accent-surface-hover: #254A3C;
+        --ds-color-accent-surface-active: #2E5E4B;
+        --ds-color-accent-border-subtle: #2E5E4B;
+        --ds-color-accent-border-default: #4A7A62;
+        --ds-color-accent-border-strong: #8BB39C;
+        --ds-color-accent-text-subtle: #8BB39C;
+        --ds-color-accent-text-default: #C5D9CE;
+        --ds-color-accent-base-default: #4A7A62;
+        --ds-color-accent-base-hover: #5E9478;
+        --ds-color-accent-base-active: #72AE8E;
+        --ds-color-accent-base-contrast-subtle: #132A22;
+        --ds-color-accent-base-contrast-default: #ffffff;
+
+        /* ── Neutral (Warm Charcoal — dark mode) ────────────────── */
+        --ds-color-neutral-background-default: #0B0B12;
+        --ds-color-neutral-background-tinted: #161620;
+        --ds-color-neutral-surface-default: #1E1E2A;
+        --ds-color-neutral-surface-tinted: #282836;
+        --ds-color-neutral-surface-subtle: #161620;
+        --ds-color-neutral-surface-hover: #282836;
+        --ds-color-neutral-surface-active: #363642;
+        --ds-color-neutral-border-subtle: #282836;
+        --ds-color-neutral-border-default: #363642;
+        --ds-color-neutral-border-strong: #48484F;
+        --ds-color-neutral-text-subtle: #9FA399;
+        --ds-color-neutral-text-default: #EBE8DF;
+        --ds-color-neutral-base-default: #EBE8DF;
+        --ds-color-neutral-base-hover: #E4E1D7;
+        --ds-color-neutral-base-active: #DDD9CF;
+        --ds-color-neutral-base-contrast-subtle: #282836;
+        --ds-color-neutral-base-contrast-default: #0B0B12;
+
+        /* ── Success (Forest Green — dark mode) ─────────────────── */
+        --ds-color-success-background-default: #0B0B12;
+        --ds-color-success-background-tinted: #0F2015;
+        --ds-color-success-surface-default: #0F2015;
+        --ds-color-success-surface-tinted: #1A3522;
+        --ds-color-success-surface-hover: #254A2F;
+        --ds-color-success-surface-active: #30603C;
+        --ds-color-success-border-subtle: #3D7A4A;
+        --ds-color-success-border-default: #5A9A68;
+        --ds-color-success-border-strong: #83C48B;
+        --ds-color-success-text-subtle: #A2D3A8;
+        --ds-color-success-text-default: #E0F0E2;
+        --ds-color-success-base-default: #3D7A4A;
+        --ds-color-success-base-hover: #5A9A68;
+        --ds-color-success-base-active: #83C48B;
+        --ds-color-success-base-contrast-subtle: #0F2015;
+        --ds-color-success-base-contrast-default: #ffffff;
+
+        /* ── Warning (Gold — dark mode) ─────────────────────────── */
+        --ds-color-warning-background-default: #0B0B12;
+        --ds-color-warning-background-tinted: #1F1808;
+        --ds-color-warning-surface-default: #1F1808;
+        --ds-color-warning-surface-tinted: #33280D;
+        --ds-color-warning-surface-hover: #4D3C14;
+        --ds-color-warning-surface-active: #66501B;
+        --ds-color-warning-border-subtle: #9A6C00;
+        --ds-color-warning-border-default: #FAAF02;
+        --ds-color-warning-border-strong: #FFCF33;
+        --ds-color-warning-text-subtle: #FFDB66;
+        --ds-color-warning-text-default: #FFF3CC;
+        --ds-color-warning-base-default: #FAAF02;
+        --ds-color-warning-base-hover: #FFCF33;
+        --ds-color-warning-base-active: #FFDB66;
+        --ds-color-warning-base-contrast-subtle: #1F1808;
+        --ds-color-warning-base-contrast-default: #0B0B12;
+
+        /* ── Danger (Deep Red — dark mode) ──────────────────────── */
+        --ds-color-danger-background-default: #0B0B12;
+        --ds-color-danger-background-tinted: #1F0F0F;
+        --ds-color-danger-surface-default: #1F0F0F;
+        --ds-color-danger-surface-tinted: #351818;
+        --ds-color-danger-surface-hover: #4B2222;
+        --ds-color-danger-surface-active: #612C2C;
+        --ds-color-danger-border-subtle: #8E2D2D;
+        --ds-color-danger-border-default: #B83A3A;
+        --ds-color-danger-border-strong: #E86060;
+        --ds-color-danger-text-subtle: #F5B0B0;
+        --ds-color-danger-text-default: #FDE8E8;
+        --ds-color-danger-base-default: #B83A3A;
+        --ds-color-danger-base-hover: #D45050;
+        --ds-color-danger-base-active: #E86060;
+        --ds-color-danger-base-contrast-subtle: #1F0F0F;
+        --ds-color-danger-base-contrast-default: #ffffff;
+
+        /* ── Info (Steinkjer Blue — dark mode) ────────────────────── */
+        --ds-color-info-background-default: #0B0B12;
+        --ds-color-info-background-tinted: #0D1928;
+        --ds-color-info-surface-default: #0D1928;
+        --ds-color-info-surface-tinted: #152D45;
+        --ds-color-info-surface-hover: #1E4162;
+        --ds-color-info-surface-active: #27557F;
+        --ds-color-info-border-subtle: #004D8F;
+        --ds-color-info-border-default: #0066BF;
+        --ds-color-info-border-strong: #4D99DB;
+        --ds-color-info-text-subtle: #94CBFF;
+        --ds-color-info-text-default: #DCEEFF;
+        --ds-color-info-base-default: #0066BF;
+        --ds-color-info-base-hover: #3388D4;
+        --ds-color-info-base-active: #4D99DB;
+        --ds-color-info-base-contrast-subtle: #0D1928;
+        --ds-color-info-base-contrast-default: #ffffff;
+
+        /* ── Brand 1 (Dusty Pink — dark mode) ───────────────────── */
+        --ds-color-brand1-background-default: #0B0B12;
+        --ds-color-brand1-background-tinted: #2A2030;
+        --ds-color-brand1-surface-default: #2A2030;
+        --ds-color-brand1-surface-tinted: #3A2838;
+        --ds-color-brand1-surface-hover: #4A3040;
+        --ds-color-brand1-surface-active: #5A3848;
+        --ds-color-brand1-border-subtle: #8B6B6B;
+        --ds-color-brand1-border-default: #D4A3A3;
+        --ds-color-brand1-border-strong: #EBCECE;
+        --ds-color-brand1-text-subtle: #D4A3A3;
+        --ds-color-brand1-text-default: #F5DEDE;
+        --ds-color-brand1-base-default: #EBCECE;
+        --ds-color-brand1-base-hover: #F5DEDE;
+        --ds-color-brand1-base-active: #FDF5F5;
+        --ds-color-brand1-base-contrast-subtle: #2A2030;
+        --ds-color-brand1-base-contrast-default: #5A3E3E;
+
+        /* ── Brand 2 (Gold — dark mode) ──────────────────────────── */
+        --ds-color-brand2-background-default: #0B0B12;
+        --ds-color-brand2-background-tinted: #1F1808;
+        --ds-color-brand2-surface-default: #1F1808;
+        --ds-color-brand2-surface-tinted: #33280D;
+        --ds-color-brand2-surface-hover: #4D3C14;
+        --ds-color-brand2-surface-active: #66501B;
+        --ds-color-brand2-border-subtle: #9A6C00;
+        --ds-color-brand2-border-default: #FAAF02;
+        --ds-color-brand2-border-strong: #FFE7AB;
+        --ds-color-brand2-text-subtle: #FFDB66;
+        --ds-color-brand2-text-default: #FFF3CC;
+        --ds-color-brand2-base-default: #FFE7AB;
+        --ds-color-brand2-base-hover: #FFDB80;
+        --ds-color-brand2-base-active: #FFF6E0;
+        --ds-color-brand2-base-contrast-subtle: #1F1808;
+        --ds-color-brand2-base-contrast-default: #614400;
+
+        /* ── Brand 3 (Vibrant Green — dark mode) ─────────────────── */
+        --ds-color-brand3-background-default: #0B0B12;
+        --ds-color-brand3-background-tinted: #06231A;
+        --ds-color-brand3-surface-default: #06231A;
+        --ds-color-brand3-surface-tinted: #0C3828;
+        --ds-color-brand3-surface-hover: #124D36;
+        --ds-color-brand3-surface-active: #186244;
+        --ds-color-brand3-border-subtle: #059669;
+        --ds-color-brand3-border-default: #00D084;
+        --ds-color-brand3-border-strong: #34D399;
+        --ds-color-brand3-text-subtle: #6EE7B7;
+        --ds-color-brand3-text-default: #D1FAE5;
+        --ds-color-brand3-base-default: #00D084;
+        --ds-color-brand3-base-hover: #34D399;
+        --ds-color-brand3-base-active: #6EE7B7;
+        --ds-color-brand3-base-contrast-subtle: #06231A;
+        --ds-color-brand3-base-contrast-default: #ffffff;
+    }
+
+    /* ==========================================================================
+   * AUTO DARK MODE (prefers-color-scheme)
+   * ========================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        [data-color-scheme="auto"] {
+            /* ── Accent ── */
+            --ds-color-accent-background-default: #0B0B12;
+            --ds-color-accent-background-tinted: #0D1A15;
+            --ds-color-accent-surface-default: #132A22;
+            --ds-color-accent-surface-tinted: #1C3A2F;
+            --ds-color-accent-surface-hover: #254A3C;
+            --ds-color-accent-surface-active: #2E5E4B;
+            --ds-color-accent-border-subtle: #2E5E4B;
+            --ds-color-accent-border-default: #4A7A62;
+            --ds-color-accent-border-strong: #8BB39C;
+            --ds-color-accent-text-subtle: #8BB39C;
+            --ds-color-accent-text-default: #C5D9CE;
+            --ds-color-accent-base-default: #4A7A62;
+            --ds-color-accent-base-hover: #5E9478;
+            --ds-color-accent-base-active: #72AE8E;
+            --ds-color-accent-base-contrast-default: #ffffff;
+
+            /* ── Neutral ── */
+            --ds-color-neutral-background-default: #0B0B12;
+            --ds-color-neutral-background-tinted: #161620;
+            --ds-color-neutral-surface-default: #1E1E2A;
+            --ds-color-neutral-surface-tinted: #282836;
+            --ds-color-neutral-surface-subtle: #161620;
+            --ds-color-neutral-surface-hover: #282836;
+            --ds-color-neutral-surface-active: #363642;
+            --ds-color-neutral-border-subtle: #282836;
+            --ds-color-neutral-border-default: #363642;
+            --ds-color-neutral-border-strong: #48484F;
+            --ds-color-neutral-text-subtle: #9FA399;
+            --ds-color-neutral-text-default: #EBE8DF;
+            --ds-color-neutral-base-default: #EBE8DF;
+            --ds-color-neutral-base-hover: #E4E1D7;
+            --ds-color-neutral-base-active: #DDD9CF;
+
+            /* ── Success ── */
+            --ds-color-success-background-default: #0B0B12;
+            --ds-color-success-background-tinted: #0F2015;
+            --ds-color-success-surface-default: #0F2015;
+            --ds-color-success-base-default: #3D7A4A;
+            --ds-color-success-text-default: #E0F0E2;
+
+            /* ── Warning ── */
+            --ds-color-warning-background-default: #0B0B12;
+            --ds-color-warning-background-tinted: #1F1808;
+            --ds-color-warning-surface-default: #1F1808;
+            --ds-color-warning-base-default: #FAAF02;
+            --ds-color-warning-text-default: #FFF3CC;
+
+            /* ── Danger ── */
+            --ds-color-danger-background-default: #0B0B12;
+            --ds-color-danger-background-tinted: #1F0F0F;
+            --ds-color-danger-surface-default: #1F0F0F;
+            --ds-color-danger-base-default: #B83A3A;
+            --ds-color-danger-text-default: #FDE8E8;
+
+            /* ── Info ── */
+            --ds-color-info-background-default: #0B0B12;
+            --ds-color-info-background-tinted: #0D1928;
+            --ds-color-info-surface-default: #0D1928;
+            --ds-color-info-base-default: #0066BF;
+            --ds-color-info-text-default: #DCEEFF;
+
+            /* ── Brands ── */
+            --ds-color-brand1-base-default: #EBCECE;
+            --ds-color-brand1-text-default: #F5DEDE;
+            --ds-color-brand2-base-default: #FFE7AB;
+            --ds-color-brand2-text-default: #FFF3CC;
+            --ds-color-brand3-base-default: #00D084;
+            --ds-color-brand3-text-default: #D1FAE5;
+        }
+    }
+
+    /* ==========================================================================
+   * SIDEBAR COMPONENT TOKENS (Warm Sand palette)
+   * ========================================================================== */
+
+    :root,
+    [data-color-scheme="light"] {
+        --digilist-sidebar-background: #F4F0E5;
+        --digilist-sidebar-foreground: #4A5550;
+        --digilist-sidebar-primary: #1C362D;
+        --digilist-sidebar-primary-foreground: #ffffff;
+        --digilist-sidebar-accent: #EDE9DD;
+        --digilist-sidebar-accent-foreground: #1C362D;
+        --digilist-sidebar-border: #E6E1D4;
+        --digilist-sidebar-ring: #1C362D;
+    }
+
+    [data-color-scheme="dark"] {
+        --digilist-sidebar-background: #161620;
+        --digilist-sidebar-foreground: #9FA399;
+        --digilist-sidebar-primary: #4A7A62;
+        --digilist-sidebar-primary-foreground: #ffffff;
+        --digilist-sidebar-accent: #132A22;
+        --digilist-sidebar-accent-foreground: #C5D9CE;
+        --digilist-sidebar-border: #282836;
+        --digilist-sidebar-ring: #4A7A62;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        [data-color-scheme="auto"] {
+            --digilist-sidebar-background: #161620;
+            --digilist-sidebar-foreground: #9FA399;
+            --digilist-sidebar-primary: #4A7A62;
+            --digilist-sidebar-primary-foreground: #ffffff;
+            --digilist-sidebar-accent: #132A22;
+            --digilist-sidebar-accent-foreground: #C5D9CE;
+            --digilist-sidebar-border: #282836;
+            --digilist-sidebar-ring: #4A7A62;
+        }
+    }
+
+    /* ==========================================================================
+   * CHART COLORS (Nature palette)
+   * ========================================================================== */
+
+    :root,
+    [data-color-scheme="light"] {
+        --digilist-chart-1: #1C362D;
+        /* Forest Green */
+        --digilist-chart-2: #FAAF02;
+        /* Gold */
+        --digilist-chart-3: #FFA8C3;
+        /* Soft Pink */
+        --digilist-chart-4: #0080EA;
+        /* Bright Blue */
+        --digilist-chart-5: #64FCB3;
+        /* Bright Mint */
+    }
+
+    [data-color-scheme="dark"] {
+        --digilist-chart-1: #4A7A62;
+        --digilist-chart-2: #FFCF33;
+        --digilist-chart-3: #EBCECE;
+        --digilist-chart-4: #4D99DB;
+        --digilist-chart-5: #34D399;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        [data-color-scheme="auto"] {
+            --digilist-chart-1: #4A7A62;
+            --digilist-chart-2: #FFCF33;
+            --digilist-chart-3: #EBCECE;
+            --digilist-chart-4: #4D99DB;
+            --digilist-chart-5: #34D399;
+        }
+    }
+
+    /* ==========================================================================
+   * STEINKJER-SPECIFIC: Editorial overrides
+   * Near-zero border radius, flat buttons for editorial feel
+   * ========================================================================== */
+
+    :root,
+    [data-color-scheme="light"] {
+        /* Editorial round corners: near-zero */
+        --ds-border-radius-sm: 2px;
+        --ds-border-radius-md: 3px;
+        --ds-border-radius-lg: 4px;
+        --ds-border-radius-xl: 6px;
+        /* Keep full for pills/avatars */
+        /* --ds-border-radius-full: 9999px; */
+    }
+}

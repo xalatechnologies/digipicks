@@ -1,0 +1,9 @@
+/* BackofficeProtectedRoute - loading state */
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--ds-color-neutral-background-default);
+}

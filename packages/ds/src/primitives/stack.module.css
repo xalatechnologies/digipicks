@@ -1,0 +1,50 @@
+/* Stack Primitive — CSS module with custom properties for dynamic values */
+
+.stack {
+  display: flex;
+  flex-direction: var(--stack-direction, column);
+  gap: var(--stack-gap, 0);
+  flex-wrap: var(--stack-wrap, nowrap);
+}
+
+/* Align items */
+.stack[data-align="start"] {
+  align-items: flex-start;
+}
+
+.stack[data-align="center"] {
+  align-items: center;
+}
+
+.stack[data-align="end"] {
+  align-items: flex-end;
+}
+
+.stack[data-align="stretch"] {
+  align-items: stretch;
+}
+
+/* Justify content */
+.stack[data-justify="start"] {
+  justify-content: flex-start;
+}
+
+.stack[data-justify="center"] {
+  justify-content: center;
+}
+
+.stack[data-justify="end"] {
+  justify-content: flex-end;
+}
+
+.stack[data-justify="between"] {
+  justify-content: space-between;
+}
+
+.stack[data-justify="around"] {
+  justify-content: space-around;
+}
+
+.stack[data-justify="evenly"] {
+  justify-content: space-evenly;
+}

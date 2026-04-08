@@ -1,0 +1,122 @@
+.skeleton {
+    background: var(--ds-color-surface-hover);
+    border-radius: var(--digilist-radius-sm, 4px);
+}
+
+.skeleton.pulse {
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeleton.wave {
+    animation: skeletonWave 1.5s linear infinite;
+    background: linear-gradient(90deg,
+            var(--ds-color-surface-hover) 0%,
+            var(--ds-color-surface-active) 50%,
+            var(--ds-color-surface-hover) 100%);
+    background-size: 200% 100%;
+}
+
+.skeleton.text {
+    height: 14px;
+    margin-bottom: var(--ds-size-2);
+}
+
+.skeleton.circular {
+    border-radius: 50%;
+}
+
+/* Card Skeleton */
+.card {
+    border-radius: var(--digilist-radius-lg, 12px);
+    border: var(--ds-border-default) solid var(--ds-color-border-subtle);
+    overflow: hidden;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.cardImage {
+    background: var(--ds-color-surface-hover);
+}
+
+.cardContent {
+    padding: var(--ds-size-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-2);
+}
+
+.cardTitle {
+    height: 14px;
+    width: 70%;
+    border-radius: var(--digilist-radius-sm, 4px);
+    background: var(--ds-color-surface-hover);
+}
+
+.cardSubtitle {
+    height: 12px;
+    width: 50%;
+    border-radius: var(--digilist-radius-sm, 4px);
+    background: var(--ds-color-surface-hover);
+}
+
+.cardDescription {
+    height: 12px;
+    width: 90%;
+    border-radius: var(--digilist-radius-sm, 4px);
+    background: var(--ds-color-surface-hover);
+}
+
+.cardMeta {
+    display: flex;
+    gap: var(--ds-size-2);
+    margin-top: var(--ds-size-1);
+}
+
+.cardBadge {
+    height: 24px;
+    width: 64px;
+    border-radius: var(--ds-border-radius-full);
+    background: var(--ds-color-surface-hover);
+}
+
+.cardFooter {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--ds-size-2);
+}
+
+.cardFooterItem {
+    height: 12px;
+    width: 80px;
+    border-radius: var(--digilist-radius-sm, 4px);
+    background: var(--ds-color-surface-hover);
+}
+
+.cardFooterPrice {
+    height: 14px;
+    width: 100px;
+    border-radius: var(--digilist-radius-sm, 4px);
+    background: var(--ds-color-surface-hover);
+}
+
+/* Animations */
+@keyframes skeletonPulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes skeletonWave {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

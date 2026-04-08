@@ -1,0 +1,192 @@
+/* RichTextEditor Styles — Quill Snow theme + DS token overrides */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-2);
+}
+
+.label {
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+    margin-bottom: var(--ds-size-1);
+}
+
+.description {
+    color: var(--ds-color-neutral-text-subtle);
+    margin-bottom: var(--ds-size-2);
+}
+
+.editorWrapper {
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    background: var(--ds-color-neutral-surface-default);
+    transition: border-color 0.15s ease;
+    overflow: hidden;
+}
+
+.editorWrapper:focus-within {
+    border-color: var(--ds-color-accent-border-default);
+    outline: 2px solid var(--ds-color-accent-border-subtle);
+    outline-offset: 0;
+}
+
+.editorError {
+    border-color: var(--ds-color-danger-border-default);
+}
+
+.editorError:focus-within {
+    border-color: var(--ds-color-danger-border-default);
+    outline-color: var(--ds-color-danger-border-subtle);
+}
+
+.editorDisabled {
+    background: var(--ds-color-neutral-surface-default);
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ─── Quill Snow theme overrides with DS tokens ─── */
+
+/* Remove Quill's own border — we use the wrapper border */
+.editorWrapper :global(.ql-toolbar.ql-snow) {
+    border: none !important;
+    border-bottom: 1px solid var(--ds-color-neutral-border-default) !important;
+    background: var(--ds-color-neutral-surface-default);
+    padding: var(--ds-size-2) var(--ds-size-3);
+}
+
+.editorWrapper :global(.ql-container.ql-snow) {
+    border: none !important;
+    font-size: var(--ds-font-size-md);
+    font-family: inherit;
+}
+
+/* Editor content area */
+.editorWrapper :global(.ql-editor) {
+    min-height: var(--rte-min-height, 200px);
+    padding: var(--ds-size-4);
+    color: var(--ds-color-neutral-text-default);
+    line-height: 1.6;
+    font-size: var(--ds-font-size-md);
+}
+
+.editorWrapper :global(.ql-editor p) {
+    margin-bottom: 0.5em;
+}
+
+/* Placeholder */
+.editorWrapper :global(.ql-editor.ql-blank::before) {
+    color: var(--ds-color-neutral-text-subtle);
+    font-style: normal;
+    left: var(--ds-size-4);
+    right: var(--ds-size-4);
+}
+
+/* Toolbar buttons */
+.editorWrapper :global(.ql-toolbar .ql-stroke) {
+    stroke: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar .ql-fill) {
+    fill: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar .ql-picker) {
+    color: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar .ql-picker-label) {
+    color: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar button:hover .ql-stroke),
+.editorWrapper :global(.ql-toolbar .ql-picker-label:hover .ql-stroke) {
+    stroke: var(--ds-color-accent-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar button:hover .ql-fill),
+.editorWrapper :global(.ql-toolbar .ql-picker-label:hover .ql-fill) {
+    fill: var(--ds-color-accent-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar button.ql-active .ql-stroke) {
+    stroke: var(--ds-color-accent-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar button.ql-active .ql-fill) {
+    fill: var(--ds-color-accent-text-default);
+}
+
+/* Picker dropdown (header selector, etc.) */
+.editorWrapper :global(.ql-toolbar .ql-picker-options) {
+    background: var(--ds-color-neutral-surface-default);
+    border-color: var(--ds-color-neutral-border-default);
+}
+
+.editorWrapper :global(.ql-toolbar .ql-picker-item) {
+    color: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-toolbar .ql-picker-item:hover) {
+    color: var(--ds-color-accent-text-default);
+}
+
+/* Tooltip / link editor popup */
+.editorWrapper :global(.ql-snow .ql-tooltip) {
+    background: var(--ds-color-neutral-surface-default);
+    border-color: var(--ds-color-neutral-border-default);
+    color: var(--ds-color-neutral-text-default);
+    box-shadow: var(--digilist-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.15));
+}
+
+.editorWrapper :global(.ql-snow .ql-tooltip input[type="text"]) {
+    background: var(--ds-color-neutral-surface-default);
+    border-color: var(--ds-color-neutral-border-default);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-snow .ql-tooltip a) {
+    color: var(--ds-color-accent-text-default);
+}
+
+/* Links in content */
+.editorWrapper :global(.ql-editor a) {
+    color: var(--ds-color-accent-text-default);
+}
+
+/* Headings in content */
+.editorWrapper :global(.ql-editor h2) {
+    font-size: var(--ds-font-size-xl);
+    font-weight: var(--ds-font-weight-semibold);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.editorWrapper :global(.ql-editor h3) {
+    font-size: var(--ds-font-size-lg);
+    font-weight: var(--ds-font-weight-semibold);
+    color: var(--ds-color-neutral-text-default);
+}
+
+/* Lists */
+.editorWrapper :global(.ql-editor ol),
+.editorWrapper :global(.ql-editor ul) {
+    padding-left: var(--ds-size-6);
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--ds-size-1);
+}
+
+.characterCount {
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.characterCountWarning {
+    color: var(--ds-color-warning-text-default);
+    font-weight: var(--ds-font-weight-medium);
+}

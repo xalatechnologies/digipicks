@@ -1,0 +1,108 @@
+/* InfoGrid CSS Module */
+
+/* Grid Container */
+.grid {
+    display: grid;
+    width: 100%;
+}
+
+/* Column Variants */
+.columns-1 {
+    grid-template-columns: 1fr;
+}
+
+.columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Gap Variants */
+.gap-sm {
+    gap: var(--ds-size-2);
+}
+
+.gap-md {
+    gap: var(--ds-size-4);
+}
+
+.gap-lg {
+    gap: var(--ds-size-6);
+}
+
+/* Grid Item */
+.item {
+    display: flex;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-3);
+    transition: background-color var(--ds-transition-fast);
+}
+
+.item.highlighted {
+    background: var(--ds-color-accent-surface-subtle);
+    border-radius: var(--digilist-radius-md, 8px);
+}
+
+/* Variant: Bordered */
+.variant-bordered .item {
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+}
+
+/* Variant: Striped */
+.variant-striped .item:nth-child(even) {
+    background: var(--ds-color-neutral-surface-subtle);
+}
+
+/* Icon */
+.icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: var(--ds-size-1);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Content */
+.content {
+    flex: 1;
+    min-width: 0;
+}
+
+.label {
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-subtle);
+    margin-bottom: var(--ds-size-1);
+}
+
+.value {
+    font-size: var(--ds-font-size-md);
+    color: var(--ds-color-neutral-text-default);
+    word-break: break-word;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+
+    .columns-2,
+    .columns-3,
+    .columns-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .columns-3,
+    .columns-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

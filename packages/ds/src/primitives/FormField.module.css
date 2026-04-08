@@ -1,0 +1,29 @@
+/**
+ * FormField styles
+ * @deprecated This component is deprecated. Use `Field` from `@digdir/designsystemet-react`.
+ */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-1);
+}
+
+.label {
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.required {
+    color: var(--ds-color-danger-text-default);
+    margin-left: 2px;
+}
+
+.description {
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.error {
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-danger-text-default);
+}

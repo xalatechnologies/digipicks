@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-size-md);
+    padding: var(--ds-size-3xl);
+    text-align: center;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    color: var(--ds-color-text-subtle);
+    font-size: var(--digilist-font-size-3xl, 32px);
+}
+
+.title {
+    margin: 0;
+    font-size: var(--ds-font-size-xl);
+    font-weight: var(--ds-font-weight-semibold);
+    color: var(--ds-color-text-default);
+}
+
+.description {
+    margin: 0;
+    max-width: 400px;
+    font-size: var(--ds-font-size-md);
+    color: var(--ds-color-text-subtle);
+    line-height: var(--ds-line-height-normal);
+}
+
+.action {
+    margin-top: var(--ds-size-md);
+}

@@ -1,0 +1,138 @@
+.statCard {
+    padding: var(--ds-size-5);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Override Digdir Card's default tinted background with neutral surface */
+    background-color: var(--ds-color-neutral-surface-default) !important;
+}
+
+.statCardClickable:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ds-shadow-md);
+}
+
+.statCardHeader {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.statCardIconWrap {
+    opacity: 0.5;
+}
+
+.statCardValue {
+    margin: 0;
+}
+
+.statCardTrend {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-1);
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.statCardTrendPositive {
+    composes: statCardTrend;
+    color: var(--ds-color-success-text-default);
+}
+
+.statCardTrendNegative {
+    composes: statCardTrend;
+    color: var(--ds-color-danger-text-default);
+}
+
+.statCardDescription {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* ActivityItem */
+.activityItem {
+    padding: var(--ds-size-4);
+    border-radius: var(--digilist-radius-md, 8px);
+    background-color: var(--ds-color-neutral-surface-hover);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.activityItemClickable:hover {
+    transform: translateX(4px);
+    box-shadow: var(--ds-shadow-sm);
+    background-color: var(--ds-color-neutral-surface-active);
+}
+
+.activityDot {
+    width: var(--ds-size-2);
+    height: var(--ds-size-2);
+    border-radius: var(--ds-border-radius-full);
+    flex-shrink: 0;
+    margin-top: var(--ds-size-1);
+}
+
+.activityTitle {
+    margin: 0;
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.activityDescription {
+    margin: 0;
+    margin-top: var(--ds-size-1);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.activityTime {
+    margin: 0;
+    margin-top: var(--ds-size-2);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* ActivityFeed */
+.feedTitle {
+    margin-bottom: var(--ds-size-4);
+}
+
+/* QuickActionCard */
+.quickAction {
+    padding: var(--ds-size-4);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quickAction:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ds-shadow-md);
+}
+
+.quickActionDisabled {
+    padding: var(--ds-size-4);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.quickActionIconWrap {
+    width: var(--ds-size-10);
+    height: var(--ds-size-10);
+    border-radius: var(--digilist-radius-md, 8px);
+    background-color: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-text-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.quickActionTitle {
+    margin: 0;
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.quickActionDescription {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.activityContent {
+    flex: 1;
+    min-width: 0;
+}

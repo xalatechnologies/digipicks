@@ -1,0 +1,40 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-4);
+}
+
+.search {
+  flex: 1 1 200px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.filterButton {
+  position: relative;
+}
+
+.filterBadge {
+  position: absolute;
+  top: calc(-1 * var(--ds-size-1));
+  right: calc(-1 * var(--ds-size-1));
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-accent-base-default);
+}
+
+.resultCount {
+  margin: 0;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.extra {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+}

@@ -1,0 +1,68 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "types": [],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@digilist-saas/sdk": [
+                "./packages/sdk/src"
+            ],
+            "@digilist-saas/sdk/*": [
+                "./packages/sdk/src/*"
+            ],
+            "@digilist-saas/shared": [
+                "./packages/shared/src"
+            ],
+            "@digilist-saas/shared/*": [
+                "./packages/shared/src/*"
+            ],
+            "@digilist-saas/i18n": [
+                "./packages/i18n/src"
+            ],
+            "@digilist-saas/ds": [
+                "./packages/ds/src"
+            ],
+            "@digilist-saas/ds/*": [
+                "./packages/ds/src/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        "docs",
+        "apps",
+        "packages/shared",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/*.stories.tsx",
+        "**/*.stories.ts",
+        "**/__tests__/**",
+        "tests/**",
+        "scripts/**",
+        "**/_archived/**",
+        "seeds_archived",
+        "convex/seeds/seedHamarImages.ts",
+        "convex/auth/callback.ts"
+    ]
+}

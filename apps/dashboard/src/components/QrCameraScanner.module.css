@@ -1,0 +1,63 @@
+/* QrCameraScanner — Camera-based QR code scanning */
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--ds-border-radius-md);
+  border: 2px solid var(--ds-color-accent-border-default);
+  background: var(--ds-color-neutral-background-subtle);
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.canvas {
+  display: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.scanRegion {
+  width: 60%;
+  height: 60%;
+  border: 2px solid var(--ds-color-accent-base-default);
+  border-radius: var(--ds-border-radius-sm);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--ds-size-3);
+  padding: var(--ds-size-3) 0;
+}
+
+.startPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-size-3);
+  padding: var(--ds-size-8);
+  text-align: center;
+  color: var(--ds-color-neutral-text-subtle);
+}

@@ -1,0 +1,80 @@
+.exportButton {
+  min-height: 44px;
+}
+
+.filterCard {
+  padding: var(--ds-size-4);
+}
+
+.filterField {
+  flex: 1;
+}
+
+.timelineCard {
+  padding: var(--ds-size-5);
+}
+
+.loadingWrapper {
+  padding: var(--ds-size-8);
+}
+
+.emptyWrapper {
+  padding: var(--ds-size-8);
+  text-align: center;
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.timelineEntry {
+  position: relative;
+}
+
+.timelineColumn {
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.timelineDot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--ds-border-radius-full);
+  flex-shrink: 0;
+}
+
+.timelineLine {
+  flex: 1;
+  width: 2px;
+  background-color: var(--ds-color-neutral-border-default);
+  margin-top: var(--ds-size-1);
+}
+
+.contentCard {
+  flex: 1;
+  padding: var(--ds-size-4);
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+  margin-bottom: var(--ds-size-2);
+}
+
+.contentTitle {
+  margin: 0;
+  font-weight: 600;
+}
+
+.contentUser {
+  margin: 0;
+  margin-top: var(--ds-size-1);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.contentTimestamp {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.fullWidth {
+  width: 100%;
+}

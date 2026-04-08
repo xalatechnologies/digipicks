@@ -1,0 +1,104 @@
+/* =============================================================================
+ * Pricing Page — Web App
+ * Tier cards with CTA
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+/* Header */
+.headerSection {
+  text-align: center;
+  padding-bottom: var(--ds-size-6);
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Tier grid */
+.tierGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--ds-size-5);
+}
+
+/* Tier card */
+.tierCard {
+  padding: var(--ds-size-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.tierName {
+  margin: 0;
+}
+
+.tierDescription {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  flex: 1;
+}
+
+.tierPrice {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.tierInterval {
+  color: var(--ds-color-neutral-text-subtle);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+/* Benefits list */
+.benefitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+}
+
+.benefitItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.benefitCheck {
+  color: var(--ds-color-success-text-default);
+  flex-shrink: 0;
+}
+
+/* CTA section */
+.ctaSection {
+  text-align: center;
+  padding: var(--ds-size-6) 0;
+}
+
+.ctaText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-8) 0;
+}
+
+.emptyText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

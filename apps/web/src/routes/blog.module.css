@@ -1,0 +1,69 @@
+/* =============================================================================
+ * Blog Page — Web App
+ * Guide listing grid
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+/* Header */
+.headerSection {
+  text-align: center;
+  padding-bottom: var(--ds-size-6);
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Guide grid */
+.guideGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--ds-size-5);
+}
+
+/* Guide card */
+.guideCard {
+  padding: var(--ds-size-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-2);
+}
+
+.guideBadge {
+  margin: 0;
+  color: var(--ds-color-brand-1-text-default);
+  font-weight: var(--ds-font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.guideTitle {
+  margin: 0;
+}
+
+.guideDescription {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  flex: 1;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-8) 0;
+}
+
+.emptyText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

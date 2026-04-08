@@ -1,0 +1,28 @@
+/* Dashboard sidebar logo zone — configurable branding */
+
+.logoInner {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.logoImg {
+  height: 40px;
+  width: auto;
+}
+
+.logoTitle {
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-bold);
+  color: var(--ds-color-accent-text-default);
+  line-height: var(--ds-font-line-height-heading);
+  letter-spacing: var(--ds-font-letter-spacing-wide);
+}
+
+.logoSubtitle {
+  font-size: var(--ds-font-size-2xs);
+  color: var(--ds-color-neutral-text-subtle);
+  letter-spacing: var(--ds-font-letter-spacing-wide);
+  margin-top: 2px;
+  text-transform: uppercase;
+}

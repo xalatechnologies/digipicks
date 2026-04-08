@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client", "google.maps"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@digilist-saas/sdk": ["../../packages/sdk/src"],
+      "@digilist-saas/sdk/*": ["../../packages/sdk/src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "eslint.config.js", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}

@@ -1,0 +1,439 @@
+/* LoginComponents — design tokens only, no magic numbers */
+
+/* LoginOption — SSO provider button */
+.loginOption {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+  width: 100%;
+  padding: var(--ds-size-3);
+  height: auto;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.loginOptionIcon {
+  flex-shrink: 0;
+}
+
+.loginOptionTitle {
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.loginOptionDescription {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-top: var(--ds-size-0);
+}
+
+/* FeatureItem */
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-size-3);
+}
+
+.featureItemIcon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--digilist-radius-md, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featureItemIconLight {
+  /* Translucent surface on accent — theme contrast token at 15% */
+  background-color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 15%, transparent);
+  color: var(--ds-color-accent-base-contrast-default);
+}
+
+.featureItemIconDark {
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.featureItemTitle {
+  font-weight: var(--ds-font-weight-medium);
+  margin: 0;
+}
+
+.featureItemTitleLight {
+  color: var(--ds-color-accent-base-contrast-default);
+}
+
+.featureItemTitleDark {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.featureItemDescription {
+  margin: 0;
+  margin-top: var(--ds-size-1);
+}
+
+.featureItemDescriptionLight {
+  color: var(--ds-color-accent-base-contrast-subtle);
+}
+
+.featureItemDescriptionDark {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.featureItemDescriptionSize {
+  font-size: var(--ds-font-size-xs);
+}
+
+/* IntegrationBadge */
+.integrationBadge {
+  padding: var(--ds-size-1) var(--ds-size-3);
+  border-radius: var(--ds-border-radius-full);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.integrationBadgeLight {
+  background-color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 15%, transparent);
+  color: var(--ds-color-accent-base-contrast-default);
+}
+
+.integrationBadgeDark {
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-default);
+}
+
+/* DemoLoginGrid */
+.demoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-size-2);
+}
+
+.demoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-size-1);
+  padding: var(--ds-size-3) var(--ds-size-2);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--digilist-radius-md, 8px);
+  background: var(--ds-color-neutral-surface-default);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  color: inherit;
+}
+
+.demoCard:hover {
+  background: var(--ds-color-neutral-surface-hover);
+  border-color: var(--demo-card-color, var(--ds-color-accent-base-default));
+}
+
+.demoAvatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--ds-border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--digilist-color-contrast-light, #fff);
+  letter-spacing: 0.02em;
+}
+
+.demoInfo {
+  text-align: center;
+}
+
+.demoName {
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.demoRole {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-top: var(--ds-size-0);
+}
+
+/* LoginFooterLink */
+.loginFooterLink {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.loginFooterLink:hover {
+  color: var(--ds-color-accent-text-default);
+}
+
+/* LoginDivider */
+.loginDivider {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-4);
+  margin: var(--ds-size-4) 0;
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}
+
+.loginDividerLine {
+  flex: 1;
+  height: 1px;
+  background: var(--ds-color-neutral-border-default);
+}
+
+/* LoginLayout */
+.loginLayout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.loginLeft {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ds-color-neutral-background-default);
+}
+
+.loginMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--ds-size-6) var(--ds-size-10);
+  max-width: 560px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Mobile: stack panels vertically, hide right panel */
+@media (max-width: 767px) {
+  .loginLayout {
+    flex-direction: column;
+  }
+
+  .loginLeft {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .loginRight {
+    display: none;
+  }
+
+  .loginMain {
+    max-width: 480px;
+    padding: var(--ds-size-6) var(--ds-size-5);
+  }
+
+  .loginFooter {
+    padding: var(--ds-size-4) var(--ds-size-5);
+  }
+
+  .loginFooterLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--ds-size-3);
+  }
+
+  .loginCopyright {
+    text-align: center;
+  }
+
+  .loginBrandWrap {
+    margin-bottom: var(--ds-size-4);
+  }
+
+  .loginLogoImg {
+    height: 48px;
+  }
+
+  .loginBrandName {
+    font-size: var(--digilist-font-size-xl, 1.25rem);
+  }
+
+  .loginSubtitle {
+    margin-bottom: var(--ds-size-3);
+  }
+}
+
+/* Small mobile */
+@media (max-width: 479px) {
+  .loginMain {
+    padding: var(--ds-size-5) var(--ds-size-4);
+  }
+
+  .loginLogoImg {
+    height: 40px;
+  }
+
+  .loginBrandName {
+    font-size: var(--digilist-font-size-lg, 1.125rem);
+  }
+
+  .loginOptions .loginOption {
+    padding: var(--ds-size-2) var(--ds-size-3);
+  }
+
+  .loginBrandWrap {
+    margin-bottom: var(--ds-size-3);
+  }
+
+  .loginHeading {
+    margin-bottom: var(--ds-size-1);
+  }
+
+  .loginSubtitle {
+    margin-bottom: var(--ds-size-2);
+  }
+
+  .loginDivider {
+    margin: var(--ds-size-3) 0;
+  }
+
+  .loginFooter {
+    padding: var(--ds-size-3) var(--ds-size-4);
+  }
+}
+
+.loginBrandWrap {
+  margin-bottom: var(--ds-size-6);
+}
+
+.loginLogoLink {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.loginLogoWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.loginLogoImg {
+  height: 56px;
+  width: auto;
+}
+
+.loginBrandName {
+  font-size: var(--digilist-font-size-2xl, 1.5rem);
+  font-weight: var(--ds-font-weight-bold);
+  color: var(--ds-color-accent-base-default);
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+}
+
+.loginBrandTagline {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  letter-spacing: 0.1em;
+  margin-top: var(--ds-size-0);
+}
+
+.loginHeading {
+  margin-bottom: var(--ds-size-1);
+}
+
+.loginSubtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-4);
+}
+
+.loginOptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-2);
+}
+
+.loginFooter {
+  padding: var(--ds-size-4) var(--ds-size-10);
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+  text-align: center;
+}
+
+.loginFooterLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-size-2);
+  margin-bottom: var(--ds-size-2);
+  flex-wrap: wrap;
+}
+
+.loginFooterSeparator {
+  color: var(--ds-color-neutral-border-default);
+  user-select: none;
+}
+
+.loginCopyright {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  font-size: var(--ds-font-size-xs);
+}
+
+/* Right panel */
+.loginRight {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--ds-size-6) var(--ds-size-10);
+  background: linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, var(--ds-color-accent-base-active) 100%);
+}
+
+.loginRightInner {
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.loginPanelHeader {
+  margin-bottom: var(--ds-size-6);
+}
+
+.loginPanelEyebrow {
+  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 70%, transparent);
+  text-transform: uppercase;
+  letter-spacing: var(--ds-letter-spacing-wider, 0.1em);
+  font-weight: var(--ds-font-weight-medium);
+  margin-bottom: var(--ds-size-2);
+}
+
+.loginPanelTitle {
+  color: var(--ds-color-accent-base-contrast-default);
+  margin-bottom: var(--ds-size-3);
+  line-height: var(--ds-line-height-condensed);
+}
+
+.loginPanelDescription {
+  color: var(--ds-color-accent-base-contrast-subtle);
+  line-height: 1.6;
+}
+
+.loginFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+  margin-bottom: var(--ds-size-6);
+}
+
+.loginIntegrationsLabel {
+  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 60%, transparent);
+  margin-bottom: var(--ds-size-2);
+  text-transform: uppercase;
+  letter-spacing: var(--ds-letter-spacing-wide, 0.05em);
+}
+
+.loginIntegrationsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-2);
+}

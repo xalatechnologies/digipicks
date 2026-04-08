@@ -1,0 +1,6 @@
+/* Top alerts container - used below header */
+
+.alertWrapper {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  padding-bottom: 0;
+}

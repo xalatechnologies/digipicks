@@ -1,0 +1,30 @@
+{
+    "defaults": {
+        "booking": true,
+        "seasonal-leases": true,
+        "messaging": true,
+        "analytics": true,
+        "integrations": true,
+        "gdpr": true,
+        "reviews": true,
+        "mfa": false,
+        "sso": false,
+        "guest-booking": false,
+        "add-on-services": false,
+        "multi-resource-events": false,
+        "ubw-export": false,
+        "ssal-data-exit": false
+    },
+    "tenants": {
+        "steinkjer": {
+            "guest-booking": true,
+            "add-on-services": true,
+            "multi-resource-events": true,
+            "ubw-export": true,
+            "ssal-data-exit": true,
+            "seasonal-leases": false,
+            "mfa": false,
+            "sso": false
+        }
+    }
+}

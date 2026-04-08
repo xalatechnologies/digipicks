@@ -1,0 +1,70 @@
+/* BarChart - Horizontal bar chart container and layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.label {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.barContainer {
+  flex: 1;
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--digilist-radius-sm, 4px);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: var(--digilist-radius-sm, 4px);
+  transition: width 0.3s ease;
+}
+
+.value {
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  flex-shrink: 0;
+}
+
+/* VerticalBarChart */
+.verticalContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.verticalItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-size-2);
+}
+
+.verticalValue {
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.verticalBar {
+  border-radius: var(--digilist-radius-sm, 4px) var(--digilist-radius-sm, 4px) 0 0;
+  min-height: 4px;
+  transition: height 0.3s ease;
+}
+
+.verticalLabel {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  text-align: center;
+  white-space: nowrap;
+}

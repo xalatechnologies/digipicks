@@ -1,0 +1,57 @@
+.statCard {
+  padding: var(--ds-size-5);
+}
+
+.statLabel {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.statValue {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.cellTitle {
+  font-weight: 600;
+  margin: 0;
+}
+
+.cellSubtle {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.cellTabular {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.bulkBar {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  background-color: var(--ds-color-accent-surface-default);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.bulkBarText {
+  margin: 0;
+}
+
+.loadingCard {
+  padding: var(--ds-size-12);
+}
+
+.emptyCard {
+  padding: var(--ds-size-12);
+}
+
+.tableCard {
+  padding: 0;
+}
+
+.fullWidthTable {
+  width: 100%;
+}

@@ -1,0 +1,12 @@
+.accountTypeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ds-size-3);
+}
+
+.accountTypeButton {
+  min-height: 120px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+}

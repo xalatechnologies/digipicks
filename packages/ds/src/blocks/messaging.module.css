@@ -1,0 +1,360 @@
+/* =============================================================================
+ * Messaging Components CSS Module
+ * ============================================================================= */
+
+/* NotificationBell */
+.bellButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ds-size-10);
+    height: var(--ds-size-10);
+    border-radius: var(--digilist-radius-md, 8px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--ds-color-neutral-text-default);
+    transition: background-color 0.2s;
+}
+
+.bellButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.bellBadge {
+    position: absolute;
+    top: var(--ds-size-1);
+    right: var(--ds-size-1);
+    min-width: var(--ds-size-5);
+    height: var(--ds-size-5);
+    padding: 0 var(--ds-size-1);
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-danger-base-default);
+    color: var(--ds-color-neutral-background-default);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ConversationListItem */
+.conversationButton {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-3) var(--ds-size-4);
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    border-left: 3px solid transparent;
+    transition: background-color 0.2s;
+}
+
+.conversationButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.conversationButtonSelected {
+    composes: conversationButton;
+    background-color: var(--ds-color-accent-surface-default);
+    border-left-color: var(--ds-color-accent-base-default);
+}
+
+.avatarWrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: var(--ds-size-11);
+    height: var(--ds-size-11);
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-accent-surface-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-accent-base-default);
+    font-weight: var(--ds-font-weight-semibold);
+    font-size: var(--ds-font-size-md);
+}
+
+.onlineDot {
+    position: absolute;
+    bottom: var(--ds-size-half);
+    right: var(--ds-size-half);
+    width: var(--ds-size-3);
+    height: var(--ds-size-3);
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-success-base-default);
+    border: 2px solid var(--ds-color-neutral-background-default);
+}
+
+.conversationContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.conversationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.conversationName {
+    color: var(--ds-color-neutral-text-default);
+    font-size: var(--ds-font-size-sm);
+}
+
+.conversationNameUnread {
+    composes: conversationName;
+    font-weight: var(--ds-font-weight-semibold);
+}
+
+.conversationNameRead {
+    composes: conversationName;
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.conversationTime {
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.conversationPreview {
+    font-size: var(--ds-font-size-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: var(--ds-size-half);
+}
+
+.conversationPreviewUnread {
+    composes: conversationPreview;
+    color: var(--ds-color-neutral-text-default);
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.conversationPreviewRead {
+    composes: conversationPreview;
+    color: var(--ds-color-neutral-text-subtle);
+    font-weight: var(--ds-font-weight-regular);
+}
+
+.unreadBadge {
+    min-width: var(--ds-size-5);
+    height: var(--ds-size-5);
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--ds-color-neutral-background-default);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--ds-size-1);
+}
+
+/* ConversationList */
+.listWrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.searchWrap {
+    padding: var(--ds-size-4);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.searchInput {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-2) var(--ds-size-3);
+    background-color: var(--ds-color-neutral-surface-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    border: 1px solid var(--ds-color-neutral-border-default);
+}
+
+.searchInputField {
+    flex: 1;
+    border: none !important;
+    background: none;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.searchInputField:focus,
+.searchInputField:focus-visible,
+.searchInputField:active {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.filterTabs {
+    display: flex;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-3) var(--ds-size-4);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+    overflow-x: auto;
+}
+
+.filterTab {
+    padding: var(--ds-size-1) var(--ds-size-3);
+    border-radius: var(--ds-border-radius-full);
+    border: none;
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-medium);
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: var(--ds-color-neutral-surface-default);
+    color: var(--ds-color-neutral-text-default);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.filterTabActive {
+    composes: filterTab;
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--ds-color-neutral-background-default);
+}
+
+.filterTabCount {
+    margin-left: var(--ds-size-1);
+    opacity: 0.8;
+}
+
+.scrollArea {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.centeredSpinner {
+    display: flex;
+    justify-content: center;
+    padding: var(--ds-size-8);
+}
+
+.emptyMessage {
+    padding: var(--ds-size-8);
+    text-align: center;
+}
+
+.emptyMessageText {
+    color: var(--ds-color-neutral-text-subtle);
+    margin: 0;
+}
+
+/* MessageBubble */
+.bubbleRowSent {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--ds-size-2);
+}
+
+.bubbleRowReceived {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: var(--ds-size-2);
+}
+
+.bubbleSent {
+    max-width: 70%;
+    padding: var(--ds-size-3) var(--ds-size-4);
+    border-radius: var(--digilist-radius-lg, 12px) var(--digilist-radius-lg, 12px) var(--digilist-radius-sm, 4px) var(--digilist-radius-lg, 12px);
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--ds-color-neutral-background-default);
+}
+
+.bubbleReceived {
+    max-width: 70%;
+    padding: var(--ds-size-3) var(--ds-size-4);
+    border-radius: var(--digilist-radius-lg, 12px) var(--digilist-radius-lg, 12px) var(--digilist-radius-lg, 12px) var(--digilist-radius-sm, 4px);
+    background-color: var(--ds-color-neutral-surface-default);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.bubbleContent {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.bubbleMeta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--ds-size-1);
+    margin-top: var(--ds-size-1);
+}
+
+.bubbleTime {
+    font-size: var(--ds-font-size-xs);
+    opacity: 0.7;
+}
+
+.readReceipt {
+    opacity: 0.7;
+}
+
+/* ChatThread */
+.chatWrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chatHeader {
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--ds-size-4);
+}
+
+.dateSeparator {
+    text-align: center;
+    margin: var(--ds-size-4) 0;
+}
+
+.dateSeparatorLabel {
+    padding: var(--ds-size-1) var(--ds-size-3);
+    background-color: var(--ds-color-neutral-surface-default);
+    border-radius: var(--ds-border-radius-full);
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.chatInputWrap {
+    padding: var(--ds-size-4);
+    border-top: 1px solid var(--ds-color-neutral-border-subtle);
+    background-color: var(--ds-color-neutral-background-subtle);
+}
+
+.chatInputRow {
+    display: flex;
+    gap: var(--ds-size-2);
+    align-items: center;
+}
+
+.chatInputField {
+    flex: 1;
+    padding: var(--ds-size-3);
+    border-radius: var(--digilist-radius-md, 8px);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    font-size: var(--ds-font-size-sm);
+    outline: none;
+}
+
+.chatInputField:focus {
+    border-color: var(--ds-color-accent-base-default);
+}

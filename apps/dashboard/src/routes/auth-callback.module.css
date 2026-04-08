@@ -1,0 +1,12 @@
+/**
+ * AuthCallbackPage Styles
+ */
+
+.container {
+    padding: var(--ds-size-8);
+}
+
+.centerText {
+    margin: 0;
+    text-align: center;
+}

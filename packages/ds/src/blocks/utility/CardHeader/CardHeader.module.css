@@ -1,0 +1,155 @@
+/* CardHeader Component Styles */
+
+.cardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ds-size-4);
+    padding: var(--ds-size-6);
+}
+
+.cardHeader.withDivider {
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+/* Section variant — compact header with subtle background */
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-size-3);
+    padding: 14px 16px;
+    background: var(--ds-color-neutral-surface-subtle);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+/* Left Content */
+.leftContent {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ds-size-3);
+    flex: 1;
+    min-width: 0;
+    /* Allow text truncation */
+}
+
+.backButton {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    color: var(--ds-color-neutral-text-default);
+    cursor: pointer;
+    transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.backButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-accent-text-default);
+}
+
+.backButton:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+.backButton:active {
+    background-color: var(--ds-color-neutral-surface-active);
+}
+
+/* Text Content */
+.textContent {
+    flex: 1;
+    min-width: 0;
+    /* Allow text truncation */
+}
+
+.title {
+    margin: 0;
+    font-size: var(--ds-font-size-heading-md);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-line-height-heading);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.headerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--ds-border-radius-md, 6px);
+    background: var(--ds-color-neutral-background-default, #fff);
+    color: var(--ds-color-neutral-text-default);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+/* In section headers, center-align everything on one line */
+.sectionHeader .leftContent {
+    align-items: center;
+}
+
+.sectionTitle {
+    margin: 0;
+    color: var(--ds-color-neutral-text-default);
+    font-weight: var(--ds-font-weight-semibold, 600);
+}
+
+.subtitle {
+    margin: 0;
+    margin-top: var(--ds-size-1);
+    font-size: var(--ds-font-size-body-sm);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-line-height-body);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 479px) {
+    .cardHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .leftContent {
+        width: 100%;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .backButton {
+        transition: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .backButton {
+        border: 1px solid currentColor;
+    }
+
+    .cardHeader.withDivider {
+        border-bottom-width: 2px;
+    }
+}

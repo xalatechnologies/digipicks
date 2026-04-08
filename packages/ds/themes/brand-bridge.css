@@ -1,0 +1,47 @@
+/**
+ * Brand → Design System Bridge
+ *
+ * Maps tenant brand CSS custom properties (set by getThemeCSS at runtime)
+ * to Digdir Design System tokens. This allows tenant branding to override
+ * the platform theme without breaking the DS token contract.
+ *
+ * Loaded once in the app shell. The fallback values ensure the app works
+ * without a tenant brand config (falls through to the platform theme).
+ *
+ * Brand vars set by getThemeCSS:
+ *   --brand-primary, --brand-secondary, --brand-accent,
+ *   --brand-font-family, --brand-border-radius
+ *
+ * @layer ds.brand - Loaded after ds.app (highest priority among DS layers)
+ */
+
+@layer ds.brand {
+
+    :root {
+        /* ── Accent base → Brand primary ─────────────────────────── */
+        --ds-color-accent-base-default: var(--brand-primary, var(--ds-color-accent-base-default));
+        --ds-color-accent-border-strong: var(--brand-primary, var(--ds-color-accent-border-strong));
+        --ds-color-accent-text-subtle: var(--brand-primary, var(--ds-color-accent-text-subtle));
+
+        /* ── Neutral base → Brand secondary ──────────────────────── */
+        --ds-color-neutral-border-default: var(--brand-secondary, var(--ds-color-neutral-border-default));
+        --ds-color-neutral-text-subtle: var(--brand-secondary, var(--ds-color-neutral-text-subtle));
+
+        /* ── Pastell accent surface → Brand accent ───────────────── */
+        --ds-color-accent-surface-tinted: var(--brand-accent, var(--ds-color-accent-surface-tinted));
+        --ds-color-accent-surface-hover: var(--brand-accent, var(--ds-color-accent-surface-hover));
+
+        /* ── Background → Brand background ───────────────────────── */
+        --ds-color-neutral-background-default: var(--brand-background, var(--ds-color-neutral-background-default));
+
+        /* ── Text → Brand text ───────────────────────────────────── */
+        --ds-color-neutral-text-default: var(--brand-text, var(--ds-color-neutral-text-default));
+
+        /* ── Typography override ─────────────────────────────────── */
+        --ds-font-family: var(--brand-font-family, var(--ds-font-family));
+
+        /* ── Border radius override ──────────────────────────────── */
+        --ds-border-radius-md: var(--brand-border-radius, var(--ds-border-radius-md));
+    }
+
+}

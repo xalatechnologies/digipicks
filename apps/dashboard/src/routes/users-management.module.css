@@ -1,0 +1,98 @@
+/**
+ * UsersManagementPage Styles
+ *
+ * DS-token-based styling for users management page
+ */
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-text-default);
+    font-weight: var(--ds-font-weight-semibold);
+    flex-shrink: 0;
+}
+
+.userName {
+    margin: 0;
+    font-weight: 500;
+}
+
+.userEmail {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.statusBadgeActive {
+    background-color: var(--ds-color-success-surface-default);
+    color: var(--ds-color-success-text-default);
+}
+
+.statusBadgeInactive {
+    background-color: var(--ds-color-neutral-surface-default);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.inviteCard {
+    padding: var(--ds-size-5);
+}
+
+.inviteHeading {
+    margin: 0;
+    margin-bottom: var(--ds-size-4);
+}
+
+.inviteGrid {
+    align-items: end;
+}
+
+.inviteButton {
+    min-height: 44px;
+}
+
+.inviteInput {
+    width: 100%;
+}
+
+.headerButton {
+    min-height: 44px;
+}
+
+.statCard {
+    padding: var(--ds-size-4);
+}
+
+.statLabel {
+    color: var(--ds-color-neutral-text-subtle);
+    margin: 0;
+}
+
+.statValue {
+    margin: 0;
+}
+
+.statValueSuccess {
+    margin: 0;
+    color: var(--ds-color-success-text-default);
+}
+
+.tableCard {
+    padding: 0;
+    overflow: hidden;
+}
+
+.loadingContainer {
+    padding: var(--ds-size-8);
+}
+
+.dataTable {
+    width: 100%;
+}
+
+.pillDropdown {
+    min-width: 140px;
+}

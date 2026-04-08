@@ -1,0 +1,162 @@
+.root {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--digilist-radius-lg, 12px);
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.rootFullscreen {
+    composes: root;
+    border-radius: 0;
+    height: 100vh;
+}
+
+/* Wrapper div around the main image */
+.imageWrapper {
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+
+.imageWrapper[data-thumbnails="true"] {
+    height: calc(100% - 80px);
+}
+
+.imageWrapper[data-zoomable="true"] {
+    cursor: zoom-in;
+}
+
+.mainImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+}
+
+.mainImageFullscreen {
+    composes: mainImage;
+    object-fit: contain;
+}
+
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: var(--ds-border-radius-full);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.navButtonPrev {
+    composes: navButton;
+    left: var(--ds-size-3);
+}
+
+.navButtonNext {
+    composes: navButton;
+    right: var(--ds-size-3);
+}
+
+.counter {
+    position: absolute;
+    bottom: var(--ds-size-3);
+    left: var(--ds-size-3);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: var(--ds-size-1) var(--ds-size-3);
+    border-radius: var(--ds-border-radius-full);
+    backdrop-filter: blur(4px);
+    margin: 0;
+}
+
+.counter[data-has-thumbnails="true"] {
+    bottom: calc(80px + var(--ds-size-3));
+}
+
+.dotContainer {
+    position: absolute;
+    bottom: var(--ds-size-3);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--ds-size-2);
+}
+
+.dotContainer[data-has-thumbnails="true"] {
+    bottom: calc(80px + var(--ds-size-3));
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--ds-border-radius-full);
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 0;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.dotActive {
+    composes: dot;
+    width: 24px;
+    background-color: white;
+}
+
+.thumbnailStrip {
+    display: flex;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-2);
+    height: 80px;
+    overflow-x: auto;
+    align-items: center;
+}
+
+.thumbnailButton {
+    width: 70px;
+    height: 60px;
+    flex-shrink: 0;
+    border: 2px solid transparent;
+    border-radius: var(--digilist-radius-sm, 4px);
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+    background: none;
+}
+
+.thumbnailButtonActive {
+    composes: thumbnailButton;
+    border-color: var(--ds-color-accent-base-default);
+    opacity: 1;
+}
+
+.thumbnailImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.closeButton {
+    composes: navButton;
+    top: var(--ds-size-4);
+    right: var(--ds-size-4);
+    transform: none;
+}
+
+.fullscreenBackdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

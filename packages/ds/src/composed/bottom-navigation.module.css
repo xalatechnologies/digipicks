@@ -1,0 +1,119 @@
+.nav {
+    border-top: 1px solid var(--ds-color-neutral-border-subtle);
+    box-shadow: var(--ds-shadow-md);
+    transition: transform 0.3s ease;
+}
+
+.nav[data-fixed="true"] {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.nav[data-variant="surface"] {
+    background-color: var(--ds-color-neutral-surface-default);
+}
+
+.nav[data-variant="background"] {
+    background-color: var(--ds-color-neutral-background-default);
+}
+
+.nav[data-safe-area="true"] {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 64px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--ds-size-2);
+}
+
+/* Nav item (anchor or button) */
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 64px;
+    min-height: 48px;
+    max-width: 168px;
+    padding: var(--ds-size-2);
+    border: none;
+    background: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    border-radius: var(--digilist-radius-md, 8px);
+    gap: var(--ds-size-1);
+    -webkit-tap-highlight-color: var(--ds-color-accent-surface-hover);
+}
+
+/* Icon container */
+.iconWrap {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    color: var(--ds-color-neutral-text-subtle);
+    transition: color 0.2s ease;
+}
+
+.item[aria-current="page"] .iconWrap {
+    color: var(--ds-color-accent-base-default);
+}
+
+/* Badge */
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-danger-base-default);
+    color: var(--ds-color-danger-contrast-default);
+    font-size: var(--digilist-font-size-xs, 10px);
+    font-weight: var(--ds-font-weight-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+/* Label */
+.label {
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-subtle);
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.item[aria-current="page"] .label {
+    font-weight: var(--ds-font-weight-semibold);
+    color: var(--ds-color-accent-base-default);
+}
+
+/* Active indicator bar */
+.indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 2px;
+    background-color: var(--ds-color-accent-base-default);
+    border-radius: var(--ds-border-radius-full);
+}

@@ -1,0 +1,186 @@
+.container {
+    background-color: var(--ds-color-pilltabs-bg, var(--ds-color-neutral-surface-hover));
+    border-radius: var(--digilist-radius-lg, 12px);
+    padding: var(--ds-size-2) var(--ds-size-4);
+    border: 1px solid var(--ds-color-pilltabs-border, var(--ds-color-neutral-border-default));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tablist {
+    display: flex;
+    gap: var(--ds-size-1, 4px);
+    min-width: max-content;
+}
+
+/* Base tab button */
+.tab {
+    min-width: 100px;
+    min-height: 48px;
+    padding: var(--ds-size-3, 12px) var(--ds-size-3, 12px);
+    border-radius: var(--digilist-radius-md, 8px);
+    border: none;
+    cursor: pointer;
+    font-size: var(--ds-font-size-sm, 0.875rem);
+    font-weight: var(--ds-font-weight-medium, 500);
+    line-height: normal;
+    transition: all 0.2s ease;
+    background-color: transparent;
+    color: var(--ds-color-pilltabs-text, var(--ds-color-neutral-text-default));
+    text-align: center;
+    box-shadow: none;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-size-2, 8px);
+    opacity: 1;
+    box-sizing: border-box;
+}
+
+/* Expand to fill */
+.tab[data-expand="true"] {
+    flex: 1;
+}
+
+/* Size: small / compact — matches PillDropdown triggerSm for consistent height */
+.tab[data-size="sm"] {
+    min-width: 60px;
+    min-height: 40px;
+    padding: var(--ds-size-2, 8px) var(--ds-size-3, 12px);
+    font-size: var(--ds-font-size-xs, 0.75rem);
+}
+
+/* Active state */
+.tab[aria-selected="true"] {
+    background-color: var(--ds-color-pilltabs-active-bg, var(--ds-color-accent-base-default));
+    color: var(--ds-color-pilltabs-active-text, var(--ds-color-accent-base-contrast-default));
+    font-weight: var(--ds-font-weight-semibold, 600);
+    box-shadow: var(--ds-shadow-xs);
+}
+
+/* Per-tab color override (set via --pill-tab-color custom property) */
+/* Light mode: pastel bg + dark text */
+.tab[aria-selected="true"][style] {
+    background-color: var(--pill-tab-color, var(--ds-color-pilltabs-active-bg, var(--ds-color-accent-base-default)));
+    color: var(--digilist-color-contrast-dark, #1a1a1a);
+}
+
+.tab[aria-selected="true"][style] .badge {
+    background-color: rgba(0, 0, 0, 0.15);
+    color: var(--digilist-color-contrast-dark, #1a1a1a);
+}
+
+/* Dark mode: use explicit dark color if provided, otherwise derive via color-mix */
+[data-color-scheme="dark"] .tab[aria-selected="true"][style] {
+    background-color: var(--pill-tab-color-dark, color-mix(in srgb, var(--pill-tab-color) 35%, #0B0B12));
+    color: var(--digilist-color-contrast-muted-light, #e8e8e8);
+}
+
+[data-color-scheme="dark"] .tab[aria-selected="true"][style] .badge {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--digilist-color-contrast-muted-light, #e8e8e8);
+}
+
+@media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] .tab[aria-selected="true"][style] {
+        background-color: var(--pill-tab-color-dark, color-mix(in srgb, var(--pill-tab-color) 35%, #0B0B12));
+        color: var(--digilist-color-contrast-muted-light, #e8e8e8);
+    }
+
+    [data-color-scheme="auto"] .tab[aria-selected="true"][style] .badge {
+        background-color: rgba(255, 255, 255, 0.12);
+        color: var(--digilist-color-contrast-muted-light, #e8e8e8);
+    }
+}
+
+/* Disabled */
+.tab:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Step badge (wizard number circle) */
+.stepBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--ds-border-radius-full, 50%);
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-neutral-text-default);
+    font-size: 0.7rem;
+    font-weight: var(--digilist-font-weight-semibold, 600);
+    flex-shrink: 0;
+}
+
+.stepBadge[data-size="sm"] {
+    width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+}
+
+.stepBadge[data-active="true"] {
+    background-color: var(--ds-color-accent-base-contrast-default);
+    color: var(--ds-color-accent-base-default);
+}
+
+/* Icon wrapper */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Tab badge (count) */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: var(--ds-border-radius-full, 50%);
+    background-color: var(--ds-color-pilltabs-badge-bg, var(--ds-color-neutral-border-default));
+    color: var(--ds-color-pilltabs-badge-text, var(--ds-color-neutral-text-default));
+    font-size: 0.75rem;
+    font-weight: var(--digilist-font-weight-semibold, 600);
+    flex-shrink: 0;
+}
+
+.badge[data-size="sm"] {
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.65rem;
+}
+
+.badge[data-active="true"] {
+    background-color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 25%, transparent);
+    color: var(--ds-color-pilltabs-active-text, var(--ds-color-accent-base-contrast-default));
+}
+
+/* Mobile responsive */
+@media (max-width: 479px) {
+    .container {
+        padding: var(--ds-size-1) var(--ds-size-2);
+        border-radius: var(--digilist-radius-md, 8px);
+    }
+
+    .tablist {
+        gap: var(--ds-size-1);
+    }
+
+    .tab {
+        min-width: unset;
+        min-height: 36px;
+        padding: var(--ds-size-2) var(--ds-size-3);
+        font-size: var(--ds-font-size-xs);
+        gap: var(--ds-size-1);
+    }
+
+    .tab svg {
+        width: 14px;
+        height: 14px;
+    }
+}

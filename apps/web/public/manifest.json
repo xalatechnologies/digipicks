@@ -1,0 +1,23 @@
+{
+  "name": "Xala Booking",
+  "short_name": "Xala",
+  "description": "Norwegian municipal booking and resource management system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "lang": "no",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

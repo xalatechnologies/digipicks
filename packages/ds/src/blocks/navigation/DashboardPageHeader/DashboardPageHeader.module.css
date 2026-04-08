@@ -1,0 +1,217 @@
+/* DashboardPageHeader - Page-level header for dashboard routes */
+
+.root {
+  margin-bottom: var(--ds-size-4);
+}
+
+.root[data-sticky="true"] {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--ds-color-neutral-background-default);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  /*
+   * Bleed into .main's horizontal padding so the header spans
+   * full width. Negative top margin pulls the header up into
+   * .main's padding area in normal flow. The ::before pseudo
+   * covers the gap between the scroll container's padding edge
+   * and the border box when the header is in sticky state.
+   */
+  margin: calc(-1 * var(--ds-size-8)) calc(-1 * var(--ds-size-8)) var(--ds-size-4);
+  padding: 0 var(--ds-size-8) var(--ds-size-2);
+}
+
+/* Cover the gap between scroll container padding edge and sticky header border box */
+.root[data-sticky="true"]::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--ds-size-8));
+  left: 0;
+  right: 0;
+  height: var(--ds-size-8);
+  background-color: inherit;
+  pointer-events: none;
+}
+
+.root.bordered {
+  padding-bottom: var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-size-4);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-4);
+  flex: 1;
+  min-width: 0;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  color: var(--ds-color-accent-text-default);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--ds-border-radius-full);
+  text-decoration: none;
+  transition: background-color var(--ds-transition-default);
+}
+
+.backLink:hover {
+  background-color: var(--ds-color-accent-surface-hover);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--ds-color-accent-base-default);
+  outline-offset: 2px;
+}
+
+.titleBlock {
+  flex: 1;
+  min-width: 0;
+}
+
+.breadcrumb {
+  margin-bottom: var(--ds-size-2);
+}
+
+.title {
+  margin: 0 0 var(--ds-size-2) 0;
+}
+
+.root[data-sticky="true"] .title {
+  margin-bottom: 0;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--ds-size-3);
+  align-items: center;
+}
+
+/* Result count badge next to title */
+.count {
+  color: var(--ds-color-neutral-text-subtle);
+  font-weight: var(--ds-font-weight-regular);
+  margin-left: var(--ds-size-2);
+}
+
+/* Active filter tags row */
+.filterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-2);
+  align-items: center;
+}
+
+/* Removable filter chip */
+@keyframes filterChipPop {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  border-radius: var(--digilist-radius-pill, 100px);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  border: 1px solid var(--ds-color-accent-border-default);
+  animation: filterChipPop 0.25s ease both;
+}
+
+.filterChipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--ds-color-accent-text-default);
+  border-radius: var(--digilist-radius-pill, 100px);
+  font-size: var(--digilist-font-size-sm, 14px);
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.filterChipRemove:hover {
+  opacity: 1;
+}
+
+/* Clear all filters button */
+.clearAllBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ds-color-accent-text-default);
+  font-size: 0.8125rem;
+  text-decoration: underline;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.clearAllBtn:hover {
+  opacity: 0.8;
+}
+
+/* Row 2: toolbar / children slot */
+.toolbar {
+  margin-top: var(--ds-size-3);
+}
+
+/* When toolbar is the only content (no title/actions above), remove top margin */
+.toolbar:first-child {
+  margin-top: 0;
+}
+
+/* HeaderSearch inside DashboardPageHeader uses the lg variant */
+.root [class*="searchInputWrapper"] {
+  height: 68px;
+}
+
+/* Mobile: stack actions below on small screens */
+@media (max-width: 768px) {
+  .main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .filterTags {
+    justify-content: flex-start;
+  }
+}

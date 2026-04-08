@@ -1,0 +1,22 @@
+/* Magic Link Callback page styles */
+
+.page {
+  min-height: 100vh;
+  background-color: var(--ds-color-neutral-background-default);
+}
+
+.card {
+  text-align: center;
+  max-width: 400px;
+  padding: var(--ds-size-8);
+}
+
+.dangerHeading {
+  margin: 0;
+  color: var(--ds-color-danger-text-default);
+}
+
+.subtleText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

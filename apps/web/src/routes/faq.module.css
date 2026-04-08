@@ -1,0 +1,116 @@
+/* =============================================================================
+ * FAQ Page — Web App
+ * Categorized FAQ with search and expandable questions
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+/* Header */
+.headerSection {
+  text-align: center;
+  padding-bottom: var(--ds-size-6);
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Search */
+.searchCard {
+  padding: var(--ds-size-4);
+  margin-bottom: var(--ds-size-5);
+}
+
+.searchInput {
+  width: 100%;
+}
+
+/* Category filter */
+.categoryBar {
+  flex-wrap: wrap;
+}
+
+/* FAQ sections */
+.faqCard {
+  padding: var(--ds-size-5);
+}
+
+.faqSectionTitle {
+  margin: 0;
+  margin-bottom: var(--ds-size-3);
+}
+
+.faqButton {
+  width: 100%;
+  padding: var(--ds-size-3);
+  text-align: left;
+  justify-content: space-between;
+  border-radius: var(--ds-border-radius-md);
+}
+
+.faqButtonExpanded {
+  composes: faqButton;
+  background-color: var(--ds-color-neutral-surface-active);
+}
+
+.faqButtonCollapsed {
+  composes: faqButton;
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.faqQuestion {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.faqAnswer {
+  padding: var(--ds-size-4);
+  padding-top: var(--ds-size-3);
+}
+
+.faqAnswerText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  line-height: 1.6;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* No results */
+.noResults {
+  text-align: center;
+  padding: var(--ds-size-8) 0;
+}
+
+.noResultsText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Contact prompt */
+.contactCard {
+  padding: var(--ds-size-5);
+  text-align: center;
+  background-color: var(--ds-color-brand-1-surface-default);
+  border: 1px solid var(--ds-color-brand-1-border-subtle);
+}
+
+.contactText {
+  margin: 0;
+}
+
+.contactLink {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+}

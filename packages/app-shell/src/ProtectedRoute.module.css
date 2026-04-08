@@ -1,0 +1,50 @@
+/**
+ * ProtectedRoute styles — design tokens only
+ */
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--ds-color-neutral-background-default, #f5f5f5);
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--ds-color-neutral-border-subtle, #e0e0e0);
+  border-top-color: var(--ds-color-accent-border-default, #0062ba);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.accessDeniedContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  gap: var(--ds-size-4, 1rem);
+  padding: var(--ds-size-6, 1.5rem);
+  text-align: center;
+}
+
+.accessDeniedTitle {
+  font-size: var(--ds-font-size-2xl, 1.5rem);
+  font-weight: var(--ds-font-weight-semibold, 600);
+  color: var(--ds-color-danger-text-default, #c30000);
+  margin: 0;
+}
+
+.accessDeniedMessage {
+  font-size: var(--ds-font-size-base, 1rem);
+  color: var(--ds-color-neutral-text-subtle, #666);
+  margin: 0;
+}

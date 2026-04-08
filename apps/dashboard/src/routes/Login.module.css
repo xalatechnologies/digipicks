@@ -1,0 +1,22 @@
+/* Login page styles */
+
+.magicLinkCard {
+  margin-top: var(--ds-size-4);
+  padding: var(--ds-size-5);
+}
+
+.subtleText {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.cancelButton {
+  flex: 1;
+}
+
+.submitButton {
+  flex: 2;
+}
+
+.alertMargin {
+  margin-top: var(--ds-size-4);
+}

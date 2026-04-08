@@ -1,0 +1,44 @@
+/* CrudWizard — multi-step wizard layout for CRUD forms */
+
+.stepperCard {
+  padding: var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-default);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--digilist-radius-md, 8px);
+}
+
+.stepperScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-6);
+  min-height: 200px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--ds-size-4);
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+  gap: var(--ds-size-3);
+}
+
+.footerStart {
+  display: flex;
+  align-items: center;
+}
+
+.footerEnd {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.navButton {
+  min-height: 44px;
+}

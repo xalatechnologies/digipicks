@@ -1,0 +1,130 @@
+/* StatusBadge CSS Module */
+
+/* Base Badge */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-size-1);
+    font-weight: var(--ds-font-weight-medium);
+    border-radius: var(--ds-border-radius-full);
+    transition: background-color var(--ds-transition-fast), border-color var(--ds-transition-fast);
+}
+
+/* Size Variants */
+.size-sm {
+    padding: var(--ds-size-1) var(--ds-size-2);
+    font-size: var(--ds-font-size-xs);
+}
+
+.size-md {
+    padding: var(--ds-size-2) var(--ds-size-3);
+    font-size: var(--ds-font-size-sm);
+}
+
+.size-lg {
+    padding: var(--ds-size-3) var(--ds-size-4);
+    font-size: var(--ds-font-size-md);
+}
+
+/* Icon */
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.label {
+    white-space: nowrap;
+}
+
+/* Status: Success */
+.status-success.variant-solid {
+    background: var(--ds-color-success-base-default);
+    color: var(--ds-color-success-text-on-base);
+}
+
+.status-success.variant-outlined {
+    background: transparent;
+    border: 1px solid var(--ds-color-success-border-default);
+    color: var(--ds-color-success-text-default);
+}
+
+.status-success.variant-subtle {
+    background: var(--ds-color-success-surface-default);
+    color: var(--ds-color-success-text-default);
+}
+
+/* Status: Warning */
+.status-warning.variant-solid {
+    background: var(--ds-color-warning-base-default);
+    color: var(--ds-color-warning-text-on-base);
+}
+
+.status-warning.variant-outlined {
+    background: transparent;
+    border: 1px solid var(--ds-color-warning-border-default);
+    color: var(--ds-color-warning-text-default);
+}
+
+.status-warning.variant-subtle {
+    background: var(--ds-color-warning-surface-default);
+    color: var(--ds-color-warning-text-default);
+}
+
+/* Status: Error */
+.status-error.variant-solid {
+    background: var(--ds-color-danger-base-default);
+    color: var(--ds-color-danger-text-on-base);
+}
+
+.status-error.variant-outlined {
+    background: transparent;
+    border: 1px solid var(--ds-color-danger-border-default);
+    color: var(--ds-color-danger-text-default);
+}
+
+.status-error.variant-subtle {
+    background: var(--ds-color-danger-surface-default);
+    color: var(--ds-color-danger-text-default);
+}
+
+/* Status: Info */
+.status-info.variant-solid {
+    background: var(--ds-color-accent-base-default);
+    color: var(--ds-color-accent-text-on-base);
+}
+
+.status-info.variant-outlined {
+    background: transparent;
+    border: 1px solid var(--ds-color-accent-border-default);
+    color: var(--ds-color-accent-text-default);
+}
+
+.status-info.variant-subtle {
+    background: var(--ds-color-accent-surface-default);
+    color: var(--ds-color-accent-text-default);
+}
+
+/* Status: Neutral */
+.status-neutral.variant-solid {
+    background: var(--ds-color-neutral-surface-default);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.status-neutral.variant-outlined {
+    background: transparent;
+    border: 1px solid var(--ds-color-neutral-border-default);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.status-neutral.variant-subtle {
+    background: var(--ds-color-neutral-surface-subtle);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Accessibility */
+@media (prefers-contrast: high) {
+    .badge.variant-outlined {
+        border-width: 2px;
+    }
+}

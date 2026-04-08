@@ -1,0 +1,162 @@
+{
+  "version": "1.0.0",
+  "generatedAt": null,
+  "tenant": "Hamar Kulturhus",
+  "tenantId": "qd71nzdbvssrm2n3n2018daspx81pftx",
+  "totalDomains": 11,
+  "totalTestCases": 68,
+  "domains": [
+    {
+      "id": "A-1",
+      "name": "Roles & Access",
+      "suite": "suite-a-rbac.spec.ts",
+      "tests": [
+        { "akrav": "A-1.1", "testIds": ["RBAC-001", "RBAC-002"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-1.2", "testIds": ["RBAC-003", "RBAC-004"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-1.3", "testIds": ["RBAC-005", "RBAC-006"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-1.4", "testIds": ["RBAC-007"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-1.5", "testIds": ["RBAC-008"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-1.6", "testIds": ["RBAC-009"], "app": "backoffice", "evidence": "json" }
+      ]
+    },
+    {
+      "id": "A-2",
+      "name": "Events & Publishing",
+      "suite": "suite-b-events-publishing.spec.ts",
+      "tests": [
+        { "akrav": "A-2.1", "testIds": ["EVT-001"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-2.2", "testIds": ["EVT-002"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-2.3", "testIds": ["EVT-003"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-2.3b", "testIds": ["EVT-004", "EVT-005"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-2.4", "testIds": ["EVT-006"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-2.5", "testIds": ["EVT-007"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-2.6", "testIds": ["EVT-008"], "app": "backoffice", "evidence": "screenshot" }
+      ]
+    },
+    {
+      "id": "A-3",
+      "name": "Inventory & Seats",
+      "suite": "suite-c-inventory-seats.spec.ts",
+      "tests": [
+        { "akrav": "A-3.1", "testIds": ["SEAT-001"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-3.2", "testIds": ["SEAT-002"], "app": "api", "evidence": "json" },
+        { "akrav": "A-3.3", "testIds": ["SEAT-003"], "app": "api", "evidence": "json" },
+        { "akrav": "A-3.4", "testIds": ["SEAT-004"], "app": "api", "evidence": "json" },
+        { "akrav": "A-3.5", "testIds": ["SEAT-005"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-3.6", "testIds": ["SEAT-006"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-3.7", "testIds": ["SEAT-007"], "app": "api", "evidence": "json" }
+      ]
+    },
+    {
+      "id": "A-4",
+      "name": "Checkout & Payments",
+      "suite": "suite-d-checkout-payments.spec.ts",
+      "tests": [
+        { "akrav": "A-4.1", "testIds": ["PAY-001"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.2", "testIds": ["PAY-002"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.3", "testIds": ["PAY-003"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.4", "testIds": ["PAY-004"], "app": "api", "evidence": "json" },
+        { "akrav": "A-4.5", "testIds": ["PAY-005"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.6", "testIds": ["PAY-006"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.7", "testIds": ["PAY-007"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.8", "testIds": ["PAY-008"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-4.9", "testIds": ["PAY-009"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-4.10", "testIds": ["PAY-010"], "app": "backoffice", "evidence": "screenshot" }
+      ]
+    },
+    {
+      "id": "A-5",
+      "name": "Gift Cards",
+      "suite": "suite-e-gift-cards.spec.ts",
+      "tests": [
+        { "akrav": "A-5.1", "testIds": ["GC-001"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-5.2", "testIds": ["GC-002"], "app": "api", "evidence": "json" },
+        { "akrav": "A-5.3", "testIds": ["GC-003"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-5.4", "testIds": ["GC-004"], "app": "api", "evidence": "json" },
+        { "akrav": "A-5.5", "testIds": ["GC-005"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-5.6", "testIds": ["GC-006"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-5.7", "testIds": ["GC-007"], "app": "backoffice", "evidence": "screenshot" }
+      ]
+    },
+    {
+      "id": "A-6",
+      "name": "Membership",
+      "suite": "suite-f-membership.spec.ts",
+      "tests": [
+        { "akrav": "A-6.1", "testIds": ["MEM-001"], "app": "web/minside", "evidence": "screenshot" },
+        { "akrav": "A-6.2", "testIds": ["MEM-002"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-6.3", "testIds": ["MEM-003"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-6.4", "testIds": ["MEM-004"], "app": "minside", "evidence": "screenshot" },
+        { "akrav": "A-6.5", "testIds": ["MEM-005"], "app": "minside", "evidence": "screenshot" },
+        { "akrav": "A-6.6", "testIds": ["MEM-006"], "app": "minside", "evidence": "screenshot" }
+      ]
+    },
+    {
+      "id": "A-7",
+      "name": "Resale & Transfer",
+      "suite": "suite-g-resale-transfer.spec.ts",
+      "tests": [
+        { "akrav": "A-7.1", "testIds": ["RSL-001"], "app": "minside", "evidence": "screenshot" },
+        { "akrav": "A-7.2", "testIds": ["RSL-002"], "app": "minside", "evidence": "screenshot" },
+        { "akrav": "A-7.3", "testIds": ["RSL-003"], "app": "web", "evidence": "screenshot" },
+        { "akrav": "A-7.4", "testIds": ["RSL-004"], "app": "api", "evidence": "json" },
+        { "akrav": "A-7.5", "testIds": ["RSL-005"], "app": "minside", "evidence": "screenshot" },
+        { "akrav": "A-7.6", "testIds": ["RSL-006"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-7.7", "testIds": ["RSL-007"], "app": "minside", "evidence": "screenshot" }
+      ]
+    },
+    {
+      "id": "A-8",
+      "name": "Scanning / Entry Control",
+      "suite": "suite-h-scanning.spec.ts",
+      "tests": [
+        { "akrav": "A-8.1", "testIds": ["SCN-001"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.2", "testIds": ["SCN-002"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.3", "testIds": ["SCN-003"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.4", "testIds": ["SCN-004"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.5", "testIds": ["SCN-005"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.6", "testIds": ["SCN-006"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.7", "testIds": ["SCN-007"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-8.8", "testIds": ["SCN-008"], "app": "api", "evidence": "json" }
+      ]
+    },
+    {
+      "id": "A-9",
+      "name": "Reporting & Export",
+      "suite": "suite-i-reporting-export.spec.ts",
+      "tests": [
+        { "akrav": "A-9.1", "testIds": ["RPT-001"], "app": "backoffice", "evidence": "screenshot+csv" },
+        { "akrav": "A-9.2", "testIds": ["RPT-002"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-9.3", "testIds": ["RPT-003"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-9.4", "testIds": ["RPT-004"], "app": "backoffice", "evidence": "screenshot" },
+        { "akrav": "A-9.5", "testIds": ["RPT-005"], "app": "backoffice", "evidence": "csv" },
+        { "akrav": "A-9.6", "testIds": ["RPT-006"], "app": "api", "evidence": "json" },
+        { "akrav": "A-9.7", "testIds": ["RPT-007"], "app": "backoffice", "evidence": "screenshot" }
+      ]
+    },
+    {
+      "id": "A-10",
+      "name": "Channels",
+      "suite": "suite-j-channels.spec.ts",
+      "tests": [
+        { "akrav": "A-10.1", "testIds": ["CHN-001"], "app": "web", "evidence": "json" },
+        { "akrav": "A-10.2", "testIds": ["CHN-002"], "app": "backoffice", "evidence": "json" },
+        { "akrav": "A-10.3", "testIds": ["CHN-003"], "app": "api", "evidence": "json" }
+      ]
+    },
+    {
+      "id": "A-11",
+      "name": "Accessibility",
+      "suite": "suite-k-accessibility.spec.ts",
+      "tests": [
+        { "akrav": "A-11.1", "testIds": ["A11Y-001"], "app": "web", "evidence": "axe-json" },
+        { "akrav": "A-11.2", "testIds": ["A11Y-002"], "app": "web", "evidence": "axe-json" },
+        { "akrav": "A-11.3", "testIds": ["A11Y-003"], "app": "web", "evidence": "axe-json" },
+        { "akrav": "A-11.4", "testIds": ["A11Y-004"], "app": "web", "evidence": "axe-json" },
+        { "akrav": "A-11.5", "testIds": ["A11Y-005"], "app": "web", "evidence": "axe-json" },
+        { "akrav": "A-11.6", "testIds": ["A11Y-006"], "app": "web", "evidence": "json" },
+        { "akrav": "A-11.7", "testIds": ["A11Y-007"], "app": "web", "evidence": "json" }
+      ]
+    }
+  ]
+}

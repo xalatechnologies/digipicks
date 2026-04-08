@@ -1,0 +1,86 @@
+/* FilterBar Component Styles */
+
+.filterBar {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    flex-wrap: wrap;
+    padding: var(--ds-size-4);
+    background-color: var(--ds-color-neutral-surface-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    flex: 1;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.clearButton {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-2) var(--ds-size-3);
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    font-family: var(--ds-font-family-base);
+    color: var(--ds-color-danger-text-default);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.clearButton:hover {
+    background-color: var(--ds-color-danger-surface-default);
+}
+
+.clearButton:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+.clearButton:active {
+    background-color: var(--ds-color-danger-surface-hover);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .filterBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .clearButton {
+        justify-content: center;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .clearButton {
+        transition: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .filterBar {
+        border-width: 2px;
+    }
+
+    .clearButton {
+        border: 1px solid currentColor;
+    }
+}

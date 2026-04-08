@@ -1,0 +1,5 @@
+/* Modules page styles */
+
+.moduleCard {
+  padding: var(--ds-size-5);
+}

@@ -1,0 +1,70 @@
+/* =============================================================================
+ * Billing — User billing dashboard
+ * ============================================================================= */
+
+/* Loading */
+.loadingCenter {
+  padding: var(--ds-size-4);
+}
+
+.loadingCenterLg {
+  padding: var(--ds-size-8);
+}
+
+/* DataTable cell styles */
+.reference {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+  font-family: var(--ds-font-family-monospace);
+  color: var(--ds-color-accent-text-default);
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.mediumWeight {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.semiboldWeight {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.subtleText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.successText {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-success-text-default);
+}
+
+.warningText {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-warning-text-default);
+}
+
+/* Mobile invoice card */
+.invoiceCard {
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.invoiceCard:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+/* Invoice description text — truncate to 1 line */
+.invoiceDesc {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

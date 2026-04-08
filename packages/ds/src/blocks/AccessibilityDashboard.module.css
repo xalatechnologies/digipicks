@@ -1,0 +1,205 @@
+/* AccessibilityDashboard CSS Module */
+
+/* ---- Main Container ---- */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-6);
+    padding: var(--ds-size-6);
+    background-color: var(--ds-color-neutral-background-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+}
+
+/* ---- Header ---- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--ds-size-4);
+}
+
+.headerTitle {
+    margin: 0;
+}
+
+.headerSubtitle {
+    margin: var(--ds-size-1) 0 0 0;
+}
+
+.refreshButton {
+    padding: var(--ds-size-2) var(--ds-size-4);
+    background-color: var(--ds-color-accent-base-default);
+    color: var(--ds-color-accent-contrast-default);
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    cursor: pointer;
+}
+
+.refreshButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ---- Compliance Score Card ---- */
+.complianceCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--ds-size-8);
+    background-color: var(--ds-color-neutral-surface-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.complianceVisual {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.complianceSvg {
+    transform: rotate(-90deg);
+}
+
+.circleProgress {
+    transition: stroke-dasharray 0.3s ease;
+}
+
+.scoreOverlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreValue {
+    font-size: var(--ds-font-size-5xl);
+    font-weight: var(--ds-font-weight-bold);
+    color: var(--ds-color-neutral-text-default);
+    line-height: 1;
+}
+
+.scoreMax {
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-neutral-text-subtle);
+    margin-top: var(--ds-size-1);
+}
+
+.complianceLabel {
+    margin-top: var(--ds-size-4);
+    font-size: var(--ds-font-size-lg);
+    font-weight: var(--ds-font-weight-semibold);
+}
+
+/* ---- Metrics Grid ---- */
+.metricsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--ds-size-4);
+}
+
+/* ---- MetricCard ---- */
+.metricCard {
+    padding: var(--ds-size-5);
+    background-color: var(--ds-color-neutral-surface-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+    border-left: 4px solid var(--metric-status-color, var(--ds-color-neutral-border-subtle));
+}
+
+.metricHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    margin-bottom: var(--ds-size-3);
+}
+
+.metricIcon {
+    font-size: var(--ds-font-size-2xl);
+}
+
+.metricTitle {
+    margin: 0;
+}
+
+.metricBody {
+    margin-bottom: var(--ds-size-3);
+}
+
+.metricValue {
+    font-size: var(--ds-font-size-3xl);
+    font-weight: var(--ds-font-weight-bold);
+    color: var(--ds-color-neutral-text-default);
+    line-height: 1.2;
+}
+
+.metricSubtitle {
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-neutral-text-subtle);
+    margin-top: var(--ds-size-1);
+}
+
+/* ---- MetricCard Details ---- */
+.metricDetails {
+    padding-top: var(--ds-size-3);
+    border-top: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.detailRow+.detailRow {
+    margin-top: var(--ds-size-1);
+}
+
+.detailValue {
+    font-weight: var(--ds-font-weight-medium);
+}
+
+/* ---- Recommendations ---- */
+.recommendations {
+    padding: var(--ds-size-6);
+    background-color: var(--ds-color-info-surface-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    border: 1px solid var(--ds-color-info-border-default);
+}
+
+.recommendationsTitle {
+    margin: 0 0 var(--ds-size-4) 0;
+}
+
+.recommendationsList {
+    margin: 0;
+    padding: 0 0 0 var(--ds-size-5);
+    list-style: disc;
+}
+
+.recommendationItem {
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-info-text-default);
+    margin-bottom: var(--ds-size-2);
+}
+
+/* ---- Accessibility ---- */
+@media (prefers-reduced-motion: reduce) {
+    .circleProgress {
+        transition: none !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .refreshButton:focus-visible {
+        outline: 4px solid var(--ds-color-focus-outer);
+        outline-offset: 2px;
+    }
+}

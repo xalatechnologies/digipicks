@@ -1,0 +1,68 @@
+/* InfoBox - Colored info/status boxes */
+
+.box {
+  padding: var(--ds-size-3);
+  border-radius: var(--digilist-radius-md, 8px);
+  border: 1px solid;
+}
+
+.boxInfo {
+  background-color: var(--ds-color-info-surface-subtle);
+  border-color: var(--ds-color-info-border-subtle);
+}
+
+.boxSuccess {
+  background-color: var(--ds-color-success-surface-subtle);
+  border-color: var(--ds-color-success-border-subtle);
+}
+
+.boxWarning {
+  background-color: var(--ds-color-warning-surface-subtle);
+  border-color: var(--ds-color-warning-border-subtle);
+}
+
+.boxDanger {
+  background-color: var(--ds-color-danger-surface-subtle);
+  border-color: var(--ds-color-danger-border-subtle);
+}
+
+.boxNeutral {
+  background-color: var(--ds-color-neutral-surface-default);
+  border-color: var(--ds-color-neutral-border-subtle);
+}
+
+.title {
+  font-weight: var(--ds-font-weight-semibold);
+  margin: 0 0 var(--ds-size-1) 0;
+  font-size: var(--ds-font-size-sm);
+}
+
+.content {
+  margin: 0;
+  font-size: var(--ds-font-size-sm);
+}
+
+.titleInfo,
+.contentInfo {
+  color: var(--ds-color-info-text-default);
+}
+
+.titleSuccess,
+.contentSuccess {
+  color: var(--ds-color-success-text-default);
+}
+
+.titleWarning,
+.contentWarning {
+  color: var(--ds-color-warning-text-default);
+}
+
+.titleDanger,
+.contentDanger {
+  color: var(--ds-color-danger-text-default);
+}
+
+.titleNeutral,
+.contentNeutral {
+  color: var(--ds-color-neutral-text-default);
+}

@@ -1,0 +1,15 @@
+/* Audit log page styles */
+
+.tableWrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+.loadingWrapper {
+  padding: var(--ds-size-10);
+}
+
+.timestamp {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

@@ -1,0 +1,70 @@
+/* =============================================================================
+ * Preferences — User preferences page
+ * ============================================================================= */
+
+/* Section cards */
+.sectionCard {
+  padding: var(--ds-size-5);
+}
+
+.sectionHeading {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+/* Loading */
+.loadingCenter {
+  padding: var(--ds-size-4);
+}
+
+/* Preference items */
+.preferenceLabel {
+  margin: 0;
+  margin-bottom: var(--ds-size-2);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.noMargin {
+  margin: 0;
+}
+
+/* Notification preference row */
+.preferenceRow {
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+/* Language / Theme dropdown container */
+.preferenceHighlight {
+  padding: var(--ds-size-3);
+  background-color: var(--ds-color-accent-surface-default);
+  border-radius: var(--ds-border-radius-md);
+}
+
+/* Full-width buttons */
+.fullWidthButton {
+  width: 100%;
+}
+
+/* Danger zone */
+.dangerCard {
+  padding: var(--ds-size-5);
+  border: 1px solid var(--ds-color-danger-border-default);
+}
+
+.dangerHeading {
+  margin: 0;
+  margin-bottom: var(--ds-size-2);
+  color: var(--ds-color-danger-text-default);
+}
+
+.dangerDesc {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.dangerButton {
+  color: var(--ds-color-danger-text-default);
+}

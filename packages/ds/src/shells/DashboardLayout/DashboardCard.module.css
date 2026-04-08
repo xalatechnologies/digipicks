@@ -1,0 +1,56 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    background: var(--ds-color-surface-default);
+    border: var(--ds-border-default) solid var(--ds-color-border-subtle);
+    border-radius: var(--digilist-radius-lg, 12px);
+    box-shadow: var(--ds-shadow-sm);
+    overflow: hidden;
+    transition: var(--ds-transition-default);
+}
+
+.card[data-variant="elevated"] {
+    box-shadow: var(--ds-shadow-lg);
+    border: none;
+}
+
+.card[data-variant="outlined"] {
+    box-shadow: none;
+    border-width: var(--ds-border-width-medium);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--ds-size-md);
+    padding: var(--ds-size-lg);
+    border-bottom: var(--ds-border-default) solid var(--ds-color-border-subtle);
+}
+
+.headerText {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin: 0;
+    font-size: var(--ds-font-size-lg);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-line-height-tight);
+    color: var(--ds-color-text-default);
+}
+
+.subtitle {
+    margin: var(--ds-size-xs) 0 0;
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-text-subtle);
+}
+
+.actions {
+    flex-shrink: 0;
+}
+
+.content {
+    padding: var(--ds-size-lg);
+}

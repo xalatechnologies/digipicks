@@ -1,0 +1,36 @@
+/**
+ * Responsive size-mode switching
+ *
+ * DigDir Designsystemet uses `data-size` (sm/md/lg) to scale component trees.
+ * This stylesheet auto-switches the size mode based on viewport width,
+ * used when DesignsystemetProvider has size="auto".
+ *
+ * - Mobile (<768px):  sm — basefont 16px, compact components
+ * - Tablet (768-1279px): md — basefont 18px, standard components
+ * - Desktop (1280px+): lg — basefont 21px, large/accessible
+ *
+ * The --ds-size CSS custom property controls which size tokens are active.
+ * This file sets it based on viewport using media queries.
+ */
+
+/* Base: mobile-first uses sm mode */
+:root[data-size="auto"] {
+    --ds-size: var(--ds-size--sm);
+}
+
+/* Tablet and up: switch to md */
+@media (min-width: 768px) {
+    :root[data-size="auto"] {
+        --ds-size: var(--ds-size--md);
+    }
+}
+
+/* Large desktop: switch to lg (optional — only if design warrants it) */
+/* Uncomment below if the design benefits from lg mode on wide screens */
+/*
+@media (min-width: 1280px) {
+    :root[data-size="auto"] {
+        --ds-size: var(--ds-size--lg);
+    }
+}
+*/

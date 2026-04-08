@@ -1,0 +1,35 @@
+/* =============================================================================
+ * QRCodeDialog — Reusable QR code dialog block.
+ * ============================================================================= */
+
+.qrDialog {
+    border: none;
+    border-radius: var(--digilist-radius-lg, 12px);
+    padding: 0;
+    max-width: 420px;
+    width: 90vw;
+    background: var(--ds-color-neutral-background-default);
+    box-shadow: var(--ds-shadow-lg);
+}
+
+.qrDialog::backdrop {
+    background: rgb(0 0 0 / 50%);
+}
+
+.qrDialogInner {
+    padding: var(--ds-size-6);
+}
+
+.qrCodeWrapper {
+    display: flex;
+    justify-content: center;
+    padding: var(--ds-size-4);
+    background: var(--ds-color-neutral-surface-subtle);
+    border-radius: var(--digilist-radius-md, 8px);
+}
+
+.qrFooter {
+    padding-block-start: var(--ds-size-4);
+    display: flex;
+    justify-content: center;
+}

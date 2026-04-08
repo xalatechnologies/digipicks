@@ -1,0 +1,45 @@
+/* NativeSelect — DS-styled native <select> */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+}
+
+.select {
+  appearance: none;
+  background-color: var(--ds-color-neutral-background-default);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--digilist-radius-md, 8px);
+  color: var(--ds-color-neutral-text-default);
+  font-family: inherit;
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+  padding: var(--ds-size-2) var(--ds-size-8) var(--ds-size-2) var(--ds-size-3);
+  width: 100%;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%23333' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--ds-size-3) center;
+  transition: border-color 0.15s ease;
+}
+
+.select:hover {
+  border-color: var(--ds-color-accent-border-default);
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--ds-color-accent-border-default);
+  outline-offset: 1px;
+  border-color: var(--ds-color-accent-border-default);
+}
+
+.select[data-size="sm"] {
+  font-size: var(--ds-font-size-sm);
+  padding: var(--ds-size-1) var(--ds-size-7) var(--ds-size-1) var(--ds-size-2);
+}
+
+.select[data-size="lg"] {
+  font-size: var(--ds-font-size-lg);
+  padding: var(--ds-size-3) var(--ds-size-9) var(--ds-size-3) var(--ds-size-4);
+}

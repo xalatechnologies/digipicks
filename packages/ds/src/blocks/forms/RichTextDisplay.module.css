@@ -1,0 +1,60 @@
+/* RichTextDisplay Styles */
+
+.richTextContent {
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.richTextContent p {
+    margin-bottom: var(--ds-spacing-3);
+}
+
+.richTextContent p:last-child {
+    margin-bottom: 0;
+}
+
+.richTextContent h2 {
+    font-size: var(--ds-font-size-xl);
+    font-weight: var(--ds-font-weight-semibold);
+    margin-top: var(--ds-spacing-4);
+    margin-bottom: var(--ds-spacing-2);
+    line-height: 1.3;
+}
+
+.richTextContent h3 {
+    font-size: var(--ds-font-size-lg);
+    font-weight: var(--ds-font-weight-semibold);
+    margin-top: var(--ds-spacing-3);
+    margin-bottom: var(--ds-spacing-2);
+    line-height: 1.4;
+}
+
+.richTextContent ul,
+.richTextContent ol {
+    padding-left: var(--ds-spacing-6);
+    margin-bottom: var(--ds-spacing-3);
+}
+
+.richTextContent li {
+    margin-bottom: var(--ds-spacing-1);
+}
+
+.richTextContent a {
+    color: var(--ds-color-accent-text);
+    text-decoration: underline;
+}
+
+.richTextContent a:hover {
+    color: var(--ds-color-accent-text-hover);
+}
+
+.richTextContent strong {
+    font-weight: var(--ds-font-weight-bold);
+}
+
+.richTextContent em {
+    font-style: italic;
+}

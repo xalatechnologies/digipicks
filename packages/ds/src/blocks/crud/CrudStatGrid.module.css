@@ -1,0 +1,59 @@
+/* CrudStatGrid — responsive KPI stat cards */
+
+.grid {
+  display: grid;
+  gap: var(--ds-size-4);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.card {
+  padding: var(--ds-size-5);
+}
+
+.clickable {
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.clickable:hover {
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-4);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+  min-width: 0;
+}
+
+.label {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.value {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.description {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}

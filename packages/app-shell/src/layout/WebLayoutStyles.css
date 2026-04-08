@@ -1,0 +1,202 @@
+/**
+ * Web Layout - Global styles for web app (listings, booking platform).
+ * Uses design tokens only. Import once in web app.
+ * Note: !important used to override component inline styles (matches common-extensions.css pattern).
+ */
+
+.web-layout-root {
+  --app-header-height: 86px;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--ds-color-neutral-background-default);
+}
+
+/* Container - max-width, centered, side padding */
+.ds-container {
+  max-width: var(--ds-container-max-width, 1600px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--ds-size-6) !important;
+  padding-right: var(--ds-size-6) !important;
+}
+
+/* Fluid containers bypass the max-width constraint */
+.ds-container[data-fluid="true"] {
+  max-width: none !important;
+}
+
+@media (max-width: 599px) {
+  .ds-container {
+    padding-left: var(--ds-size-3) !important;
+    padding-right: var(--ds-size-3) !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .header-search-desktop {
+    display: none !important;
+  }
+
+  .mobile-search-wrapper {
+    display: block !important;
+  }
+
+  .listing-toolbar .ds-toggle-group {
+    display: none !important;
+  }
+}
+
+@media (min-width: 600px) {
+  .mobile-search-wrapper {
+    display: none !important;
+  }
+}
+
+.header-search-desktop {
+  max-width: 400px;
+  width: 100%;
+}
+
+.header-search-desktop [data-ds-search-results] {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Theme transition (from web App.tsx) */
+.themed-app-root *,
+.themed-app-root *::before,
+.themed-app-root *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+}
+
+/* Listing stagger animation (from web listings) */
+@keyframes listingStaggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.listing-animate-in {
+  animation: listingStaggerIn 0.4s ease both;
+  height: 100%;
+}
+
+/* Spinner animation (from magic-link-callback) */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.magic-link-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Listing detail animations and responsive (from web listing-detail) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.listing-details-layout>div {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+[role="tabpanel"]>div {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.contact-widget,
+.map-widget,
+.opening-hours-widget,
+.booking-widget-placement {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-widget:hover,
+.map-widget:hover,
+.opening-hours-widget:hover,
+.booking-widget-placement:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ds-shadow-md);
+}
+
+@media (max-width: 991px) {
+  .listing-content-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .booking-widget-placement {
+    margin-left: calc(-1 * var(--ds-size-4));
+    margin-right: calc(-1 * var(--ds-size-4));
+    border-radius: 0 !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .image-slider {
+    margin-left: calc(-1 * var(--ds-size-4));
+    margin-right: calc(-1 * var(--ds-size-4));
+    border-radius: 0 !important;
+  }
+
+  .image-slider-main {
+    border-radius: 0 !important;
+  }
+
+  .image-slider-thumbnails {
+    display: none !important;
+  }
+
+  .ds-tabs [role="tab"] {
+    padding: var(--ds-size-3) var(--ds-size-2) !important;
+    font-size: var(--ds-font-size-xs) !important;
+  }
+}
+
+/* Header navigation links */
+.header-nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-1, 4px);
+}
+
+.header-nav-link {
+  color: var(--ds-color-neutral-text-subtle, #666);
+  text-decoration: none;
+  font-size: var(--ds-font-size-sm, 14px);
+  font-weight: var(--ds-font-weight-medium, 500);
+  padding: var(--ds-size-2, 8px) var(--ds-size-3, 12px);
+  border-radius: var(--ds-border-radius-md, 8px);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.header-nav-link:hover {
+  color: var(--ds-color-neutral-text-default, #333);
+  background-color: var(--ds-color-neutral-surface-hover, #f5f5f5);
+}
+
+@media (max-width: 767px) {
+  .header-nav-links {
+    display: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}

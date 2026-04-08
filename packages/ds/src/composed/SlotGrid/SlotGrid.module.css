@@ -1,0 +1,222 @@
+/* SlotGrid - Time×Days selectable grid using CSS Grid */
+
+.slotGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+}
+
+.slotGrid__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ds-size-2) 0;
+}
+
+.slotGrid__navBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.slotGrid__navLabel {
+  font-weight: var(--digilist-font-weight-semibold, 600);
+  font-size: var(--ds-font-size-lg);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.slotGrid__scroll {
+  position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--digilist-radius-md, 8px);
+}
+
+.slotGrid__grid {
+  display: grid;
+  --slot-grid-cols: 7;
+  grid-template-columns: 60px repeat(var(--slot-grid-cols), minmax(70px, 1fr));
+  min-width: 600px;
+  width: 100%;
+}
+
+.slotGrid__headerCell {
+  padding: var(--ds-size-2) var(--ds-size-3);
+  text-align: center;
+  font-weight: var(--digilist-font-weight-semibold, 600);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  background: var(--ds-color-neutral-surface-default);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.slotGrid__headerCell_time {
+  width: 60px;
+  border-right: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.slotGrid__headerCell_day {
+  min-width: 70px;
+}
+
+.slotGrid__headerCell_sticky,
+.slotGrid__rowHeader_sticky {
+  position: sticky;
+  left: 0;
+  background: var(--ds-color-neutral-surface-default);
+  z-index: 2;
+}
+
+.slotGrid__headerCell_time.slotGrid__headerCell_sticky {
+  z-index: 3;
+}
+
+.slotGrid__dayName {
+  display: block;
+  font-size: var(--ds-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ds-letter-spacing-wide, 0.05em);
+}
+
+.slotGrid__dayDate {
+  display: block;
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--digilist-font-weight-bold, 700);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.slotGrid__rowHeader {
+  padding: var(--ds-size-2);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  text-align: center;
+  background: var(--ds-color-neutral-background-default);
+  border-right: 1px solid var(--ds-color-neutral-border-subtle);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.slotGrid__cell {
+  height: 40px;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.slotGrid__cell_available {
+  background: var(--ds-color-success-surface-default);
+  cursor: pointer;
+}
+
+.slotGrid__cell_available:hover {
+  background: var(--ds-color-success-surface-hover);
+  border-color: var(--ds-color-success-border-default);
+}
+
+.slotGrid__cell_available:focus-visible {
+  outline: 2px solid var(--ds-color-focus-outer);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.slotGrid__cell_booked {
+  background: var(--ds-color-neutral-surface-default);
+  cursor: not-allowed;
+}
+
+.slotGrid__cell_closed {
+  background: var(--ds-color-neutral-background-subtle);
+  cursor: not-allowed;
+}
+
+.slotGrid__cell_blocked {
+  background: var(--ds-color-warning-surface-default);
+  cursor: not-allowed;
+}
+
+.slotGrid__cell_selected {
+  background: var(--ds-color-accent-base-default) !important;
+  border-color: var(--ds-color-accent-border-strong) !important;
+  color: var(--ds-color-accent-base-contrast-default);
+}
+
+.slotGrid__icon {
+  font-size: var(--ds-font-size-xs);
+}
+
+.slotGrid__cell_booked .slotGrid__icon {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.slotGrid__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-size-2);
+  background: var(--ds-color-neutral-background-default);
+  opacity: 0.95;
+}
+
+.slotGrid__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-4);
+  padding: var(--ds-size-3);
+  background: var(--ds-color-neutral-surface-default);
+  border-radius: var(--digilist-radius-md, 8px);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.slotGrid__legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.slotGrid__legendBox {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--digilist-radius-sm, 4px);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.slotGrid__legendBox_available {
+  background: var(--ds-color-success-surface-default);
+  border-color: var(--ds-color-success-border-default);
+}
+
+.slotGrid__legendBox_booked {
+  background: var(--ds-color-neutral-surface-default);
+}
+
+.slotGrid__legendBox_selected {
+  background: var(--ds-color-accent-base-default);
+  border-color: var(--ds-color-accent-border-strong);
+}
+
+.slotGrid__legendBox_closed {
+  background: var(--ds-color-neutral-background-subtle);
+}
+
+.slotGrid__legendBox_blocked {
+  background: var(--ds-color-warning-surface-default);
+}
+
+.slotGrid__summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-size-3) var(--ds-size-4);
+  background: var(--ds-color-accent-surface-default);
+  border-radius: var(--digilist-radius-md, 8px);
+  border: 1px solid var(--ds-color-accent-border-subtle);
+}

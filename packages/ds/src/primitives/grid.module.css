@@ -1,0 +1,21 @@
+/* Grid Primitive — CSS module with custom properties for dynamic values */
+
+.grid {
+  display: grid;
+  grid-template-columns: var(--grid-columns, 1fr);
+  gap: var(--grid-gap, var(--ds-size-2));
+}
+
+/* Optional column-gap / row-gap overrides */
+.grid[data-has-gap-x] {
+  column-gap: var(--grid-gap-x);
+}
+
+.grid[data-has-gap-y] {
+  row-gap: var(--grid-gap-y);
+}
+
+/* Optional row template */
+.grid[data-has-rows] {
+  grid-template-rows: var(--grid-rows);
+}

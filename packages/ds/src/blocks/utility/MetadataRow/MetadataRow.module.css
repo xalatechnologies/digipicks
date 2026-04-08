@@ -1,0 +1,98 @@
+/* MetadataRow Component Styles */
+
+.metadataRow {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+}
+
+/* Icon */
+.icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    min-width: 0;
+    /* Allow text truncation */
+}
+
+.label {
+    margin: 0;
+    margin-bottom: var(--ds-size-1);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-line-height-body);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.valueContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+}
+
+.value {
+    margin: 0;
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-line-height-body);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.badge {
+    flex-shrink: 0;
+}
+
+/* Size Variants */
+.sm .icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sm .label {
+    font-size: var(--ds-font-size-xs);
+}
+
+.sm .value {
+    font-size: var(--ds-font-size-xs);
+}
+
+.md .icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.md .label {
+    font-size: var(--ds-font-size-xs);
+}
+
+.md .value {
+    font-size: var(--ds-font-size-sm);
+}
+
+/* Accessibility */
+.metadataRow:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+    border-radius: var(--digilist-radius-sm, 4px);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+
+    .label,
+    .value {
+        font-weight: var(--ds-font-weight-semibold);
+    }
+}

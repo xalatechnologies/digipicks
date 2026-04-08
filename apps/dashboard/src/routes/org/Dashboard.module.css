@@ -1,0 +1,77 @@
+/* Org Dashboard styles */
+
+.loadingCenter {
+  height: 50vh;
+}
+
+.quickActionsCard {
+  padding: var(--ds-size-5);
+}
+
+.quickActionsTitle {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.quickActionLink {
+  text-decoration: none;
+}
+
+.quickActionButton {
+  width: 100%;
+  min-height: 44px;
+}
+
+.membersCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.membersHeader {
+  padding: var(--ds-size-4) var(--ds-size-5);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.membersTitle {
+  margin: 0;
+}
+
+.membersBody {
+  padding: var(--ds-size-4);
+}
+
+.emptyMembers {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  text-align: center;
+  padding: var(--ds-size-4);
+}
+
+.memberRow {
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.memberAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  font-weight: var(--ds-font-weight-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.memberName {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.memberEmail {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

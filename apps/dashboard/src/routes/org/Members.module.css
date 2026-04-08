@@ -1,0 +1,140 @@
+/* Org Members styles */
+
+.backLink {
+  color: var(--ds-color-accent-text-default);
+  text-decoration: none;
+  font-size: var(--ds-font-size-sm);
+}
+
+.headerTitle {
+  margin: 0;
+  margin-top: var(--ds-size-2);
+}
+
+.headerDesc {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-top: var(--ds-size-2);
+  margin-bottom: 0;
+}
+
+.inviteButtonFull {
+  width: 100%;
+  min-height: var(--ds-size-11);
+}
+
+.inviteButtonAuto {
+  width: auto;
+  min-height: var(--ds-size-11);
+}
+
+.inviteCard {
+  padding: var(--ds-size-5);
+}
+
+.inviteTitle {
+  margin: 0;
+  margin-bottom: var(--ds-size-4);
+}
+
+.inviteGrid {
+  align-items: end;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.submitButton {
+  min-height: var(--ds-size-11);
+}
+
+.statCard {
+  padding: var(--ds-size-4);
+}
+
+.statLabel {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.statValue {
+  margin: 0;
+}
+
+.membersListCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.membersListHeader {
+  padding: var(--ds-size-4) var(--ds-size-5);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.membersListTitle {
+  margin: 0;
+}
+
+.loadingCenter {
+  padding: var(--ds-size-8);
+}
+
+.emptyState {
+  padding: var(--ds-size-8);
+  text-align: center;
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.memberRow {
+  padding: var(--ds-size-4) var(--ds-size-5);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.memberAvatar {
+  width: var(--ds-size-11);
+  height: var(--ds-size-11);
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  font-weight: var(--ds-font-weight-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.memberName {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.memberEmail {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.memberActionsFull {
+  width: 100%;
+}
+
+.memberActionsAuto {
+  width: auto;
+}
+
+.roleDropdown {
+  min-width: 7.5rem;
+}
+
+.removeButton {
+  min-height: var(--ds-size-11);
+}

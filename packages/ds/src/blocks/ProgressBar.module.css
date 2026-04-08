@@ -1,0 +1,32 @@
+/* ProgressBar block */
+
+.track {
+    height: 8px;
+    border-radius: var(--ds-border-radius-full);
+    background-color: var(--ds-color-neutral-surface-hover);
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    border-radius: var(--ds-border-radius-full);
+    transition: width 0.3s ease;
+    /* Width set imperatively via --progress-value by the ProgressBar component */
+    width: var(--progress-value, 0%);
+}
+
+.fillDefault {
+    background-color: var(--ds-color-accent-base-default);
+}
+
+.fillSuccess {
+    background-color: var(--ds-color-success-base-default);
+}
+
+.fillWarning {
+    background-color: var(--ds-color-warning-base-default);
+}
+
+.fillDanger {
+    background-color: var(--ds-color-danger-base-default);
+}

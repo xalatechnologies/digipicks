@@ -1,0 +1,28 @@
+.container {
+    background-color: var(--ds-color-neutral-background-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+    border: 1px solid var(--ds-color-neutral-border-subtle);
+    padding: var(--ds-size-5);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--ds-size-5);
+    padding-bottom: var(--ds-size-4);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.title {
+    margin: 0;
+}
+
+.stepCounter {
+    margin: 0;
+    color: var(--ds-color-neutral-text-subtle);
+    background-color: var(--ds-color-neutral-surface-default);
+    padding: var(--ds-size-1) var(--ds-size-3);
+    border-radius: var(--ds-border-radius-full);
+    font-weight: var(--ds-font-weight-medium);
+}

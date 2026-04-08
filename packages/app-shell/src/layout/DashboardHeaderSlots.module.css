@@ -1,0 +1,16 @@
+/* DashboardHeaderSlots — page title in header left slot, mode toggle */
+
+.pageTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+  margin: 0;
+}
+
+.pageTitleCount {
+  color: var(--ds-color-neutral-text-subtle);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+/* Mode toggle removed — now in UserMenu dropdown */

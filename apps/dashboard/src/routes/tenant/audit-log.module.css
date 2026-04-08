@@ -1,0 +1,87 @@
+/* Audit Log Page — extracted from inline styles */
+
+.statCard {
+  padding: var(--ds-size-4);
+}
+
+.subtleText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.headingNoMargin {
+  margin: 0;
+}
+
+.warningHeading {
+  margin: 0;
+  color: var(--ds-color-warning-text-default);
+}
+
+.dangerHeading {
+  margin: 0;
+  color: var(--ds-color-danger-text-default);
+}
+
+.infoHeading {
+  margin: 0;
+  color: var(--ds-color-info-text-default);
+}
+
+.filterCard {
+  padding: var(--ds-size-4);
+}
+
+.flexOne {
+  flex: 1;
+}
+
+.filterCount {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  white-space: nowrap;
+  align-self: center;
+}
+
+.tableCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.fullWidthTable {
+  width: 100%;
+}
+
+.noWrapText {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.monoText {
+  margin: 0;
+  font-family: var(--ds-font-family-mono, monospace);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.drawerSubtleText {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.drawerMonoText {
+  margin: 0;
+  font-family: var(--ds-font-family-mono, monospace);
+}
+
+.drawerLabelText {
+  margin: 0;
+  font-weight: 500;
+}
+
+.createButton {
+  min-height: 44px;
+}

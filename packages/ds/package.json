@@ -1,0 +1,63 @@
+{
+  "name": "@digilist-saas/ds",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./blocks": {
+      "types": "./src/blocks/index.ts",
+      "default": "./src/blocks/index.ts"
+    },
+    "./styles": {
+      "default": "./src/styles.ts"
+    },
+    "./registry": {
+      "types": "./registry/index.ts",
+      "default": "./registry/index.ts"
+    },
+    "./registry.json": "./registry/registry.json",
+    "./registry/examples": {
+      "types": "./registry-examples/index.ts",
+      "default": "./registry-examples/index.ts"
+    },
+    "./themes": {
+      "types": "./src/themes/index.ts",
+      "default": "./src/themes/index.ts"
+    },
+    "./themes/*": "./themes/*",
+    "./platform-base": "./themes/platform-base.css",
+    "./platform": "./themes/platform-bundle.css",
+    "./digilist": "./themes/platform-bundle.css"
+  },
+  "scripts": {
+    "build": "echo 'DS package is source-only, consumed directly by bundlers'",
+    "typecheck": "tsc --noEmit",
+    "tokens:create": "npx @digdir/designsystemet tokens create --config ../../designsystemet.config.json",
+    "tokens:build": "npx @digdir/designsystemet tokens build --tokens ./generated --out-dir ./generated",
+    "tokens:generate": "pnpm run tokens:create && pnpm run tokens:build"
+  },
+  "dependencies": {
+    "@digdir/designsystemet-css": "^1.0.0",
+    "@digdir/designsystemet-react": "^1.9.0",
+    "@digilist-saas/i18n": "workspace:^",
+    "mapbox-gl": "^3.17.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-map-gl": "^8.1.0",
+    "react-quill-new": "^3.8.3",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@digdir/designsystemet": "^1.9.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.3.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^24.1.3",
+    "vitest": "^2.0.0"
+  }
+}

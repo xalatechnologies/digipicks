@@ -1,0 +1,57 @@
+/* DashboardHeader - 3-zone flex layout for dashboard app headers */
+/* Layout: [leftSlot flex:1] [centerSlot fixed] [rightSlot flex:1] */
+/* Left and right share remaining space equally → center stays centered */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--ds-z-index-header, 100);
+  background-color: var(--ds-color-neutral-surface-default);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  box-shadow: var(--ds-shadow-xs);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  height: 72px;
+  padding: 0 var(--ds-size-6);
+  gap: var(--ds-size-3);
+}
+
+/* Left: grows equally with right, can shrink (title truncates via ellipsis) */
+.leftSlot {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Center: fixed preferred width, can shrink to min-width */
+.centerSlot {
+  flex: 0 1 420px;
+  min-width: 160px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Right: grows equally with left, never shrinks (actions stay visible) */
+.rightSlot {
+  flex: 1 0 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--ds-size-4);
+    gap: var(--ds-size-2);
+    height: 64px;
+  }
+
+  .centerSlot {
+    flex: 1 1 auto;
+  }
+}

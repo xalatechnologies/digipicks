@@ -1,0 +1,36 @@
+/* AvatarDisplay - User avatar with initials or image fallback */
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--ds-border-radius-full);
+  color: white;
+  font-weight: var(--ds-font-weight-semibold);
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-brand-base-default) 0%,
+    var(--ds-color-brand-base-hover) 100%
+  );
+  background-size: cover;
+  background-position: center;
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--ds-font-size-xs);
+}
+
+.md {
+  width: 44px;
+  height: 44px;
+  font-size: var(--ds-font-size-sm);
+}
+
+.lg {
+  width: 56px;
+  height: 56px;
+  font-size: var(--ds-font-size-md);
+}

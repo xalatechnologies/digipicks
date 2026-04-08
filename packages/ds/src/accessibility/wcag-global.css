@@ -1,0 +1,260 @@
+/**
+ * WCAG 2.1 AA Global Accessibility Layer
+ *
+ * Imported once in @digilist-saas/ds/global to ensure all apps inherit
+ * consistent accessibility behaviors. Contains:
+ *
+ * 1. Focus ring system (keyboard-only, high visibility)
+ * 2. Screen reader utilities (.sr-only, .sr-focusable)
+ * 3. Reduced motion support
+ * 4. High contrast mode adjustments
+ * 5. Minimum touch target enforcement
+ * 6. Color contrast enforcement for custom properties
+ * 7. ARIA live region styling
+ *
+ * Reference: docs/architecture/wcag-audit-v1.md
+ * Criteria: WCAG 2.1 AA — 1.4.3, 2.1.1, 2.4.7, 2.5.5, 2.5.8
+ */
+
+/* ==========================================================================
+   1. FOCUS RING SYSTEM (WCAG 2.4.7 Focus Visible)
+   ========================================================================== */
+
+/**
+ * Keyboard focus indicator: 3px solid outline with 2px offset.
+ * Uses the DS focus token for theme consistency.
+ * Applies ONLY to keyboard navigation (:focus-visible), not mouse clicks.
+ */
+
+:focus-visible {
+    outline: 3px solid var(--ds-color-focus-outer, #2563eb);
+    outline-offset: 2px;
+    border-radius: var(--digilist-radius-sm, 4px);
+}
+
+/* Remove default browser focus ring for mouse users */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Enhanced focus for interactive controls */
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--ds-color-focus-outer, #2563eb);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.15);
+}
+
+/* Inset focus for inputs (better visual within bordered elements) */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline-offset: -1px;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   2. SCREEN READER UTILITIES (WCAG 1.3.1 Info and Relationships)
+   ========================================================================== */
+
+/**
+ * Visually hidden but accessible to screen readers.
+ * Use for labels, descriptions, and context that sighted users
+ * derive from visual layout.
+ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/**
+ * Visually hidden until focused (for skip links and similar).
+ */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: var(--ds-size-2) var(--ds-size-3);
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* ==========================================================================
+   3. REDUCED MOTION (WCAG 2.3.3 Animation from Interactions)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ==========================================================================
+   4. HIGH CONTRAST MODE (WCAG 1.4.11 Non-text Contrast)
+   ========================================================================== */
+
+@media (forced-colors: active) {
+
+    /* Ensure focus indicators remain visible */
+    :focus-visible {
+        outline: 3px solid Highlight;
+        outline-offset: 2px;
+    }
+
+    /* Ensure borders are visible */
+    button,
+    input,
+    select,
+    textarea {
+        border: 1px solid ButtonText;
+    }
+
+    /* Ensure links are distinguishable */
+    a {
+        text-decoration: underline;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        /* Enforce higher contrast ratios */
+        --ds-color-text-muted: #333;
+        --ds-color-border-default: #555;
+    }
+
+    :focus-visible {
+        outline-width: 4px;
+    }
+}
+
+/* ==========================================================================
+   5. MINIMUM TOUCH TARGET SIZE (WCAG 2.5.5 Target Size, 2.5.8 Target Size Minimum)
+   ========================================================================== */
+
+/**
+ * Interactive elements should be at least 44×44 CSS pixels (AAA) or 24×24 (AA).
+ * We enforce 44px for primary controls, 24px minimum for inline elements.
+ */
+
+button,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="switch"],
+[role="checkbox"],
+[role="radio"],
+a[href] {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Exception: inline text links don't need 44px */
+p a,
+li a,
+td a,
+span a,
+.inline-link {
+    min-height: unset;
+    min-width: unset;
+}
+
+/* ==========================================================================
+   6. ARIA LIVE REGION UTILITIES
+   ========================================================================== */
+
+/**
+ * Utility classes for dynamic content announcements.
+ * Usage: <div class="aria-live-polite" aria-live="polite">...</div>
+ */
+
+.aria-live-polite {
+    /* Utility class — no visual styles needed. Pair with aria-live="polite" */
+    position: relative;
+}
+
+.aria-live-assertive {
+    /* Utility class — no visual styles needed. Pair with aria-live="assertive" */
+    position: relative;
+}
+
+/* Status messages (WCAG 4.1.3) */
+[role="status"],
+[role="alert"] {
+    /* Ensure status messages don't visually disrupt layout */
+    contain: layout;
+}
+
+/* ==========================================================================
+   7. TEXT SPACING (WCAG 1.4.12 Text Spacing)
+   ========================================================================== */
+
+/**
+ * Content must be readable with increased spacing.
+ * These values ensure text remains functional at WCAG-required thresholds:
+ *   - Line height: 1.5× font size
+ *   - Paragraph spacing: 2× font size
+ *   - Letter spacing: 0.12× font size
+ *   - Word spacing: 0.16× font size
+ */
+
+body {
+    line-height: 1.5;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+/* ==========================================================================
+   8. IMAGE ACCESSIBILITY (WCAG 1.1.1 Non-text Content)
+   ========================================================================== */
+
+/* Flag images missing alt text */
+img:not([alt]) {
+    outline: 3px dashed red;
+    outline-offset: 2px;
+}
+
+/* Only show in development */
+@media not all and (min-resolution: 0.001dpcm) {
+    img:not([alt]) {
+        outline: none;
+    }
+}
+
+/* ==========================================================================
+   9. SCROLLBAR ACCESSIBILITY
+   ========================================================================== */
+
+/* Ensure scrollable areas are keyboard-accessible */
+[tabindex="-1"]:focus {
+    outline: none;
+}
+
+/* Scrollable containers should be focusable */
+[role="region"][tabindex="0"]:focus-visible {
+    outline: 3px solid var(--ds-color-focus-outer, #2563eb);
+    outline-offset: -3px;
+}

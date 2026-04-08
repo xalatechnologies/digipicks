@@ -1,0 +1,127 @@
+/**
+ * RevisionDiffView — Styles
+ *
+ * Color-coded diff table for audit revision comparison.
+ * Uses DS design tokens exclusively for consistency.
+ */
+
+.container {
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: var(--digilist-radius-md, 8px);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-font-size-sm);
+}
+
+.fieldHeader,
+.valueHeader {
+  padding: var(--ds-size-2) var(--ds-size-3);
+  text-align: left;
+  font-weight: var(--digilist-font-weight-semibold, 600);
+  font-size: var(--ds-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ds-color-neutral-text-subtle);
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-bottom: 1px solid var(--ds-color-neutral-border-default);
+}
+
+.fieldCell {
+  padding: var(--ds-size-2) var(--ds-size-3);
+  font-weight: var(--digilist-font-weight-medium, 500);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+}
+
+.fieldName {
+  font-family: var(--ds-font-family-mono, monospace);
+}
+
+.valueCell {
+  padding: var(--ds-size-2) var(--ds-size-3);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  word-break: break-word;
+  max-width: 300px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--ds-border-radius-full);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--digilist-font-weight-bold, 700);
+  flex-shrink: 0;
+}
+
+.statusBadge.added {
+  background-color: var(--ds-color-success-surface-default);
+  color: var(--ds-color-success-text-default);
+}
+
+.statusBadge.removed {
+  background-color: var(--ds-color-danger-surface-default);
+  color: var(--ds-color-danger-text-default);
+}
+
+.statusBadge.modified {
+  background-color: var(--ds-color-warning-surface-default);
+  color: var(--ds-color-warning-text-default);
+}
+
+.statusBadge.unchanged {
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Row hover */
+.table tbody tr:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+/* Row status backgrounds */
+.rowAdded {
+  background-color: color-mix(in srgb, var(--ds-color-success-surface-default) 20%, transparent);
+}
+
+.rowRemoved {
+  background-color: color-mix(in srgb, var(--ds-color-danger-surface-default) 20%, transparent);
+}
+
+.rowModified {
+  background-color: transparent;
+}
+
+.rowUnchanged {
+  opacity: 0.6;
+}
+
+/* Value coloring */
+.added {
+  color: var(--ds-color-success-text-default);
+  font-weight: var(--digilist-font-weight-medium, 500);
+}
+
+.removed {
+  color: var(--ds-color-danger-text-default);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Empty state */
+.empty {
+  padding: var(--ds-size-6);
+  text-align: center;
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+  font-style: italic;
+}

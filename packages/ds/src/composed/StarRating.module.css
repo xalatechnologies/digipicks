@@ -1,0 +1,61 @@
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+}
+
+/* Size variants - gap */
+.container[data-size="sm"] {
+    gap: var(--ds-size-1);
+}
+
+.container[data-size="md"] {
+    gap: var(--ds-size-1);
+}
+
+.container[data-size="lg"] {
+    gap: var(--ds-size-2);
+}
+
+.stars[data-size="sm"] {
+    gap: var(--ds-size-1);
+}
+
+.stars[data-size="md"] {
+    gap: var(--ds-size-1);
+}
+
+.stars[data-size="lg"] {
+    gap: var(--ds-size-2);
+}
+
+/* Star colors */
+.starFilled {
+    color: var(--ds-color-warning-base-default);
+}
+
+.starEmpty {
+    color: var(--ds-color-neutral-border-default);
+}
+
+/* Label */
+.label {
+    font-weight: var(--digilist-font-weight-semibold, 600);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.label[data-size="sm"] {
+    font-size: var(--ds-font-size-sm);
+}
+
+.label[data-size="md"] {
+    font-size: var(--ds-font-size-md);
+}
+
+.label[data-size="lg"] {
+    font-size: var(--ds-font-size-lg);
+}

@@ -1,0 +1,270 @@
+/* FileUpload CSS Module */
+
+/* Container */
+.container {
+    width: 100%;
+}
+
+/* Drop Zone */
+.dropZone {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    padding: var(--ds-size-6);
+    background: var(--ds-color-neutral-background-default);
+    border: 2px dashed var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-lg, 12px);
+    cursor: pointer;
+    transition: border-color var(--ds-transition-fast), background-color var(--ds-transition-fast);
+}
+
+.dropZone:hover:not(.disabled) {
+    border-color: var(--ds-color-accent-base-default);
+    background: var(--ds-color-accent-surface-default);
+}
+
+.dropZone:focus {
+    outline: 2px solid var(--ds-color-accent-base-default);
+    outline-offset: 2px;
+}
+
+.dropZone.dragging {
+    border-color: var(--ds-color-accent-base-default);
+    background: var(--ds-color-accent-surface-default);
+    border-style: solid;
+}
+
+.dropZone.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--ds-color-neutral-background-subtle);
+}
+
+/* Variant: Compact */
+.variant-compact {
+    min-height: 120px;
+    padding: var(--ds-size-4);
+}
+
+/* Variant: Minimal */
+.variant-minimal {
+    min-height: 80px;
+    padding: var(--ds-size-3);
+    border-style: solid;
+}
+
+/* File Input (hidden) */
+.fileInput {
+    display: none;
+}
+
+/* Drop Zone Content */
+.dropZoneContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-size-3);
+    color: var(--ds-color-neutral-text-subtle);
+    text-align: center;
+    pointer-events: none;
+}
+
+.dropZoneText {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-2);
+}
+
+.dropZoneTitle {
+    margin: 0;
+    font-size: var(--ds-font-size-md);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.dropZoneSubtitle {
+    margin: 0;
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.browseLink {
+    color: var(--ds-color-accent-base-default);
+    font-weight: var(--ds-font-weight-medium);
+    text-decoration: underline;
+}
+
+.dropZoneHint {
+    margin: 0;
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Previews Grid */
+.previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--ds-size-3);
+    margin-top: var(--ds-size-4);
+}
+
+/* Preview Item */
+.preview {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    padding: var(--ds-size-3);
+    background: var(--ds-color-neutral-background-default);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    transition: border-color var(--ds-transition-fast);
+}
+
+.preview:hover {
+    border-color: var(--ds-color-neutral-border-hover);
+}
+
+.previewError {
+    border-color: var(--ds-color-danger-border-default);
+    background: var(--ds-color-danger-surface-subtle);
+}
+
+.previewSuccess {
+    border-color: var(--ds-color-success-border-default);
+    background: var(--ds-color-success-surface-subtle);
+}
+
+/* Preview Image */
+.previewImage {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ds-color-neutral-surface-default);
+    border-radius: var(--digilist-radius-sm, 4px);
+    overflow: hidden;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.previewImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Preview Info */
+.previewInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.previewName {
+    margin: 0;
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.previewSize {
+    margin: 0;
+    margin-top: var(--ds-size-1);
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.previewErrorText {
+    margin: 0;
+    margin-top: var(--ds-size-1);
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-danger-text-default);
+}
+
+/* Progress Bar */
+.progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--ds-color-neutral-surface-default);
+    border-radius: 0 0 var(--digilist-radius-md, 8px) var(--digilist-radius-md, 8px);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--ds-color-accent-base-default);
+    transition: width var(--ds-transition-normal);
+}
+
+/* Remove Button */
+.removeButton {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--ds-color-neutral-text-subtle);
+    cursor: pointer;
+    border-radius: var(--digilist-radius-sm, 4px);
+    transition: background-color var(--ds-transition-fast), color var(--ds-transition-fast);
+}
+
+.removeButton:hover {
+    background: var(--ds-color-danger-surface-default);
+    color: var(--ds-color-danger-base-default);
+}
+
+.removeButton:active {
+    transform: scale(0.95);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    .dropZone,
+    .preview,
+    .removeButton,
+    .progressFill {
+        transition: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .dropZone {
+        border-width: 3px;
+    }
+
+    .dropZone:focus {
+        outline-width: 3px;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dropZone {
+        min-height: 160px;
+        padding: var(--ds-size-4);
+    }
+
+    .previews {
+        grid-template-columns: 1fr;
+    }
+
+    .dropZoneContent svg {
+        width: 32px;
+        height: 32px;
+    }
+}

@@ -1,0 +1,149 @@
+name: A-krav Nightly
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 02:00 UTC daily
+  workflow_dispatch: {}
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  # ============================================================================
+  # Seed E2E test data
+  # ============================================================================
+  seed:
+    name: Seed E2E Data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@xala-technologies'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Seed E2E data
+        run: npx tsx scripts/seed-e2e.ts
+        env:
+          CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
+
+  # ============================================================================
+  # Run A-krav test suites
+  # ============================================================================
+  a-krav:
+    name: A-krav Tests
+    needs: seed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@xala-technologies'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build shared
+        run: pnpm --filter @digilist-saas/shared build
+
+      - name: Build web app
+        run: pnpm --filter @digilist-saas/web build
+        env:
+          VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run A-krav tests
+        run: pnpm exec playwright test --project=a-krav
+        env:
+          CI: true
+
+      - name: Upload evidence artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: a-krav-evidence-${{ github.run_number }}
+          path: |
+            evidence/
+            playwright-report/
+          retention-days: 90
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: a-krav-results-${{ github.run_number }}
+          path: playwright-results.xml
+          retention-days: 90
+
+  # ============================================================================
+  # Generate evidence pack
+  # ============================================================================
+  evidence-pack:
+    name: Generate Evidence Pack
+    needs: a-krav
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@xala-technologies'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download evidence artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: a-krav-evidence-${{ github.run_number }}
+          path: evidence/
+
+      - name: Generate evidence pack
+        run: npx tsx scripts/export-evidence-pack.ts
+
+      - name: Upload evidence pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: a-krav-evidence-pack-${{ github.run_number }}
+          path: evidence/evidence-pack-*
+          retention-days: 90

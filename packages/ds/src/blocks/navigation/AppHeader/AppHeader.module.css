@@ -1,0 +1,300 @@
+/* AppHeader Component Styles */
+
+.header {
+    z-index: var(--ds-z-index-header, 100);
+    height: var(--app-header-height, 72px);
+    background-color: var(--ds-color-neutral-surface-default);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+    box-shadow: var(--ds-shadow-xs);
+}
+
+.header[data-sticky] {
+    position: sticky;
+    top: 0;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 100%;
+    padding: 0 var(--ds-size-6);
+    gap: var(--ds-size-4);
+    max-width: none;
+    margin: 0 auto;
+}
+
+/* Left Zone */
+.leftZone {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+    z-index: 1;
+}
+
+/* Center Zone - Search (absolutely centered) */
+.centerZone {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    max-width: 800px;
+    width: 50%;
+}
+
+.searchContainer {
+    position: relative;
+    width: 100%;
+}
+
+.searchInput {
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--ds-size-4) 0 var(--ds-size-11);
+    font-size: var(--ds-font-size-sm);
+    font-family: var(--ds-font-family-base);
+    color: var(--ds-color-neutral-text-default);
+    background-color: var(--ds-color-neutral-surface-default);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+    box-shadow: none !important;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.searchInput:hover {
+    border-color: var(--ds-color-neutral-border-hover);
+}
+
+.searchInput:focus {
+    outline: none !important;
+    border-color: var(--ds-color-accent-border-default);
+    box-shadow: none !important;
+}
+
+.searchInput:focus-visible,
+.searchInput:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.searchInput::placeholder {
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.searchIcon {
+    position: absolute;
+    left: var(--ds-size-4);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-neutral-text-subtle);
+    pointer-events: none;
+}
+
+.searchResults {
+    position: absolute;
+    top: calc(100% + var(--ds-size-2));
+    left: 0;
+    right: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: var(--ds-color-neutral-surface-default);
+    border: 1px solid var(--ds-color-neutral-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    box-shadow: var(--ds-shadow-lg);
+    z-index: 1000;
+}
+
+.searchResult {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+    width: 100%;
+    padding: var(--ds-size-3) var(--ds-size-4);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--ds-transition-duration-fast) var(--ds-transition-timing-default);
+}
+
+.searchResult:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.searchResult:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: -2px;
+}
+
+.resultIcon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.resultContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.resultLabel {
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-neutral-text-default);
+}
+
+.resultDescription {
+    font-size: var(--ds-font-size-xs);
+    color: var(--ds-color-neutral-text-subtle);
+    margin-top: var(--ds-size-1);
+}
+
+/* Right Zone */
+.rightZone {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--ds-size-2);
+    min-width: 0;
+    z-index: 1;
+}
+
+.iconButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    color: var(--ds-color-neutral-text-default);
+    cursor: pointer;
+    transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.iconButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-accent-text-default);
+}
+
+.iconButton:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+.iconButton:active {
+    background-color: var(--ds-color-neutral-surface-active);
+}
+
+.notificationBadge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 var(--ds-size-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-bold);
+    color: var(--ds-color-danger-contrast-default);
+    background-color: var(--ds-color-danger-base-default);
+    border: 2px solid var(--ds-color-neutral-surface-default);
+    border-radius: var(--ds-border-radius-full);
+}
+
+.divider {
+    width: 1px;
+    height: 28px;
+    background-color: var(--ds-color-neutral-border-subtle);
+    margin: 0 var(--ds-size-2);
+}
+
+.logoutButton {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+    padding: var(--ds-size-2) var(--ds-size-3);
+    background: none;
+    border: none;
+    border-radius: var(--digilist-radius-md, 8px);
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-medium);
+    font-family: var(--ds-font-family-base);
+    color: var(--ds-color-neutral-text-default);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--ds-transition-duration-normal) var(--ds-transition-timing-default);
+}
+
+.logoutButton:hover {
+    background-color: var(--ds-color-neutral-surface-hover);
+    color: var(--ds-color-accent-text-default);
+}
+
+.logoutButton:focus-visible {
+    outline: 2px solid var(--ds-color-focus-outline);
+    outline-offset: 2px;
+}
+
+.logoutButton:active {
+    background-color: var(--ds-color-neutral-surface-active);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: auto 1fr;
+        gap: var(--ds-size-2);
+        padding: 0 var(--ds-size-3);
+    }
+
+    .centerZone {
+        display: none;
+    }
+
+    .rightZone {
+        justify-content: flex-end;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    .searchInput,
+    .iconButton,
+    .logoutButton,
+    .searchResult {
+        transition: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .header {
+        border-bottom-width: 2px;
+    }
+
+    .iconButton,
+    .logoutButton {
+        border: 1px solid currentColor;
+    }
+
+    .searchInput {
+        border-width: 2px;
+    }
+}

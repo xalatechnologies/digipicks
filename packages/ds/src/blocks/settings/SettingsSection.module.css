@@ -1,0 +1,11 @@
+/* SettingsSection - Card with heading for settings group */
+
+.card {
+  padding: var(--ds-size-5);
+}
+
+.iconWrapper {
+  padding: var(--ds-size-2);
+  border-radius: var(--digilist-radius-md, 8px);
+  background-color: var(--ds-color-brand-surface-default);
+}

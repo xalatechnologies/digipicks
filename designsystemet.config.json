@@ -1,0 +1,61 @@
+{
+  "$schema": "./node_modules/@digdir/designsystemet/dist/config.schema.json",
+  "outDir": "packages/ds/generated",
+  "clean": false,
+  "themes": {
+    "digilist": {
+      "colors": {
+        "main": {
+          "primary": "#33639E",
+          "accent": "#1F2F6E"
+        },
+        "neutral": "#1a275c",
+        "support": {
+          "extra1": "#8BC34A",
+          "extra2": "#9EDBE5",
+          "extra3": "#E5AA20"
+        }
+      },
+      "borderRadius": 5,
+      "typography": {
+        "fontFamily": "Inter"
+      }
+    },
+    "xala-navy": {
+      "colors": {
+        "main": {
+          "primary": "#003057",
+          "accent": "#1e40af"
+        },
+        "neutral": "#0f172a",
+        "support": {
+          "extra1": "#2563eb",
+          "extra2": "#93c5fd",
+          "extra3": "#e0f2fe"
+        }
+      },
+      "borderRadius": 5,
+      "typography": {
+        "fontFamily": "Inter"
+      }
+    },
+    "steinkjer": {
+      "colors": {
+        "main": {
+          "primary": "#EBCECE",
+          "accent": "#0B0B12"
+        },
+        "neutral": "#565B56",
+        "support": {
+          "extra1": "#FAE7B7",
+          "extra2": "#B3F9D5",
+          "extra3": "#F9A8C3"
+        }
+      },
+      "borderRadius": 2,
+      "typography": {
+        "fontFamily": "Inter"
+      }
+    }
+  }
+}

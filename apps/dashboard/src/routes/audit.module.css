@@ -1,0 +1,64 @@
+.outerStack {
+  height: 100%;
+}
+
+.contentArea {
+  flex: 1;
+  min-height: 0;
+}
+
+.loadingWrapper {
+  padding: var(--ds-size-10);
+}
+
+.fullWidthTable {
+  width: 100%;
+}
+
+.exportButton {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cellTitle {
+  margin: 0;
+  font-weight: 500;
+}
+
+.cellSubtle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.cellDefault {
+  margin: 0;
+}
+
+.cellMono {
+  margin: 0;
+  font-family: var(--ds-font-family-mono, monospace);
+}
+
+.drawerTitle {
+  margin: 0;
+  font-weight: 600;
+}
+
+.drawerLabel {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.drawerValue {
+  margin: 0;
+}
+
+.drawerValueBold {
+  margin: 0;
+  font-weight: 500;
+}
+
+.drawerValueMono {
+  margin: 0;
+  font-family: var(--ds-font-family-mono, monospace);
+}

@@ -1,0 +1,94 @@
+.container {
+    position: relative;
+    display: inline-block;
+}
+
+.trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: var(--ds-color-text-default);
+    background: transparent;
+    border: none;
+    border-radius: var(--digilist-radius-sm, 4px);
+    cursor: pointer;
+    transition: var(--ds-transition-colors);
+}
+
+.trigger:hover {
+    background: var(--ds-color-surface-hover);
+}
+
+.trigger:active {
+    background: var(--ds-color-surface-active);
+}
+
+.trigger:focus {
+    outline: none;
+    box-shadow: var(--digilist-shadow-focus);
+}
+
+.menu {
+    position: absolute;
+    top: calc(100% + var(--ds-size-xs));
+    right: 0;
+    z-index: 1000;
+    min-width: 160px;
+    padding: var(--ds-size-xs);
+    background: var(--ds-color-surface-default);
+    border: var(--ds-border-default) solid var(--ds-color-border-default);
+    border-radius: var(--digilist-radius-md, 8px);
+    box-shadow: var(--ds-shadow-lg);
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-sm);
+    width: 100%;
+    padding: var(--ds-size-sm) var(--ds-size-md);
+    font-size: var(--ds-font-size-sm);
+    color: var(--ds-color-text-default);
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-radius: var(--digilist-radius-sm, 4px);
+    cursor: pointer;
+    transition: var(--ds-transition-colors);
+}
+
+.menuItem:hover:not(:disabled) {
+    background: var(--ds-color-surface-hover);
+}
+
+.menuItem:active:not(:disabled) {
+    background: var(--ds-color-surface-active);
+}
+
+.menuItem:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.menuItem[data-variant='danger'] {
+    color: var(--ds-color-error-text);
+}
+
+.menuItem[data-variant='danger']:hover:not(:disabled) {
+    background: var(--ds-color-error-surface);
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+}
+
+.label {
+    flex: 1;
+}

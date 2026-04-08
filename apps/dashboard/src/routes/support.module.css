@@ -1,0 +1,251 @@
+/* Support Page — extracted from inline styles */
+
+.pageLayout {
+  height: calc(100vh - 160px);
+}
+
+.panelRow {
+  flex: 1;
+  min-height: 0;
+}
+
+.ticketListPanel {
+  width: 380px;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.ticketListHeader {
+  padding: var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  background-color: var(--ds-color-neutral-background-subtle);
+}
+
+.scrollContainer {
+  flex: 1;
+  overflow: auto;
+}
+
+.loadingPadding {
+  padding: var(--ds-size-8);
+}
+
+.emptyState {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.ticketItem {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  cursor: pointer;
+}
+
+.ticketItemSelected {
+  composes: ticketItem;
+  background-color: var(--ds-color-brand-1-surface-default);
+  border-left: 3px solid var(--ds-color-brand-1-base-default);
+}
+
+.ticketItemUnselected {
+  composes: ticketItem;
+  border-left: 3px solid transparent;
+}
+
+.ticketSubject {
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtleText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.ticketMeta {
+  margin-top: var(--ds-size-1);
+}
+
+.ticketMessageCount {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: var(--ds-size-1) 0 0;
+}
+
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.threadPanel {
+  flex: 1;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.threadEmptyState {
+  flex: 1;
+  padding: var(--ds-size-8);
+}
+
+.threadHeader {
+  padding: var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  background-color: var(--ds-color-neutral-background-subtle);
+}
+
+.headingNoMargin {
+  margin: 0;
+}
+
+.threadDescription {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow: auto;
+  padding: var(--ds-size-4);
+}
+
+.systemMessage {
+  margin: var(--ds-size-3) 0;
+}
+
+.systemMessageText {
+  color: var(--ds-color-neutral-text-subtle);
+  font-style: italic;
+  margin: 0;
+}
+
+.messageWrapper {
+  margin-bottom: var(--ds-size-3);
+  display: flex;
+  flex-direction: column;
+}
+
+.messageAuthor {
+  font-weight: 600;
+  margin: 0;
+}
+
+.messageBubble {
+  margin-top: var(--ds-size-1);
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-border-radius-md);
+  max-width: 80%;
+}
+
+.messageBody {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.inputArea {
+  padding: var(--ds-size-4);
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.textareaFlex {
+  flex: 1;
+}
+
+.detailPanel {
+  width: 280px;
+  padding: var(--ds-size-4);
+  overflow: auto;
+  flex-shrink: 0;
+}
+
+.sectionLabel {
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.reporterAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-brand-1-surface-default);
+}
+
+.reporterAvatarIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.reporterName {
+  font-weight: 600;
+  margin: 0;
+}
+
+.divider {
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.calendarIconSm {
+  width: 14px;
+  height: 14px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.fullWidthButton {
+  width: 100%;
+}
+
+.actionIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: var(--ds-size-1);
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--ds-color-neutral-background-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalCard {
+  width: 520px;
+  padding: var(--ds-size-6);
+}
+
+.newTicketLabel {
+  font-weight: 600;
+  margin: 0 0 var(--ds-size-1);
+}
+
+.newTicketFieldLabel {
+  font-weight: 600;
+  margin: 0;
+}
+
+.flexOne {
+  flex: 1;
+}
+
+.flexOneShrink {
+  flex: 1;
+  min-width: 0;
+}

@@ -1,0 +1,85 @@
+.root {
+    overflow: hidden;
+    border-radius: var(--digilist-radius-lg, 12px);
+}
+
+.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ds-color-neutral-surface-hover);
+    border-radius: var(--digilist-radius-lg, 12px);
+}
+
+.emptyLabel {
+    margin: 0;
+}
+
+/* Clickable wrapper around hero */
+.heroWrapper {
+    flex: 1;
+    cursor: default;
+}
+
+.heroWrapper[data-clickable="true"] {
+    cursor: pointer;
+}
+
+.heroContainer {
+    position: relative;
+    height: 100%;
+    border-radius: var(--digilist-radius-lg, 12px);
+    overflow: hidden;
+}
+
+/* Vertical thumbnails column */
+.thumbnailsColumn {
+    width: 240px;
+}
+
+.heroImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.counter {
+    position: absolute;
+    bottom: var(--ds-size-4);
+    left: var(--ds-size-4);
+    padding: var(--ds-size-2) var(--ds-size-4);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: var(--ds-border-radius-full);
+    font-weight: var(--ds-font-weight-medium);
+    backdrop-filter: blur(4px);
+    margin: 0;
+}
+
+.thumbnailButton {
+    flex: 1;
+    padding: 0;
+    border: 3px solid transparent;
+    border-radius: var(--digilist-radius-lg, 12px);
+    overflow: hidden;
+    opacity: 0.85;
+    background: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.thumbnailButton:hover {
+    opacity: 1;
+}
+
+.thumbnailButtonActive {
+    composes: thumbnailButton;
+    border-color: var(--ds-color-accent-base-default);
+    opacity: 1;
+}
+
+.thumbnailImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

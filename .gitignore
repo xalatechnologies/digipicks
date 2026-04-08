@@ -1,0 +1,85 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.js.map
+*.d.ts
+!src/**/*.d.ts
+!packages/**/src/**/*.d.ts
+!convex/_generated/*.d.ts
+
+# Environment
+.env
+.env.*
+!.env.example
+.env.test
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test outputs
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+evidence/
+
+# Artifacts
+artifacts/
+*.artifact
+
+# Generated
+*.generated.ts
+*.generated.sql
+
+# Secrets (never commit)
+*.pem
+*.key
+service-account*.json
+secrets/
+
+# Package lock files (keep pnpm-lock.yaml, ignore others)
+yarn.lock
+package-lock.json
+
+# Convex
+.convex/
+# Note: convex/_generated/ is committed to repo for CI type checking
+
+# Turbo
+.turbo/
+
+# Vite
+*.local
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.prettiercache
+*.tsbuildinfo
+
+# VitePress
+**/.vitepress/cache/
+**/.vitepress/dist/
+
+# PWA / Service Workers (dev artifacts)
+**/dev-dist/
