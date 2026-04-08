@@ -1170,3 +1170,334 @@ export const creatorStatsBySport = query({
             .sort((a, b) => b.totalPicks - a.totalPicks);
     },
 });
+
+// =============================================================================
+// AI-POWERED INSIGHTS
+// =============================================================================
+
+/**
+ * Performance predictions — analyze a creator's historical pick data to
+ * surface trends, streak patterns, confidence calibration, and projected
+ * performance. Used by the subscriber insights dashboard.
+ */
+export const performancePredictions = query({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+    },
+    returns: v.object({
+        currentStreak: v.object({
+            type: v.union(v.literal("win"), v.literal("loss"), v.literal("none")),
+            length: v.number(),
+        }),
+        longestWinStreak: v.number(),
+        longestLossStreak: v.number(),
+        recentWinRate: v.number(),
+        overallWinRate: v.number(),
+        trend: v.union(v.literal("improving"), v.literal("declining"), v.literal("stable")),
+        confidenceCalibration: v.array(v.object({
+            confidence: v.string(),
+            picks: v.number(),
+            winRate: v.number(),
+            avgOdds: v.number(),
+            roi: v.number(),
+        })),
+        bestEdges: v.array(v.object({
+            sport: v.string(),
+            league: v.optional(v.string()),
+            pickType: v.string(),
+            picks: v.number(),
+            winRate: v.number(),
+            roi: v.number(),
+        })),
+        pickTypeBreakdown: v.array(v.object({
+            pickType: v.string(),
+            picks: v.number(),
+            winRate: v.number(),
+            roi: v.number(),
+        })),
+        sampleSize: v.number(),
+    }),
+    handler: async (ctx, { tenantId, creatorId }) => {
+        const picks = await ctx.db
+            .query("picks")
+            .withIndex("by_tenant_creator", (q) =>
+                q.eq("tenantId", tenantId).eq("creatorId", creatorId)
+            )
+            .collect();
+
+        const published = picks
+            .filter((p) => p.status === "published")
+            .sort((a, b) => (a._creationTime ?? 0) - (b._creationTime ?? 0));
+
+        const graded = published.filter((p) => p.result === "won" || p.result === "lost");
+
+        // --- Streak analysis ---
+        let currentStreak: { type: "win" | "loss" | "none"; length: number } = { type: "none", length: 0 };
+        let longestWinStreak = 0;
+        let longestLossStreak = 0;
+        let winRun = 0;
+        let lossRun = 0;
+
+        for (const pick of graded) {
+            if (pick.result === "won") {
+                winRun++;
+                lossRun = 0;
+                if (winRun > longestWinStreak) longestWinStreak = winRun;
+            } else {
+                lossRun++;
+                winRun = 0;
+                if (lossRun > longestLossStreak) longestLossStreak = lossRun;
+            }
+        }
+        if (graded.length > 0) {
+            const last = graded[graded.length - 1];
+            if (last.result === "won") currentStreak = { type: "win", length: winRun };
+            else currentStreak = { type: "loss", length: lossRun };
+        }
+
+        // --- Trend: recent 10 vs overall ---
+        const overallWins = graded.filter((p) => p.result === "won").length;
+        const overallWinRate = graded.length > 0
+            ? Math.round((overallWins / graded.length) * 100) / 100
+            : 0;
+
+        const recent10 = graded.slice(-10);
+        const recentWins = recent10.filter((p) => p.result === "won").length;
+        const recentWinRate = recent10.length > 0
+            ? Math.round((recentWins / recent10.length) * 100) / 100
+            : 0;
+
+        const trendDiff = recentWinRate - overallWinRate;
+        const trend = trendDiff > 0.05 ? "improving" : trendDiff < -0.05 ? "declining" : "stable";
+
+        // --- Confidence calibration ---
+        const confMap = new Map<string, { wins: number; total: number; oddsSum: number; wagered: number; netUnits: number }>();
+        for (const pick of graded) {
+            const entry = confMap.get(pick.confidence) ?? { wins: 0, total: 0, oddsSum: 0, wagered: 0, netUnits: 0 };
+            entry.total++;
+            entry.oddsSum += pick.oddsDecimal;
+            entry.wagered += pick.units;
+            if (pick.result === "won") {
+                entry.wins++;
+                entry.netUnits += pick.units * (pick.oddsDecimal - 1);
+            } else {
+                entry.netUnits -= pick.units;
+            }
+            confMap.set(pick.confidence, entry);
+        }
+        const confidenceCalibration = Array.from(confMap.entries())
+            .map(([confidence, d]) => ({
+                confidence,
+                picks: d.total,
+                winRate: d.total > 0 ? Math.round((d.wins / d.total) * 100) / 100 : 0,
+                avgOdds: d.total > 0 ? Math.round((d.oddsSum / d.total) * 100) / 100 : 0,
+                roi: d.wagered > 0 ? Math.round((d.netUnits / d.wagered) * 100 * 100) / 100 : 0,
+            }))
+            .sort((a, b) => b.picks - a.picks);
+
+        // --- Best edges: sport + league + pickType combos with >= 5 picks ---
+        const edgeMap = new Map<string, { sport: string; league?: string; pickType: string; wins: number; total: number; wagered: number; netUnits: number }>();
+        for (const pick of graded) {
+            const key = `${pick.sport}|${pick.league ?? ""}|${pick.pickType}`;
+            const entry = edgeMap.get(key) ?? { sport: pick.sport, league: pick.league, pickType: pick.pickType, wins: 0, total: 0, wagered: 0, netUnits: 0 };
+            entry.total++;
+            entry.wagered += pick.units;
+            if (pick.result === "won") {
+                entry.wins++;
+                entry.netUnits += pick.units * (pick.oddsDecimal - 1);
+            } else {
+                entry.netUnits -= pick.units;
+            }
+            edgeMap.set(key, entry);
+        }
+        const bestEdges = Array.from(edgeMap.values())
+            .filter((e) => e.total >= 5)
+            .map((e) => ({
+                sport: e.sport,
+                league: e.league,
+                pickType: e.pickType,
+                picks: e.total,
+                winRate: Math.round((e.wins / e.total) * 100) / 100,
+                roi: e.wagered > 0 ? Math.round((e.netUnits / e.wagered) * 100 * 100) / 100 : 0,
+            }))
+            .sort((a, b) => b.roi - a.roi)
+            .slice(0, 5);
+
+        // --- Pick type breakdown ---
+        const typeMap = new Map<string, { wins: number; total: number; wagered: number; netUnits: number }>();
+        for (const pick of graded) {
+            const entry = typeMap.get(pick.pickType) ?? { wins: 0, total: 0, wagered: 0, netUnits: 0 };
+            entry.total++;
+            entry.wagered += pick.units;
+            if (pick.result === "won") {
+                entry.wins++;
+                entry.netUnits += pick.units * (pick.oddsDecimal - 1);
+            } else {
+                entry.netUnits -= pick.units;
+            }
+            typeMap.set(pick.pickType, entry);
+        }
+        const pickTypeBreakdown = Array.from(typeMap.entries())
+            .map(([pickType, d]) => ({
+                pickType,
+                picks: d.total,
+                winRate: d.total > 0 ? Math.round((d.wins / d.total) * 100) / 100 : 0,
+                roi: d.wagered > 0 ? Math.round((d.netUnits / d.wagered) * 100 * 100) / 100 : 0,
+            }))
+            .sort((a, b) => b.picks - a.picks);
+
+        return {
+            currentStreak,
+            longestWinStreak,
+            longestLossStreak,
+            recentWinRate,
+            overallWinRate,
+            trend,
+            confidenceCalibration,
+            bestEdges,
+            pickTypeBreakdown,
+            sampleSize: graded.length,
+        };
+    },
+});
+
+/**
+ * Bankroll insights — compute Kelly-criterion sizing, risk metrics,
+ * and bankroll growth projections based on a user's tailed pick history.
+ */
+export const bankrollInsights = query({
+    args: {
+        tenantId: v.string(),
+        userId: v.string(),
+        bankroll: v.number(),
+    },
+    returns: v.object({
+        kellySuggestions: v.array(v.object({
+            confidence: v.string(),
+            historicalWinRate: v.number(),
+            avgOdds: v.number(),
+            kellyFraction: v.number(),
+            suggestedUnits: v.number(),
+            suggestedDollarAmount: v.number(),
+        })),
+        riskMetrics: v.object({
+            maxDrawdown: v.number(),
+            maxDrawdownPercent: v.number(),
+            currentDrawdown: v.number(),
+            variance: v.number(),
+            sharpeRatio: v.number(),
+        }),
+        projection: v.object({
+            next50PicksExpected: v.number(),
+            next100PicksExpected: v.number(),
+            breakEvenPicks: v.optional(v.number()),
+        }),
+        sampleSize: v.number(),
+    }),
+    handler: async (ctx, { tenantId, userId, bankroll }) => {
+        const tails = await ctx.db
+            .query("pickTails")
+            .withIndex("by_tenant_user", (q) => q.eq("tenantId", tenantId).eq("userId", userId))
+            .collect();
+
+        const tailedPicks: Array<{ result: string; units: number; oddsDecimal: number; confidence: string }> = [];
+        for (const tail of tails) {
+            const pick = await ctx.db.get(tail.pickId as any);
+            if (!pick || (pick.result !== "won" && pick.result !== "lost")) continue;
+            tailedPicks.push({
+                result: pick.result,
+                units: pick.units,
+                oddsDecimal: pick.oddsDecimal,
+                confidence: pick.confidence,
+            });
+        }
+
+        // --- Kelly criterion per confidence level ---
+        const confMap = new Map<string, { wins: number; total: number; oddsSum: number }>();
+        for (const p of tailedPicks) {
+            const entry = confMap.get(p.confidence) ?? { wins: 0, total: 0, oddsSum: 0 };
+            entry.total++;
+            entry.oddsSum += p.oddsDecimal;
+            if (p.result === "won") entry.wins++;
+            confMap.set(p.confidence, entry);
+        }
+
+        const kellySuggestions = Array.from(confMap.entries())
+            .filter(([, d]) => d.total >= 3)
+            .map(([confidence, d]) => {
+                const winRate = d.wins / d.total;
+                const avgOdds = d.oddsSum / d.total;
+                const b = avgOdds - 1;
+                const q = 1 - winRate;
+                const kellyFull = b > 0 ? (winRate * b - q) / b : 0;
+                // Quarter-Kelly for conservative sizing
+                const kellyFraction = Math.max(0, Math.round(kellyFull * 0.25 * 10000) / 10000);
+                const suggestedDollarAmount = Math.round(bankroll * kellyFraction * 100) / 100;
+                const unitSize = bankroll * 0.01;
+                const suggestedUnits = unitSize > 0 ? Math.round((suggestedDollarAmount / unitSize) * 10) / 10 : 0;
+
+                return {
+                    confidence,
+                    historicalWinRate: Math.round(winRate * 100) / 100,
+                    avgOdds: Math.round(avgOdds * 100) / 100,
+                    kellyFraction,
+                    suggestedUnits,
+                    suggestedDollarAmount,
+                };
+            })
+            .sort((a, b) => b.historicalWinRate - a.historicalWinRate);
+
+        // --- Risk metrics ---
+        let runningPL = 0;
+        let peak = 0;
+        let maxDrawdown = 0;
+        const plPerPick: number[] = [];
+
+        for (const p of tailedPicks) {
+            const pl = p.result === "won"
+                ? p.units * (p.oddsDecimal - 1)
+                : -p.units;
+            plPerPick.push(pl);
+            runningPL += pl;
+            if (runningPL > peak) peak = runningPL;
+            const drawdown = peak - runningPL;
+            if (drawdown > maxDrawdown) maxDrawdown = drawdown;
+        }
+
+        const currentDrawdown = peak - runningPL;
+        const maxDrawdownPercent = bankroll > 0 ? Math.round((maxDrawdown / bankroll) * 100 * 100) / 100 : 0;
+
+        const n = plPerPick.length;
+        const mean = n > 0 ? plPerPick.reduce((s, v) => s + v, 0) / n : 0;
+        const variance = n > 1
+            ? plPerPick.reduce((s, v) => s + (v - mean) ** 2, 0) / (n - 1)
+            : 0;
+        const stdDev = Math.sqrt(variance);
+        const sharpeRatio = stdDev > 0 ? Math.round((mean / stdDev) * 100) / 100 : 0;
+
+        // --- Projection ---
+        const next50 = bankroll + mean * 50;
+        const next100 = bankroll + mean * 100;
+        const breakEvenPicks = currentDrawdown > 0 && mean > 0
+            ? Math.ceil(currentDrawdown / mean)
+            : undefined;
+
+        return {
+            kellySuggestions,
+            riskMetrics: {
+                maxDrawdown: Math.round(maxDrawdown * 100) / 100,
+                maxDrawdownPercent,
+                currentDrawdown: Math.round(currentDrawdown * 100) / 100,
+                variance: Math.round(variance * 100) / 100,
+                sharpeRatio,
+            },
+            projection: {
+                next50PicksExpected: Math.round(next50 * 100) / 100,
+                next100PicksExpected: Math.round(next100 * 100) / 100,
+                breakEvenPicks,
+            },
+            sampleSize: tailedPicks.length,
+        };
+    },
+});

@@ -904,3 +904,24 @@ export type {
     BroadcastMessageType,
     SendBroadcastInput,
 } from './use-broadcasts';
+
+// AI Insights (DigiPicks — performance predictions, bankroll management)
+export {
+    useCreatorPredictions,
+    useBankrollInsights,
+    useSubscriberDashboard,
+} from './use-insights';
+
+export type {
+    StreakInfo,
+    ConfidenceCalibration,
+    BestEdge,
+    PickTypeBreakdown,
+    PerformancePredictions,
+    KellySuggestion,
+    RiskMetrics,
+    BankrollProjection,
+    BankrollInsights,
+    CreatorInsight,
+    SubscriberDashboard,
+} from './use-insights';
