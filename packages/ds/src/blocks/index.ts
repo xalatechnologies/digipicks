@@ -230,3 +230,7 @@ export type { ProgressBarProps, ProgressBarVariant } from './ProgressBar';
 // QRCodeDialog
 export { QRCodeDialog } from './QRCodeDialog';
 export type { QRCodeDialogProps } from './QRCodeDialog';
+
+// PushNotificationPrompt
+export { PushNotificationPrompt } from './PushNotificationPrompt';
+export type { PushNotificationPromptProps } from './PushNotificationPrompt';

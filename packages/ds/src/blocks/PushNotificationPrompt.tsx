@@ -29,7 +29,7 @@ export interface PushNotificationPromptProps {
   /** Description text */
   description?: string;
   /** Context for the prompt (affects messaging) */
-  context?: 'booking' | 'reminder' | 'general';
+  context?: 'booking' | 'reminder' | 'general' | 'picks' | 'results' | 'subscription';
   /** Custom class name */
   className?: string;
 }
@@ -65,12 +65,33 @@ export function PushNotificationPrompt({
             description ||
             'Vi kan sende deg påminnelser før dine bookinger så du aldri glemmer en avtale.',
         };
+      case 'picks':
+        return {
+          title: title || 'Få varsel om nye picks',
+          description:
+            description ||
+            'Bli varslet når dine favoritt-creators publiserer nye picks, så du aldri går glipp av en mulighet.',
+        };
+      case 'results':
+        return {
+          title: title || 'Følg med på resultatene',
+          description:
+            description ||
+            'Få umiddelbar beskjed når picks avgjøres — se gevinster og oppdatert statistikk direkte.',
+        };
+      case 'subscription':
+        return {
+          title: title || 'Hold deg oppdatert',
+          description:
+            description ||
+            'Motta varsler om abonnementet ditt — fornyelser, nye tilbud og endringer.',
+        };
       default:
         return {
           title: title || 'Aktiver varsler',
           description:
             description ||
-            'Få viktige oppdateringer om dine bookinger direkte i nettleseren din.',
+            'Få viktige oppdateringer direkte i nettleseren din.',
         };
     }
   };

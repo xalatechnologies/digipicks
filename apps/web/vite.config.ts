@@ -16,11 +16,11 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['logo.svg'],
       manifest: {
-        name: 'Xala Booking',
-        short_name: 'Xala',
-        description: 'Norwegian municipal booking and resource management system',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        name: 'DigiPicks',
+        short_name: 'DigiPicks',
+        description: 'Premium sports betting picks from top creators',
+        theme_color: '#0f172a',
+        background_color: '#0f172a',
         display: 'standalone',
         start_url: '/',
         scope: '/',
@@ -30,6 +30,12 @@ export default defineConfig({
             sizes: 'any',
             type: 'image/svg+xml',
             purpose: 'any maskable',
+          },
+          {
+            src: '/icon.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any',
           },
         ],
       },
@@ -73,6 +79,37 @@ export default defineConfig({
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60, // 1 hour
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            // Cache Convex API responses for offline feed viewing
+            urlPattern: /\.convex\.cloud\/api\//,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'convex-api-cache',
+              networkTimeoutSeconds: 5,
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 30, // 30 minutes
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            // Cache pick/creator images for offline viewing
+            urlPattern: /\.(png|jpg|jpeg|webp|gif)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-cache',
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
               },
               cacheableResponse: {
                 statuses: [0, 200],

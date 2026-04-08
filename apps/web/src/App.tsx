@@ -38,6 +38,7 @@ import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
 import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
+import { PushNotificationOptIn } from '@/components/PushNotificationOptIn';
 
 import {
   AuthProvider,
@@ -212,6 +213,7 @@ function ThemedApp() {
             <NotificationCenterProvider>
               <ConvexRealtimeProvider>
                 <RealtimeToast />
+                <PushNotificationOptIn context="picks" />
                 <div className="themed-app-root">
                   <Routes>
                     {/* Login page - no header */}
