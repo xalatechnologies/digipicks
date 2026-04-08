@@ -172,8 +172,19 @@ function HeroSection() {
 
   return (
     <section className={s.hero}>
+      {/* Floating sport icons for visual energy */}
+      <div className={s.heroOrbs} aria-hidden="true">
+        <span className={s.heroOrb} style={{ top: '12%', left: '8%', animationDelay: '0s' }}>🏀</span>
+        <span className={s.heroOrb} style={{ top: '20%', right: '10%', animationDelay: '1.4s' }}>🏈</span>
+        <span className={s.heroOrb} style={{ bottom: '25%', left: '14%', animationDelay: '2.8s' }}>⚾</span>
+        <span className={s.heroOrb} style={{ bottom: '18%', right: '12%', animationDelay: '0.7s' }}>🏒</span>
+        <span className={s.heroOrb} style={{ top: '45%', left: '4%', animationDelay: '2.1s' }}>⚽</span>
+        <span className={s.heroOrb} style={{ top: '50%', right: '5%', animationDelay: '3.5s' }}>🥊</span>
+      </div>
+
       <div className={s.heroInner}>
         <div className={s.heroLabel}>
+          <span className={s.heroLabelDot} />
           {t('landing.hero.label', 'Applications Now Open')}
         </div>
         <h1 className={s.heroTitle}>
@@ -185,7 +196,7 @@ function HeroSection() {
         <p className={s.heroSubtitle}>
           {t(
             'landing.hero.subtitle',
-            'EdgePicks is the premium platform where sports betting creators build real businesses \u2014 with verified records, smart pricing, and professional tools.',
+            'EdgePicks is the premium platform where sports betting creators build real businesses — with verified records, smart pricing, and professional tools.',
           )}
         </p>
         <div className={s.heroCtas}>
@@ -208,6 +219,13 @@ function HeroSection() {
             </Button>
           )}
         </div>
+        <div className={s.heroTrust}>
+          <span className={s.heroTrustItem}>✓ {t('landing.hero.trustVerified', 'Verified Records')}</span>
+          <span className={s.heroTrustDivider} />
+          <span className={s.heroTrustItem}>✓ {t('landing.hero.trustManual', 'Manually Reviewed')}</span>
+          <span className={s.heroTrustDivider} />
+          <span className={s.heroTrustItem}>✓ {t('landing.hero.trustPro', 'Pro-Grade Tools')}</span>
+        </div>
         <div className={s.heroStats}>
           <div className={s.heroStatItem}>
             <div className={s.heroStatValue}>500+</div>
@@ -229,17 +247,55 @@ function HeroSection() {
 
 function LiveEventsStrip() {
   const t = useT();
+  const [activeSport, setActiveSport] = React.useState<string | null>(null);
+
+  const sports = React.useMemo(
+    () => Array.from(new Set(TODAYS_EVENTS.map((e) => e.sport))),
+    [],
+  );
+
+  const filtered = activeSport
+    ? TODAYS_EVENTS.filter((e) => e.sport === activeSport)
+    : TODAYS_EVENTS;
+
+  const liveCount = TODAYS_EVENTS.filter((e) => e.live).length;
 
   return (
     <section className={s.eventsStrip}>
       <div className={s.eventsInner}>
         <div className={s.eventsHeader}>
-          <div className={s.liveDot} />
-          <span className={s.eventsLabel}>{t('landing.events.label', "Today's Events")}</span>
+          <div className={s.eventsHeaderLeft}>
+            <div className={s.liveDot} />
+            <span className={s.eventsLabel}>{t('landing.events.label', "Today's Events")}</span>
+            {liveCount > 0 && (
+              <span className={s.eventsLiveCount}>
+                {liveCount} {t('landing.events.live', 'LIVE NOW')}
+              </span>
+            )}
+          </div>
+          <div className={s.eventsSportChips}>
+            <button
+              type="button"
+              className={`${s.sportChip} ${activeSport === null ? s.sportChipActive : ''}`}
+              onClick={() => setActiveSport(null)}
+            >
+              {t('landing.events.all', 'All')}
+            </button>
+            {sports.map((sp) => (
+              <button
+                key={sp}
+                type="button"
+                className={`${s.sportChip} ${activeSport === sp ? s.sportChipActive : ''}`}
+                onClick={() => setActiveSport(sp)}
+              >
+                {sp}
+              </button>
+            ))}
+          </div>
         </div>
         <div className={s.eventsScroll}>
-          {TODAYS_EVENTS.map((evt) => (
-            <div key={evt.id} className={s.eventCard}>
+          {filtered.map((evt) => (
+            <div key={evt.id} className={`${s.eventCard} ${evt.live ? s.eventCardLive : ''}`}>
               <div className={s.eventSport}>{evt.sport}</div>
               <div className={s.eventMatchup}>{evt.matchup}</div>
               {evt.live ? (

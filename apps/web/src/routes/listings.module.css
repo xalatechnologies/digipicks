@@ -1,19 +1,43 @@
 /* listings.module.css — EdgePicks Landing Page */
 
 /* ═══════════════════════════════════════════════════════
-   Hero Section
+   Hero Section — Enhanced
    ═══════════════════════════════════════════════════════ */
 
 .hero {
   position: relative;
   padding: var(--ds-size-10) var(--ds-size-4);
+  padding-top: calc(var(--ds-size-10) + 2rem);
+  padding-bottom: calc(var(--ds-size-10) + 2rem);
   text-align: center;
-  background: linear-gradient(
-    180deg,
-    var(--ds-color-neutral-background-default) 0%,
-    var(--ds-color-neutral-background-subtle) 100%
-  );
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    linear-gradient(
+      180deg,
+      var(--ds-color-neutral-background-default) 0%,
+      var(--ds-color-neutral-background-subtle) 100%
+    );
   overflow: hidden;
+}
+
+/* Floating sport icon orbs */
+.heroOrbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroOrb {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.12;
+  animation: orbFloat 6s ease-in-out infinite;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-18px) scale(1.1); }
 }
 
 .heroInner {
@@ -24,7 +48,9 @@
 }
 
 .heroLabel {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: var(--ds-font-size-xs, 0.75rem);
   font-weight: var(--ds-font-weight-medium, 500);
   letter-spacing: 0.15em;
@@ -36,16 +62,29 @@
   margin-bottom: var(--ds-size-4);
 }
 
+.heroLabelDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--ds-color-success-base-default, #16a34a);
+  animation: livePulse 2s ease-in-out infinite;
+}
+
 .heroTitle {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: var(--ds-font-weight-bold, 700);
-  line-height: 1.1;
+  line-height: 1.05;
   color: var(--ds-color-neutral-text-default);
   margin: 0 0 var(--ds-size-4);
+  letter-spacing: -0.02em;
 }
 
 .heroTitleAccent {
   color: var(--ds-color-accent-text-default);
+  text-decoration: underline;
+  text-decoration-color: var(--ds-color-accent-surface-default);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 4px;
 }
 
 .heroSubtitle {
@@ -61,6 +100,30 @@
   gap: var(--ds-size-3);
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Trust badge row */
+.heroTrust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-size-3);
+  margin-top: var(--ds-size-5);
+  flex-wrap: wrap;
+}
+
+.heroTrustItem {
+  font-size: var(--ds-font-size-xs, 0.75rem);
+  font-weight: var(--ds-font-weight-medium, 500);
+  color: var(--ds-color-neutral-text-subtle);
+  letter-spacing: 0.04em;
+}
+
+.heroTrustDivider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--ds-color-neutral-border-default);
 }
 
 .heroStats {
@@ -89,7 +152,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   Live Events Strip
+   Live Events Strip — Enhanced
    ═══════════════════════════════════════════════════════ */
 
 .eventsStrip {
@@ -108,8 +171,16 @@
 .eventsHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--ds-size-3);
   margin-bottom: var(--ds-size-3);
+  flex-wrap: wrap;
+}
+
+.eventsHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
 }
 
 .liveDot {
@@ -131,6 +202,46 @@
   color: var(--ds-color-neutral-text-default);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.eventsLiveCount {
+  font-size: var(--ds-font-size-xs, 0.75rem);
+  font-weight: var(--ds-font-weight-medium, 500);
+  color: var(--ds-color-danger-text-default, #ef4444);
+  background-color: rgba(239, 68, 68, 0.1);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.05em;
+}
+
+/* Sport filter chips */
+.eventsSportChips {
+  display: flex;
+  gap: var(--ds-size-1);
+  flex-wrap: wrap;
+}
+
+.sportChip {
+  all: unset;
+  cursor: pointer;
+  font-size: var(--ds-font-size-xs, 0.75rem);
+  font-weight: var(--ds-font-weight-medium, 500);
+  color: var(--ds-color-neutral-text-subtle);
+  padding: 2px 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  transition: all 0.15s;
+}
+
+.sportChip:hover {
+  border-color: var(--ds-color-accent-border-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+.sportChipActive {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  border-color: var(--ds-color-accent-border-default);
 }
 
 .eventsScroll {
@@ -158,6 +269,21 @@
   display: flex;
   flex-direction: column;
   gap: var(--ds-size-1);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.eventCard:hover {
+  border-color: var(--ds-color-accent-border-default);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.eventCardLive {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-neutral-background-default) 0%,
+    rgba(239, 68, 68, 0.03) 100%
+  );
 }
 
 .eventSport {
@@ -586,6 +712,11 @@
   .heroStats {
     gap: var(--ds-size-5);
   }
+
+  .eventsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -597,9 +728,22 @@
     padding: var(--ds-size-8) var(--ds-size-3);
   }
 
+  .heroOrb {
+    font-size: 1.5rem;
+  }
+
   .heroStats {
     flex-direction: column;
     gap: var(--ds-size-4);
+  }
+
+  .heroTrust {
+    flex-direction: column;
+    gap: var(--ds-size-2);
+  }
+
+  .heroTrustDivider {
+    display: none;
   }
 
   .section,
@@ -620,5 +764,15 @@
 
   .finalCta {
     padding: var(--ds-size-8) var(--ds-size-3);
+  }
+
+  .eventsSportChips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .eventsSportChips::-webkit-scrollbar {
+    display: none;
   }
 }
