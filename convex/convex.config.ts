@@ -102,4 +102,8 @@ app.use(picks);
 import broadcasts from "./components/broadcasts/convex.config";
 app.use(broadcasts);
 
+// DigiPicks: emailCampaigns (transactional + marketing email campaigns)
+import emailCampaigns from "./components/emailCampaigns/convex.config";
+app.use(emailCampaigns);
+
 export default app;
