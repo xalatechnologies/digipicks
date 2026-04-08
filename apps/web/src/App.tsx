@@ -36,6 +36,7 @@ import { BlogArticlePage } from '@/routes/blog-article';
 import { AboutPage } from '@/routes/about';
 import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
+import { PickTrackerPage } from '@/routes/pick-tracker';
 
 import {
   AuthProvider,
@@ -122,6 +123,7 @@ function MainLayout() {
           <HeaderActions spacing="16px">
             <nav className="header-nav-links">
               <Link to="/picks" className="header-nav-link">{t('nav.picks', 'Picks')}</Link>
+              {isLoggedIn && <Link to="/tracker" className="header-nav-link">{t('nav.tracker', 'Tracker')}</Link>}
               <Link to="/pricing" className="header-nav-link">{t('nav.pricing', 'Pricing')}</Link>
               <Link to="/blog" className="header-nav-link">{t('nav.blog', 'Blog')}</Link>
               <Link to="/about" className="header-nav-link">{t('nav.about', 'About')}</Link>
@@ -229,8 +231,7 @@ function ThemedApp() {
                       <Route path="/about" element={<AboutPage />} />
                       <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
                       <Route path="/picks" element={<PicksFeedPage />} />
-
-
+                      <Route path="/tracker" element={<PickTrackerPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}
                       <Route path="/min-side" element={<MinsideRedirect />} />

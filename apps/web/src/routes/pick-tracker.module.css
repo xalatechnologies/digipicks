@@ -1,0 +1,202 @@
+/* Pick Tracker — Personal P/L dashboard */
+
+.pageContainer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: var(--ds-size-6);
+}
+
+.title {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+}
+
+.statCard {
+  padding: var(--ds-size-4);
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-1);
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ds-color-neutral-text-default);
+}
+
+.statPositive {
+  color: var(--ds-color-success-text-default);
+}
+
+.statNegative {
+  color: var(--ds-color-danger-text-default);
+}
+
+/* Bankroll section */
+.bankrollSection {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+  flex-wrap: wrap;
+}
+
+.bankrollInput {
+  max-width: 200px;
+}
+
+.bankrollResult {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+  font-weight: 600;
+}
+
+/* Sport breakdown */
+.breakdownSection {
+  margin-bottom: var(--ds-size-6);
+}
+
+.breakdownGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ds-size-3);
+}
+
+.breakdownCard {
+  padding: var(--ds-size-3);
+}
+
+.breakdownSport {
+  font-weight: 600;
+  margin-bottom: var(--ds-size-1);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.breakdownStats {
+  display: flex;
+  gap: var(--ds-size-3);
+  font-size: 13px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Filters */
+.filterRow {
+  display: flex;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-4);
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  min-width: 140px;
+}
+
+/* Pick history */
+.pickList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.pickRow {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.pickMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.pickEvent {
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-default);
+  font-size: 14px;
+}
+
+.pickMeta {
+  display: flex;
+  gap: var(--ds-size-2);
+  flex-wrap: wrap;
+  margin-top: var(--ds-size-1);
+  font-size: 13px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.pickPl {
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 80px;
+  text-align: right;
+}
+
+.plPositive {
+  color: var(--ds-color-success-text-default);
+}
+
+.plNegative {
+  color: var(--ds-color-danger-text-default);
+}
+
+.plNeutral {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.untailButton {
+  flex-shrink: 0;
+}
+
+/* Empty/login states */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-4);
+}
+
+.loginPrompt {
+  text-align: center;
+  padding: var(--ds-size-8) var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.loginPromptText {
+  margin-bottom: var(--ds-size-3);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Section headers */
+.sectionHeader {
+  margin-bottom: var(--ds-size-3);
+}
