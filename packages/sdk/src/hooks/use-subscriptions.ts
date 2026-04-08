@@ -5,7 +5,7 @@
  * Covers: public tiers, user subscriptions, creator subscribers, Connect accounts.
  */
 
-import { useQuery, useAction } from "./convex-utils";
+import { useQuery, useAction, useMutation } from "./convex-utils";
 import { api } from "../convex-api";
 import { useCallback, useState } from "react";
 
@@ -54,6 +54,11 @@ export interface Subscription {
     startDate: number;
     endDate: number;
     autoRenew: boolean;
+    trialStartDate?: number;
+    trialEndDate?: number;
+    convertedFromTrial?: boolean;
+    isTrialing?: boolean;
+    trialDaysRemaining?: number;
     stripeSubscriptionId?: string;
     stripeCustomerId?: string;
     tier?: {
@@ -62,6 +67,16 @@ export interface Subscription {
         price: number;
         currency: string;
     } | null;
+}
+
+export interface TrialStatus {
+    membershipId: string;
+    isTrialing: boolean;
+    trialStartDate: number | null;
+    trialEndDate: number | null;
+    trialDaysRemaining: number;
+    convertedFromTrial: boolean;
+    status: string;
 }
 
 export interface CreatorAccount {
@@ -160,6 +175,21 @@ export function useCreatorAccount(userId: string | undefined) {
     };
 }
 
+/**
+ * Get trial status for a user's subscription to a creator.
+ */
+export function useTrialStatus(userId: string | undefined, creatorId: string | undefined) {
+    const data = useQuery(
+        api.domain.subscriptions.getTrialStatus,
+        creatorId ? { userId, creatorId } : "skip"
+    );
+
+    return {
+        trial: data as TrialStatus | null | undefined,
+        isLoading: creatorId !== undefined && data === undefined,
+    };
+}
+
 // =============================================================================
 // Action Hooks
 // =============================================================================
@@ -240,6 +270,35 @@ export function useCancelSubscription() {
     );
 
     return { cancel, isLoading, error };
+}
+
+/**
+ * Update trial days on a subscription tier.
+ */
+export function useUpdateTierTrialDays() {
+    const updateTierTrialDays = useMutation(api.domain.subscriptions.updateTierTrialDays);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const update = useCallback(
+        async (args: { tierId: string; trialDays: number }) => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await updateTierTrialDays(args);
+                return result;
+            } catch (e) {
+                const message = e instanceof Error ? e.message : "Failed to update trial days";
+                setError(message);
+                throw e;
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [updateTierTrialDays]
+    );
+
+    return { update, isLoading, error };
 }
 
 /**

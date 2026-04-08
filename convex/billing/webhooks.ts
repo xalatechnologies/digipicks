@@ -110,6 +110,7 @@ export const stripeWebhook = internalAction({
                             stripeSubscriptionId: subscriptionId,
                             stripeCustomerId: customerId,
                             reference,
+                            trialDays: metadata.trialDays ? parseInt(metadata.trialDays, 10) : undefined,
                         });
                         console.log(`Stripe webhook: subscription checkout completed → ${reference}, sub=${subscriptionId}`);
                     }
@@ -277,7 +278,7 @@ function mapStripeSubscriptionStatus(
         case "unpaid":
             return "past_due";
         case "trialing":
-            return "active";
+            return "trialing";
         case "incomplete":
             return "pending";
         case "incomplete_expired":
@@ -302,6 +303,7 @@ export const activateSubscription = internalMutation({
         stripeSubscriptionId: v.string(),
         stripeCustomerId: v.string(),
         reference: v.string(),
+        trialDays: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
         // Check if membership already exists for this subscription
@@ -316,19 +318,24 @@ export const activateSubscription = internalMutation({
 
         const now = Date.now();
         const oneMonth = 30 * 24 * 60 * 60 * 1000;
+        const trialDays = args.trialDays;
+        const isTrialing = trialDays && trialDays > 0;
+        const trialMs = isTrialing ? trialDays * 24 * 60 * 60 * 1000 : 0;
 
         await ctx.runMutation(components.subscriptions.functions.createMembership, {
             tenantId: args.tenantId,
             userId: args.userId,
             tierId: args.tierId,
             creatorId: args.creatorId,
-            status: "active",
+            status: isTrialing ? "trialing" : "active",
             startDate: now,
-            endDate: now + oneMonth,
+            endDate: isTrialing ? now + trialMs : now + oneMonth,
             autoRenew: true,
-            nextBillingDate: now + oneMonth,
-            lastPaymentDate: now,
+            nextBillingDate: isTrialing ? now + trialMs : now + oneMonth,
+            lastPaymentDate: isTrialing ? undefined : now,
             enrollmentChannel: "web",
+            trialStartDate: isTrialing ? now : undefined,
+            trialEndDate: isTrialing ? now + trialMs : undefined,
             stripeSubscriptionId: args.stripeSubscriptionId,
             stripeCustomerId: args.stripeCustomerId,
         });
@@ -351,6 +358,8 @@ export const activateSubscription = internalMutation({
             membershipId: args.stripeSubscriptionId,
             tierId: args.tierId,
             tierName: tier?.name,
+            isTrialing: !!isTrialing,
+            trialDays: trialDays,
         });
     },
 });
@@ -384,6 +393,21 @@ export const updateSubscriptionStatus = internalMutation({
             status,
             ...cancelFields,
         });
+
+        // Track trial-to-paid conversion
+        if (status === "active" && membership.status === "trialing") {
+            await ctx.runMutation(components.subscriptions.functions.updateMembership, {
+                id: membership._id,
+                convertedFromTrial: true,
+            });
+
+            await emitEvent(ctx, "subscriptions.membership.activated", membership.tenantId, "subscriptions", {
+                userId: membership.userId,
+                creatorId: membership.creatorId,
+                membershipId: membership._id as string,
+                convertedFromTrial: true,
+            });
+        }
 
         // If cancelled, decrement member count
         if (status === "cancelled" && membership.tierId) {

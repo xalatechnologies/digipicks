@@ -569,4 +569,204 @@ describe("subscriptions — getMembershipByUser", () => {
         });
         expect(membership).toBeNull();
     });
+
+    it("returns trialing membership with correct priority", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t);
+        await createMembership(t, tierId, {
+            userId: USER_A,
+            status: "trialing",
+            trialStartDate: Date.now(),
+            trialEndDate: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        });
+
+        const membership = await t.query(api.functions.getMembershipByUser, {
+            userId: USER_A,
+        });
+        expect(membership).not.toBeNull();
+        expect(membership?.status).toBe("trialing");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Free Trial
+// ---------------------------------------------------------------------------
+
+describe("subscriptions — free trial", () => {
+    it("creates membership with trialing status and trial dates", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t, { trialDays: 7 });
+
+        const now = Date.now();
+        const trialEnd = now + 7 * 24 * 60 * 60 * 1000;
+        const { id } = await createMembership(t, tierId, {
+            status: "trialing",
+            trialStartDate: now,
+            trialEndDate: trialEnd,
+        });
+
+        const membership = (await t.run(async (ctx) =>
+            ctx.db.get(id as any)
+        )) as any;
+        expect(membership?.status).toBe("trialing");
+        expect(membership?.trialStartDate).toBe(now);
+        expect(membership?.trialEndDate).toBe(trialEnd);
+        expect(membership?.convertedFromTrial).toBe(false);
+    });
+
+    it("creates tier with trialDays", async () => {
+        const t = convexTest(schema, modules);
+        const { id } = await createTier(t, { trialDays: 14 });
+
+        const tier = (await t.run(async (ctx) =>
+            ctx.db.get(id as any)
+        )) as any;
+        expect(tier?.trialDays).toBe(14);
+    });
+
+    it("updates tier trialDays", async () => {
+        const t = convexTest(schema, modules);
+        const { id } = await createTier(t);
+
+        await t.mutation(api.functions.updateTier, {
+            id: id as any,
+            trialDays: 7,
+        });
+
+        const tier = (await t.run(async (ctx) =>
+            ctx.db.get(id as any)
+        )) as any;
+        expect(tier?.trialDays).toBe(7);
+    });
+
+    it("getUserCreatorSubscription includes trialing memberships", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t);
+        const creatorId = "creator-001";
+
+        await createMembership(t, tierId, {
+            userId: USER_A,
+            creatorId,
+            status: "trialing",
+            trialStartDate: Date.now(),
+            trialEndDate: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        });
+
+        const sub = await t.query(api.functions.getUserCreatorSubscription, {
+            userId: USER_A,
+            creatorId,
+        });
+        expect(sub).not.toBeNull();
+        expect(sub?.status).toBe("trialing");
+    });
+
+    it("getTrialStatus returns trial metadata", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t);
+        const creatorId = "creator-002";
+        const now = Date.now();
+        const trialEnd = now + 5 * 24 * 60 * 60 * 1000;
+
+        await createMembership(t, tierId, {
+            userId: USER_A,
+            creatorId,
+            status: "trialing",
+            trialStartDate: now,
+            trialEndDate: trialEnd,
+        });
+
+        const trial = await t.query(api.functions.getTrialStatus, {
+            userId: USER_A,
+            creatorId,
+        });
+        expect(trial).not.toBeNull();
+        expect(trial?.isTrialing).toBe(true);
+        expect(trial?.trialStartDate).toBe(now);
+        expect(trial?.trialEndDate).toBe(trialEnd);
+        expect(trial?.trialDaysRemaining).toBeGreaterThanOrEqual(4);
+        expect(trial?.convertedFromTrial).toBe(false);
+    });
+
+    it("getTrialStatus returns non-trialing for active membership", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t);
+        const creatorId = "creator-003";
+
+        await createMembership(t, tierId, {
+            userId: USER_A,
+            creatorId,
+            status: "active",
+        });
+
+        const trial = await t.query(api.functions.getTrialStatus, {
+            userId: USER_A,
+            creatorId,
+        });
+        expect(trial).not.toBeNull();
+        expect(trial?.isTrialing).toBe(false);
+        expect(trial?.trialDaysRemaining).toBe(0);
+    });
+
+    it("getTrialStatus returns null when no subscription", async () => {
+        const t = convexTest(schema, modules);
+        const trial = await t.query(api.functions.getTrialStatus, {
+            userId: "no-one",
+            creatorId: "no-creator",
+        });
+        expect(trial).toBeNull();
+    });
+
+    it("listExpiringTrials finds trials past their end date", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t);
+        const now = Date.now();
+
+        // Expired trial
+        await createMembership(t, tierId, {
+            userId: USER_A,
+            status: "trialing",
+            trialStartDate: now - 8 * 24 * 60 * 60 * 1000,
+            trialEndDate: now - 1 * 24 * 60 * 60 * 1000,
+        });
+
+        // Active trial (not expired)
+        await createMembership(t, tierId, {
+            userId: USER_B,
+            status: "trialing",
+            trialStartDate: now,
+            trialEndDate: now + 7 * 24 * 60 * 60 * 1000,
+        });
+
+        const expired = await t.query(api.functions.listExpiringTrials, {
+            beforeDate: now,
+        });
+        expect(expired.length).toBe(1);
+        expect(expired[0].userId).toBe(USER_A);
+    });
+
+    it("tracks convertedFromTrial via updateMembership", async () => {
+        const t = convexTest(schema, modules);
+        const { id: tierId } = await createTier(t);
+        const { id } = await createMembership(t, tierId, {
+            status: "trialing",
+            trialStartDate: Date.now(),
+            trialEndDate: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        });
+
+        // Simulate trial-to-paid conversion
+        await t.mutation(api.functions.updateMembershipStatus, {
+            id: id as any,
+            status: "active",
+        });
+        await t.mutation(api.functions.updateMembership, {
+            id: id as any,
+            convertedFromTrial: true,
+        });
+
+        const membership = (await t.run(async (ctx) =>
+            ctx.db.get(id as any)
+        )) as any;
+        expect(membership?.status).toBe("active");
+        expect(membership?.convertedFromTrial).toBe(true);
+    });
 });

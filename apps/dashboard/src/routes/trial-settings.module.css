@@ -1,0 +1,43 @@
+.tierCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ds-size-4);
+    border-bottom: 1px solid var(--ds-color-border-subtle);
+}
+
+.tierCard:last-child {
+    border-bottom: none;
+}
+
+.tierInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-1);
+}
+
+.tierName {
+    font-weight: var(--ds-font-weight-medium);
+}
+
+.tierPrice {
+    color: var(--ds-color-text-subtle);
+    font-size: var(--ds-font-size-sm);
+}
+
+.trialConfig {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-3);
+}
+
+.trialInput {
+    max-width: 100px;
+}
+
+.conversionStat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-size-1);
+}
