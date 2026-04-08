@@ -804,3 +804,369 @@ export const personalStats = query({
         };
     },
 });
+
+// =============================================================================
+// SPORT-SPECIFIC ANALYTICS
+// =============================================================================
+
+/**
+ * Sport dashboard — aggregate stats for a single sport across all creators.
+ * Returns overall metrics, top performers, pick type breakdown, and recent results.
+ */
+export const sportDashboard = query({
+    args: {
+        tenantId: v.string(),
+        sport: v.string(),
+        timeframe: v.optional(v.union(v.literal("7d"), v.literal("30d"), v.literal("90d"), v.literal("all"))),
+    },
+    returns: v.object({
+        sport: v.string(),
+        totalPicks: v.number(),
+        gradedPicks: v.number(),
+        pendingPicks: v.number(),
+        wins: v.number(),
+        losses: v.number(),
+        pushes: v.number(),
+        winRate: v.number(),
+        netUnits: v.number(),
+        roi: v.number(),
+        avgOdds: v.number(),
+        totalCreators: v.number(),
+        pickTypeBreakdown: v.array(v.object({
+            pickType: v.string(),
+            count: v.number(),
+            wins: v.number(),
+            losses: v.number(),
+            winRate: v.number(),
+            netUnits: v.number(),
+        })),
+        topCreators: v.array(v.object({
+            creatorId: v.string(),
+            wins: v.number(),
+            losses: v.number(),
+            winRate: v.number(),
+            netUnits: v.number(),
+            roi: v.number(),
+        })),
+        recentResults: v.array(v.object({
+            result: v.string(),
+            count: v.number(),
+        })),
+    }),
+    handler: async (ctx, { tenantId, sport, timeframe }) => {
+        let picks = await ctx.db
+            .query("picks")
+            .withIndex("by_tenant_sport", (q) =>
+                q.eq("tenantId", tenantId).eq("sport", sport)
+            )
+            .collect();
+
+        // Only published picks
+        picks = picks.filter((p) => p.status === "published");
+
+        // Time filter
+        if (timeframe && timeframe !== "all") {
+            const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
+            const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+            picks = picks.filter((p) => p._creationTime >= cutoff);
+        }
+
+        let wins = 0;
+        let losses = 0;
+        let pushes = 0;
+        let pending = 0;
+        let netUnits = 0;
+        let totalWagered = 0;
+        let oddsSum = 0;
+        let oddsCount = 0;
+
+        const creatorSet = new Set<string>();
+        const pickTypeMap = new Map<string, { count: number; wins: number; losses: number; netUnits: number; wagered: number }>();
+        const creatorStatsMap = new Map<string, { wins: number; losses: number; netUnits: number; wagered: number }>();
+
+        for (const pick of picks) {
+            creatorSet.add(pick.creatorId);
+
+            const ptEntry = pickTypeMap.get(pick.pickType) ?? { count: 0, wins: 0, losses: 0, netUnits: 0, wagered: 0 };
+            ptEntry.count++;
+
+            const cEntry = creatorStatsMap.get(pick.creatorId) ?? { wins: 0, losses: 0, netUnits: 0, wagered: 0 };
+
+            if (pick.result === "won") {
+                wins++;
+                const profit = pick.units * (pick.oddsDecimal - 1);
+                netUnits += profit;
+                totalWagered += pick.units;
+                oddsSum += pick.oddsDecimal;
+                oddsCount++;
+                ptEntry.wins++;
+                ptEntry.netUnits += profit;
+                ptEntry.wagered += pick.units;
+                cEntry.wins++;
+                cEntry.netUnits += profit;
+                cEntry.wagered += pick.units;
+            } else if (pick.result === "lost") {
+                losses++;
+                netUnits -= pick.units;
+                totalWagered += pick.units;
+                oddsSum += pick.oddsDecimal;
+                oddsCount++;
+                ptEntry.losses++;
+                ptEntry.netUnits -= pick.units;
+                ptEntry.wagered += pick.units;
+                cEntry.losses++;
+                cEntry.netUnits -= pick.units;
+                cEntry.wagered += pick.units;
+            } else if (pick.result === "push") {
+                pushes++;
+                totalWagered += pick.units;
+            } else {
+                pending++;
+            }
+
+            pickTypeMap.set(pick.pickType, ptEntry);
+            creatorStatsMap.set(pick.creatorId, cEntry);
+        }
+
+        const gradedPicks = wins + losses;
+        const winRate = gradedPicks > 0 ? Math.round((wins / gradedPicks) * 100 * 100) / 100 : 0;
+        const roi = totalWagered > 0 ? Math.round((netUnits / totalWagered) * 100 * 100) / 100 : 0;
+        const avgOdds = oddsCount > 0 ? Math.round((oddsSum / oddsCount) * 100) / 100 : 0;
+
+        // Pick type breakdown
+        const pickTypeBreakdown = Array.from(pickTypeMap.entries()).map(([pickType, data]) => {
+            const ptGraded = data.wins + data.losses;
+            return {
+                pickType,
+                count: data.count,
+                wins: data.wins,
+                losses: data.losses,
+                winRate: ptGraded > 0 ? Math.round((data.wins / ptGraded) * 100 * 100) / 100 : 0,
+                netUnits: Math.round(data.netUnits * 100) / 100,
+            };
+        });
+
+        // Top creators (sorted by ROI, top 5)
+        const topCreators = Array.from(creatorStatsMap.entries())
+            .filter(([_, data]) => data.wins + data.losses > 0)
+            .map(([creatorId, data]) => {
+                const cGraded = data.wins + data.losses;
+                return {
+                    creatorId,
+                    wins: data.wins,
+                    losses: data.losses,
+                    winRate: cGraded > 0 ? Math.round((data.wins / cGraded) * 100 * 100) / 100 : 0,
+                    netUnits: Math.round(data.netUnits * 100) / 100,
+                    roi: data.wagered > 0 ? Math.round((data.netUnits / data.wagered) * 100 * 100) / 100 : 0,
+                };
+            })
+            .sort((a, b) => b.roi - a.roi)
+            .slice(0, 5);
+
+        // Recent results (last 10 graded picks)
+        const recentGraded = picks
+            .filter((p) => p.result === "won" || p.result === "lost" || p.result === "push")
+            .sort((a, b) => b._creationTime - a._creationTime)
+            .slice(0, 10);
+
+        const recentMap = new Map<string, number>();
+        for (const p of recentGraded) {
+            recentMap.set(p.result, (recentMap.get(p.result) ?? 0) + 1);
+        }
+        const recentResults = Array.from(recentMap.entries()).map(([result, count]) => ({ result, count }));
+
+        return {
+            sport,
+            totalPicks: picks.length,
+            gradedPicks,
+            pendingPicks: pending,
+            wins,
+            losses,
+            pushes,
+            winRate,
+            netUnits: Math.round(netUnits * 100) / 100,
+            roi,
+            avgOdds,
+            totalCreators: creatorSet.size,
+            pickTypeBreakdown,
+            topCreators,
+            recentResults,
+        };
+    },
+});
+
+/**
+ * Sport overview — aggregate stats across ALL sports for a tenant.
+ * Used to render a multi-sport comparison dashboard.
+ */
+export const sportOverview = query({
+    args: {
+        tenantId: v.string(),
+        timeframe: v.optional(v.union(v.literal("7d"), v.literal("30d"), v.literal("90d"), v.literal("all"))),
+    },
+    returns: v.array(v.object({
+        sport: v.string(),
+        totalPicks: v.number(),
+        gradedPicks: v.number(),
+        wins: v.number(),
+        losses: v.number(),
+        winRate: v.number(),
+        netUnits: v.number(),
+        roi: v.number(),
+        totalCreators: v.number(),
+    })),
+    handler: async (ctx, { tenantId, timeframe }) => {
+        let picks = await ctx.db
+            .query("picks")
+            .withIndex("by_tenant_status", (q) =>
+                q.eq("tenantId", tenantId).eq("status", "published")
+            )
+            .collect();
+
+        // Time filter
+        if (timeframe && timeframe !== "all") {
+            const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
+            const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+            picks = picks.filter((p) => p._creationTime >= cutoff);
+        }
+
+        // Group by sport
+        const sportMap = new Map<string, {
+            totalPicks: number;
+            wins: number;
+            losses: number;
+            netUnits: number;
+            wagered: number;
+            creators: Set<string>;
+        }>();
+
+        for (const pick of picks) {
+            const entry = sportMap.get(pick.sport) ?? {
+                totalPicks: 0,
+                wins: 0,
+                losses: 0,
+                netUnits: 0,
+                wagered: 0,
+                creators: new Set<string>(),
+            };
+            entry.totalPicks++;
+            entry.creators.add(pick.creatorId);
+
+            if (pick.result === "won") {
+                entry.wins++;
+                entry.netUnits += pick.units * (pick.oddsDecimal - 1);
+                entry.wagered += pick.units;
+            } else if (pick.result === "lost") {
+                entry.losses++;
+                entry.netUnits -= pick.units;
+                entry.wagered += pick.units;
+            }
+
+            sportMap.set(pick.sport, entry);
+        }
+
+        return Array.from(sportMap.entries())
+            .map(([sport, data]) => {
+                const graded = data.wins + data.losses;
+                return {
+                    sport,
+                    totalPicks: data.totalPicks,
+                    gradedPicks: graded,
+                    wins: data.wins,
+                    losses: data.losses,
+                    winRate: graded > 0 ? Math.round((data.wins / graded) * 100 * 100) / 100 : 0,
+                    netUnits: Math.round(data.netUnits * 100) / 100,
+                    roi: data.wagered > 0 ? Math.round((data.netUnits / data.wagered) * 100 * 100) / 100 : 0,
+                    totalCreators: data.creators.size,
+                };
+            })
+            .sort((a, b) => b.totalPicks - a.totalPicks);
+    },
+});
+
+/**
+ * Creator stats broken down by sport — performance per sport for a single creator.
+ * Used on creator profile pages to show sport-specific performance.
+ */
+export const creatorStatsBySport = query({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+    },
+    returns: v.array(v.object({
+        sport: v.string(),
+        totalPicks: v.number(),
+        wins: v.number(),
+        losses: v.number(),
+        pushes: v.number(),
+        winRate: v.number(),
+        netUnits: v.number(),
+        roi: v.number(),
+        avgOdds: v.number(),
+    })),
+    handler: async (ctx, { tenantId, creatorId }) => {
+        const picks = await ctx.db
+            .query("picks")
+            .withIndex("by_tenant_creator", (q) =>
+                q.eq("tenantId", tenantId).eq("creatorId", creatorId)
+            )
+            .collect();
+
+        const published = picks.filter((p) => p.status === "published");
+
+        const sportMap = new Map<string, {
+            wins: number;
+            losses: number;
+            pushes: number;
+            netUnits: number;
+            wagered: number;
+            oddsSum: number;
+            oddsCount: number;
+            total: number;
+        }>();
+
+        for (const pick of published) {
+            const entry = sportMap.get(pick.sport) ?? {
+                wins: 0, losses: 0, pushes: 0,
+                netUnits: 0, wagered: 0,
+                oddsSum: 0, oddsCount: 0, total: 0,
+            };
+            entry.total++;
+
+            if (pick.result === "won") {
+                entry.wins++;
+                entry.netUnits += pick.units * (pick.oddsDecimal - 1);
+                entry.wagered += pick.units;
+                entry.oddsSum += pick.oddsDecimal;
+                entry.oddsCount++;
+            } else if (pick.result === "lost") {
+                entry.losses++;
+                entry.netUnits -= pick.units;
+                entry.wagered += pick.units;
+                entry.oddsSum += pick.oddsDecimal;
+                entry.oddsCount++;
+            } else if (pick.result === "push") {
+                entry.pushes++;
+            }
+
+            sportMap.set(pick.sport, entry);
+        }
+
+        return Array.from(sportMap.entries())
+            .map(([sport, data]) => {
+                const graded = data.wins + data.losses;
+                return {
+                    sport,
+                    totalPicks: data.total,
+                    wins: data.wins,
+                    losses: data.losses,
+                    pushes: data.pushes,
+                    winRate: graded > 0 ? Math.round((data.wins / graded) * 100 * 100) / 100 : 0,
+                    netUnits: Math.round(data.netUnits * 100) / 100,
+                    roi: data.wagered > 0 ? Math.round((data.netUnits / data.wagered) * 100 * 100) / 100 : 0,
+                    avgOdds: data.oddsCount > 0 ? Math.round((data.oddsSum / data.oddsCount) * 100) / 100 : 0,
+                };
+            })
+            .sort((a, b) => b.totalPicks - a.totalPicks);
+    },
+});
