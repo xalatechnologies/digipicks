@@ -66,4 +66,39 @@ export default defineSchema({
     })
         .index("by_tenant", ["tenantId"])
         .index("by_component", ["tenantId", "componentKey"]),
+
+    // =========================================================================
+    // CREATOR-LEVEL WHITE-LABEL BRANDING
+    // =========================================================================
+
+    creatorBrandConfigs: defineTable({
+        tenantId: v.string(),
+        creatorId: v.string(),
+        primaryColor: v.optional(v.string()),
+        secondaryColor: v.optional(v.string()),
+        accentColor: v.optional(v.string()),
+        fontFamily: v.optional(v.string()),
+        borderRadius: v.optional(v.string()),
+        darkMode: v.optional(v.boolean()),
+        customCSS: v.optional(v.string()),
+        displayName: v.optional(v.string()),
+        tagline: v.optional(v.string()),
+        customDomain: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_creator", ["tenantId", "creatorId"])
+        .index("by_custom_domain", ["customDomain"]),
+
+    creatorBrandAssets: defineTable({
+        tenantId: v.string(),
+        creatorId: v.string(),
+        assetType: v.string(), // "logo" | "banner" | "favicon" | "background"
+        storageId: v.optional(v.string()),
+        url: v.optional(v.string()),
+        alt: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+    })
+        .index("by_creator", ["tenantId", "creatorId"])
+        .index("by_type", ["tenantId", "creatorId", "assetType"]),
 });

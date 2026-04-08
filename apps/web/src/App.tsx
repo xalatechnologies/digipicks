@@ -19,7 +19,7 @@ import { DEFAULT_THEME, type ThemeId } from '@digilist-saas/ds';
 // Without this, the default DS blue theme renders before the dynamic import in useBundledTheme resolves.
 import '@digilist-saas/ds/themes/hamar-theme.css';
 import { I18nProvider, useT, useI18nLocale } from '@digilist-saas/i18n';
-import { useTenantConfig, useTenantBranding, useWebMCPTools } from '@digilist-saas/sdk';
+import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTools } from '@digilist-saas/sdk';
 import { GlobalSearch } from '@digilist-saas/app-shell';
 import { useAuth } from '@digilist-saas/app-shell';
 import { ListingsPage } from '@/routes/listings';
@@ -53,6 +53,18 @@ import {
 import '@digilist-saas/app-shell/layout/WebLayoutStyles.css';
 import { RealtimeToast } from '@digilist-saas/app-shell';
 initSentry();
+
+/**
+ * CustomDomainRedirect — When the hostname matches a creator's custom domain,
+ * redirect the root "/" to that creator's profile page.
+ */
+function CustomDomainRedirect() {
+  const { creator, isLoading } = useCreatorFromDomain();
+
+  if (isLoading) return null;
+  if (creator) return <Navigate to={`/creator/${creator.creatorId}`} replace />;
+  return null;
+}
 
 /** Redirects to the minside app (separate app at apps/minside) */
 function MinsideRedirect() {
@@ -221,8 +233,8 @@ function ThemedApp() {
 
                     {/* Main pages with header */}
                     <Route element={<MainLayout />}>
-                      {/* Public pages */}
-                      <Route path="/" element={<ListingsPage />} />
+                      {/* Public pages — custom domain redirects root to creator profile */}
+                      <Route path="/" element={<><CustomDomainRedirect /><ListingsPage /></>} />
                       <Route path="/faq" element={<FAQPage />} />
                       <Route path="/pricing" element={<PricingPage />} />
                       <Route path="/blog" element={<BlogPage />} />

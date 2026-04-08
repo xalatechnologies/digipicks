@@ -213,3 +213,30 @@ export const getThemeCSS = query({
         );
     },
 });
+
+// Get creator brand CSS for white-label creator pages
+export const getCreatorThemeCSS = query({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+    },
+    handler: async (ctx, { tenantId, creatorId }) => {
+        return await ctx.runQuery(
+            components.tenantConfig.queries.getCreatorThemeCSS,
+            { tenantId, creatorId }
+        );
+    },
+});
+
+// Resolve creator from custom domain for white-label routing
+export const getCreatorByCustomDomain = query({
+    args: {
+        domain: v.string(),
+    },
+    handler: async (ctx, { domain }) => {
+        return await ctx.runQuery(
+            components.tenantConfig.queries.getCreatorByCustomDomain,
+            { domain }
+        );
+    },
+});

@@ -315,6 +315,13 @@ export type {
 // Tenant Branding (runtime brand CSS injection)
 export { useTenantBranding } from './use-tenant-branding';
 
+// Creator Branding (white-label CSS injection for creator pages)
+export { useCreatorBranding } from './use-creator-branding';
+
+// Creator Custom Domain (resolve creator from hostname)
+export { useCreatorFromDomain } from './use-creator-from-domain';
+export type { CreatorFromDomainResult } from './use-creator-from-domain';
+
 // Integrations (Tier 2 adapter — RCO, Visma, BRREG, Vipps, calendar sync)
 export {
     useTenantSettings,

@@ -160,6 +160,83 @@ export const listThemeOverrides = query({
     },
 });
 
+// =============================================================================
+// CREATOR BRAND QUERIES
+// =============================================================================
+
+export const getCreatorBranding = query({
+    args: { tenantId: v.string(), creatorId: v.string() },
+    returns: v.any(),
+    handler: async (ctx, { tenantId, creatorId }) => {
+        const config = await ctx.db
+            .query("creatorBrandConfigs")
+            .withIndex("by_creator", (q) =>
+                q.eq("tenantId", tenantId).eq("creatorId", creatorId)
+            )
+            .first();
+
+        return config ?? null;
+    },
+});
+
+export const listCreatorBrandAssets = query({
+    args: { tenantId: v.string(), creatorId: v.string() },
+    returns: v.array(v.any()),
+    handler: async (ctx, { tenantId, creatorId }) => {
+        return ctx.db
+            .query("creatorBrandAssets")
+            .withIndex("by_creator", (q) =>
+                q.eq("tenantId", tenantId).eq("creatorId", creatorId)
+            )
+            .collect();
+    },
+});
+
+export const getCreatorByCustomDomain = query({
+    args: { domain: v.string() },
+    returns: v.any(),
+    handler: async (ctx, { domain }) => {
+        const config = await ctx.db
+            .query("creatorBrandConfigs")
+            .withIndex("by_custom_domain", (q) => q.eq("customDomain", domain))
+            .first();
+
+        return config ?? null;
+    },
+});
+
+export const getCreatorThemeCSS = query({
+    args: { tenantId: v.string(), creatorId: v.string() },
+    returns: v.string(),
+    handler: async (ctx, { tenantId, creatorId }) => {
+        const branding = await ctx.db
+            .query("creatorBrandConfigs")
+            .withIndex("by_creator", (q) =>
+                q.eq("tenantId", tenantId).eq("creatorId", creatorId)
+            )
+            .first();
+
+        if (!branding) return "";
+
+        const lines: string[] = [":root {"];
+
+        if (branding.primaryColor) lines.push(`  --creator-brand-primary: ${branding.primaryColor};`);
+        if (branding.secondaryColor) lines.push(`  --creator-brand-secondary: ${branding.secondaryColor};`);
+        if (branding.accentColor) lines.push(`  --creator-brand-accent: ${branding.accentColor};`);
+        if (branding.fontFamily) lines.push(`  --creator-brand-font-family: ${branding.fontFamily};`);
+        if (branding.borderRadius) lines.push(`  --creator-brand-border-radius: ${branding.borderRadius};`);
+
+        lines.push("}");
+
+        if (branding.customCSS) {
+            lines.push("");
+            lines.push(branding.customCSS);
+        }
+
+        return lines.join("\n");
+    },
+});
+
 export const getThemeCSS = query({
     args: { tenantId: v.string() },
     returns: v.string(),

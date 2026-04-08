@@ -77,6 +77,114 @@ export const updateBranding = mutation({
     },
 });
 
+// =============================================================================
+// CREATOR BRANDING
+// =============================================================================
+
+// Get creator branding config
+export const getCreatorBranding = query({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+    },
+    handler: async (ctx, { tenantId, creatorId }) => {
+        return ctx.runQuery(components.tenantConfig.queries.getCreatorBranding, {
+            tenantId,
+            creatorId,
+        });
+    },
+});
+
+// Get creator brand assets
+export const listCreatorBrandAssets = query({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+    },
+    handler: async (ctx, { tenantId, creatorId }) => {
+        return ctx.runQuery(components.tenantConfig.queries.listCreatorBrandAssets, {
+            tenantId,
+            creatorId,
+        });
+    },
+});
+
+// Get creator theme CSS for injection
+export const getCreatorThemeCSS = query({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+    },
+    handler: async (ctx, { tenantId, creatorId }) => {
+        return ctx.runQuery(components.tenantConfig.queries.getCreatorThemeCSS, {
+            tenantId,
+            creatorId,
+        });
+    },
+});
+
+// Resolve creator from custom domain
+export const getCreatorByCustomDomain = query({
+    args: {
+        domain: v.string(),
+    },
+    handler: async (ctx, { domain }) => {
+        return ctx.runQuery(components.tenantConfig.queries.getCreatorByCustomDomain, {
+            domain,
+        });
+    },
+});
+
+// Update creator branding
+export const updateCreatorBranding = mutation({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+        primaryColor: v.optional(v.string()),
+        secondaryColor: v.optional(v.string()),
+        accentColor: v.optional(v.string()),
+        fontFamily: v.optional(v.string()),
+        borderRadius: v.optional(v.string()),
+        darkMode: v.optional(v.boolean()),
+        customCSS: v.optional(v.string()),
+        displayName: v.optional(v.string()),
+        tagline: v.optional(v.string()),
+        customDomain: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+    },
+    handler: async (ctx, args) => {
+        return ctx.runMutation(components.tenantConfig.mutations.updateCreatorBranding, args);
+    },
+});
+
+// Upload creator brand asset
+export const uploadCreatorBrandAsset = mutation({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+        assetType: v.string(),
+        url: v.string(),
+        alt: v.optional(v.string()),
+        storageId: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+    },
+    handler: async (ctx, args) => {
+        return ctx.runMutation(components.tenantConfig.mutations.uploadCreatorBrandAsset, args);
+    },
+});
+
+// Remove creator brand asset
+export const removeCreatorBrandAsset = mutation({
+    args: {
+        id: v.string(),
+    },
+    handler: async (ctx, { id }) => {
+        return ctx.runMutation(components.tenantConfig.mutations.removeCreatorBrandAsset, {
+            id: id as any,
+        });
+    },
+});
+
 // Set a theme override
 export const setThemeOverride = mutation({
     args: {
