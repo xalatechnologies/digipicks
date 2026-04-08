@@ -98,6 +98,7 @@ import { BroadcastComposePage } from '@/routes/broadcast-compose';
 // DigiPicks — Stripe integration (payouts & subscribers)
 import { PayoutsPage } from '@/routes/payouts';
 import { SubscribersPage } from '@/routes/subscribers';
+import { TrialSettingsPage } from '@/routes/trial-settings';
 
 // Organization portal pages (org-scoped views — single deduplicated source)
 import {
@@ -308,6 +309,7 @@ function AppWithTheme() {
                                 {/* ─── DigiPicks: Stripe integration ─── */}
                                 <Route path="payouts" element={<PayoutsPage />} />
                                 <Route path="subscribers" element={<SubscribersPage />} />
+                                <Route path="trial-settings" element={<TrialSettingsPage />} />
 
                                 {/* ─── Admin: Operations ─── */}
                                 <Route path="support" element={<FeatureGate module="support" fallback={<Navigate to="/" replace />} appId="backoffice"><ProtectedRouteConnected requiredRole="admin"><SupportPage /></ProtectedRouteConnected></FeatureGate>} />

@@ -53,7 +53,7 @@ export default defineSchema({
         tierId: v.string(),
         creatorId: v.optional(v.string()), // Creator being subscribed to
         memberNumber: v.optional(v.string()),
-        status: v.string(), // "pending" | "active" | "paused" | "expired" | "cancelled" | "past_due"
+        status: v.string(), // "pending" | "active" | "trialing" | "paused" | "expired" | "cancelled" | "past_due"
         startDate: v.number(),
         endDate: v.number(),
         originalStartDate: v.number(),
@@ -70,6 +70,10 @@ export default defineSchema({
         presaleAccessGranted: v.boolean(),
         previousTierId: v.optional(v.string()),
         enrollmentChannel: v.optional(v.string()), // "web" | "counter" | "api" | "gift"
+        // Free trial tracking
+        trialStartDate: v.optional(v.number()),
+        trialEndDate: v.optional(v.number()),
+        convertedFromTrial: v.optional(v.boolean()),
         // Stripe integration
         stripeSubscriptionId: v.optional(v.string()),
         stripeCustomerId: v.optional(v.string()),

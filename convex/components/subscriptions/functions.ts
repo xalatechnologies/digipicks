@@ -355,8 +355,8 @@ export const getMembershipByUser = query({
             .withIndex("by_user", (q) => q.eq("userId", userId))
             .collect();
 
-        // Return the best membership by priority: active > past_due > pending > paused
-        const priority = ["active", "past_due", "pending", "paused"];
+        // Return the best membership by priority: active > trialing > past_due > pending > paused
+        const priority = ["active", "trialing", "past_due", "pending", "paused"];
         for (const status of priority) {
             const match = memberships.find((m) => m.status === status);
             if (match) return match;
@@ -443,6 +443,8 @@ export const createMembership = mutation({
         lastPaymentDate: v.optional(v.number()),
         presaleAccessGranted: v.optional(v.boolean()),
         enrollmentChannel: v.optional(v.string()),
+        trialStartDate: v.optional(v.number()),
+        trialEndDate: v.optional(v.number()),
         stripeSubscriptionId: v.optional(v.string()),
         stripeCustomerId: v.optional(v.string()),
         metadata: v.optional(v.any()),
@@ -464,6 +466,9 @@ export const createMembership = mutation({
             lastPaymentDate: args.lastPaymentDate,
             presaleAccessGranted: args.presaleAccessGranted ?? false,
             enrollmentChannel: args.enrollmentChannel,
+            trialStartDate: args.trialStartDate,
+            trialEndDate: args.trialEndDate,
+            convertedFromTrial: args.trialStartDate ? false : undefined,
             stripeSubscriptionId: args.stripeSubscriptionId,
             stripeCustomerId: args.stripeCustomerId,
             metadata: args.metadata,
@@ -490,6 +495,7 @@ export const updateMembership = mutation({
         benefitsUsedThisPeriod: v.optional(v.any()),
         presaleAccessGranted: v.optional(v.boolean()),
         previousTierId: v.optional(v.string()),
+        convertedFromTrial: v.optional(v.boolean()),
         metadata: v.optional(v.any()),
     },
     returns: v.object({ success: v.boolean() }),
@@ -696,8 +702,77 @@ export const getUserCreatorSubscription = query({
             .collect();
 
         return memberships.find(
-            (m) => m.creatorId === creatorId && (m.status === "active" || m.status === "pending")
+            (m) => m.creatorId === creatorId && (m.status === "active" || m.status === "trialing" || m.status === "pending")
         ) ?? null;
+    },
+});
+
+// =============================================================================
+// TRIAL QUERIES
+// =============================================================================
+
+/**
+ * List memberships currently in trial that expire before a given date.
+ * Used by cron to expire trials or send reminders.
+ */
+export const listExpiringTrials = query({
+    args: {
+        beforeDate: v.number(),
+    },
+    returns: v.array(v.any()),
+    handler: async (ctx, { beforeDate }) => {
+        const trialing = await ctx.db
+            .query("memberships")
+            .withIndex("by_status")
+            .collect();
+
+        return trialing.filter(
+            (m) =>
+                m.status === "trialing" &&
+                m.trialEndDate !== undefined &&
+                m.trialEndDate <= beforeDate
+        );
+    },
+});
+
+/**
+ * Get trial status for a user's subscription to a creator.
+ * Returns trial metadata if the membership is trialing, null otherwise.
+ */
+export const getTrialStatus = query({
+    args: {
+        userId: v.string(),
+        creatorId: v.string(),
+    },
+    returns: v.any(),
+    handler: async (ctx, { userId, creatorId }) => {
+        const memberships = await ctx.db
+            .query("memberships")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .collect();
+
+        const membership = memberships.find(
+            (m) => m.creatorId === creatorId && (m.status === "trialing" || m.status === "active")
+        );
+
+        if (!membership) return null;
+
+        const now = Date.now();
+        const isTrialing = membership.status === "trialing";
+        const trialEndDate = membership.trialEndDate;
+        const trialDaysRemaining = isTrialing && trialEndDate
+            ? Math.max(0, Math.ceil((trialEndDate - now) / (24 * 60 * 60 * 1000)))
+            : 0;
+
+        return {
+            membershipId: membership._id as string,
+            isTrialing,
+            trialStartDate: membership.trialStartDate ?? null,
+            trialEndDate: membership.trialEndDate ?? null,
+            trialDaysRemaining,
+            convertedFromTrial: membership.convertedFromTrial ?? false,
+            status: membership.status,
+        };
     },
 });
 

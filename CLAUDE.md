@@ -307,6 +307,27 @@ export const CONTRACT = defineContract({
 5. Run `npx convex dev` to generate `_generated/` for the component
 6. Add component to seed script: `convex/seedComponents.ts`
 
+## Git Workflow
+
+- **Default branch**: `develop` — all work happens here
+- **Protected branch**: `main` — only receives merges from `develop` when verified and stable
+- **No feature branches** — commit directly to `develop`
+- **Before starting any task**: `git checkout develop && git pull origin develop`
+- **Commit after each meaningful step** — small, incremental commits
+- **Push regularly** during work, not only at the end
+- **Commit message format**: `feat(DIGAAA-NNN): description` (or `fix`, `test`, `refactor`, `docs`)
+- **Merge to main**: Only when changes are verified and stable — `git checkout main && git merge develop && git push origin main`
+
+```bash
+# Standard workflow
+git checkout develop
+git pull origin develop
+# ... do work ...
+git add <files>
+git commit -m "feat(DIGAAA-42): implement booking filters"
+git push origin develop
+```
+
 ## Key Conventions
 
 - **Errors**: RFC7807 format (`type`, `title`, `status`, `detail`, `instance`)

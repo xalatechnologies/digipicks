@@ -121,6 +121,7 @@ export const createSubscriptionCheckout = action({
         tierId: v.string(), // Subscription component tier ID
         creatorId: v.string(), // Creator being subscribed to
         stripePriceId: v.string(), // Stripe Price ID from the tier
+        trialDays: v.optional(v.number()), // Free trial duration in days
         customerEmail: v.optional(v.string()),
         returnUrl: v.string(),
         cancelUrl: v.optional(v.string()),
@@ -152,6 +153,12 @@ export const createSubscriptionCheckout = action({
         params.append("subscription_data[metadata][tierId]", args.tierId);
         params.append("subscription_data[metadata][creatorId]", args.creatorId);
         params.append("subscription_data[metadata][reference]", reference);
+
+        // Free trial: pass trial_period_days to Stripe so first charge is deferred
+        if (args.trialDays && args.trialDays > 0) {
+            params.append("subscription_data[trial_period_days]", String(args.trialDays));
+            params.append("subscription_data[metadata][trialDays]", String(args.trialDays));
+        }
 
         if (args.customerEmail) {
             params.append("customer_email", args.customerEmail);

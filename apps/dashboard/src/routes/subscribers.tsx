@@ -20,12 +20,24 @@ import { useCreatorSubscribers } from '@digilist-saas/sdk';
 import { useAuthBridge } from '@digilist-saas/app-shell';
 import styles from './subscribers.module.css';
 
-function statusColor(status: string): 'success' | 'danger' | 'warning' | 'neutral' {
+function statusColor(status: string): 'success' | 'danger' | 'warning' | 'neutral' | 'info' {
     switch (status) {
         case 'active': return 'success';
+        case 'trialing': return 'info';
         case 'cancelled': return 'danger';
         case 'past_due': return 'warning';
         default: return 'neutral';
+    }
+}
+
+function statusLabel(status: string, t: (key: string, fallback: string) => string): string {
+    switch (status) {
+        case 'active': return t('subscribers.status.active', 'Active');
+        case 'trialing': return t('subscribers.status.trialing', 'Free Trial');
+        case 'cancelled': return t('subscribers.status.cancelled', 'Cancelled');
+        case 'past_due': return t('subscribers.status.past_due', 'Past Due');
+        case 'pending': return t('subscribers.status.pending', 'Pending');
+        default: return status;
     }
 }
 
@@ -38,6 +50,7 @@ export function SubscribersPage() {
     const { subscribers, isLoading } = useCreatorSubscribers(tenantId, userId);
 
     const activeCount = subscribers.filter((s: any) => s.status === 'active').length;
+    const trialingCount = subscribers.filter((s: any) => s.status === 'trialing').length;
 
     if (isLoading) {
         return (
@@ -56,7 +69,7 @@ export function SubscribersPage() {
                 {t('subscribers.description', 'People subscribed to your picks.')}
             </Paragraph>
 
-            <Grid columns="repeat(2, 1fr)" data-gap="sm">
+            <Grid columns="repeat(3, 1fr)" data-gap="sm">
                 <Card>
                     <Paragraph data-size="sm">
                         {t('subscribers.total', 'Total Subscribers')}
@@ -71,6 +84,14 @@ export function SubscribersPage() {
                     </Paragraph>
                     <Heading level={3} data-size="lg">
                         {activeCount}
+                    </Heading>
+                </Card>
+                <Card>
+                    <Paragraph data-size="sm">
+                        {t('subscribers.trialing', 'Free Trials')}
+                    </Paragraph>
+                    <Heading level={3} data-size="lg">
+                        {trialingCount}
                     </Heading>
                 </Card>
             </Grid>
@@ -93,7 +114,7 @@ export function SubscribersPage() {
                                 </span>
                             </div>
                             <StatusTag color={statusColor(sub.status)} size="sm">
-                                {sub.status}
+                                {statusLabel(sub.status, t)}
                             </StatusTag>
                         </div>
                     ))}

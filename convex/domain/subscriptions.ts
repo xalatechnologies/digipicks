@@ -77,9 +77,18 @@ export const getMySubscription = query({
               }).catch(() => null)
             : null;
 
+        const now = Date.now();
+        const isTrialing = subscription.status === "trialing";
+        const trialEndDate = subscription.trialEndDate as number | undefined;
+        const trialDaysRemaining = isTrialing && trialEndDate
+            ? Math.max(0, Math.ceil((trialEndDate - now) / (24 * 60 * 60 * 1000)))
+            : 0;
+
         return {
             ...subscription,
             tier: tier ? { name: tier.name, slug: tier.slug, price: tier.price, currency: tier.currency } : null,
+            isTrialing,
+            trialDaysRemaining,
         };
     },
 });
@@ -100,7 +109,7 @@ export const isSubscribed = query({
             { userId, creatorId }
         );
 
-        return subscription?.status === "active";
+        return subscription?.status === "active" || subscription?.status === "trialing";
     },
 });
 
@@ -152,6 +161,44 @@ export const getCreatorAccount = query({
         return ctx.runQuery(
             components.subscriptions.functions.getCreatorAccount,
             { userId: userId as string }
+        );
+    },
+});
+
+/**
+ * Update trial days configuration on a subscription tier.
+ * Set to 0 or undefined to disable trials.
+ */
+export const updateTierTrialDays = mutation({
+    args: {
+        tierId: v.string(),
+        trialDays: v.number(),
+    },
+    handler: async (ctx, { tierId, trialDays }) => {
+        const result = await ctx.runMutation(components.subscriptions.functions.updateTier, {
+            id: tierId as any,
+            trialDays: trialDays > 0 ? trialDays : undefined,
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Get trial status for a user's subscription to a creator.
+ * Returns trial metadata including days remaining.
+ */
+export const getTrialStatus = query({
+    args: {
+        userId: v.optional(v.string()),
+        creatorId: v.string(),
+    },
+    handler: async (ctx, { userId, creatorId }) => {
+        if (!userId) return null;
+
+        return ctx.runQuery(
+            components.subscriptions.functions.getTrialStatus,
+            { userId, creatorId }
         );
     },
 });
@@ -235,13 +282,14 @@ export const initiateSubscription = action({
             });
         }
 
-        // Create Stripe subscription checkout
+        // Create Stripe subscription checkout (with trial if tier has trialDays)
         const result: { sessionId: string; url: string; reference: string } = await ctx.runAction(api.billing.stripe.createSubscriptionCheckout, {
             tenantId: args.tenantId,
             userId: args.userId,
             tierId: args.tierId,
             creatorId: args.creatorId,
             stripePriceId: tier.stripePriceId,
+            trialDays: tier.trialDays,
             customerEmail: args.customerEmail,
             returnUrl: args.returnUrl,
             cancelUrl: args.cancelUrl,
