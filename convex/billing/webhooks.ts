@@ -64,15 +64,16 @@ export const stripeWebhook = internalAction({
     handler: async (ctx, { body, signature }) => {
         const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-        // Verify signature
-        if (webhookSecret) {
-            const valid = await verifyStripeSignature(body, signature, webhookSecret);
-            if (!valid) {
-                console.error("Stripe webhook: signature verification failed");
-                throw new Error("Invalid Stripe webhook signature");
-            }
-        } else {
-            console.warn("Stripe webhook: STRIPE_WEBHOOK_SECRET not configured — skipping signature verification");
+        // Verify signature — mandatory in all environments
+        if (!webhookSecret) {
+            console.error("Stripe webhook: STRIPE_WEBHOOK_SECRET not configured — rejecting request");
+            throw new Error("Stripe webhook secret not configured");
+        }
+
+        const valid = await verifyStripeSignature(body, signature, webhookSecret);
+        if (!valid) {
+            console.error("Stripe webhook: signature verification failed");
+            throw new Error("Invalid Stripe webhook signature");
         }
 
         const event = JSON.parse(body);
@@ -454,12 +455,64 @@ export const updateConnectAccountStatus = internalMutation({
  * Events: epayments.payment.created.v1, .authorized.v1, .captured.v1,
  *         .cancelled.v1, .refunded.v1, .aborted.v1, .expired.v1
  */
+/**
+ * Verify the Vipps webhook signature.
+ * Vipps signs webhooks with HMAC-SHA256 using the webhook secret.
+ * The signature is sent in the `Authorization` header as a Bearer token,
+ * or in the `X-Vipps-Authorization` header.
+ */
+async function verifyVippsSignature(
+    payload: string,
+    signatureHeader: string,
+    secret: string
+): Promise<boolean> {
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(secret);
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        keyData,
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+
+    const signature = await crypto.subtle.sign(
+        "HMAC",
+        cryptoKey,
+        encoder.encode(payload)
+    );
+
+    const computed = Array.from(new Uint8Array(signature))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+
+    return computed === signatureHeader;
+}
+
 export const vippsWebhook = internalAction({
     args: {
         payload: v.any(),
         headers: v.any(),
     },
-    handler: async (ctx, { payload, headers: _headers }) => {
+    handler: async (ctx, { payload, headers }) => {
+        // Verify Vipps webhook signature — mandatory
+        const vippsSecret = process.env.VIPPS_WEBHOOK_SECRET;
+        if (!vippsSecret) {
+            console.error("Vipps webhook: VIPPS_WEBHOOK_SECRET not configured — rejecting request");
+            throw new Error("Vipps webhook secret not configured");
+        }
+
+        const signatureHeader =
+            headers?.["x-vipps-authorization"] ??
+            headers?.["X-Vipps-Authorization"] ??
+            "";
+        const payloadString = typeof payload === "string" ? payload : JSON.stringify(payload);
+        const valid = await verifyVippsSignature(payloadString, signatureHeader, vippsSecret);
+        if (!valid) {
+            console.error("Vipps webhook: signature verification failed");
+            throw new Error("Invalid Vipps webhook signature");
+        }
+
         // Vipps ePayment webhook payload structure:
         // { msn, reference, pspReference, name, amount, state, paymentMethod, ... }
         const reference = payload.reference;

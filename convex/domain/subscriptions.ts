@@ -113,15 +113,20 @@ export const listCreatorSubscribers = query({
         creatorId: v.id("users"),
         status: v.optional(v.string()),
     },
-    handler: async (ctx, { tenantId: _tenantId, creatorId, status }) => {
+    handler: async (ctx, { tenantId, creatorId, status }) => {
         const subscribers = await ctx.runQuery(
             components.subscriptions.functions.listCreatorSubscribers,
             { creatorId: creatorId as string, status }
         );
 
+        // Filter by tenantId to enforce tenant isolation
+        const tenantSubscribers = (subscribers as any[]).filter(
+            (sub: any) => sub.tenantId === (tenantId as string)
+        );
+
         // Enrich with user data
         const enriched = await Promise.all(
-            (subscribers as any[]).map(async (sub: any) => {
+            tenantSubscribers.map(async (sub: any) => {
                 const user = sub.userId
                     ? await ctx.db.get(sub.userId as Id<"users">).catch(() => null)
                     : null;
@@ -170,6 +175,28 @@ export const initiateSubscription = action({
         cancelUrl: v.optional(v.string()),
     },
     handler: async (ctx, args): Promise<{ sessionId: string; url: string; reference: string }> => {
+        // Verify the caller is authenticated
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new ConvexError({
+                type: "about:blank",
+                title: "Unauthorized",
+                status: 401,
+                detail: "Authentication required to initiate a subscription",
+            });
+        }
+
+        // Verify the authenticated user matches the requested userId
+        const tokenUserId = identity.subject;
+        if (tokenUserId !== (args.userId as string)) {
+            throw new ConvexError({
+                type: "about:blank",
+                title: "Forbidden",
+                status: 403,
+                detail: "You can only create subscriptions for yourself",
+            });
+        }
+
         // Get the tier to find Stripe price ID
         const tier: any = await ctx.runQuery(api.domain.subscriptions.getTier, {
             id: args.tierId,
@@ -234,6 +261,28 @@ export const cancelSubscription = action({
         reason: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        // Verify the caller is the subscription owner
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new ConvexError({
+                type: "about:blank",
+                title: "Unauthorized",
+                status: 401,
+                detail: "Authentication required",
+            });
+        }
+
+        // Verify the authenticated user matches the requested userId
+        const tokenUserId = identity.subject;
+        if (tokenUserId !== (args.userId as string)) {
+            throw new ConvexError({
+                type: "about:blank",
+                title: "Forbidden",
+                status: 403,
+                detail: "You can only cancel your own subscription",
+            });
+        }
+
         const subscription: any = await ctx.runQuery(api.domain.subscriptions.getMySubscription, {
             userId: args.userId,
             creatorId: args.creatorId,
@@ -296,6 +345,7 @@ export const cancelSubscription = action({
         // Update local membership status
         await ctx.runMutation(internal.domain.subscriptions.markCancelled, {
             membershipId: subscription._id,
+            tenantId: subscription.tenantId ?? "",
             userId: args.userId as string,
             reason: args.reason,
         });
@@ -356,10 +406,11 @@ export const syncCreatorAccountStatus = action({
 export const markCancelled = internalMutation({
     args: {
         membershipId: v.string(),
+        tenantId: v.string(),
         userId: v.string(),
         reason: v.optional(v.string()),
     },
-    handler: async (ctx, { membershipId, userId, reason }) => {
+    handler: async (ctx, { membershipId, tenantId, userId, reason }) => {
         const now = Date.now();
 
         await ctx.runMutation(components.subscriptions.functions.updateMembershipStatus, {
@@ -371,7 +422,7 @@ export const markCancelled = internalMutation({
         });
 
         await withAudit(ctx, {
-            tenantId: "",
+            tenantId,
             userId,
             entityType: "subscription",
             entityId: membershipId,

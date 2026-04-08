@@ -303,6 +303,7 @@ describe("domain/picks — update", () => {
 
         await t.mutation(api.domain.picks.update, {
             id,
+            callerId: userId,
             analysis: "Strong home court advantage",
         });
 
@@ -316,7 +317,7 @@ describe("domain/picks — update", () => {
 
         const { id } = await t.mutation(api.domain.picks.create, pickArgs(tenantId, userId));
 
-        await t.mutation(api.domain.picks.update, { id, analysis: "New analysis" });
+        await t.mutation(api.domain.picks.update, { id, callerId: userId, analysis: "New analysis" });
 
         const auditEntries = await t.query(
             components.audit.functions.listForTenant,
@@ -341,7 +342,7 @@ describe("domain/picks — update", () => {
         });
 
         await expect(
-            t.mutation(api.domain.picks.update, { id, oddsAmerican: "+200" })
+            t.mutation(api.domain.picks.update, { id, callerId: userId, oddsAmerican: "+200" })
         ).rejects.toThrow("Cannot edit odds, units, or selection on a graded pick");
     });
 });
@@ -455,7 +456,7 @@ describe("domain/picks — remove", () => {
 
         const { id } = await t.mutation(api.domain.picks.create, pickArgs(tenantId, userId));
 
-        const result = await t.mutation(api.domain.picks.remove, { id });
+        const result = await t.mutation(api.domain.picks.remove, { id, callerId: userId });
         expect(result.success).toBe(true);
 
         const auditEntries = await t.query(

@@ -130,11 +130,18 @@ export const listPublishedFeed = query({
  * Get a single pick by ID.
  */
 export const get = query({
-    args: { id: v.id("picks") },
+    args: {
+        id: v.id("picks"),
+        tenantId: v.optional(v.string()),
+    },
     returns: v.any(),
-    handler: async (ctx, { id }) => {
+    handler: async (ctx, { id, tenantId }) => {
         const pick = await ctx.db.get(id);
         if (!pick) {
+            throw new Error("Pick not found");
+        }
+        // Tenant isolation: if tenantId is provided, verify the pick belongs to that tenant
+        if (tenantId && pick.tenantId !== tenantId) {
             throw new Error("Pick not found");
         }
         return pick;
@@ -509,11 +516,17 @@ export const grade = mutation({
             v.literal("void")
         ),
         gradedBy: v.string(),
+        tenantId: v.optional(v.string()),
     },
     returns: v.object({ success: v.boolean() }),
-    handler: async (ctx, { id, result, gradedBy }) => {
+    handler: async (ctx, { id, result, gradedBy, tenantId }) => {
         const pick = await ctx.db.get(id);
         if (!pick) {
+            throw new Error("Pick not found");
+        }
+
+        // Tenant isolation: if tenantId is provided, verify the pick belongs to that tenant
+        if (tenantId && pick.tenantId !== tenantId) {
             throw new Error("Pick not found");
         }
 

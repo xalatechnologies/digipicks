@@ -274,16 +274,28 @@ export const updateTierMemberCount = mutation({
 export const listMemberships = query({
     args: {
         tenantId: v.string(),
+        userId: v.optional(v.string()),
         tierId: v.optional(v.string()),
         status: v.optional(v.string()),
         limit: v.optional(v.number()),
         cursor: v.optional(v.string()),
     },
     returns: v.any(),
-    handler: async (ctx, { tenantId, tierId, status, limit }) => {
+    handler: async (ctx, { tenantId, userId, tierId, status, limit }) => {
         let memberships;
 
-        if (status) {
+        // When userId is provided, scope to that user's memberships via index
+        if (userId) {
+            memberships = await ctx.db
+                .query("memberships")
+                .withIndex("by_user", (q) => q.eq("userId", userId))
+                .collect();
+            // Filter to the requested tenant
+            memberships = memberships.filter((m) => m.tenantId === tenantId);
+            if (status) {
+                memberships = memberships.filter((m) => m.status === status);
+            }
+        } else if (status) {
             memberships = await ctx.db
                 .query("memberships")
                 .withIndex("by_status", (q) =>

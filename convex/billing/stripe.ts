@@ -280,7 +280,7 @@ export const createRefund = action({
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 Authorization: `Bearer ${secretKey}`,
-                "Idempotency-Key": `refund-${reference}-${Date.now()}`,
+                "Idempotency-Key": `refund-${reference}`,
             },
             body: params.toString(),
         });
@@ -326,7 +326,7 @@ export const cancelPaymentIntent = action({
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                     Authorization: `Bearer ${secretKey}`,
-                    "Idempotency-Key": `cancel-${reference}-${Date.now()}`,
+                    "Idempotency-Key": `cancel-${reference}`,
                 },
             }
         );

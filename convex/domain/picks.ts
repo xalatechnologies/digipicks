@@ -303,15 +303,14 @@ export const feedFollowing = query({
     handler: async (ctx, { tenantId, userId, sport, result, limit, cursor }) => {
         if (!userId) return [];
 
-        // Get all active subscriptions for this user
+        // Get active subscriptions for this user (scoped by userId at component level)
         const memberships = await ctx.runQuery(
             components.subscriptions.functions.listMemberships,
-            { tenantId: tenantId as string, status: "active" }
+            { tenantId: tenantId as string, userId, status: "active" }
         );
-        const userMemberships = (memberships as any[]).filter(
-            (m: any) => m.userId === userId && m.creatorId
-        );
-        const subscribedCreatorIds = userMemberships.map((m: any) => m.creatorId as string);
+        const subscribedCreatorIds = (memberships as any[])
+            .filter((m: any) => m.creatorId)
+            .map((m: any) => m.creatorId as string);
 
         if (subscribedCreatorIds.length === 0) return [];
 
@@ -369,17 +368,18 @@ export const feedForYou = query({
             cursor,
         });
 
-        // Resolve which creators the user is subscribed to
+        // Resolve which creators the user is subscribed to (scoped by userId at component level)
         let subscribedCreatorIds = new Set<string>();
         if (userId) {
             const memberships = await ctx.runQuery(
                 components.subscriptions.functions.listMemberships,
-                { tenantId: tenantId as string, status: "active" }
+                { tenantId: tenantId as string, userId, status: "active" }
             );
-            const userMemberships = (memberships as any[]).filter(
-                (m: any) => m.userId === userId && m.creatorId
+            subscribedCreatorIds = new Set(
+                (memberships as any[])
+                    .filter((m: any) => m.creatorId)
+                    .map((m: any) => m.creatorId as string)
             );
-            subscribedCreatorIds = new Set(userMemberships.map((m: any) => m.creatorId as string));
         }
 
         // Enrich with creator data
@@ -517,6 +517,7 @@ export const create = mutation({
 export const update = mutation({
     args: {
         id: v.string(),
+        callerId: v.id("users"),
         event: v.optional(v.string()),
         sport: v.optional(v.string()),
         league: v.optional(v.string()),
@@ -531,12 +532,19 @@ export const update = mutation({
         status: v.optional(v.string()),
         metadata: v.optional(v.any()),
     },
-    handler: async (ctx, { id, ...updates }) => {
+    handler: async (ctx, { id, callerId, ...updates }) => {
+        await requireActiveUser(ctx, callerId);
+
         const pick = await ctx.runQuery(components.picks.functions.get, { id });
+
+        // Ownership check: only the creator can update their pick
+        if ((pick as any)?.creatorId !== (callerId as string)) {
+            throw new Error("Not authorized: only the pick creator can update this pick");
+        }
 
         await rateLimit(ctx, {
             name: "mutatePick",
-            key: rateLimitKeys.user((pick as any)?.creatorId ?? ""),
+            key: rateLimitKeys.user(callerId as string),
             throws: true,
         });
 
@@ -547,6 +555,7 @@ export const update = mutation({
 
         await withAudit(ctx, {
             tenantId: (pick as any)?.tenantId ?? "",
+            userId: callerId as string,
             entityType: "pick",
             entityId: id,
             action: "updated",
@@ -591,6 +600,7 @@ export const grade = mutation({
             id,
             result,
             gradedBy: gradedBy as string,
+            tenantId: (pickBefore as any)?.tenantId,
         });
 
         await withAudit(ctx, {
@@ -622,13 +632,23 @@ export const grade = mutation({
  * Remove a pick.
  */
 export const remove = mutation({
-    args: { id: v.string() },
-    handler: async (ctx, { id }) => {
+    args: {
+        id: v.string(),
+        callerId: v.id("users"),
+    },
+    handler: async (ctx, { id, callerId }) => {
+        await requireActiveUser(ctx, callerId);
+
         const pick = await ctx.runQuery(components.picks.functions.get, { id });
+
+        // Ownership check: only the creator can remove their pick
+        if ((pick as any)?.creatorId !== (callerId as string)) {
+            throw new Error("Not authorized: only the pick creator can remove this pick");
+        }
 
         await rateLimit(ctx, {
             name: "mutatePick",
-            key: rateLimitKeys.user((pick as any)?.creatorId ?? ""),
+            key: rateLimitKeys.user(callerId as string),
             throws: true,
         });
 
@@ -636,11 +656,19 @@ export const remove = mutation({
 
         await withAudit(ctx, {
             tenantId: (pick as any)?.tenantId ?? "",
+            userId: callerId as string,
             entityType: "pick",
             entityId: id,
             action: "removed",
             previousState: { event: (pick as any)?.event, sport: (pick as any)?.sport },
             sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.pick.removed", (pick as any)?.tenantId ?? "", "picks", {
+            pickId: id,
+            creatorId: (pick as any)?.creatorId,
+            event: (pick as any)?.event,
+            sport: (pick as any)?.sport,
         });
 
         return result;
