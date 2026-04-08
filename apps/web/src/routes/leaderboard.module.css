@@ -1,0 +1,207 @@
+/* =============================================================================
+ * Creator Leaderboard Page — Web App
+ * Ranked creator list by ROI, win rate, streak, total picks
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.pageHeader {
+  margin-bottom: var(--ds-size-6);
+}
+
+.pageTitle {
+  margin: 0 0 var(--ds-size-2) 0;
+}
+
+.pageSubtitle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-5);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filterItem {
+  min-width: 140px;
+}
+
+/* Loading */
+.loadingState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}
+
+/* Leaderboard table */
+.leaderboardTable {
+  width: 100%;
+}
+
+.leaderboardRow {
+  display: grid;
+  grid-template-columns: 50px 1fr 80px 100px 80px 90px 80px;
+  align-items: center;
+  gap: var(--ds-size-3);
+  padding: var(--ds-size-3) var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.leaderboardRow:hover {
+  background: var(--ds-color-neutral-surface-hover);
+}
+
+.leaderboardHeader {
+  font-weight: var(--ds-font-weight-semibold);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: default;
+  border-bottom: 2px solid var(--ds-color-neutral-border-default);
+}
+
+.leaderboardHeader:hover {
+  background: transparent;
+}
+
+/* Rank column */
+.rank {
+  font-weight: var(--ds-font-weight-bold);
+  font-size: var(--ds-font-size-lg);
+  text-align: center;
+}
+
+.rankGold {
+  color: #d4a017;
+}
+
+.rankSilver {
+  color: #8a8a8a;
+}
+
+.rankBronze {
+  color: #cd7f32;
+}
+
+/* Creator info */
+.creatorCell {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+  min-width: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.avatarPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.creatorName {
+  font-weight: var(--ds-font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.creatorRecord {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Stat cells */
+.statCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.roiPositive {
+  color: var(--ds-color-success-text-default);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.roiNegative {
+  color: var(--ds-color-danger-text-default);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+/* Streak badge */
+.streakBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-size-1);
+  padding: var(--ds-size-1) var(--ds-size-2);
+  border-radius: var(--ds-border-radius-md);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.streakWin {
+  background: var(--ds-color-success-surface-default);
+  color: var(--ds-color-success-text-default);
+}
+
+.streakLoss {
+  background: var(--ds-color-danger-surface-default);
+  color: var(--ds-color-danger-text-default);
+}
+
+/* Header sortable */
+.sortableHeader {
+  cursor: pointer;
+  text-align: right;
+}
+
+.sortableHeader:hover {
+  color: var(--ds-color-accent-text-default);
+}
+
+.activeSort {
+  color: var(--ds-color-accent-text-default);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .leaderboardRow {
+    grid-template-columns: 40px 1fr 70px 80px;
+  }
+
+  .hideOnMobile {
+    display: none;
+  }
+}

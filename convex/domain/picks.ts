@@ -231,6 +231,58 @@ export const creatorProfile = query({
 });
 
 // =============================================================================
+// LEADERBOARD FACADE
+// =============================================================================
+
+/**
+ * Public leaderboard — ranked list of creators with performance stats.
+ * Enriches each entry with creator user info (name, avatar, displayName).
+ * Real-time via Convex subscriptions — updates when picks are graded.
+ */
+export const leaderboard = query({
+    args: {
+        tenantId: v.id("tenants"),
+        sport: v.optional(v.string()),
+        timeframe: v.optional(v.union(v.literal("30d"), v.literal("90d"), v.literal("all"))),
+        sortBy: v.optional(v.union(v.literal("roi"), v.literal("winRate"), v.literal("streak"), v.literal("totalPicks"))),
+        limit: v.optional(v.number()),
+    },
+    handler: async (ctx, { tenantId, sport, timeframe, sortBy, limit }) => {
+        const entries = await ctx.runQuery(components.picks.functions.leaderboard, {
+            tenantId: tenantId as string,
+            sport,
+            timeframe,
+            sortBy,
+            limit,
+        });
+
+        // Batch fetch creator users for enrichment
+        const creatorIds = (entries as any[]).map((e: any) => e.creatorId);
+        const users = await Promise.all(
+            creatorIds.map((id: string) => ctx.db.get(id as Id<"users">).catch(() => null))
+        );
+        const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id as string, u]));
+
+        return (entries as any[]).map((entry: any, index: number) => {
+            const user = userMap.get(entry.creatorId);
+            return {
+                rank: index + 1,
+                ...entry,
+                creator: user
+                    ? {
+                        id: user._id,
+                        name: user.name,
+                        displayName: user.displayName,
+                        email: user.email,
+                        avatarUrl: user.avatarUrl,
+                    }
+                    : null,
+            };
+        });
+    },
+});
+
+// =============================================================================
 // FEED FACADES
 // =============================================================================
 
@@ -450,6 +502,7 @@ export const create = mutation({
         await emitEvent(ctx, "picks.pick.created", args.tenantId as string, "picks", {
             pickId: result.id,
             creatorId: args.creatorId as string,
+            event: args.event,
             sport: args.sport,
             selection: args.selection,
         });
@@ -553,6 +606,8 @@ export const grade = mutation({
 
         await emitEvent(ctx, "picks.pick.graded", (pickBefore as any)?.tenantId ?? "", "picks", {
             pickId: id,
+            creatorId: (pickBefore as any)?.creatorId,
+            event: (pickBefore as any)?.event,
             result,
             gradedBy: gradedBy as string,
             sport: (pickBefore as any)?.sport,
@@ -589,5 +644,138 @@ export const remove = mutation({
         });
 
         return result;
+    },
+});
+
+// =============================================================================
+// PICK TAILING FACADES
+// =============================================================================
+
+/**
+ * Tail a pick — subscriber marks they are following this pick.
+ */
+export const tailPick = mutation({
+    args: {
+        tenantId: v.id("tenants"),
+        userId: v.id("users"),
+        pickId: v.string(),
+        startingBankroll: v.optional(v.number()),
+    },
+    handler: async (ctx, { tenantId, userId, pickId, startingBankroll }) => {
+        await requireActiveUser(ctx, userId);
+
+        const result = await ctx.runMutation(components.picks.functions.tailPick, {
+            tenantId: tenantId as string,
+            userId: userId as string,
+            pickId,
+            startingBankroll,
+        });
+
+        await withAudit(ctx, {
+            tenantId: tenantId as string,
+            userId: userId as string,
+            entityType: "pickTail",
+            entityId: result.id,
+            action: "created",
+            newState: { pickId },
+            sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.tail.created", tenantId as string, "picks", {
+            pickId,
+            userId: userId as string,
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Untail a pick — remove tracking.
+ */
+export const untailPick = mutation({
+    args: {
+        userId: v.id("users"),
+        pickId: v.string(),
+    },
+    handler: async (ctx, { userId, pickId }) => {
+        await requireActiveUser(ctx, userId);
+
+        const result = await ctx.runMutation(components.picks.functions.untailPick, {
+            userId: userId as string,
+            pickId,
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Check if user has tailed a specific pick.
+ */
+export const isTailed = query({
+    args: {
+        userId: v.string(),
+        pickId: v.string(),
+    },
+    handler: async (ctx, { userId, pickId }) => {
+        return ctx.runQuery(components.picks.functions.isTailed, { userId, pickId });
+    },
+});
+
+/**
+ * List all tailed picks for a user, enriched with creator data.
+ */
+export const myTailedPicks = query({
+    args: {
+        tenantId: v.id("tenants"),
+        userId: v.string(),
+        sport: v.optional(v.string()),
+        result: v.optional(v.string()),
+        creatorId: v.optional(v.string()),
+    },
+    handler: async (ctx, { tenantId, userId, sport, result, creatorId }) => {
+        const picks = await ctx.runQuery(components.picks.functions.listTailed, {
+            tenantId: tenantId as string,
+            userId,
+            sport,
+            result,
+            creatorId,
+        });
+
+        // Enrich with creator data
+        const creatorIds = [...new Set((picks as any[]).map((p: any) => p.creatorId).filter(Boolean))];
+        const users = await Promise.all(
+            creatorIds.map((id: string) => ctx.db.get(id as Id<"users">).catch(() => null))
+        );
+        const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
+
+        return (picks as any[]).map((pick: any) => {
+            const user = pick.creatorId ? userMap.get(pick.creatorId) : null;
+            return {
+                ...pick,
+                creator: user
+                    ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
+                    : null,
+            };
+        });
+    },
+});
+
+/**
+ * Personal P/L tracker stats for a user's tailed picks.
+ */
+export const myTrackerStats = query({
+    args: {
+        tenantId: v.id("tenants"),
+        userId: v.string(),
+        startingBankroll: v.optional(v.number()),
+    },
+    handler: async (ctx, { tenantId, userId, startingBankroll }) => {
+        return ctx.runQuery(components.picks.functions.personalStats, {
+            tenantId: tenantId as string,
+            userId,
+            startingBankroll,
+        });
     },
 });

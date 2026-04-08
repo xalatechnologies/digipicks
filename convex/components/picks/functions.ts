@@ -216,6 +216,151 @@ export const creatorStats = query({
     },
 });
 
+/**
+ * Leaderboard: aggregate stats for all creators in a tenant.
+ * Returns an array of creator entries ranked by the requested metric.
+ * Filters published, graded picks only (won/lost). Pushes and voids excluded from record.
+ */
+export const leaderboard = query({
+    args: {
+        tenantId: v.string(),
+        sport: v.optional(v.string()),
+        timeframe: v.optional(v.union(v.literal("30d"), v.literal("90d"), v.literal("all"))),
+        sortBy: v.optional(v.union(v.literal("roi"), v.literal("winRate"), v.literal("streak"), v.literal("totalPicks"))),
+        limit: v.optional(v.number()),
+    },
+    returns: v.array(v.object({
+        creatorId: v.string(),
+        totalPicks: v.number(),
+        wins: v.number(),
+        losses: v.number(),
+        pushes: v.number(),
+        winRate: v.number(),
+        netUnits: v.number(),
+        roi: v.number(),
+        currentStreak: v.number(),
+        streakType: v.union(v.literal("W"), v.literal("L"), v.literal("none")),
+        avgOdds: v.number(),
+    })),
+    handler: async (ctx, { tenantId, sport, timeframe, sortBy, limit }) => {
+        let picks = await ctx.db
+            .query("picks")
+            .withIndex("by_tenant_status", (q) =>
+                q.eq("tenantId", tenantId).eq("status", "published")
+            )
+            .collect();
+
+        // Time filter
+        if (timeframe && timeframe !== "all") {
+            const days = timeframe === "30d" ? 30 : 90;
+            const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+            picks = picks.filter((p) => p._creationTime >= cutoff);
+        }
+
+        // Sport filter
+        if (sport) {
+            picks = picks.filter((p) => p.sport === sport);
+        }
+
+        // Group by creator
+        const creatorMap = new Map<string, typeof picks>();
+        for (const pick of picks) {
+            const existing = creatorMap.get(pick.creatorId);
+            if (existing) {
+                existing.push(pick);
+            } else {
+                creatorMap.set(pick.creatorId, [pick]);
+            }
+        }
+
+        // Calculate stats per creator
+        const entries = [];
+        for (const [creatorId, creatorPicks] of creatorMap) {
+            let wins = 0;
+            let losses = 0;
+            let pushes = 0;
+            let netUnits = 0;
+            let totalWagered = 0;
+            let oddsSum = 0;
+            let oddsCount = 0;
+
+            for (const pick of creatorPicks) {
+                if (pick.result === "won") {
+                    wins++;
+                    netUnits += pick.units * (pick.oddsDecimal - 1);
+                    totalWagered += pick.units;
+                    oddsSum += pick.oddsDecimal;
+                    oddsCount++;
+                } else if (pick.result === "lost") {
+                    losses++;
+                    netUnits -= pick.units;
+                    totalWagered += pick.units;
+                    oddsSum += pick.oddsDecimal;
+                    oddsCount++;
+                } else if (pick.result === "push") {
+                    pushes++;
+                }
+                // pending and void are excluded from stats
+            }
+
+            const graded = wins + losses;
+            if (graded === 0) continue; // Skip creators with no graded picks
+
+            const winRate = Math.round((wins / graded) * 100 * 100) / 100;
+            const roi = totalWagered > 0
+                ? Math.round((netUnits / totalWagered) * 100 * 100) / 100
+                : 0;
+
+            // Calculate current streak (most recent graded picks)
+            const gradedPicks = creatorPicks
+                .filter((p) => p.result === "won" || p.result === "lost")
+                .sort((a, b) => b._creationTime - a._creationTime);
+
+            let currentStreak = 0;
+            let streakType: "W" | "L" | "none" = "none";
+            if (gradedPicks.length > 0) {
+                streakType = gradedPicks[0].result === "won" ? "W" : "L";
+                for (const pick of gradedPicks) {
+                    if ((streakType === "W" && pick.result === "won") ||
+                        (streakType === "L" && pick.result === "lost")) {
+                        currentStreak++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            entries.push({
+                creatorId,
+                totalPicks: graded,
+                wins,
+                losses,
+                pushes,
+                winRate,
+                netUnits: Math.round(netUnits * 100) / 100,
+                roi,
+                currentStreak,
+                streakType,
+                avgOdds: oddsCount > 0
+                    ? Math.round((oddsSum / oddsCount) * 100) / 100
+                    : 0,
+            });
+        }
+
+        // Sort
+        const sort = sortBy ?? "roi";
+        entries.sort((a, b) => {
+            if (sort === "roi") return b.roi - a.roi;
+            if (sort === "winRate") return b.winRate - a.winRate;
+            if (sort === "streak") return b.currentStreak - a.currentStreak;
+            if (sort === "totalPicks") return b.totalPicks - a.totalPicks;
+            return b.roi - a.roi;
+        });
+
+        return entries.slice(0, limit ?? 50);
+    },
+});
+
 // =============================================================================
 // MUTATIONS
 // =============================================================================
@@ -400,5 +545,249 @@ export const remove = mutation({
 
         await ctx.db.delete(id);
         return { success: true };
+    },
+});
+
+// =============================================================================
+// PICK TAILING (subscriber tracking)
+// =============================================================================
+
+/**
+ * Tail a pick — mark that a subscriber is following this pick.
+ */
+export const tailPick = mutation({
+    args: {
+        tenantId: v.string(),
+        userId: v.string(),
+        pickId: v.string(),
+        startingBankroll: v.optional(v.number()),
+    },
+    returns: v.object({ id: v.string() }),
+    handler: async (ctx, { tenantId, userId, pickId, startingBankroll }) => {
+        // Check the pick exists
+        const pick = await ctx.db.get(pickId as any);
+        if (!pick) {
+            throw new Error("Pick not found");
+        }
+
+        // Check not already tailed
+        const existing = await ctx.db
+            .query("pickTails")
+            .withIndex("by_user_pick", (q) => q.eq("userId", userId).eq("pickId", pickId))
+            .unique();
+        if (existing) {
+            throw new Error("Already tailed this pick");
+        }
+
+        const id = await ctx.db.insert("pickTails", {
+            tenantId,
+            userId,
+            pickId,
+            tailedAt: Date.now(),
+            startingBankroll,
+        });
+
+        return { id: id as string };
+    },
+});
+
+/**
+ * Untail a pick — remove tracking.
+ */
+export const untailPick = mutation({
+    args: {
+        userId: v.string(),
+        pickId: v.string(),
+    },
+    returns: v.object({ success: v.boolean() }),
+    handler: async (ctx, { userId, pickId }) => {
+        const tail = await ctx.db
+            .query("pickTails")
+            .withIndex("by_user_pick", (q) => q.eq("userId", userId).eq("pickId", pickId))
+            .unique();
+        if (!tail) {
+            throw new Error("Not tailed");
+        }
+
+        await ctx.db.delete(tail._id);
+        return { success: true };
+    },
+});
+
+/**
+ * Check if user has tailed a specific pick.
+ */
+export const isTailed = query({
+    args: {
+        userId: v.string(),
+        pickId: v.string(),
+    },
+    returns: v.boolean(),
+    handler: async (ctx, { userId, pickId }) => {
+        const tail = await ctx.db
+            .query("pickTails")
+            .withIndex("by_user_pick", (q) => q.eq("userId", userId).eq("pickId", pickId))
+            .unique();
+        return tail !== null;
+    },
+});
+
+/**
+ * List all tailed picks for a user, with full pick data.
+ */
+export const listTailed = query({
+    args: {
+        tenantId: v.string(),
+        userId: v.string(),
+        sport: v.optional(v.string()),
+        result: v.optional(v.string()),
+        creatorId: v.optional(v.string()),
+    },
+    returns: v.array(v.any()),
+    handler: async (ctx, { tenantId, userId, sport, result, creatorId }) => {
+        const tails = await ctx.db
+            .query("pickTails")
+            .withIndex("by_tenant_user", (q) => q.eq("tenantId", tenantId).eq("userId", userId))
+            .collect();
+
+        // Resolve picks
+        const results = [];
+        for (const tail of tails) {
+            const pick = await ctx.db.get(tail.pickId as any);
+            if (!pick) continue;
+
+            // Apply filters
+            if (sport && pick.sport !== sport) continue;
+            if (result && pick.result !== result) continue;
+            if (creatorId && pick.creatorId !== creatorId) continue;
+
+            results.push({
+                ...pick,
+                tailId: tail._id as string,
+                tailedAt: tail.tailedAt,
+                startingBankroll: tail.startingBankroll,
+            });
+        }
+
+        // Sort newest tailed first
+        results.sort((a, b) => b.tailedAt - a.tailedAt);
+
+        return results;
+    },
+});
+
+/**
+ * Personal P/L stats for a user's tailed picks.
+ */
+export const personalStats = query({
+    args: {
+        tenantId: v.string(),
+        userId: v.string(),
+        startingBankroll: v.optional(v.number()),
+    },
+    returns: v.object({
+        totalTailed: v.number(),
+        wins: v.number(),
+        losses: v.number(),
+        pushes: v.number(),
+        voids: v.number(),
+        pending: v.number(),
+        winRate: v.number(),
+        netUnits: v.number(),
+        roi: v.number(),
+        totalWagered: v.number(),
+        currentBankroll: v.optional(v.number()),
+        sportBreakdown: v.array(v.object({
+            sport: v.string(),
+            picks: v.number(),
+            wins: v.number(),
+            losses: v.number(),
+            netUnits: v.number(),
+            winRate: v.number(),
+        })),
+    }),
+    handler: async (ctx, { tenantId, userId, startingBankroll }) => {
+        const tails = await ctx.db
+            .query("pickTails")
+            .withIndex("by_tenant_user", (q) => q.eq("tenantId", tenantId).eq("userId", userId))
+            .collect();
+
+        let wins = 0;
+        let losses = 0;
+        let pushes = 0;
+        let voids = 0;
+        let pending = 0;
+        let netUnits = 0;
+        let totalWagered = 0;
+        const sportMap = new Map<string, { picks: number; wins: number; losses: number; netUnits: number }>();
+
+        for (const tail of tails) {
+            const pick = await ctx.db.get(tail.pickId as any);
+            if (!pick) continue;
+
+            // Sport breakdown
+            const sportEntry = sportMap.get(pick.sport) ?? { picks: 0, wins: 0, losses: 0, netUnits: 0 };
+            sportEntry.picks++;
+
+            if (pick.result === "won") {
+                wins++;
+                const profit = pick.units * (pick.oddsDecimal - 1);
+                netUnits += profit;
+                totalWagered += pick.units;
+                sportEntry.wins++;
+                sportEntry.netUnits += profit;
+            } else if (pick.result === "lost") {
+                losses++;
+                netUnits -= pick.units;
+                totalWagered += pick.units;
+                sportEntry.losses++;
+                sportEntry.netUnits -= pick.units;
+            } else if (pick.result === "push") {
+                pushes++;
+                totalWagered += pick.units;
+            } else if (pick.result === "void") {
+                voids++;
+            } else {
+                pending++;
+            }
+
+            sportMap.set(pick.sport, sportEntry);
+        }
+
+        const totalTailed = tails.length;
+        const graded = wins + losses;
+        const winRate = graded > 0 ? Math.round((wins / graded) * 100) / 100 : 0;
+        const roi = totalWagered > 0 ? Math.round((netUnits / totalWagered) * 100 * 100) / 100 : 0;
+
+        const currentBankroll = startingBankroll !== undefined
+            ? Math.round((startingBankroll + netUnits) * 100) / 100
+            : undefined;
+
+        const sportBreakdown = Array.from(sportMap.entries()).map(([sport, data]) => {
+            const sportGraded = data.wins + data.losses;
+            return {
+                sport,
+                picks: data.picks,
+                wins: data.wins,
+                losses: data.losses,
+                netUnits: Math.round(data.netUnits * 100) / 100,
+                winRate: sportGraded > 0 ? Math.round((data.wins / sportGraded) * 100) / 100 : 0,
+            };
+        });
+
+        return {
+            totalTailed,
+            wins,
+            losses,
+            pushes,
+            voids,
+            pending,
+            winRate,
+            netUnits: Math.round(netUnits * 100) / 100,
+            roi,
+            totalWagered: Math.round(totalWagered * 100) / 100,
+            currentBankroll,
+            sportBreakdown,
+        };
     },
 });
