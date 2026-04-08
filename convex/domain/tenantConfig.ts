@@ -1,6 +1,7 @@
 import { mutation, query } from "../_generated/server";
 import { components } from "../_generated/api";
 import { v } from "convex/values";
+import { requireActiveUser } from "../lib/auth";
 
 /**
  * Tenant Config Facade
@@ -11,11 +12,11 @@ import { v } from "convex/values";
 // Get all feature flags for a tenant
 export const listFlags = query({
     args: {
-        tenantId: v.string(),
+        tenantId: v.id("tenants"),
     },
     handler: async (ctx, { tenantId }) => {
         return ctx.runQuery(components.tenantConfig.queries.listFlags, {
-            tenantId,
+            tenantId: tenantId as string,
         });
     },
 });
@@ -23,13 +24,13 @@ export const listFlags = query({
 // Evaluate all flags for a tenant
 export const evaluateAllFlags = query({
     args: {
-        tenantId: v.string(),
+        tenantId: v.id("tenants"),
         targetType: v.optional(v.string()),
         targetId: v.optional(v.string()),
     },
     handler: async (ctx, { tenantId, targetType, targetId }) => {
         return ctx.runQuery(components.tenantConfig.queries.evaluateAllFlags, {
-            tenantId,
+            tenantId: tenantId as string,
             targetType,
             targetId,
         });
@@ -39,11 +40,11 @@ export const evaluateAllFlags = query({
 // Get branding for a tenant
 export const getBranding = query({
     args: {
-        tenantId: v.string(),
+        tenantId: v.id("tenants"),
     },
     handler: async (ctx, { tenantId }) => {
         return ctx.runQuery(components.tenantConfig.queries.getBranding, {
-            tenantId,
+            tenantId: tenantId as string,
         });
     },
 });
@@ -51,11 +52,11 @@ export const getBranding = query({
 // Get theme CSS for a tenant
 export const getThemeCSS = query({
     args: {
-        tenantId: v.string(),
+        tenantId: v.id("tenants"),
     },
     handler: async (ctx, { tenantId }) => {
         return ctx.runQuery(components.tenantConfig.queries.getThemeCSS, {
-            tenantId,
+            tenantId: tenantId as string,
         });
     },
 });
@@ -63,7 +64,7 @@ export const getThemeCSS = query({
 // Update branding for a tenant
 export const updateBranding = mutation({
     args: {
-        tenantId: v.string(),
+        tenantId: v.id("tenants"),
         logoUrl: v.optional(v.string()),
         faviconUrl: v.optional(v.string()),
         primaryColor: v.optional(v.string()),
@@ -73,7 +74,10 @@ export const updateBranding = mutation({
         metadata: v.optional(v.any()),
     },
     handler: async (ctx, args) => {
-        return ctx.runMutation(components.tenantConfig.mutations.updateBranding, args);
+        return ctx.runMutation(components.tenantConfig.mutations.updateBranding, {
+            ...args,
+            tenantId: args.tenantId as string,
+        });
     },
 });
 
@@ -84,13 +88,13 @@ export const updateBranding = mutation({
 // Get creator branding config
 export const getCreatorBranding = query({
     args: {
-        tenantId: v.string(),
-        creatorId: v.string(),
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
     },
     handler: async (ctx, { tenantId, creatorId }) => {
         return ctx.runQuery(components.tenantConfig.queries.getCreatorBranding, {
-            tenantId,
-            creatorId,
+            tenantId: tenantId as string,
+            creatorId: creatorId as string,
         });
     },
 });
@@ -98,13 +102,13 @@ export const getCreatorBranding = query({
 // Get creator brand assets
 export const listCreatorBrandAssets = query({
     args: {
-        tenantId: v.string(),
-        creatorId: v.string(),
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
     },
     handler: async (ctx, { tenantId, creatorId }) => {
         return ctx.runQuery(components.tenantConfig.queries.listCreatorBrandAssets, {
-            tenantId,
-            creatorId,
+            tenantId: tenantId as string,
+            creatorId: creatorId as string,
         });
     },
 });
@@ -112,13 +116,13 @@ export const listCreatorBrandAssets = query({
 // Get creator theme CSS for injection
 export const getCreatorThemeCSS = query({
     args: {
-        tenantId: v.string(),
-        creatorId: v.string(),
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
     },
     handler: async (ctx, { tenantId, creatorId }) => {
         return ctx.runQuery(components.tenantConfig.queries.getCreatorThemeCSS, {
-            tenantId,
-            creatorId,
+            tenantId: tenantId as string,
+            creatorId: creatorId as string,
         });
     },
 });
@@ -138,8 +142,8 @@ export const getCreatorByCustomDomain = query({
 // Update creator branding
 export const updateCreatorBranding = mutation({
     args: {
-        tenantId: v.string(),
-        creatorId: v.string(),
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
         primaryColor: v.optional(v.string()),
         secondaryColor: v.optional(v.string()),
         accentColor: v.optional(v.string()),
@@ -153,15 +157,20 @@ export const updateCreatorBranding = mutation({
         metadata: v.optional(v.any()),
     },
     handler: async (ctx, args) => {
-        return ctx.runMutation(components.tenantConfig.mutations.updateCreatorBranding, args);
+        await requireActiveUser(ctx, args.creatorId);
+        return ctx.runMutation(components.tenantConfig.mutations.updateCreatorBranding, {
+            ...args,
+            tenantId: args.tenantId as string,
+            creatorId: args.creatorId as string,
+        });
     },
 });
 
 // Upload creator brand asset
 export const uploadCreatorBrandAsset = mutation({
     args: {
-        tenantId: v.string(),
-        creatorId: v.string(),
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
         assetType: v.string(),
         url: v.string(),
         alt: v.optional(v.string()),
@@ -169,7 +178,12 @@ export const uploadCreatorBrandAsset = mutation({
         metadata: v.optional(v.any()),
     },
     handler: async (ctx, args) => {
-        return ctx.runMutation(components.tenantConfig.mutations.uploadCreatorBrandAsset, args);
+        await requireActiveUser(ctx, args.creatorId);
+        return ctx.runMutation(components.tenantConfig.mutations.uploadCreatorBrandAsset, {
+            ...args,
+            tenantId: args.tenantId as string,
+            creatorId: args.creatorId as string,
+        });
     },
 });
 
@@ -177,8 +191,10 @@ export const uploadCreatorBrandAsset = mutation({
 export const removeCreatorBrandAsset = mutation({
     args: {
         id: v.string(),
+        creatorId: v.id("users"),
     },
-    handler: async (ctx, { id }) => {
+    handler: async (ctx, { id, creatorId }) => {
+        await requireActiveUser(ctx, creatorId);
         return ctx.runMutation(components.tenantConfig.mutations.removeCreatorBrandAsset, {
             id: id as any,
         });
@@ -188,14 +204,14 @@ export const removeCreatorBrandAsset = mutation({
 // Set a theme override
 export const setThemeOverride = mutation({
     args: {
-        tenantId: v.string(),
+        tenantId: v.id("tenants"),
         componentKey: v.string(),
         property: v.string(),
         value: v.string(),
     },
     handler: async (ctx, args) => {
         return ctx.runMutation(components.tenantConfig.mutations.setThemeOverride, {
-            tenantId: args.tenantId,
+            tenantId: args.tenantId as string,
             componentKey: args.componentKey,
             property: args.property,
             value: args.value,

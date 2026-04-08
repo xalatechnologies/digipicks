@@ -14,6 +14,7 @@ import { mutation, query, internalMutation } from "../_generated/server";
 import { v } from "convex/values";
 import { emitEvent } from "../lib/eventBus";
 import { withAudit } from "../lib/auditHelpers";
+import { requireAdmin } from "../lib/auth";
 
 // =============================================================================
 // PLATFORM FEE CONFIGURATION — Queries
@@ -399,6 +400,8 @@ export const requestCreatorPayout = mutation({
         notes: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.requestedBy);
+
         if (args.amount <= 0) {
             throw new Error("Payout amount must be positive");
         }
@@ -490,6 +493,8 @@ export const updateCreatorPayoutStatus = mutation({
         updatedBy: v.id("users"),
     },
     handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.updatedBy);
+
         const payout = await ctx.db.get(args.payoutId);
         if (!payout) throw new Error("Creator payout not found");
 

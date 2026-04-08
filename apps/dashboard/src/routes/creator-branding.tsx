@@ -9,7 +9,7 @@
  * - Live preview of branded creator profile
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useT } from '@digilist-saas/i18n';
 import {
   Card,
@@ -29,6 +29,7 @@ import {
 import { useAuth, env } from '@digilist-saas/app-shell';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@digilist-saas/sdk/convex-api';
+import { useFileUpload } from '@digilist-saas/sdk/hooks/use-file-upload';
 import styles from './creator-branding.module.css';
 
 const COLOR_PRESETS = [
@@ -60,8 +61,12 @@ export function CreatorBrandingPage() {
 
   const updateBrandingMutation = useMutation(api.domain.tenantConfig.updateCreatorBranding);
   const uploadAssetMutation = useMutation(api.domain.tenantConfig.uploadCreatorBrandAsset);
+  const { uploadBase64Image } = useFileUpload();
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
 
   // Local state (initialized from server data or defaults)
   const [branding, setBranding] = useState(() => ({
@@ -127,6 +132,53 @@ export function CreatorBrandingPage() {
       setIsSaving(false);
     }
   };
+
+  const handleFileUpload = useCallback(
+    async (file: File, assetType: 'logo' | 'banner') => {
+      if (!tenantId || !creatorId) return;
+      setIsUploading(assetType);
+      try {
+        const reader = new FileReader();
+        const dataUri = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(file);
+        });
+
+        const url = await uploadBase64Image(dataUri);
+
+        await uploadAssetMutation({
+          tenantId,
+          creatorId,
+          assetType,
+          url,
+          alt: assetType === 'logo' ? 'Creator logo' : 'Creator banner',
+        });
+      } finally {
+        setIsUploading(null);
+      }
+    },
+    [tenantId, creatorId, uploadBase64Image, uploadAssetMutation]
+  );
+
+  const handleDropzoneClick = useCallback(
+    (assetType: 'logo' | 'banner') => {
+      const ref = assetType === 'logo' ? logoInputRef : bannerInputRef;
+      ref.current?.click();
+    },
+    []
+  );
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, assetType: 'logo' | 'banner') => {
+      const file = e.target.files?.[0];
+      if (file) {
+        handleFileUpload(file, assetType);
+      }
+      e.target.value = '';
+    },
+    [handleFileUpload]
+  );
 
   // Resolve asset URLs from fetched data
   const logoAsset = existingAssets?.find(
@@ -270,8 +322,25 @@ export function CreatorBrandingPage() {
             <Paragraph data-size="sm" className={styles.labelMedium}>
               {t('creatorBranding.logo', 'Logo')}
             </Paragraph>
-            <div className={logoAsset?.url ? styles.dropzoneWithImage : styles.dropzone}>
-              {logoAsset?.url ? (
+            <input
+              ref={logoInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/svg+xml"
+              style={{ display: 'none' }}
+              onChange={(e) => handleFileChange(e, 'logo')}
+            />
+            <div
+              className={logoAsset?.url ? styles.dropzoneWithImage : styles.dropzone}
+              onClick={() => handleDropzoneClick('logo')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick('logo'); }}
+            >
+              {isUploading === 'logo' ? (
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('common.uploading', 'Uploading...')}
+                </Paragraph>
+              ) : logoAsset?.url ? (
                 <img
                   src={logoAsset.url}
                   alt={logoAsset.alt || 'Logo'}
@@ -293,8 +362,25 @@ export function CreatorBrandingPage() {
             <Paragraph data-size="sm" className={styles.labelMedium}>
               {t('creatorBranding.banner', 'Banner Image')}
             </Paragraph>
-            <div className={bannerAsset?.url ? styles.dropzoneWithImage : styles.dropzone}>
-              {bannerAsset?.url ? (
+            <input
+              ref={bannerInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/svg+xml"
+              style={{ display: 'none' }}
+              onChange={(e) => handleFileChange(e, 'banner')}
+            />
+            <div
+              className={bannerAsset?.url ? styles.dropzoneWithImage : styles.dropzone}
+              onClick={() => handleDropzoneClick('banner')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick('banner'); }}
+            >
+              {isUploading === 'banner' ? (
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('common.uploading', 'Uploading...')}
+                </Paragraph>
+              ) : bannerAsset?.url ? (
                 <img
                   src={bannerAsset.url}
                   alt={bannerAsset.alt || 'Banner'}
