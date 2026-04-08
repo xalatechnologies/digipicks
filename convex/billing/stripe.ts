@@ -111,6 +111,82 @@ export const createCheckoutSession = action({
 });
 
 // =============================================================================
+// Create Subscription Checkout Session (action — for recurring subscriptions)
+// =============================================================================
+
+export const createSubscriptionCheckout = action({
+    args: {
+        tenantId: v.id("tenants"),
+        userId: v.id("users"),
+        tierId: v.string(), // Subscription component tier ID
+        creatorId: v.string(), // Creator being subscribed to
+        stripePriceId: v.string(), // Stripe Price ID from the tier
+        customerEmail: v.optional(v.string()),
+        returnUrl: v.string(),
+        cancelUrl: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const { secretKey } = getStripeConfig();
+        const reference = `dp-sub-${args.tierId}-${Date.now()}`;
+
+        const successUrl = `${args.returnUrl}?reference=${encodeURIComponent(reference)}&status=success&sessionId={CHECKOUT_SESSION_ID}`;
+        const cancelUrlFinal = args.cancelUrl
+            ? `${args.cancelUrl}?reference=${encodeURIComponent(reference)}&status=cancelled`
+            : `${args.returnUrl}?reference=${encodeURIComponent(reference)}&status=cancelled`;
+
+        const params = new URLSearchParams();
+        params.append("mode", "subscription");
+        params.append("success_url", successUrl);
+        params.append("cancel_url", cancelUrlFinal);
+        params.append("line_items[0][price]", args.stripePriceId);
+        params.append("line_items[0][quantity]", "1");
+        params.append("payment_method_types[0]", "card");
+        params.append("metadata[tenantId]", args.tenantId as string);
+        params.append("metadata[userId]", args.userId as string);
+        params.append("metadata[tierId]", args.tierId);
+        params.append("metadata[creatorId]", args.creatorId);
+        params.append("metadata[type]", "creator_subscription");
+        params.append("client_reference_id", reference);
+        params.append("subscription_data[metadata][tenantId]", args.tenantId as string);
+        params.append("subscription_data[metadata][userId]", args.userId as string);
+        params.append("subscription_data[metadata][tierId]", args.tierId);
+        params.append("subscription_data[metadata][creatorId]", args.creatorId);
+        params.append("subscription_data[metadata][reference]", reference);
+
+        if (args.customerEmail) {
+            params.append("customer_email", args.customerEmail);
+        }
+
+        const response = await fetch(`${STRIPE_API_BASE}/v1/checkout/sessions`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Authorization: `Bearer ${secretKey}`,
+            },
+            body: params.toString(),
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            throw new ConvexError({
+                type: "about:blank",
+                title: "Stripe createSubscriptionCheckout failed",
+                status: response.status,
+                detail: text,
+            });
+        }
+
+        const result = await response.json();
+
+        return {
+            sessionId: result.id,
+            url: result.url,
+            reference,
+        };
+    },
+});
+
+// =============================================================================
 // Get Payment Status (query — reads from billing component)
 // =============================================================================
 

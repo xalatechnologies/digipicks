@@ -38,6 +38,9 @@ export default defineSchema({
         sortOrder: v.number(),
         isActive: v.boolean(),
         isPublic: v.boolean(),
+        // Stripe integration
+        stripeProductId: v.optional(v.string()),
+        stripePriceId: v.optional(v.string()),
         metadata: v.optional(v.any()),
     })
         .index("by_tenant", ["tenantId"])
@@ -48,6 +51,7 @@ export default defineSchema({
         tenantId: v.string(),
         userId: v.string(),
         tierId: v.string(),
+        creatorId: v.optional(v.string()), // Creator being subscribed to
         memberNumber: v.optional(v.string()),
         status: v.string(), // "pending" | "active" | "paused" | "expired" | "cancelled" | "past_due"
         startDate: v.number(),
@@ -66,6 +70,9 @@ export default defineSchema({
         presaleAccessGranted: v.boolean(),
         previousTierId: v.optional(v.string()),
         enrollmentChannel: v.optional(v.string()), // "web" | "counter" | "api" | "gift"
+        // Stripe integration
+        stripeSubscriptionId: v.optional(v.string()),
+        stripeCustomerId: v.optional(v.string()),
         metadata: v.optional(v.any()),
     })
         .index("by_tenant", ["tenantId"])
@@ -73,7 +80,26 @@ export default defineSchema({
         .index("by_tier", ["tierId"])
         .index("by_status", ["tenantId", "status"])
         .index("by_next_billing", ["nextBillingDate"])
-        .index("by_member_number", ["tenantId", "memberNumber"]),
+        .index("by_member_number", ["tenantId", "memberNumber"])
+        .index("by_stripe_subscription", ["stripeSubscriptionId"])
+        .index("by_creator", ["creatorId"]),
+
+    /**
+     * Stripe Connect accounts for creators who receive payouts.
+     */
+    creatorAccounts: defineTable({
+        tenantId: v.string(),
+        userId: v.string(), // The creator's user ID
+        stripeAccountId: v.string(),
+        status: v.string(), // "pending" | "onboarding" | "active" | "restricted" | "disabled"
+        chargesEnabled: v.boolean(),
+        payoutsEnabled: v.boolean(),
+        detailsSubmitted: v.boolean(),
+        metadata: v.optional(v.any()),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_user", ["userId"])
+        .index("by_stripe_account", ["stripeAccountId"]),
 
     memberBenefitUsage: defineTable({
         tenantId: v.string(),

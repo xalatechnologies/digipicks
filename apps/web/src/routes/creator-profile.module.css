@@ -1,0 +1,243 @@
+/* =============================================================================
+ * Creator Profile Page — Web App
+ * Public page: bio, stats, ROI chart, recent picks
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+/* Loading / not found */
+.loadingState,
+.notFoundState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Profile header */
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-5);
+  margin-bottom: var(--ds-size-6);
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--ds-color-neutral-surface-hover);
+  flex-shrink: 0;
+}
+
+.avatarPlaceholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-size-6);
+  font-weight: var(--ds-font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.profileInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileName {
+  margin: 0;
+}
+
+.profileRole {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  text-transform: capitalize;
+}
+
+.subscribeCta {
+  flex-shrink: 0;
+}
+
+/* Stats grid */
+.statsSection {
+  margin-bottom: var(--ds-size-6);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--ds-size-3);
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profileHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .subscribeCta {
+    width: 100%;
+  }
+}
+
+.statCard {
+  padding: var(--ds-size-4);
+  text-align: center;
+}
+
+.statValue {
+  font-size: var(--ds-size-5);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1.2;
+}
+
+.statLabel {
+  font-size: var(--ds-size-2);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-top: var(--ds-size-1);
+}
+
+/* ROI Chart section */
+.chartSection {
+  margin-bottom: var(--ds-size-6);
+}
+
+.chartCard {
+  padding: var(--ds-size-4);
+}
+
+.chartContainer {
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding-top: var(--ds-size-3);
+}
+
+.chartBar {
+  flex: 1;
+  min-width: 4px;
+  border-radius: 2px 2px 0 0;
+  transition: opacity 0.15s ease;
+}
+
+.chartBar:hover {
+  opacity: 0.8;
+}
+
+.chartLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--ds-size-1);
+}
+
+.chartLabel {
+  font-size: 10px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Recent picks */
+.picksSection {
+  margin-bottom: var(--ds-size-6);
+}
+
+.sectionHeading {
+  margin: 0 0 var(--ds-size-4) 0;
+}
+
+.picksList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.pickCard {
+  padding: var(--ds-size-4);
+}
+
+.pickHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-2);
+}
+
+.pickEvent {
+  font-weight: var(--ds-font-weight-semibold);
+  margin: 0;
+}
+
+.pickMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+  flex-wrap: wrap;
+}
+
+.pickDetail {
+  font-size: var(--ds-size-2);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.pickOdds {
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+/* Locked overlay for non-subscribers */
+.lockedOverlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.lockedOverlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ds-color-neutral-surface-default);
+  opacity: 0.85;
+  backdrop-filter: blur(4px);
+}
+
+.lockedBadge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  text-align: center;
+}
+
+/* Record breakdown */
+.recordLine {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  margin-top: var(--ds-size-1);
+}
+
+.recordItem {
+  font-size: var(--ds-size-2);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Empty picks */
+.emptyPicks {
+  text-align: center;
+  padding: var(--ds-size-6) 0;
+  color: var(--ds-color-neutral-text-subtle);
+}

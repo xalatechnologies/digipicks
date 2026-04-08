@@ -87,6 +87,14 @@ import { UserDetailPage } from '@/routes/users/UserDetailPage';
 import { NotificationSettingsPage } from '@/routes/notification-settings';
 import { HelpPage } from '@/routes/help';
 
+// DigiPicks — creator pick posting
+import { PicksPage } from '@/routes/picks';
+import { PickEditPage } from '@/routes/pick-edit';
+
+// DigiPicks — Stripe integration (payouts & subscribers)
+import { PayoutsPage } from '@/routes/payouts';
+import { SubscribersPage } from '@/routes/subscribers';
+
 // Organization portal pages (org-scoped views — single deduplicated source)
 import {
   OrganizationDashboardPage,
@@ -282,6 +290,15 @@ function AppWithTheme() {
                                 <Route path="notification-settings" element={<NotificationSettingsPage />} />
 
                                 <Route path="help" element={<HelpPage />} />
+
+                                {/* ─── DigiPicks: Creator pick management ─── */}
+                                <Route path="picks" element={<PicksPage />} />
+                                <Route path="picks/new" element={<PickEditPage />} />
+                                <Route path="picks/:id" element={<PickEditPage />} />
+
+                                {/* ─── DigiPicks: Stripe integration ─── */}
+                                <Route path="payouts" element={<PayoutsPage />} />
+                                <Route path="subscribers" element={<SubscribersPage />} />
 
                                 {/* ─── Admin: Operations ─── */}
                                 <Route path="support" element={<FeatureGate module="support" fallback={<Navigate to="/" replace />} appId="backoffice"><ProtectedRouteConnected requiredRole="admin"><SupportPage /></ProtectedRouteConnected></FeatureGate>} />

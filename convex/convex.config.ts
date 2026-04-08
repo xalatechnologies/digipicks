@@ -94,4 +94,8 @@ app.use(externalReviews);
 import classification from "./components/classification/convex.config";
 app.use(classification);
 
+// DigiPicks: picks (creator pick posting, result tracking)
+import picks from "./components/picks/convex.config";
+app.use(picks);
+
 export default app;

@@ -1,6 +1,6 @@
-import { internalAction } from "../_generated/server";
+import { internalAction, internalMutation } from "../_generated/server";
 import { v } from "convex/values";
-import { internal } from "../_generated/api";
+import { internal, components } from "../_generated/api";
 
 /**
  * Stripe Webhook Handler
@@ -86,24 +86,41 @@ export const stripeWebhook = internalAction({
         switch (eventType) {
             case "checkout.session.completed": {
                 const reference = obj.client_reference_id;
-                const paymentIntent = obj.payment_intent;
+                const sessionMode = obj.mode;
 
                 if (!reference) {
                     console.log("Stripe webhook: checkout.session.completed missing client_reference_id");
                     break;
                 }
 
-                // Update billing component
-                await ctx.runMutation(internal.billing.stripe.updatePaymentStatus, {
-                    reference,
-                    status: "captured",
-                    externalId: paymentIntent,
-                });
+                if (sessionMode === "subscription") {
+                    // Subscription checkout — create membership
+                    const subscriptionId = obj.subscription;
+                    const customerId = obj.customer;
+                    const metadata = obj.metadata ?? {};
 
-                // TODO: checkout facade was removed — post-payment order completion
-                // callbacks should be re-wired when ticketing checkout is rebuilt.
-
-                console.log(`Stripe webhook: checkout.session.completed → ${reference}`);
+                    if (subscriptionId && metadata.userId && metadata.tierId) {
+                        await ctx.runMutation(internal.billing.webhooks.activateSubscription, {
+                            tenantId: metadata.tenantId,
+                            userId: metadata.userId,
+                            tierId: metadata.tierId,
+                            creatorId: metadata.creatorId,
+                            stripeSubscriptionId: subscriptionId,
+                            stripeCustomerId: customerId,
+                            reference,
+                        });
+                        console.log(`Stripe webhook: subscription checkout completed → ${reference}, sub=${subscriptionId}`);
+                    }
+                } else {
+                    // One-time payment checkout
+                    const paymentIntent = obj.payment_intent;
+                    await ctx.runMutation(internal.billing.stripe.updatePaymentStatus, {
+                        reference,
+                        status: "captured",
+                        externalId: paymentIntent,
+                    });
+                    console.log(`Stripe webhook: checkout.session.completed → ${reference}`);
+                }
                 break;
             }
 
@@ -120,9 +137,6 @@ export const stripeWebhook = internalAction({
                     status: "failed",
                 });
 
-                // TODO: checkout facade was removed — failure callback
-                // should be re-wired when ticketing checkout is rebuilt.
-
                 console.log(`Stripe webhook: checkout.session.expired → ${reference}`);
                 break;
             }
@@ -132,8 +146,6 @@ export const stripeWebhook = internalAction({
                 const amountRefunded = obj.amount_refunded;
 
                 if (paymentIntent) {
-                    // We need the reference to update our records.
-                    // The charge object has metadata from the payment intent.
                     const reference = obj.metadata?.client_reference_id;
                     if (reference) {
                         await ctx.runMutation(internal.billing.stripe.updatePaymentRefund, {
@@ -148,11 +160,281 @@ export const stripeWebhook = internalAction({
                 break;
             }
 
+            // -----------------------------------------------------------------
+            // Subscription lifecycle events
+            // -----------------------------------------------------------------
+
+            case "customer.subscription.updated": {
+                const subscriptionId = obj.id;
+                const status = obj.status; // active, past_due, canceled, unpaid
+                const metadata = obj.metadata ?? {};
+
+                const membershipStatus = mapStripeSubscriptionStatus(status);
+                if (membershipStatus) {
+                    await ctx.runMutation(internal.billing.webhooks.updateSubscriptionStatus, {
+                        stripeSubscriptionId: subscriptionId,
+                        status: membershipStatus,
+                        cancelAtPeriodEnd: obj.cancel_at_period_end ?? false,
+                    });
+                    console.log(`Stripe webhook: subscription.updated → ${subscriptionId}, status=${status}`);
+                }
+                break;
+            }
+
+            case "customer.subscription.deleted": {
+                const subscriptionId = obj.id;
+
+                await ctx.runMutation(internal.billing.webhooks.updateSubscriptionStatus, {
+                    stripeSubscriptionId: subscriptionId,
+                    status: "cancelled",
+                    cancelAtPeriodEnd: false,
+                });
+
+                console.log(`Stripe webhook: subscription.deleted → ${subscriptionId}`);
+                break;
+            }
+
+            case "invoice.paid": {
+                const subscriptionId = obj.subscription;
+                if (subscriptionId) {
+                    await ctx.runMutation(internal.billing.webhooks.recordSubscriptionPayment, {
+                        stripeSubscriptionId: subscriptionId,
+                        amountPaid: obj.amount_paid,
+                        periodEnd: obj.lines?.data?.[0]?.period?.end
+                            ? obj.lines.data[0].period.end * 1000
+                            : undefined,
+                    });
+                    console.log(`Stripe webhook: invoice.paid for subscription ${subscriptionId}`);
+                }
+                break;
+            }
+
+            case "invoice.payment_failed": {
+                const subscriptionId = obj.subscription;
+                if (subscriptionId) {
+                    await ctx.runMutation(internal.billing.webhooks.updateSubscriptionStatus, {
+                        stripeSubscriptionId: subscriptionId,
+                        status: "past_due",
+                        cancelAtPeriodEnd: false,
+                    });
+                    console.log(`Stripe webhook: invoice.payment_failed for subscription ${subscriptionId}`);
+                }
+                break;
+            }
+
+            // -----------------------------------------------------------------
+            // Connect account events
+            // -----------------------------------------------------------------
+
+            case "account.updated": {
+                const accountId = obj.id;
+                if (accountId) {
+                    let connectStatus = "pending";
+                    if (obj.details_submitted && obj.charges_enabled && obj.payouts_enabled) {
+                        connectStatus = "active";
+                    } else if (obj.details_submitted) {
+                        connectStatus = "restricted";
+                    } else {
+                        connectStatus = "onboarding";
+                    }
+
+                    await ctx.runMutation(internal.billing.webhooks.updateConnectAccountStatus, {
+                        stripeAccountId: accountId,
+                        status: connectStatus,
+                        chargesEnabled: obj.charges_enabled ?? false,
+                        payoutsEnabled: obj.payouts_enabled ?? false,
+                        detailsSubmitted: obj.details_submitted ?? false,
+                    });
+                    console.log(`Stripe webhook: account.updated → ${accountId}, status=${connectStatus}`);
+                }
+                break;
+            }
+
             default:
                 console.log(`Stripe webhook: unhandled event type ${eventType}`);
         }
 
         return { received: true };
+    },
+});
+
+// =============================================================================
+// Stripe subscription status mapping
+// =============================================================================
+
+function mapStripeSubscriptionStatus(
+    stripeStatus: string
+): string | null {
+    switch (stripeStatus) {
+        case "active":
+            return "active";
+        case "past_due":
+            return "past_due";
+        case "canceled":
+            return "cancelled";
+        case "unpaid":
+            return "past_due";
+        case "trialing":
+            return "active";
+        case "incomplete":
+            return "pending";
+        case "incomplete_expired":
+            return "expired";
+        case "paused":
+            return "paused";
+        default:
+            return null;
+    }
+}
+
+// =============================================================================
+// Internal mutations for subscription webhook processing
+// =============================================================================
+
+export const activateSubscription = internalMutation({
+    args: {
+        tenantId: v.string(),
+        userId: v.string(),
+        tierId: v.string(),
+        creatorId: v.optional(v.string()),
+        stripeSubscriptionId: v.string(),
+        stripeCustomerId: v.string(),
+        reference: v.string(),
+    },
+    handler: async (ctx, args) => {
+        // Check if membership already exists for this subscription
+        const existing = await ctx.runQuery(
+            components.subscriptions.functions.getMembershipByStripeSubscription,
+            { stripeSubscriptionId: args.stripeSubscriptionId }
+        );
+        if (existing) {
+            console.log(`Subscription ${args.stripeSubscriptionId} already activated, skipping`);
+            return;
+        }
+
+        const now = Date.now();
+        const oneMonth = 30 * 24 * 60 * 60 * 1000;
+
+        await ctx.runMutation(components.subscriptions.functions.createMembership, {
+            tenantId: args.tenantId,
+            userId: args.userId,
+            tierId: args.tierId,
+            creatorId: args.creatorId,
+            status: "active",
+            startDate: now,
+            endDate: now + oneMonth,
+            autoRenew: true,
+            nextBillingDate: now + oneMonth,
+            lastPaymentDate: now,
+            enrollmentChannel: "web",
+            stripeSubscriptionId: args.stripeSubscriptionId,
+            stripeCustomerId: args.stripeCustomerId,
+        });
+
+        // Increment tier member count
+        const tier = await ctx.runQuery(components.subscriptions.functions.getTier, {
+            id: args.tierId as any,
+        });
+        if (tier) {
+            await ctx.runMutation(components.subscriptions.functions.updateTierMemberCount, {
+                id: args.tierId as any,
+                delta: 1,
+            });
+        }
+    },
+});
+
+export const updateSubscriptionStatus = internalMutation({
+    args: {
+        stripeSubscriptionId: v.string(),
+        status: v.string(),
+        cancelAtPeriodEnd: v.boolean(),
+    },
+    handler: async (ctx, { stripeSubscriptionId, status, cancelAtPeriodEnd }) => {
+        const membership = await ctx.runQuery(
+            components.subscriptions.functions.getMembershipByStripeSubscription,
+            { stripeSubscriptionId }
+        );
+
+        if (!membership) {
+            console.log(`No membership found for Stripe subscription ${stripeSubscriptionId}`);
+            return;
+        }
+
+        const now = Date.now();
+        const cancelFields: Record<string, unknown> = {};
+        if (status === "cancelled") {
+            cancelFields.cancelledAt = now;
+            cancelFields.cancelEffectiveDate = now;
+        }
+
+        await ctx.runMutation(components.subscriptions.functions.updateMembershipStatus, {
+            id: membership._id,
+            status,
+            ...cancelFields,
+        });
+
+        // If cancelled, decrement member count
+        if (status === "cancelled" && membership.tierId) {
+            await ctx.runMutation(components.subscriptions.functions.updateTierMemberCount, {
+                id: membership.tierId as any,
+                delta: -1,
+            });
+        }
+    },
+});
+
+export const recordSubscriptionPayment = internalMutation({
+    args: {
+        stripeSubscriptionId: v.string(),
+        amountPaid: v.optional(v.number()),
+        periodEnd: v.optional(v.number()),
+    },
+    handler: async (ctx, { stripeSubscriptionId, amountPaid: _amountPaid, periodEnd }) => {
+        const membership = await ctx.runQuery(
+            components.subscriptions.functions.getMembershipByStripeSubscription,
+            { stripeSubscriptionId }
+        );
+
+        if (!membership) return;
+
+        const now = Date.now();
+        await ctx.runMutation(components.subscriptions.functions.updateMembership, {
+            id: membership._id,
+            lastPaymentDate: now,
+            failedPaymentCount: 0,
+            nextBillingDate: periodEnd,
+            endDate: periodEnd,
+        });
+    },
+});
+
+export const updateConnectAccountStatus = internalMutation({
+    args: {
+        stripeAccountId: v.string(),
+        status: v.string(),
+        chargesEnabled: v.boolean(),
+        payoutsEnabled: v.boolean(),
+        detailsSubmitted: v.boolean(),
+    },
+    handler: async (ctx, args) => {
+        const account = await ctx.runQuery(
+            components.subscriptions.functions.getCreatorAccountByStripeId,
+            { stripeAccountId: args.stripeAccountId }
+        );
+
+        if (!account) {
+            console.log(`No creator account found for Stripe account ${args.stripeAccountId}`);
+            return;
+        }
+
+        await ctx.runMutation(components.subscriptions.functions.updateCreatorAccount, {
+            id: account._id,
+            status: args.status,
+            chargesEnabled: args.chargesEnabled,
+            payoutsEnabled: args.payoutsEnabled,
+            detailsSubmitted: args.detailsSubmitted,
+        });
     },
 });
 

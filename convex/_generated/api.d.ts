@@ -25,6 +25,7 @@ import type * as auth_signup from "../auth/signup.js";
 import type * as auth_start from "../auth/start.js";
 import type * as billing_adyen from "../billing/adyen.js";
 import type * as billing_stripe from "../billing/stripe.js";
+import type * as billing_stripeConnect from "../billing/stripeConnect.js";
 import type * as billing_stripePaymentIntent from "../billing/stripePaymentIntent.js";
 import type * as billing_vipps from "../billing/vipps.js";
 import type * as billing_webhooks from "../billing/webhooks.js";
@@ -53,6 +54,7 @@ import type * as domain_monitoring from "../domain/monitoring.js";
 import type * as domain_notifications from "../domain/notifications.js";
 import type * as domain_organizationVerify from "../domain/organizationVerify.js";
 import type * as domain_payouts from "../domain/payouts.js";
+import type * as domain_picks from "../domain/picks.js";
 import type * as domain_platformAdmin from "../domain/platformAdmin.js";
 import type * as domain_pricing from "../domain/pricing.js";
 import type * as domain_rbacFacade from "../domain/rbacFacade.js";
@@ -137,6 +139,7 @@ declare const fullApi: ApiFromModules<{
   "auth/start": typeof auth_start;
   "billing/adyen": typeof billing_adyen;
   "billing/stripe": typeof billing_stripe;
+  "billing/stripeConnect": typeof billing_stripeConnect;
   "billing/stripePaymentIntent": typeof billing_stripePaymentIntent;
   "billing/vipps": typeof billing_vipps;
   "billing/webhooks": typeof billing_webhooks;
@@ -165,6 +168,7 @@ declare const fullApi: ApiFromModules<{
   "domain/notifications": typeof domain_notifications;
   "domain/organizationVerify": typeof domain_organizationVerify;
   "domain/payouts": typeof domain_payouts;
+  "domain/picks": typeof domain_picks;
   "domain/platformAdmin": typeof domain_platformAdmin;
   "domain/pricing": typeof domain_pricing;
   "domain/rbacFacade": typeof domain_rbacFacade;
@@ -4233,13 +4237,26 @@ export declare const components: {
         },
         { id: string }
       >;
+      createCreatorAccount: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          status?: string;
+          stripeAccountId: string;
+          tenantId: string;
+          userId: string;
+        },
+        { id: string }
+      >;
       createMembership: FunctionReference<
         "mutation",
         "internal",
         {
           autoRenew?: boolean;
+          creatorId?: string;
           endDate: number;
           enrollmentChannel?: string;
+          lastPaymentDate?: number;
           memberNumber?: string;
           metadata?: any;
           nextBillingDate?: number;
@@ -4247,6 +4264,8 @@ export declare const components: {
           presaleAccessGranted?: boolean;
           startDate: number;
           status?: string;
+          stripeCustomerId?: string;
+          stripeSubscriptionId?: string;
           tenantId: string;
           tierId: string;
           userId: string;
@@ -4280,6 +4299,8 @@ export declare const components: {
           shortDescription?: string;
           slug: string;
           sortOrder?: number;
+          stripePriceId?: string;
+          stripeProductId?: string;
           tenantId: string;
           trialDays?: number;
         },
@@ -4401,6 +4422,8 @@ export declare const components: {
           shortDescription?: string;
           slug?: string;
           sortOrder?: number;
+          stripePriceId?: string;
+          stripeProductId?: string;
           trialDays?: number;
         },
         { success: boolean }
@@ -4409,6 +4432,49 @@ export declare const components: {
         "mutation",
         "internal",
         { delta: number; id: string },
+        { success: boolean }
+      >;
+      getCreatorAccount: FunctionReference<
+        "query",
+        "internal",
+        { userId: string },
+        any
+      >;
+      getCreatorAccountByStripeId: FunctionReference<
+        "query",
+        "internal",
+        { stripeAccountId: string },
+        any
+      >;
+      getMembershipByStripeSubscription: FunctionReference<
+        "query",
+        "internal",
+        { stripeSubscriptionId: string },
+        any
+      >;
+      getUserCreatorSubscription: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
+        any
+      >;
+      listCreatorSubscribers: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; status?: string },
+        Array<any>
+      >;
+      updateCreatorAccount: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          chargesEnabled?: boolean;
+          detailsSubmitted?: boolean;
+          id: string;
+          metadata?: any;
+          payoutsEnabled?: boolean;
+          status?: string;
+        },
         { success: boolean }
       >;
     };
@@ -4701,6 +4767,95 @@ export declare const components: {
         "internal",
         { tenantId: string },
         Array<any>
+      >;
+    };
+  };
+  picks: {
+    functions: {
+      create: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          analysis?: string;
+          confidence: string;
+          creatorId: string;
+          event: string;
+          eventDate?: number;
+          league?: string;
+          metadata?: any;
+          oddsAmerican: string;
+          oddsDecimal: number;
+          pickType: string;
+          selection: string;
+          sport: string;
+          status?: string;
+          tenantId: string;
+          units: number;
+        },
+        { id: string }
+      >;
+      creatorStats: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        {
+          losses: number;
+          netUnits: number;
+          pending: number;
+          pushes: number;
+          roi: number;
+          totalPicks: number;
+          voids: number;
+          winRate: number;
+          wins: number;
+        }
+      >;
+      get: FunctionReference<"query", "internal", { id: string }, any>;
+      grade: FunctionReference<
+        "mutation",
+        "internal",
+        { gradedBy: string; id: string; result: "lost" | "push" | "void" | "won" },
+        { success: boolean }
+      >;
+      list: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          limit?: number;
+          result?: string;
+          sport?: string;
+          status?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
+      remove: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      update: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          analysis?: string;
+          confidence?: string;
+          event?: string;
+          eventDate?: number;
+          id: string;
+          league?: string;
+          metadata?: any;
+          oddsAmerican?: string;
+          oddsDecimal?: number;
+          pickType?: string;
+          selection?: string;
+          sport?: string;
+          status?: string;
+          units?: number;
+        },
+        { success: boolean }
       >;
     };
   };

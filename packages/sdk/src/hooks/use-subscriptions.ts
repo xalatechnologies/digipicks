@@ -1,11 +1,13 @@
 /**
  * DigilistSaaS SDK — Subscription Hooks
  *
- * Wraps api.domain.subscriptions for the web pricing page.
+ * Wraps api.domain.subscriptions for subscription management.
+ * Covers: public tiers, user subscriptions, creator subscribers, Connect accounts.
  */
 
-import { useQuery } from "./convex-utils";
+import { useQuery, useAction } from "./convex-utils";
 import { api } from "../convex-api";
+import { useCallback, useState } from "react";
 
 // =============================================================================
 // Types
@@ -38,6 +40,39 @@ export interface SubscriptionTier {
     sortOrder: number;
     isActive: boolean;
     isPublic: boolean;
+    stripeProductId?: string;
+    stripePriceId?: string;
+}
+
+export interface Subscription {
+    _id: string;
+    tenantId: string;
+    userId: string;
+    tierId: string;
+    creatorId?: string;
+    status: string;
+    startDate: number;
+    endDate: number;
+    autoRenew: boolean;
+    stripeSubscriptionId?: string;
+    stripeCustomerId?: string;
+    tier?: {
+        name: string;
+        slug: string;
+        price: number;
+        currency: string;
+    } | null;
+}
+
+export interface CreatorAccount {
+    _id: string;
+    tenantId: string;
+    userId: string;
+    stripeAccountId: string;
+    status: string;
+    chargesEnabled: boolean;
+    payoutsEnabled: boolean;
+    detailsSubmitted: boolean;
 }
 
 // =============================================================================
@@ -46,7 +81,6 @@ export interface SubscriptionTier {
 
 /**
  * Fetch publicly visible, active membership tiers for a tenant.
- * Returns an empty array while loading or if tenantId is undefined.
  */
 export function usePublicTiers(tenantId: string | undefined) {
     const data = useQuery(
@@ -58,4 +92,193 @@ export function usePublicTiers(tenantId: string | undefined) {
         tiers: (data ?? []) as SubscriptionTier[],
         isLoading: tenantId !== undefined && data === undefined,
     };
+}
+
+/**
+ * Get the current user's subscription to a specific creator.
+ */
+export function useMySubscription(userId: string | undefined, creatorId: string | undefined) {
+    const data = useQuery(
+        api.domain.subscriptions.getMySubscription,
+        userId && creatorId ? { userId: userId as any, creatorId } : "skip"
+    );
+
+    return {
+        subscription: data as Subscription | null | undefined,
+        isLoading: userId !== undefined && creatorId !== undefined && data === undefined,
+    };
+}
+
+/**
+ * Check if user is subscribed to a creator.
+ */
+export function useIsSubscribed(userId: string | undefined, creatorId: string | undefined) {
+    const data = useQuery(
+        api.domain.subscriptions.isSubscribed,
+        creatorId ? { userId, creatorId } : "skip"
+    );
+
+    return {
+        isSubscribed: data === true,
+        isLoading: creatorId !== undefined && data === undefined,
+    };
+}
+
+/**
+ * List subscribers for a creator.
+ */
+export function useCreatorSubscribers(
+    tenantId: string | undefined,
+    creatorId: string | undefined,
+    status?: string
+) {
+    const data = useQuery(
+        api.domain.subscriptions.listCreatorSubscribers,
+        tenantId && creatorId
+            ? { tenantId: tenantId as any, creatorId: creatorId as any, status }
+            : "skip"
+    );
+
+    return {
+        subscribers: (data ?? []) as any[],
+        isLoading: tenantId !== undefined && creatorId !== undefined && data === undefined,
+    };
+}
+
+/**
+ * Get creator's Stripe Connect account status.
+ */
+export function useCreatorAccount(userId: string | undefined) {
+    const data = useQuery(
+        api.domain.subscriptions.getCreatorAccount,
+        userId ? { userId: userId as any } : "skip"
+    );
+
+    return {
+        account: data as CreatorAccount | null | undefined,
+        isLoading: userId !== undefined && data === undefined,
+    };
+}
+
+// =============================================================================
+// Action Hooks
+// =============================================================================
+
+/**
+ * Initiate a subscription checkout. Returns a redirect URL.
+ */
+export function useSubscribe() {
+    const initiateSubscription = useAction(api.domain.subscriptions.initiateSubscription);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const subscribe = useCallback(
+        async (args: {
+            tenantId: string;
+            userId: string;
+            tierId: string;
+            creatorId: string;
+            customerEmail?: string;
+            returnUrl: string;
+            cancelUrl?: string;
+        }) => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await initiateSubscription({
+                    tenantId: args.tenantId as any,
+                    userId: args.userId as any,
+                    tierId: args.tierId,
+                    creatorId: args.creatorId,
+                    customerEmail: args.customerEmail,
+                    returnUrl: args.returnUrl,
+                    cancelUrl: args.cancelUrl,
+                });
+                return result;
+            } catch (e) {
+                const message = e instanceof Error ? e.message : "Failed to initiate subscription";
+                setError(message);
+                throw e;
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [initiateSubscription]
+    );
+
+    return { subscribe, isLoading, error };
+}
+
+/**
+ * Cancel a subscription.
+ */
+export function useCancelSubscription() {
+    const cancelSubscription = useAction(api.domain.subscriptions.cancelSubscription);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const cancel = useCallback(
+        async (args: { userId: string; creatorId: string; reason?: string }) => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await cancelSubscription({
+                    userId: args.userId as any,
+                    creatorId: args.creatorId,
+                    reason: args.reason,
+                });
+                return result;
+            } catch (e) {
+                const message = e instanceof Error ? e.message : "Failed to cancel subscription";
+                setError(message);
+                throw e;
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [cancelSubscription]
+    );
+
+    return { cancel, isLoading, error };
+}
+
+/**
+ * Set up Stripe Connect for creator payouts.
+ */
+export function useSetupCreatorPayouts() {
+    const setupPayouts = useAction(api.domain.subscriptions.setupCreatorPayouts);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const setup = useCallback(
+        async (args: {
+            tenantId: string;
+            userId: string;
+            email: string;
+            refreshUrl: string;
+            returnUrl: string;
+        }) => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await setupPayouts({
+                    tenantId: args.tenantId as any,
+                    userId: args.userId as any,
+                    email: args.email,
+                    refreshUrl: args.refreshUrl,
+                    returnUrl: args.returnUrl,
+                });
+                return result;
+            } catch (e) {
+                const message = e instanceof Error ? e.message : "Failed to set up payouts";
+                setError(message);
+                throw e;
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [setupPayouts]
+    );
+
+    return { setup, isLoading, error };
 }

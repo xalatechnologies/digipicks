@@ -1,0 +1,56 @@
+.statusCard {
+    padding: var(--ds-size-4);
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-size-1);
+    padding: var(--ds-size-1) var(--ds-size-2);
+    border-radius: var(--ds-size-1);
+    font-weight: 500;
+}
+
+.statusActive {
+    background: var(--ds-color-success-surface-default);
+    color: var(--ds-color-success-text-default);
+}
+
+.statusPending {
+    background: var(--ds-color-warning-surface-default);
+    color: var(--ds-color-warning-text-default);
+}
+
+.statusOnboarding {
+    background: var(--ds-color-info-surface-default);
+    color: var(--ds-color-info-text-default);
+}
+
+.statusRestricted {
+    background: var(--ds-color-danger-surface-default);
+    color: var(--ds-color-danger-text-default);
+}
+
+.infoList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-2);
+}
+
+.infoItem {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--ds-size-2) 0;
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.infoLabel {
+    color: var(--ds-color-neutral-text-subtle);
+}
+
+.infoValue {
+    font-weight: 500;
+}

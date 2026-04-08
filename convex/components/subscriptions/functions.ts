@@ -127,6 +127,8 @@ export const createTier = mutation({
         sortOrder: v.optional(v.number()),
         isActive: v.optional(v.boolean()),
         isPublic: v.optional(v.boolean()),
+        stripeProductId: v.optional(v.string()),
+        stripePriceId: v.optional(v.string()),
         metadata: v.optional(v.any()),
     },
     returns: v.object({ id: v.string() }),
@@ -164,6 +166,8 @@ export const createTier = mutation({
             sortOrder: args.sortOrder ?? 0,
             isActive: args.isActive ?? true,
             isPublic: args.isPublic ?? true,
+            stripeProductId: args.stripeProductId,
+            stripePriceId: args.stripePriceId,
             metadata: args.metadata,
         });
 
@@ -204,6 +208,8 @@ export const updateTier = mutation({
         sortOrder: v.optional(v.number()),
         isActive: v.optional(v.boolean()),
         isPublic: v.optional(v.boolean()),
+        stripeProductId: v.optional(v.string()),
+        stripePriceId: v.optional(v.string()),
         metadata: v.optional(v.any()),
     },
     returns: v.object({ success: v.boolean() }),
@@ -337,15 +343,12 @@ export const getMembershipByUser = query({
             .withIndex("by_user", (q) => q.eq("userId", userId))
             .collect();
 
-        // Return the active membership (prefer active, then pending, then paused)
-        const active = memberships.find((m) => m.status === "active");
-        if (active) return active;
-
-        const pending = memberships.find((m) => m.status === "pending");
-        if (pending) return pending;
-
-        const paused = memberships.find((m) => m.status === "paused");
-        if (paused) return paused;
+        // Return the best membership by priority: active > past_due > pending > paused
+        const priority = ["active", "past_due", "pending", "paused"];
+        for (const status of priority) {
+            const match = memberships.find((m) => m.status === status);
+            if (match) return match;
+        }
 
         return null;
     },
@@ -417,6 +420,7 @@ export const createMembership = mutation({
         tenantId: v.string(),
         userId: v.string(),
         tierId: v.string(),
+        creatorId: v.optional(v.string()),
         memberNumber: v.optional(v.string()),
         status: v.optional(v.string()),
         startDate: v.number(),
@@ -424,8 +428,11 @@ export const createMembership = mutation({
         originalStartDate: v.optional(v.number()),
         autoRenew: v.optional(v.boolean()),
         nextBillingDate: v.optional(v.number()),
+        lastPaymentDate: v.optional(v.number()),
         presaleAccessGranted: v.optional(v.boolean()),
         enrollmentChannel: v.optional(v.string()),
+        stripeSubscriptionId: v.optional(v.string()),
+        stripeCustomerId: v.optional(v.string()),
         metadata: v.optional(v.any()),
     },
     returns: v.object({ id: v.string() }),
@@ -434,6 +441,7 @@ export const createMembership = mutation({
             tenantId: args.tenantId,
             userId: args.userId,
             tierId: args.tierId,
+            creatorId: args.creatorId,
             memberNumber: args.memberNumber,
             status: args.status ?? "pending",
             startDate: args.startDate,
@@ -441,8 +449,11 @@ export const createMembership = mutation({
             originalStartDate: args.originalStartDate ?? args.startDate,
             autoRenew: args.autoRenew ?? true,
             nextBillingDate: args.nextBillingDate,
+            lastPaymentDate: args.lastPaymentDate,
             presaleAccessGranted: args.presaleAccessGranted ?? false,
             enrollmentChannel: args.enrollmentChannel,
+            stripeSubscriptionId: args.stripeSubscriptionId,
+            stripeCustomerId: args.stripeCustomerId,
             metadata: args.metadata,
         });
 
@@ -608,5 +619,171 @@ export const createBenefitUsage = mutation({
         });
 
         return { id: id as string };
+    },
+});
+
+// =============================================================================
+// STRIPE SUBSCRIPTION QUERIES
+// =============================================================================
+
+/**
+ * Find a membership by Stripe subscription ID.
+ */
+export const getMembershipByStripeSubscription = query({
+    args: {
+        stripeSubscriptionId: v.string(),
+    },
+    returns: v.any(),
+    handler: async (ctx, { stripeSubscriptionId }) => {
+        return ctx.db
+            .query("memberships")
+            .withIndex("by_stripe_subscription", (q) =>
+                q.eq("stripeSubscriptionId", stripeSubscriptionId)
+            )
+            .first();
+    },
+});
+
+/**
+ * List active subscriptions for a specific creator.
+ */
+export const listCreatorSubscribers = query({
+    args: {
+        creatorId: v.string(),
+        status: v.optional(v.string()),
+    },
+    returns: v.array(v.any()),
+    handler: async (ctx, { creatorId, status }) => {
+        let memberships = await ctx.db
+            .query("memberships")
+            .withIndex("by_creator", (q) => q.eq("creatorId", creatorId))
+            .collect();
+
+        if (status) {
+            memberships = memberships.filter((m) => m.status === status);
+        }
+
+        memberships.sort((a, b) => b._creationTime - a._creationTime);
+        return memberships;
+    },
+});
+
+/**
+ * Get a user's subscription to a specific creator.
+ */
+export const getUserCreatorSubscription = query({
+    args: {
+        userId: v.string(),
+        creatorId: v.string(),
+    },
+    returns: v.any(),
+    handler: async (ctx, { userId, creatorId }) => {
+        const memberships = await ctx.db
+            .query("memberships")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .collect();
+
+        return memberships.find(
+            (m) => m.creatorId === creatorId && (m.status === "active" || m.status === "pending")
+        ) ?? null;
+    },
+});
+
+// =============================================================================
+// CREATOR ACCOUNT (STRIPE CONNECT) FUNCTIONS
+// =============================================================================
+
+/**
+ * Create a creator account record.
+ */
+export const createCreatorAccount = mutation({
+    args: {
+        tenantId: v.string(),
+        userId: v.string(),
+        stripeAccountId: v.string(),
+        status: v.optional(v.string()),
+    },
+    returns: v.object({ id: v.string() }),
+    handler: async (ctx, args) => {
+        const existing = await ctx.db
+            .query("creatorAccounts")
+            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .first();
+
+        if (existing) {
+            throw new Error("Creator account already exists for this user");
+        }
+
+        const id = await ctx.db.insert("creatorAccounts", {
+            tenantId: args.tenantId,
+            userId: args.userId,
+            stripeAccountId: args.stripeAccountId,
+            status: args.status ?? "pending",
+            chargesEnabled: false,
+            payoutsEnabled: false,
+            detailsSubmitted: false,
+        });
+
+        return { id: id as string };
+    },
+});
+
+/**
+ * Get a creator's Connect account.
+ */
+export const getCreatorAccount = query({
+    args: {
+        userId: v.string(),
+    },
+    returns: v.any(),
+    handler: async (ctx, { userId }) => {
+        return ctx.db
+            .query("creatorAccounts")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .first();
+    },
+});
+
+/**
+ * Get a creator account by Stripe account ID.
+ */
+export const getCreatorAccountByStripeId = query({
+    args: {
+        stripeAccountId: v.string(),
+    },
+    returns: v.any(),
+    handler: async (ctx, { stripeAccountId }) => {
+        return ctx.db
+            .query("creatorAccounts")
+            .withIndex("by_stripe_account", (q) => q.eq("stripeAccountId", stripeAccountId))
+            .first();
+    },
+});
+
+/**
+ * Update a creator's Connect account status.
+ */
+export const updateCreatorAccount = mutation({
+    args: {
+        id: v.id("creatorAccounts"),
+        status: v.optional(v.string()),
+        chargesEnabled: v.optional(v.boolean()),
+        payoutsEnabled: v.optional(v.boolean()),
+        detailsSubmitted: v.optional(v.boolean()),
+        metadata: v.optional(v.any()),
+    },
+    returns: v.object({ success: v.boolean() }),
+    handler: async (ctx, { id, ...updates }) => {
+        const account = await ctx.db.get(id);
+        if (!account) {
+            throw new Error("Creator account not found");
+        }
+
+        const filteredUpdates = Object.fromEntries(
+            Object.entries(updates).filter(([_, v]) => v !== undefined)
+        );
+
+        await ctx.db.patch(id, filteredUpdates);
+        return { success: true };
     },
 });

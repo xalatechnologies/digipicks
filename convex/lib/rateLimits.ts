@@ -411,6 +411,27 @@ export const RATE_LIMITS = {
     },
 
     // -------------------------------------------------------------------------
+    // Picks operations (per-user)
+    // -------------------------------------------------------------------------
+    createPick: {
+        kind: "fixed window" as const,
+        rate: 20,
+        period: 3_600_000, // 1 hour — PRD: max 20 picks/hour per creator
+    },
+    gradePick: {
+        kind: "token bucket" as const,
+        rate: 30,
+        period: 60_000,
+        capacity: 60,
+    },
+    mutatePick: {
+        kind: "token bucket" as const,
+        rate: 30,
+        period: 60_000,
+        capacity: 60,
+    },
+
+    // -------------------------------------------------------------------------
     // GDPR operations (per-tenant)
     // -------------------------------------------------------------------------
     gdprPurge: {

@@ -35,6 +35,8 @@ import guidesSchema from "../../components/guides/schema";
 import supportSchema from "../../components/support/schema";
 import externalReviewsSchema from "../../components/externalReviews/schema";
 import classificationSchema from "../../components/classification/schema";
+import subscriptionsSchema from "../../components/subscriptions/schema";
+import picksSchema from "../../components/picks/schema";
 
 // Component modules (import.meta.glob)
 import { modules as auditModules } from "../../components/audit/testSetup.test-util";
@@ -56,6 +58,8 @@ import { modules as guidesModules } from "../../components/guides/testSetup.test
 import { modules as supportModules } from "../../components/support/testSetup.test-util";
 import { modules as externalReviewsModules } from "../../components/externalReviews/testSetup.test-util";
 import { modules as classificationModules } from "../../components/classification/testSetup.test-util";
+import { modules as subscriptionsModules } from "../../components/subscriptions/testSetup.test-util";
+import { modules as picksModules } from "../../components/picks/testSetup.test-util";
 
 /**
  * Registry mapping component names (matching convex.config.ts variable names)
@@ -81,6 +85,8 @@ const COMPONENT_REGISTRY = {
     support: { schema: supportSchema, modules: supportModules },
     externalReviews: { schema: externalReviewsSchema, modules: externalReviewsModules },
     classification: { schema: classificationSchema, modules: classificationModules },
+    subscriptions: { schema: subscriptionsSchema, modules: subscriptionsModules },
+    picks: { schema: picksSchema, modules: picksModules },
 } as const;
 
 export type ComponentName = keyof typeof COMPONENT_REGISTRY;

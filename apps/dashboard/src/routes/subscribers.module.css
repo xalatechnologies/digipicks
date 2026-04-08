@@ -1,0 +1,28 @@
+.subscriberCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--ds-size-3);
+    border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.subscriberInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-size-1);
+}
+
+.subscriberName {
+    font-weight: 500;
+}
+
+.subscriberDate {
+    color: var(--ds-color-neutral-text-subtle);
+    font-size: var(--ds-font-size-sm);
+}
+
+.statsRow {
+    display: flex;
+    gap: var(--ds-size-4);
+    flex-wrap: wrap;
+}

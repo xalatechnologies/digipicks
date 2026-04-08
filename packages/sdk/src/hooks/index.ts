@@ -673,9 +673,23 @@ export type {
 } from './use-addons';
 
 
-// Subscriptions (public tier listing for pricing page)
-export { usePublicTiers } from './use-subscriptions';
-export type { SubscriptionTier, SubscriptionBenefit } from './use-subscriptions';
+// Subscriptions (pricing, subscription management, Connect accounts)
+export {
+    usePublicTiers,
+    useMySubscription,
+    useIsSubscribed,
+    useCreatorSubscribers,
+    useCreatorAccount,
+    useSubscribe,
+    useCancelSubscription,
+    useSetupCreatorPayouts,
+} from './use-subscriptions';
+export type {
+    SubscriptionTier,
+    SubscriptionBenefit,
+    Subscription,
+    CreatorAccount,
+} from './use-subscriptions';
 
 // Docs / User Guides (api.domain.guides — for user-guides app)
 export {
