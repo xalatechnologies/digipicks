@@ -18,11 +18,17 @@ export default defineSchema({
         // Message content
         title: v.string(),
         body: v.string(),
-        messageType: v.string(), // "text_update", "pick_alert", "announcement"
+        messageType: v.string(), // "text_update", "pick_alert", "announcement", "post"
+
+        // Rich content support (posts)
+        contentFormat: v.optional(v.string()), // "plain", "markdown" — defaults to "plain"
+        accessLevel: v.optional(v.string()), // "free", "premium" — defaults to "free"
+        publishedAt: v.optional(v.number()), // When a post was published (distinct from sentAt)
+        editedAt: v.optional(v.number()), // Last edit timestamp
 
         // Delivery tracking
         recipientCount: v.number(),
-        status: v.string(), // "draft", "sent"
+        status: v.string(), // "draft", "sent", "published"
         sentAt: v.optional(v.number()),
 
         // Optional linked pick (for pick_alert type)
@@ -34,7 +40,8 @@ export default defineSchema({
         .index("by_tenant", ["tenantId"])
         .index("by_creator", ["creatorId"])
         .index("by_tenant_creator", ["tenantId", "creatorId"])
-        .index("by_tenant_status", ["tenantId", "status"]),
+        .index("by_tenant_status", ["tenantId", "status"])
+        .index("by_tenant_creator_and_messageType", ["tenantId", "creatorId", "messageType"]),
 
     broadcastReceipts: defineTable({
         tenantId: v.string(),
