@@ -152,8 +152,8 @@ function MainLayout() {
               language={locale}
               onSwitch={(lang) => setLocale(lang as 'nb' | 'en')}
               languages={[
-                { code: 'nb', label: 'NO' },
                 { code: 'en', label: 'EN' },
+                { code: 'nb', label: 'NO' },
               ]}
             />
             <HeaderThemeToggle isDark={isDark} onToggle={toggleTheme} />

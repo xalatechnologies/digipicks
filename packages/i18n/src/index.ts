@@ -51,9 +51,9 @@ export const sharedTranslations = {
 
 // Initialize i18n synchronously
 i18n.use(initReactI18next).init({
-  lng: 'nb',
-  fallbackLng: 'nb',
-  supportedLngs: ['nb', 'en', 'ar'],
+  lng: 'en',
+  fallbackLng: 'en',
+  supportedLngs: ['en', 'nb', 'ar'],
   resources: sharedTranslations,
   interpolation: {
     escapeValue: false, // React already escapes
@@ -73,7 +73,7 @@ export function initI18n(config?: Partial<LocaleConfig> & { resources?: Record<s
     return i18n;
   }
 
-  const { defaultLocale = 'nb', supportedLocales = ['nb', 'en', 'ar'], resources } = config;
+  const { defaultLocale = 'en', supportedLocales = ['en', 'nb', 'ar'], resources } = config;
 
   // Merge shared translations with app-specific
   const mergedResources: Record<string, Record<string, object>> = { ...sharedTranslations };
@@ -92,7 +92,7 @@ export function initI18n(config?: Partial<LocaleConfig> & { resources?: Record<s
 
   i18n.init({
     lng: defaultLocale,
-    fallbackLng: 'nb',
+    fallbackLng: 'en',
     supportedLngs: supportedLocales,
     resources: mergedResources,
     interpolation: {
@@ -131,7 +131,7 @@ export function useT(namespace?: string) {
 export function useI18nLocale() {
   const { i18n: i18nInstance } = useTranslation();
 
-  const locale = (i18nInstance.language || 'nb') as Locale;
+  const locale = (i18nInstance.language || 'en') as Locale;
   const direction = getDirection(locale);
 
   const setLocale = useCallback(
