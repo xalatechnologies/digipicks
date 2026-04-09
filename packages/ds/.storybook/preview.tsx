@@ -1,17 +1,13 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
 import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from 'storybook/viewport';
 import React, { useEffect, useState } from 'react';
-import { I18nProvider, useT } from '@digilist-saas/i18n';
+import { I18nProvider, useT } from '@digipicks/i18n';
 import { DocsContainer } from '@storybook/addon-docs/blocks';
 import { create } from 'storybook/theming';
 import { addons } from 'storybook/preview-api';
 
 // Theme colors - single source of truth for all theme values
-import {
-  THEME_COLORS,
-  getThemeCSS,
-  type ThemeId,
-} from '../src/themes';
+import { THEME_COLORS, getThemeCSS, type ThemeId } from '../src/themes';
 
 // All styling (fonts, designsystemet-css, theme) is loaded via:
 // 1. .storybook/public/vendor/designsystemet.css (loaded in preview-head.html)
@@ -40,7 +36,7 @@ const shouldSuppressMessage = (message: unknown): boolean => {
     'An update to ZoomElement inside a test was not wrapped in act',
     'manager  received',
   ];
-  return suppressPatterns.some(pattern => message.includes(pattern));
+  return suppressPatterns.some((pattern) => message.includes(pattern));
 };
 
 console.error = (...args) => {
@@ -74,11 +70,7 @@ const storybookTypography = {
  * This ensures consistency between CSS themes and Storybook UI.
  * Includes all theme properties for comprehensive theming of UI and docs.
  */
-function createStorybookTheme(
-  themeId: ThemeId,
-  mode: 'light' | 'dark',
-  brandUrl: string
-) {
+function createStorybookTheme(themeId: ThemeId, mode: 'light' | 'dark', brandUrl: string) {
   // Fallback to digilist if theme doesn't exist (handles legacy 'custom' theme)
   const themeConfig = THEME_COLORS[themeId] || THEME_COLORS.digilist;
   const colors = themeConfig[mode];
@@ -116,7 +108,6 @@ function createStorybookTheme(
     inputBorder: colors.neutral.border,
     inputTextColor: colors.neutral.text,
     inputBorderRadius: 4,
-
   });
 }
 
@@ -477,8 +468,7 @@ function ThemedDocsContainer(props: React.ComponentProps<typeof DocsContainer>) 
 
 // RTL locales mapping
 const RTL_LOCALES = ['ar', 'he', 'fa', 'ur'];
-const getDirectionForLocale = (locale: string): 'ltr' | 'rtl' =>
-  RTL_LOCALES.includes(locale) ? 'rtl' : 'ltr';
+const getDirectionForLocale = (locale: string): 'ltr' | 'rtl' => (RTL_LOCALES.includes(locale) ? 'rtl' : 'ltr');
 
 // Custom Norwegian viewports
 const customViewports = {
@@ -566,7 +556,6 @@ const withTheme: Decorator = (Story, context) => {
     </StoryProvider>
   );
 };
-
 
 const preview: Preview = {
   globalTypes: {

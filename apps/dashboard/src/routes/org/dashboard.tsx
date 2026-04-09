@@ -24,16 +24,12 @@ import {
   CalendarIcon,
   FileTextIcon,
   useIsMobile,
-} from '@digilist-saas/ds';
-import {
-  useOrganization,
-  useOrganizationMembers,
-  useOrgBillingSummary,
-} from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useAccountContext } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useOrganization, useOrganizationMembers, useOrgBillingSummary } from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useAccountContext } from '@digipicks/app-shell';
 import { NavLink } from 'react-router-dom';
 import s from './Dashboard.module.css';
 
@@ -42,7 +38,7 @@ export function OrganizationDashboardPage() {
   const { locale } = useLocale();
   const isMobile = useIsMobile();
   const accountCtx = useAccountContext();
-  const orgId = accountCtx?.selectedOrganization?.id as Id<"organizations"> | undefined;
+  const orgId = accountCtx?.selectedOrganization?.id as Id<'organizations'> | undefined;
 
   // Fetch org data
   const { data: orgData, isLoading: orgLoading } = useOrganization(orgId);
@@ -106,10 +102,7 @@ export function OrganizationDashboardPage() {
         <Heading level={2} data-size="sm" className={s.quickActionsTitle}>
           {t('org.quickActions')}
         </Heading>
-        <Grid
-          columns={isMobile ? '1fr' : 'repeat(3, 1fr)'}
-          gap="var(--ds-size-3)"
-        >
+        <Grid columns={isMobile ? '1fr' : 'repeat(3, 1fr)'} gap="var(--ds-size-3)">
           <NavLink to="/org/events" className={s.quickActionLink}>
             <Button type="button" variant="secondary" data-size="md" className={s.quickActionButton}>
               {t('org.events')}
@@ -157,23 +150,13 @@ export function OrganizationDashboardPage() {
         </Stack>
         <div className={s.membersBody}>
           {members.length === 0 ? (
-            <Paragraph className={s.emptyMembers}>
-              {t('org.noMembers')}
-            </Paragraph>
+            <Paragraph className={s.emptyMembers}>{t('org.noMembers')}</Paragraph>
           ) : (
             <Stack direction="vertical" spacing="var(--ds-size-3)">
               {members.slice(0, 5).map((member: any) => (
-                <Stack
-                  key={member.id}
-                  direction="horizontal"
-                  align="center"
-                  justify="between"
-                  className={s.memberRow}
-                >
+                <Stack key={member.id} direction="horizontal" align="center" justify="between" className={s.memberRow}>
                   <Stack direction="horizontal" align="center" spacing="var(--ds-size-3)">
-                    <div className={s.memberAvatar}>
-                      {member.name?.charAt(0) || '?'}
-                    </div>
+                    <div className={s.memberAvatar}>{member.name?.charAt(0) || '?'}</div>
                     <div>
                       <Paragraph data-size="sm" className={s.memberName}>
                         {member.name || member.email}

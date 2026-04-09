@@ -30,15 +30,26 @@ import {
   EmptyState,
   InboxIcon,
   LoadingState,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useTenantActivity, useAuditExport } from '@digilist-saas/sdk';
-import { useAuthBridge } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useTenantActivity, useAuditExport } from '@digipicks/sdk';
+import { useAuthBridge } from '@digipicks/app-shell';
 import styles from './audit-log.module.css';
 
-type EntityTypeFilter = 'all' | 'booking' | 'resource' | 'user' | 'session' | 'conversation' | 'notification' | 'allocation' | 'category' | 'amenity' | 'favorite';
+type EntityTypeFilter =
+  | 'all'
+  | 'booking'
+  | 'resource'
+  | 'user'
+  | 'session'
+  | 'conversation'
+  | 'notification'
+  | 'allocation'
+  | 'category'
+  | 'amenity'
+  | 'favorite';
 
 const ENTITY_TYPE_OPTIONS: { value: EntityTypeFilter; labelKey: string }[] = [
   { value: 'all', labelKey: 'auditLog.allTypes' },
@@ -56,7 +67,13 @@ const ENTITY_TYPE_OPTIONS: { value: EntityTypeFilter; labelKey: string }[] = [
 
 function getActionBadgeColor(action: string): 'success' | 'danger' | 'warning' | 'info' | 'neutral' {
   if (action.includes('created') || action.includes('approved') || action.includes('confirmed')) return 'success';
-  if (action.includes('deleted') || action.includes('rejected') || action.includes('hard_deleted') || action.includes('invalidated')) return 'danger';
+  if (
+    action.includes('deleted') ||
+    action.includes('rejected') ||
+    action.includes('hard_deleted') ||
+    action.includes('invalidated')
+  )
+    return 'danger';
   if (action.includes('updated') || action.includes('assigned') || action.includes('resolved')) return 'warning';
   if (action.includes('session') || action.includes('security') || action.includes('archived')) return 'info';
   return 'neutral';
@@ -64,11 +81,16 @@ function getActionBadgeColor(action: string): 'success' | 'danger' | 'warning' |
 
 function getEntityBadgeColor(entityType: string): 'success' | 'danger' | 'warning' | 'info' | 'neutral' {
   switch (entityType) {
-    case 'booking': return 'info';
-    case 'resource': return 'success';
-    case 'session': return 'danger';
-    case 'user': return 'warning';
-    default: return 'neutral';
+    case 'booking':
+      return 'info';
+    case 'resource':
+      return 'success';
+    case 'session':
+      return 'danger';
+    case 'user':
+      return 'warning';
+    default:
+      return 'neutral';
   }
 }
 
@@ -104,30 +126,46 @@ export function TenantAuditLogPage() {
   });
 
   const intlLocale = getIntlLocale(locale);
-  const formatDateTime = useCallback((ts: number) => {
-    const date = new Date(ts);
-    return date.toLocaleDateString(intlLocale) + ' ' +
-      date.toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit' });
-  }, [intlLocale]);
+  const formatDateTime = useCallback(
+    (ts: number) => {
+      const date = new Date(ts);
+      return (
+        date.toLocaleDateString(intlLocale) +
+        ' ' +
+        date.toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit' })
+      );
+    },
+    [intlLocale],
+  );
 
-  const formatDateFull = useCallback((ts: number) => {
-    const date = new Date(ts);
-    return date.toLocaleDateString(intlLocale, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    }) + ' ' + date.toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  }, [intlLocale]);
+  const formatDateFull = useCallback(
+    (ts: number) => {
+      const date = new Date(ts);
+      return (
+        date.toLocaleDateString(intlLocale, {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }) +
+        ' ' +
+        date.toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      );
+    },
+    [intlLocale],
+  );
 
   // Compute live stats from real data
   const stats = useMemo(() => {
     const now = Date.now();
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
-    const todayEntries = activities.filter(a => a.timestamp > oneDayAgo);
-    const securityEntries = activities.filter(a =>
-      a.entityType === 'session' || a.action.includes('session') || a.action.includes('security')
+    const todayEntries = activities.filter((a) => a.timestamp > oneDayAgo);
+    const securityEntries = activities.filter(
+      (a) => a.entityType === 'session' || a.action.includes('session') || a.action.includes('security'),
     );
     const warningActions = ['rejected', 'cancelled', 'hard_deleted'];
-    const warnings = activities.filter(a => warningActions.some(w => a.action.includes(w)));
-    const errors = activities.filter(a => a.action.includes('error') || a.action.includes('failed'));
+    const warnings = activities.filter((a) => warningActions.some((w) => a.action.includes(w)));
+    const errors = activities.filter((a) => a.action.includes('error') || a.action.includes('failed'));
 
     return {
       totalToday: todayEntries.length,
@@ -138,18 +176,19 @@ export function TenantAuditLogPage() {
     };
   }, [activities]);
 
-  const rows: AuditRow[] = useMemo(() =>
-    activities.map(a => ({
-      id: a.id,
-      entityType: a.entityType,
-      entityId: a.entityId,
-      action: a.action,
-      userName: a.userName,
-      userEmail: a.userEmail,
-      timestamp: a.timestamp,
-      metadata: a.metadata as Record<string, unknown> | undefined,
-    })),
-    [activities]
+  const rows: AuditRow[] = useMemo(
+    () =>
+      activities.map((a) => ({
+        id: a.id,
+        entityType: a.entityType,
+        entityId: a.entityId,
+        action: a.action,
+        userName: a.userName,
+        userEmail: a.userEmail,
+        timestamp: a.timestamp,
+        metadata: a.metadata as Record<string, unknown> | undefined,
+      })),
+    [activities],
   );
 
   const auditColumns: DataTableColumn<AuditRow>[] = useMemo(
@@ -168,18 +207,16 @@ export function TenantAuditLogPage() {
         header: t('auditLog.entityType'),
         render: (e) => (
           <Tag data-color={getEntityBadgeColor(e.entityType)} data-size="sm">
-            {t(`auditLog.type${e.entityType.charAt(0).toUpperCase() + e.entityType.slice(1)}`, { defaultValue: e.entityType })}
+            {t(`auditLog.type${e.entityType.charAt(0).toUpperCase() + e.entityType.slice(1)}`, {
+              defaultValue: e.entityType,
+            })}
           </Tag>
         ),
       },
       {
         id: 'action',
         header: t('auditLog.action'),
-        render: (e) => (
-          <Badge data-color={getActionBadgeColor(e.action)}>
-            {e.action}
-          </Badge>
-        ),
+        render: (e) => <Badge data-color={getActionBadgeColor(e.action)}>{e.action}</Badge>,
       },
       {
         id: 'entityId',
@@ -200,7 +237,7 @@ export function TenantAuditLogPage() {
         ),
       },
     ],
-    [t, formatDateTime]
+    [t, formatDateTime],
   );
 
   const handleRowClick = useCallback((row: AuditRow) => {
@@ -231,20 +268,36 @@ export function TenantAuditLogPage() {
       {/* Stats — live from real data */}
       <Grid columns={isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'} gap="var(--ds-size-4)">
         <Card data-color="neutral" className={styles.statCard}>
-          <Paragraph data-size="sm" className={styles.subtleText}>{t('auditLog.totalToday')}</Paragraph>
-          <Heading level={2} data-size="xl" className={styles.headingNoMargin}>{stats.totalToday}</Heading>
+          <Paragraph data-size="sm" className={styles.subtleText}>
+            {t('auditLog.totalToday')}
+          </Paragraph>
+          <Heading level={2} data-size="xl" className={styles.headingNoMargin}>
+            {stats.totalToday}
+          </Heading>
         </Card>
         <Card data-color="neutral" className={styles.statCard}>
-          <Paragraph data-size="sm" className={styles.subtleText}>{t('auditLog.warnings')}</Paragraph>
-          <Heading level={2} data-size="xl" className={styles.warningHeading}>{stats.warnings}</Heading>
+          <Paragraph data-size="sm" className={styles.subtleText}>
+            {t('auditLog.warnings')}
+          </Paragraph>
+          <Heading level={2} data-size="xl" className={styles.warningHeading}>
+            {stats.warnings}
+          </Heading>
         </Card>
         <Card data-color="neutral" className={styles.statCard}>
-          <Paragraph data-size="sm" className={styles.subtleText}>{t('auditLog.errors')}</Paragraph>
-          <Heading level={2} data-size="xl" className={styles.dangerHeading}>{stats.errors}</Heading>
+          <Paragraph data-size="sm" className={styles.subtleText}>
+            {t('auditLog.errors')}
+          </Paragraph>
+          <Heading level={2} data-size="xl" className={styles.dangerHeading}>
+            {stats.errors}
+          </Heading>
         </Card>
         <Card data-color="neutral" className={styles.statCard}>
-          <Paragraph data-size="sm" className={styles.subtleText}>{t('auditLog.security')}</Paragraph>
-          <Heading level={2} data-size="xl" className={styles.infoHeading}>{stats.security}</Heading>
+          <Paragraph data-size="sm" className={styles.subtleText}>
+            {t('auditLog.security')}
+          </Paragraph>
+          <Heading level={2} data-size="xl" className={styles.infoHeading}>
+            {stats.security}
+          </Heading>
         </Card>
       </Grid>
 
@@ -258,8 +311,10 @@ export function TenantAuditLogPage() {
           <Stack className={styles.flexOne}>
             <FormField label={t('auditLog.entityType')}>
               <PillDropdown
-                label={t(ENTITY_TYPE_OPTIONS.find(o => o.value === entityTypeFilter)?.labelKey ?? 'auditLog.allTypes')}
-                options={ENTITY_TYPE_OPTIONS.map(o => ({ value: o.value, label: t(o.labelKey) }))}
+                label={t(
+                  ENTITY_TYPE_OPTIONS.find((o) => o.value === entityTypeFilter)?.labelKey ?? 'auditLog.allTypes',
+                )}
+                options={ENTITY_TYPE_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) }))}
                 value={entityTypeFilter}
                 onChange={(v) => setEntityTypeFilter(v as EntityTypeFilter)}
                 ariaLabel={t('auditLog.filterByType')}
@@ -277,10 +332,7 @@ export function TenantAuditLogPage() {
         {isLoading ? (
           <LoadingState message={t('common.loading')} size="lg" />
         ) : rows.length === 0 ? (
-          <EmptyState
-            title={t('auditLog.noEvents')}
-            icon={<InboxIcon />}
-          />
+          <EmptyState title={t('auditLog.noEvents')} icon={<InboxIcon />} />
         ) : (
           <DataTable<AuditRow>
             columns={auditColumns}
@@ -310,16 +362,17 @@ export function TenantAuditLogPage() {
                   <Paragraph data-size="sm" className={styles.drawerSubtleText}>
                     {t('auditLog.action')}
                   </Paragraph>
-                  <Badge data-color={getActionBadgeColor(selectedEvent.action)}>
-                    {selectedEvent.action}
-                  </Badge>
+                  <Badge data-color={getActionBadgeColor(selectedEvent.action)}>{selectedEvent.action}</Badge>
                 </Stack>
                 <Stack direction="horizontal" justify="between" align="center">
                   <Paragraph data-size="sm" className={styles.drawerSubtleText}>
                     {t('auditLog.entityType')}
                   </Paragraph>
                   <Tag data-color={getEntityBadgeColor(selectedEvent.entityType)} data-size="sm">
-                    {t(`auditLog.type${selectedEvent.entityType.charAt(0).toUpperCase() + selectedEvent.entityType.slice(1)}`, { defaultValue: selectedEvent.entityType })}
+                    {t(
+                      `auditLog.type${selectedEvent.entityType.charAt(0).toUpperCase() + selectedEvent.entityType.slice(1)}`,
+                      { defaultValue: selectedEvent.entityType },
+                    )}
                   </Tag>
                 </Stack>
                 <Stack direction="horizontal" justify="between" align="center">
@@ -327,7 +380,9 @@ export function TenantAuditLogPage() {
                     {t('auditLog.entityId')}
                   </Paragraph>
                   <Paragraph data-size="sm" className={styles.drawerMonoText}>
-                    {selectedEvent.entityId.length > 20 ? `${selectedEvent.entityId.slice(0, 20)}…` : selectedEvent.entityId}
+                    {selectedEvent.entityId.length > 20
+                      ? `${selectedEvent.entityId.slice(0, 20)}…`
+                      : selectedEvent.entityId}
                   </Paragraph>
                 </Stack>
                 <Stack direction="horizontal" justify="between" align="center">

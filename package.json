@@ -1,87 +1,87 @@
 {
-    "name": "digilist-saas",
-    "version": "0.1.0",
-    "private": true,
-    "description": "DigilistSaaS - Convex-powered multi-tenant Backend-as-a-Service kernel",
-    "type": "module",
-    "workspaces": [
-        "packages/*",
-        "apps/*"
+  "name": "digilist-saas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DigilistSaaS - Convex-powered multi-tenant Backend-as-a-Service kernel",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"node scripts/run-convex-with-env.mjs dev\" \"pnpm --filter @digipicks/web dev\" \"pnpm --filter @digipicks/dashboard dev\"",
+    "dev:convex": "node scripts/run-convex-with-env.mjs dev",
+    "dev:web": "pnpm --filter @digipicks/web dev",
+    "dev:dashboard": "pnpm --filter @digipicks/dashboard dev",
+    "dev:all": "concurrently \"pnpm dev:convex\" \"pnpm dev:web\" \"pnpm dev:dashboard\"",
+    "sdk:build": "echo 'SDK is source-only, no build needed'",
+    "check:sso-invariants": "npx tsx scripts/check-sso-invariants.ts",
+    "verify:schema-types": "npx tsx scripts/verify-schema-types-drift.ts",
+    "sdk:test": "pnpm --filter @digipicks/sdk test",
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "test": "pnpm -r --if-present run test",
+    "test:convex": "cd convex && npx vitest run --config vitest.config.ts",
+    "test:convex:watch": "cd convex && npx vitest --config vitest.config.ts",
+    "test:convex:e2e": "tsx tests/convex/e2e/runner.ts",
+    "test:convex:e2e:coverage": "tsx tests/convex/e2e/runner.ts --coverage",
+    "test:convex:e2e:watch": "tsx tests/convex/e2e/runner.ts --watch",
+    "test:convex:e2e:all": "tsx tests/convex/e2e/run-all.ts",
+    "test:convex:e2e:parallel": "tsx tests/convex/e2e/run-all.ts --parallel",
+    "test:convex:e2e:journeys": "tsx tests/convex/e2e/run-all.ts --suite user-journeys",
+    "test:convex:e2e:performance": "tsx tests/convex/e2e/run-all.ts --suite performance",
+    "test:convex:e2e:edge-cases": "tsx tests/convex/e2e/run-all.ts --suite edge-cases",
+    "test:e2e": "playwright test tests/e2e",
+    "test:e2e:a-krav": "playwright test --project=a-krav",
+    "test:e2e:a-krav:smoke": "playwright test --project=a-krav --grep @smoke",
+    "test:e2e:a-krav:nightly": "playwright test --project=a-krav --reporter=list,html,junit",
+    "test:all": "pnpm sdk:test && pnpm test:convex && pnpm test:convex:e2e:all && pnpm test:e2e",
+    "seed:test": "npx ts-node scripts/seed-test-tenant.ts",
+    "seed": "node scripts/run-convex-with-env.mjs run seeds:seedAll",
+    "seed:components": "node scripts/run-convex-with-env.mjs run seedComponents:seedAll",
+    "seed:all": "pnpm seed && pnpm seed:components",
+    "xala": "tsx packages/cli/src/index.ts",
+    "xala:legacy": "tsx scripts/cli/index.ts",
+    "setup": "node scripts/setup.mjs",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs}": [
+      "prettier --write"
     ],
-    "scripts": {
-        "dev": "concurrently \"node scripts/run-convex-with-env.mjs dev\" \"pnpm --filter @digilist-saas/web dev\" \"pnpm --filter @digilist-saas/dashboard dev\"",
-        "dev:convex": "node scripts/run-convex-with-env.mjs dev",
-        "dev:web": "pnpm --filter @digilist-saas/web dev",
-        "dev:dashboard": "pnpm --filter @digilist-saas/dashboard dev",
-        "dev:all": "concurrently \"pnpm dev:convex\" \"pnpm dev:web\" \"pnpm dev:dashboard\"",
-        "sdk:build": "echo 'SDK is source-only, no build needed'",
-        "check:sso-invariants": "npx tsx scripts/check-sso-invariants.ts",
-        "verify:schema-types": "npx tsx scripts/verify-schema-types-drift.ts",
-        "sdk:test": "pnpm --filter @digilist-saas/sdk test",
-        "lint": "pnpm -r --if-present run lint",
-        "typecheck": "pnpm -r --if-present run typecheck",
-        "test": "pnpm -r --if-present run test",
-        "test:convex": "cd convex && npx vitest run --config vitest.config.ts",
-        "test:convex:watch": "cd convex && npx vitest --config vitest.config.ts",
-        "test:convex:e2e": "tsx tests/convex/e2e/runner.ts",
-        "test:convex:e2e:coverage": "tsx tests/convex/e2e/runner.ts --coverage",
-        "test:convex:e2e:watch": "tsx tests/convex/e2e/runner.ts --watch",
-        "test:convex:e2e:all": "tsx tests/convex/e2e/run-all.ts",
-        "test:convex:e2e:parallel": "tsx tests/convex/e2e/run-all.ts --parallel",
-        "test:convex:e2e:journeys": "tsx tests/convex/e2e/run-all.ts --suite user-journeys",
-        "test:convex:e2e:performance": "tsx tests/convex/e2e/run-all.ts --suite performance",
-        "test:convex:e2e:edge-cases": "tsx tests/convex/e2e/run-all.ts --suite edge-cases",
-        "test:e2e": "playwright test tests/e2e",
-        "test:e2e:a-krav": "playwright test --project=a-krav",
-        "test:e2e:a-krav:smoke": "playwright test --project=a-krav --grep @smoke",
-        "test:e2e:a-krav:nightly": "playwright test --project=a-krav --reporter=list,html,junit",
-        "test:all": "pnpm sdk:test && pnpm test:convex && pnpm test:convex:e2e:all && pnpm test:e2e",
-        "seed:test": "npx ts-node scripts/seed-test-tenant.ts",
-        "seed": "node scripts/run-convex-with-env.mjs run seeds:seedAll",
-        "seed:components": "node scripts/run-convex-with-env.mjs run seedComponents:seedAll",
-        "seed:all": "pnpm seed && pnpm seed:components",
-        "xala": "tsx packages/cli/src/index.ts",
-        "xala:legacy": "tsx scripts/cli/index.ts",
-        "setup": "node scripts/setup.mjs",
-        "prepare": "husky"
-    },
-    "lint-staged": {
-        "*.{ts,tsx,js,jsx,mjs}": [
-            "prettier --write"
-        ],
-        "*.{json,md,yml,yaml,css}": [
-            "prettier --write"
-        ]
-    },
-    "devDependencies": {
-        "@axe-core/playwright": "^4.11.1",
-        "@digdir/designsystemet-css": "^1.0.0",
-        "@digdir/designsystemet-react": "^1.9.0",
-        "@edge-runtime/vm": "^5.0.0",
-        "@playwright/test": "^1.45.0",
-        "@types/node": "^20.14.0",
-        "@types/uuid": "^10.0.0",
-        "concurrently": "^8.2.0",
-        "puppeteer": "^24.36.1",
-        "ts-node": "^10.9.0",
-        "tsx": "^4.7.0",
-        "typescript": "^5.4.5",
-        "uuid": "^10.0.0",
-        "vitest": "^2.0.0",
-        "husky": "^9.1.0",
-        "lint-staged": "^15.2.0",
-        "prettier": "^3.3.0"
-    },
-    "engines": {
-        "node": ">=20.0.0"
-    },
-    "author": "Xala Technologies",
-    "license": "UNLICENSED",
-    "dependencies": {
-        "convex": "^1.31.7",
-        "convex-helpers": "^0.1.111",
-        "convex-test": "^0.0.46",
-        "jspdf": "^4.2.0"
-    },
-    "pnpm": {}
+    "*.{json,md,yml,yaml,css}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@digdir/designsystemet-css": "^1.0.0",
+    "@digdir/designsystemet-react": "^1.9.0",
+    "@edge-runtime/vm": "^5.0.0",
+    "@playwright/test": "^1.45.0",
+    "@types/node": "^20.14.0",
+    "@types/uuid": "^10.0.0",
+    "concurrently": "^8.2.0",
+    "puppeteer": "^24.36.1",
+    "ts-node": "^10.9.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5",
+    "uuid": "^10.0.0",
+    "vitest": "^2.0.0",
+    "husky": "^9.1.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Xala Technologies",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "convex": "^1.31.7",
+    "convex-helpers": "^0.1.111",
+    "convex-test": "^0.0.46",
+    "jspdf": "^4.2.0"
+  },
+  "pnpm": {}
 }

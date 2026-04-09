@@ -6,12 +6,12 @@
  * - UI_GUARDRAILS_CONTRACT.md (including RTL + Localization)
  *
  * Active Rules:
- * - sdk-usage-contract: Enforce @digilist-saas/sdk namespace restrictions per app
+ * - sdk-usage-contract: Enforce @digipicks/sdk namespace restrictions per app
  * - no-domain-ui-in-backoffice: Prevent domain UI in backoffice
- * - no-direct-digdir: Prevent direct Digdir/UI kit imports — use @digilist-saas/ds
+ * - no-direct-digdir: Prevent direct Digdir/UI kit imports — use @digipicks/ds
  * - no-hardcoded-strings: Prevent hardcoded user-facing strings — use t()
  * - no-hardcoded-colors: Prevent rgb/rgba/hex — use design tokens
- * - no-inline-svg: Prevent inline SVG — use @digilist-saas/ds Icon components
+ * - no-inline-svg: Prevent inline SVG — use @digipicks/ds Icon components
  * - no-raw-html: Prevent raw HTML elements — use DS components
  * - require-css-modules: Enforce .module.css over plain .css
  * - no-deprecated-spacing: Prevent --ds-spacing-* / --digilist-spacing-* tokens

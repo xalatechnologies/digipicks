@@ -6,10 +6,10 @@
  */
 
 import type { ReactNode } from 'react';
-import { DashboardHeaderSlots } from '@digilist-saas/app-shell';
-import type { DocsTreeNavItem } from '@digilist-saas/shared';
-import type { BottomNavigationItem } from '@digilist-saas/ds';
-import { AppDashboardLayout, BrandedLogo, TreeNavSidebar } from '@digilist-saas/ds';
+import { DashboardHeaderSlots } from '@digipicks/app-shell';
+import type { DocsTreeNavItem } from '@digipicks/shared';
+import type { BottomNavigationItem } from '@digipicks/ds';
+import { AppDashboardLayout, BrandedLogo, TreeNavSidebar } from '@digipicks/ds';
 
 export interface DocsLayoutProps {
   /** Tree navigation items (guides → sections → articles) */
@@ -35,14 +35,7 @@ export function DocsLayout({
   return (
     <AppDashboardLayout
       header={resolvedHeader}
-      sidebar={
-        <TreeNavSidebar
-          logo={docsLogo}
-          items={treeItems}
-          id="docs-sidebar"
-          data-testid="docs-sidebar"
-        />
-      }
+      sidebar={<TreeNavSidebar logo={docsLogo} items={treeItems} id="docs-sidebar" data-testid="docs-sidebar" />}
       bottomNavItems={bottomNavItems}
       rightSidebar={rightSidebar}
       showSidebarOnMobile={true}

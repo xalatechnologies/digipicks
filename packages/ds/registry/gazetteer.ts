@@ -29,36 +29,36 @@ export const GAZETTEER_INDEX: GazetteerSection[] = [
   {
     id: 'components',
     title: 'Component Dictionary',
-    description: 'UI components — Digdir primitives + custom @digilist-saas/ds composed/block components',
-    path: '@digilist-saas/ds/registry',
+    description: 'UI components — Digdir primitives + custom @digipicks/ds composed/block components',
+    path: '@digipicks/ds/registry',
     count: Object.keys(components).length,
   },
   {
     id: 'patterns',
     title: 'Pattern Dictionary',
     description: 'UI patterns — form validation, theme switching, asChild, etc.',
-    path: '@digilist-saas/ds/registry',
+    path: '@digipicks/ds/registry',
     count: Object.keys(patterns).length,
   },
   {
     id: 'guidelines',
     title: 'Standards Guide',
     description: 'Guidelines — imports, styling, accessibility, shared infrastructure, CSS modules',
-    path: '@digilist-saas/ds/registry',
+    path: '@digipicks/ds/registry',
     count: Object.keys(guidelines).length,
   },
   {
     id: 'providers',
     title: 'Provider Stack',
     description: 'Canonical provider composition — Convex, Theme, Auth, Realtime, etc.',
-    path: '@digilist-saas/ds/registry (providers)',
+    path: '@digipicks/ds/registry (providers)',
     count: Object.keys(providers).length,
   },
   {
     id: 'gatekeeper',
     title: 'Gatekeeper Rules',
     description: 'Prohibitions, requirements, decision flows — non-negotiable standards',
-    path: '@digilist-saas/ds/registry (gatekeeper)',
+    path: '@digipicks/ds/registry (gatekeeper)',
     count: PROHIBITIONS.length + REQUIREMENTS.length,
   },
 ];
@@ -68,14 +68,14 @@ export function resolveNeed(need: string): { component?: string; pattern?: strin
   const lower = need.toLowerCase();
   // Simple keyword mapping — can be extended
   const map: Record<string, { component?: string; pattern?: string; source: string }> = {
-    'button': { component: 'button', source: '@digilist-saas/ds' },
-    'auth': { component: 'authProvider', source: '@digilist-saas/app-shell' },
-    'form': { pattern: 'formValidation', source: '@digilist-saas/ds' },
-    'table': { component: 'dataTable', source: '@digilist-saas/ds' },
-    'dialog': { component: 'confirmDialog', source: '@digilist-saas/ds' },
-    'drawer': { component: 'drawer', source: '@digilist-saas/ds' },
-    'filter': { component: 'filterDrawer', source: '@digilist-saas/ds' },
-    'theme': { pattern: 'themeSwitching', source: '@digilist-saas/ds' },
+    button: { component: 'button', source: '@digipicks/ds' },
+    auth: { component: 'authProvider', source: '@digipicks/app-shell' },
+    form: { pattern: 'formValidation', source: '@digipicks/ds' },
+    table: { component: 'dataTable', source: '@digipicks/ds' },
+    dialog: { component: 'confirmDialog', source: '@digipicks/ds' },
+    drawer: { component: 'drawer', source: '@digipicks/ds' },
+    filter: { component: 'filterDrawer', source: '@digipicks/ds' },
+    theme: { pattern: 'themeSwitching', source: '@digipicks/ds' },
   };
   for (const [key, value] of Object.entries(map)) {
     if (lower.includes(key)) return value;

@@ -7,7 +7,7 @@
 
 import { Outlet } from 'react-router-dom';
 import type { ReactNode } from 'react';
-import { SkipLinks, BottomNavigation, type BottomNavigationItem } from '@digilist-saas/ds';
+import { SkipLinks, BottomNavigation, type BottomNavigationItem } from '@digipicks/ds';
 import { PlatformLayout } from '../PlatformLayout';
 import styles from './AppDashboardLayout.module.css';
 
@@ -43,13 +43,7 @@ export function AppDashboardLayout({
         topAlerts={topAlerts ? <div className={styles.alertWrapper}>{topAlerts}</div> : undefined}
         bottomNav={
           bottomNavItems.length > 0 ? (
-            <BottomNavigation
-              items={bottomNavItems}
-              fixed
-              variant="surface"
-              showLabels
-              safeArea
-            />
+            <BottomNavigation items={bottomNavItems} fixed variant="surface" showLabels safeArea />
           ) : undefined
         }
         mobileBreakpoint={MOBILE_BREAKPOINT}

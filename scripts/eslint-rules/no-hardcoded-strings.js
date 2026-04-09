@@ -2,12 +2,12 @@
  * ESLint Rule: No Hardcoded Strings
  *
  * Enforces Localization Guardrails: No hardcoded user-facing strings.
- * All user-facing strings must use t() or Trans component from @digilist-saas/i18n.
+ * All user-facing strings must use t() or Trans component from @digipicks/i18n.
  *
  * HOW TO FIX:
  *
  * 1. Import the translation hook:
- *    import { useT } from '@digilist-saas/i18n';
+ *    import { useT } from '@digipicks/i18n';
  *
  * 2. Get the t function in your component:
  *    const t = useT();
@@ -44,107 +44,86 @@
  */
 
 // Attributes that require localization
-const LOCALIZED_ATTRIBUTES = [
-    'aria-label',
-    'aria-describedby',
-    'title',
-    'placeholder',
-    'alt',
-];
+const LOCALIZED_ATTRIBUTES = ['aria-label', 'aria-describedby', 'title', 'placeholder', 'alt'];
 
 // Attributes that are NOT user-facing (allow hardcoded)
-const ALLOWED_ATTRIBUTES = [
-    'data-testid',
-    'data-cy',
-    'id',
-    'className',
-    'name',
-    'type',
-    'href',
-    'src',
-    'role',
-    'key',
-];
+const ALLOWED_ATTRIBUTES = ['data-testid', 'data-cy', 'id', 'className', 'name', 'type', 'href', 'src', 'role', 'key'];
 
 export default {
-    meta: {
-        type: 'problem',
-        docs: {
-            description: 'Prevent hardcoded user-facing strings',
-            category: 'Localization Guardrails',
-        },
-        messages: {
-            noHardcodedString:
-                "Hardcoded string forbidden. Use t('key') from @digilist-saas/i18n. Add key to packages/i18n/locales/nb.json and en.json.",
-            noHardcodedAttribute:
-                "Hardcoded '{{attr}}' forbidden. Use t('key') from @digilist-saas/i18n (e.g. aria-label={t('common.close')}).",
-        },
-        schema: [],
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'Prevent hardcoded user-facing strings',
+      category: 'Localization Guardrails',
     },
+    messages: {
+      noHardcodedString:
+        "Hardcoded string forbidden. Use t('key') from @digipicks/i18n. Add key to packages/i18n/locales/nb.json and en.json.",
+      noHardcodedAttribute:
+        "Hardcoded '{{attr}}' forbidden. Use t('key') from @digipicks/i18n (e.g. aria-label={t('common.close')}).",
+    },
+    schema: [],
+  },
 
-    create(context) {
-        const filename = context.getFilename();
+  create(context) {
+    const filename = context.getFilename();
 
-        // Skip test files
-        if (
-            filename.includes('.test.') ||
-            filename.includes('.spec.') ||
-            filename.includes('__tests__')
-        ) {
-            return {};
+    // Skip test files
+    if (filename.includes('.test.') || filename.includes('.spec.') || filename.includes('__tests__')) {
+      return {};
+    }
+
+    // Only enforce in apps/
+    if (!filename.includes('/apps/')) {
+      return {};
+    }
+
+    return {
+      // Check JSX text content
+      JSXText(node) {
+        const text = node.value.trim();
+
+        // Skip whitespace-only or empty
+        if (!text || /^[\s\n]*$/.test(text)) {
+          return;
         }
 
-        // Only enforce in apps/
-        if (!filename.includes('/apps/')) {
-            return {};
+        // Skip if it's just punctuation or special chars
+        if (/^[.,;:!?()[\]{}<>\/\\|@#$%^&*+=~`'"_-]+$/.test(text)) {
+          return;
         }
 
-        return {
-            // Check JSX text content
-            JSXText(node) {
-                const text = node.value.trim();
+        // Skip numbers only
+        if (/^\d+$/.test(text)) {
+          return;
+        }
 
-                // Skip whitespace-only or empty
-                if (!text || /^[\s\n]*$/.test(text)) {
-                    return;
-                }
+        context.report({
+          node,
+          messageId: 'noHardcodedString',
+        });
+      },
 
-                // Skip if it's just punctuation or special chars
-                if (/^[.,;:!?()[\]{}<>\/\\|@#$%^&*+=~`'"_-]+$/.test(text)) {
-                    return;
-                }
+      // Check attributes that need localization
+      JSXAttribute(node) {
+        if (!node.name || !node.name.name) return;
 
-                // Skip numbers only
-                if (/^\d+$/.test(text)) {
-                    return;
-                }
+        const attrName = node.name.name;
 
-                context.report({
-                    node,
-                    messageId: 'noHardcodedString',
-                });
-            },
+        // Check if this attribute needs localization
+        if (!LOCALIZED_ATTRIBUTES.includes(attrName)) {
+          return;
+        }
 
-            // Check attributes that need localization
-            JSXAttribute(node) {
-                if (!node.name || !node.name.name) return;
-
-                const attrName = node.name.name;
-
-                // Check if this attribute needs localization
-                if (!LOCALIZED_ATTRIBUTES.includes(attrName)) {
-                    return;
-                }
-
-                // Check if value is a string literal
-                if (node.value && node.value.type === 'Literal' && typeof node.value.value === 'string') {
-                    context.report({
-                        node,
-                        messageId: 'noHardcodedAttribute',
-                        data: { attr: attrName },
-                    });
-                }
-            },
-        };
-    },
+        // Check if value is a string literal
+        if (node.value && node.value.type === 'Literal' && typeof node.value.value === 'string') {
+          context.report({
+            node,
+            messageId: 'noHardcodedAttribute',
+            data: { attr: attrName },
+          });
+        }
+      },
+    };
+  },
 };

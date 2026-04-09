@@ -1,5 +1,5 @@
 /**
- * @digilist-saas/shared - Constants
+ * @digipicks/shared - Constants
  *
  * Shared constants for DigilistSaaS.
  */
@@ -155,19 +155,66 @@ export const FAVORITES_STORAGE_KEY = 'digilist_favorites';
 export const DAY_NAMES_NB = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'] as const;
 
 /** Norwegian month name abbreviations */
-export const MONTH_NAMES_NB = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'] as const;
+export const MONTH_NAMES_NB = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'mai',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'okt',
+  'nov',
+  'des',
+] as const;
 
 /** Norwegian full day names (Sunday-first) */
 export const DAY_NAMES_FULL_NB = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'] as const;
 
 /** Norwegian full day names capitalized (Sunday-first) */
-export const DAY_NAMES_FULL_CAPITALIZED_NB = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'] as const;
+export const DAY_NAMES_FULL_CAPITALIZED_NB = [
+  'Søndag',
+  'Mandag',
+  'Tirsdag',
+  'Onsdag',
+  'Torsdag',
+  'Fredag',
+  'Lørdag',
+] as const;
 
 /** Norwegian full month names */
-export const MONTH_NAMES_FULL_NB = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'] as const;
+export const MONTH_NAMES_FULL_NB = [
+  'januar',
+  'februar',
+  'mars',
+  'april',
+  'mai',
+  'juni',
+  'juli',
+  'august',
+  'september',
+  'oktober',
+  'november',
+  'desember',
+] as const;
 
 /** Norwegian full month names capitalized (for calendar headers, etc.) */
-export const MONTH_NAMES_FULL_CAPITALIZED_NB = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'] as const;
+export const MONTH_NAMES_FULL_CAPITALIZED_NB = [
+  'Januar',
+  'Februar',
+  'Mars',
+  'April',
+  'Mai',
+  'Juni',
+  'Juli',
+  'August',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+] as const;
 
 /** Days of week Monday-first for calendar views */
 export const DAYS_OF_WEEK_MONDAY_FIRST_NB = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'] as const;
@@ -175,8 +222,6 @@ export const DAYS_OF_WEEK_MONDAY_FIRST_NB = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 
 // =============================================================================
 // Season Constants
 // =============================================================================
-
-
 
 /** Norwegian weekday labels (Sunday-first, full names) — alias for DAY_NAMES_FULL_CAPITALIZED_NB */
 export const WEEKDAY_LABELS_NB = DAY_NAMES_FULL_CAPITALIZED_NB;
@@ -202,5 +247,3 @@ export const ROLE_LABEL_KEYS: Record<string, string> = {
   guest: 'users.detail.roleGuest',
   user: 'users.user',
 };
-
-

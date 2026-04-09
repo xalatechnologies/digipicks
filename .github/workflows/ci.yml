@@ -35,7 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared (required for typecheck)
-        run: pnpm --filter @digilist-saas/shared build
+        run: pnpm --filter @digipicks/shared build
 
       - name: Lint all workspaces
         run: pnpm lint
@@ -43,11 +43,11 @@ jobs:
       - name: Typecheck packages
         run: |
           pnpm -r --if-present \
-            --filter '@digilist-saas/shared' \
-            --filter '@digilist-saas/i18n' \
-            --filter '@digilist-saas/ds' \
-            --filter '@digilist-saas/sdk' \
-            --filter '@digilist-saas/app-shell' \
+            --filter '@digipicks/shared' \
+            --filter '@digipicks/i18n' \
+            --filter '@digipicks/ds' \
+            --filter '@digipicks/sdk' \
+            --filter '@digipicks/app-shell' \
             run typecheck
 
   # ============================================================================
@@ -74,10 +74,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared (required for SDK)
-        run: pnpm --filter @digilist-saas/shared build
+        run: pnpm --filter @digipicks/shared build
 
       - name: Run SDK tests
-        run: pnpm --filter @digilist-saas/sdk test
+        run: pnpm --filter @digipicks/sdk test
 
   # ============================================================================
   # Convex Tests
@@ -159,17 +159,17 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared
-        run: pnpm --filter @digilist-saas/shared build
+        run: pnpm --filter @digipicks/shared build
 
       - name: Build SDK
         run: pnpm sdk:build
 
       - name: Build web app
-        run: pnpm --filter @digilist-saas/web build
+        run: pnpm --filter @digipicks/web build
         env:
           VITE_CONVEX_URL: https://build-verification.placeholder.invalid
 
       - name: Build dashboard app
-        run: pnpm --filter @digilist-saas/dashboard build
+        run: pnpm --filter @digipicks/dashboard build
         env:
           VITE_CONVEX_URL: https://build-verification.placeholder.invalid

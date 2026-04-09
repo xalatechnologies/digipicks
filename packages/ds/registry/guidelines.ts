@@ -1,6 +1,6 @@
 /**
  * Usage guidelines and best practices for Designsystemet.
- * 
+ *
  * This file contains comprehensive guidelines for using Designsystemet
  * components correctly and consistently across applications.
  */
@@ -33,7 +33,7 @@ export const guidelines: Record<string, Guideline> = {
     category: 'architecture',
     level: 'required',
     do: [
-      'Import all components from @digilist-saas/ds',
+      'Import all components from @digipicks/ds',
       'Import styles once in the application entry point',
       'Use named imports for better tree shaking',
     ],
@@ -55,7 +55,7 @@ export const guidelines: Record<string, Guideline> = {
     do: [
       'Use component variants for different styles',
       'Apply design tokens for consistency',
-      'Create wrapper components in @digilist-saas/ds if needed',
+      'Create wrapper components in @digipicks/ds if needed',
       'Use CSS variables for theme customization',
     ],
     dont: [
@@ -207,12 +207,7 @@ export const guidelines: Record<string, Guideline> = {
     description: 'Best practices for modal dialogs.',
     category: 'usage',
     level: 'required',
-    do: [
-      'Trap focus within the modal',
-      'Close on Escape key',
-      'Provide a close button',
-      'Restore focus on close',
-    ],
+    do: ['Trap focus within the modal', 'Close on Escape key', 'Provide a close button', 'Restore focus on close'],
     dont: [
       'Open multiple modals at once',
       'Prevent modal from closing',
@@ -295,18 +290,8 @@ export const guidelines: Record<string, Guideline> = {
     description: 'Ensuring components work on all screen sizes.',
     category: 'usage',
     level: 'required',
-    do: [
-      'Test on mobile devices',
-      'Use responsive breakpoints',
-      'Consider touch targets',
-      'Optimize for mobile first',
-    ],
-    dont: [
-      'Fixed width layouts',
-      'Small touch targets',
-      'Horizontal scrolling on mobile',
-      'Ignore viewport meta tag',
-    ],
+    do: ['Test on mobile devices', 'Use responsive breakpoints', 'Consider touch targets', 'Optimize for mobile first'],
+    dont: ['Fixed width layouts', 'Small touch targets', 'Horizontal scrolling on mobile', 'Ignore viewport meta tag'],
     related: ['accessibility', 'styling'],
   },
 
@@ -345,12 +330,7 @@ export const guidelines: Record<string, Guideline> = {
       'Write unit tests for logic',
       'Visual test all variants',
     ],
-    dont: [
-      'Skip accessibility testing',
-      'Test only with mouse',
-      'Ignore edge cases',
-      'Forget visual regression tests',
-    ],
+    dont: ['Skip accessibility testing', 'Test only with mouse', 'Ignore edge cases', 'Forget visual regression tests'],
     related: ['accessibility', 'performance'],
   },
 
@@ -358,14 +338,14 @@ export const guidelines: Record<string, Guideline> = {
   sharedInfrastructure: {
     id: 'sharedInfrastructure',
     title: 'Shared Infrastructure',
-    description: 'Auth, realtime, RBAC, feature flags must come from @digilist-saas/app-shell or @digilist-saas/sdk.',
+    description: 'Auth, realtime, RBAC, feature flags must come from @digipicks/app-shell or @digipicks/sdk.',
     category: 'architecture',
     level: 'required',
     do: [
-      'Import AuthProvider, useAuth from @digilist-saas/app-shell',
+      'Import AuthProvider, useAuth from @digipicks/app-shell',
       'Import RealtimeProvider or ConvexRealtimeProvider from app-shell',
       'Import FeatureGate, useRBAC from app-shell',
-      'Use XalaConvexProvider from @digilist-saas/sdk',
+      'Use XalaConvexProvider from @digipicks/sdk',
     ],
     dont: [
       'Implement app-local auth, realtime, or RBAC',
@@ -413,14 +393,14 @@ export type GuidelineId = keyof typeof guidelines;
  */
 export function getGuidelinesByCategory(category: GuidelineCategory): Guideline[] {
   const ids = guidelineCategories[category];
-  return ids.map(id => guidelines[id]).filter((g): g is Guideline => g !== undefined);
+  return ids.map((id) => guidelines[id]).filter((g): g is Guideline => g !== undefined);
 }
 
 /**
  * Get guidelines by importance level.
  */
 export function getGuidelinesByLevel(level: 'required' | 'recommended' | 'suggested'): Guideline[] {
-  return Object.values(guidelines).filter(g => g.level === level);
+  return Object.values(guidelines).filter((g) => g.level === level);
 }
 
 /**
@@ -429,8 +409,6 @@ export function getGuidelinesByLevel(level: 'required' | 'recommended' | 'sugges
 export function getRelatedGuidelines(guidelineId: GuidelineId): Guideline[] {
   const guideline = guidelines[guidelineId];
   if (!guideline?.related) return [];
-  
-  return guideline.related
-    .map(id => guidelines[id])
-    .filter((g): g is Guideline => g !== undefined);
+
+  return guideline.related.map((id) => guidelines[id]).filter((g): g is Guideline => g !== undefined);
 }

@@ -12,16 +12,16 @@ import {
   SkipLinks,
   ErrorBoundary,
   Button,
-} from '@digilist-saas/ds';
-import { DesignsystemetProvider } from '@digilist-saas/ds';
-import { DEFAULT_THEME, type ThemeId } from '@digilist-saas/ds';
+} from '@digipicks/ds';
+import { DesignsystemetProvider } from '@digipicks/ds';
+import { DEFAULT_THEME, type ThemeId } from '@digipicks/ds';
 // Static import of the tenant theme CSS to prevent FOUC (Flash of Unstyled Content).
 // Without this, the default DS blue theme renders before the dynamic import in useBundledTheme resolves.
-import '@digilist-saas/ds/themes/hamar-theme.css';
-import { I18nProvider, useT, useI18nLocale } from '@digilist-saas/i18n';
-import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTools } from '@digilist-saas/sdk';
-import { GlobalSearch } from '@digilist-saas/app-shell';
-import { useAuth } from '@digilist-saas/app-shell';
+import '@digipicks/ds/themes/hamar-theme.css';
+import { I18nProvider, useT, useI18nLocale } from '@digipicks/i18n';
+import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTools } from '@digipicks/sdk';
+import { GlobalSearch } from '@digipicks/app-shell';
+import { useAuth } from '@digipicks/app-shell';
 import { ListingsPage } from '@/routes/listings';
 
 import { LoginPage } from '@/routes/login';
@@ -51,9 +51,9 @@ import {
   useTheme,
   useBundledTheme,
   env,
-} from '@digilist-saas/app-shell';
-import '@digilist-saas/app-shell/layout/WebLayoutStyles.css';
-import { RealtimeToast } from '@digilist-saas/app-shell';
+} from '@digipicks/app-shell';
+import '@digipicks/app-shell/layout/WebLayoutStyles.css';
+import { RealtimeToast } from '@digipicks/app-shell';
 initSentry();
 
 /**
@@ -103,8 +103,7 @@ function MainLayout() {
   };
 
   // Derive user display info from auth state
-  const getUserName = () =>
-    auth.user?.name || auth.user?.email?.split('@')[0] || auth.user?.email;
+  const getUserName = () => auth.user?.name || auth.user?.email?.split('@')[0] || auth.user?.email;
   const getUserEmail = () => auth.user?.email;
 
   return (
@@ -125,32 +124,39 @@ function MainLayout() {
         }
         search={
           <div className="header-search-desktop">
-            <GlobalSearch
-              context="web"
-              placeholder={t('common.search')}
-              showShortcut
-              enableGlobalShortcut
-            />
+            <GlobalSearch context="web" placeholder={t('common.search')} showShortcut enableGlobalShortcut />
           </div>
         }
         actions={
           <HeaderActions spacing="16px">
             <nav className="header-nav-links">
-              <Link to="/picks" className="header-nav-link">{t('nav.picks', 'Picks')}</Link>
-              {isLoggedIn && <Link to="/tracker" className="header-nav-link">{t('nav.tracker', 'Tracker')}</Link>}
-              <Link to="/pricing" className="header-nav-link">{t('nav.pricing', 'Pricing')}</Link>
-              <Link to="/blog" className="header-nav-link">{t('nav.blog', 'Blog')}</Link>
-              <Link to="/about" className="header-nav-link">{t('nav.about', 'About')}</Link>
+              <Link to="/picks" className="header-nav-link">
+                {t('nav.picks', 'Picks')}
+              </Link>
+              {isLoggedIn && (
+                <Link to="/tracker" className="header-nav-link">
+                  {t('nav.tracker', 'Tracker')}
+                </Link>
+              )}
+              <Link to="/pricing" className="header-nav-link">
+                {t('nav.pricing', 'Pricing')}
+              </Link>
+              <Link to="/blog" className="header-nav-link">
+                {t('nav.blog', 'Blog')}
+              </Link>
+              <Link to="/about" className="header-nav-link">
+                {t('nav.about', 'About')}
+              </Link>
             </nav>
             <HeaderLanguageSwitch
               language={locale}
               onSwitch={(lang) => setLocale(lang as 'nb' | 'en')}
-              languages={[{ code: 'nb', label: 'NO' }, { code: 'en', label: 'EN' }]}
+              languages={[
+                { code: 'nb', label: 'NO' },
+                { code: 'en', label: 'EN' },
+              ]}
             />
-            <HeaderThemeToggle
-              isDark={isDark}
-              onToggle={toggleTheme}
-            />
+            <HeaderThemeToggle isDark={isDark} onToggle={toggleTheme} />
             {isLoggedIn ? (
               <UserMenu
                 user={{ name: getUserName() || '', email: getUserEmail() || '' }}
@@ -161,11 +167,7 @@ function MainLayout() {
                 ]}
               />
             ) : (
-              <Button
-                data-size="sm"
-                color="accent"
-                onClick={() => navigate('/register')}
-              >
+              <Button data-size="sm" color="accent" onClick={() => navigate('/register')}>
                 {t('landing.hero.cta', 'Get Started')}
               </Button>
             )}
@@ -179,7 +181,16 @@ function MainLayout() {
 }
 
 // Valid theme IDs for type-safe resolution
-const VALID_THEMES: ThemeId[] = ['digdir', 'altinn', 'uutilsynet', 'portal', 'digilist', 'xala-navy', 'steinkjer', 'hamar'];
+const VALID_THEMES: ThemeId[] = [
+  'digdir',
+  'altinn',
+  'uutilsynet',
+  'portal',
+  'digilist',
+  'xala-navy',
+  'steinkjer',
+  'hamar',
+];
 
 function resolveThemeId(themeName: string | undefined): ThemeId {
   if (!themeName) return DEFAULT_THEME;
@@ -203,7 +214,6 @@ const INITIAL_THEME: ThemeId = (() => {
 function ThemedApp() {
   const { colorScheme } = useTheme();
   const tenantId = env.tenantId;
-
 
   // Fetch tenant settings to resolve the correct theme
   const { config } = useTenantConfig(tenantId || undefined);
@@ -237,7 +247,15 @@ function ThemedApp() {
                     {/* Main pages with header */}
                     <Route element={<MainLayout />}>
                       {/* Public pages — custom domain redirects root to creator profile */}
-                      <Route path="/" element={<><CustomDomainRedirect /><ListingsPage /></>} />
+                      <Route
+                        path="/"
+                        element={
+                          <>
+                            <CustomDomainRedirect />
+                            <ListingsPage />
+                          </>
+                        }
+                      />
                       <Route path="/faq" element={<FAQPage />} />
                       <Route path="/pricing" element={<PricingPage />} />
                       <Route path="/blog" element={<BlogPage />} />

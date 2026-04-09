@@ -8,7 +8,7 @@
  *
  * @example
  * ```typescript
- * import { THEMES, DEFAULT_THEME, getThemeUrls } from '@digilist-saas/ds';
+ * import { THEMES, DEFAULT_THEME, getThemeUrls } from '@digipicks/ds';
  *
  * // Get theme URLs (always returns array)
  * const urls = getThemeUrls(DEFAULT_THEME);
@@ -31,42 +31,18 @@ const COMMON_EXTENSIONS = '/themes/common-extensions.css';
 const DIGDIR_TOKENS = '/themes/digdir-tokens.css';
 
 // Custom DIGILIST theme: base tokens + common extensions + digilist color scheme
-const DIGILIST_THEME = [
-  DIGDIR_TOKENS,
-  COMMON_EXTENSIONS,
-  '/themes/digilist-theme.css',
-];
+const DIGILIST_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/digilist-theme.css'];
 
 // Xala Navy theme: base tokens + common extensions + navy color scheme
-const XALA_NAVY_THEME = [
-  DIGDIR_TOKENS,
-  COMMON_EXTENSIONS,
-  '/themes/xala-navy-theme.css',
-];
+const XALA_NAVY_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/xala-navy-theme.css'];
 
 // Steinkjer theme: pastell editorial palette
-const STEINKJER_THEME = [
-  DIGDIR_TOKENS,
-  COMMON_EXTENSIONS,
-  '/themes/steinkjer-theme.css',
-];
+const STEINKJER_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/steinkjer-theme.css'];
 
 // Hamar theme: dark-dominant minimal palette
-const HAMAR_THEME = [
-  DIGDIR_TOKENS,
-  COMMON_EXTENSIONS,
-  '/themes/hamar-theme.css',
-];
+const HAMAR_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/hamar-theme.css'];
 
-export type ThemeId =
-  | 'digdir'
-  | 'altinn'
-  | 'uutilsynet'
-  | 'portal'
-  | 'digilist'
-  | 'xala-navy'
-  | 'steinkjer'
-  | 'hamar';
+export type ThemeId = 'digdir' | 'altinn' | 'uutilsynet' | 'portal' | 'digilist' | 'xala-navy' | 'steinkjer' | 'hamar';
 
 /**
  * Theme CSS files. Can be single file (string) or multiple files (array).

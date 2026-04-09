@@ -34,9 +34,9 @@ import {
   DashboardPageHeader,
   PageContentLayout,
   useIsMobile,
-} from '@digilist-saas/ds';
-import type { StatusBadgeConfig, BadgeColor } from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
+} from '@digipicks/ds';
+import type { StatusBadgeConfig, BadgeColor } from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
 import {
   useBillingSummary,
   useInvoices,
@@ -44,12 +44,12 @@ import {
   useDownloadInvoice,
   formatDate,
   type Invoice,
-} from '@digilist-saas/sdk';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useAuth } from '@digilist-saas/app-shell';
-import type { Id } from '@digilist-saas/sdk';
-import type { InvoiceStatus } from '@digilist-saas/shared/types';
+} from '@digipicks/sdk';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useAuth } from '@digipicks/app-shell';
+import type { Id } from '@digipicks/sdk';
+import type { InvoiceStatus } from '@digipicks/shared/types';
 
 function useInvoiceStatusConfig(): Record<string, StatusBadgeConfig> {
   const t = useT();
@@ -73,16 +73,17 @@ export function UserBillingPage() {
   const { locale } = useLocale();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const userId = user?.id as Id<"users"> | undefined;
+  const userId = user?.id as Id<'users'> | undefined;
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus | undefined>(undefined);
   const isMobile = useIsMobile();
 
   // Fetch billing data
   const { data: summaryData, isLoading: summaryLoading, error: summaryError } = useBillingSummary(userId);
-  const { data: invoicesData, isLoading: invoicesLoading, error: invoicesError } = useInvoices(
-    userId,
-    statusFilter ? { status: statusFilter } : undefined
-  );
+  const {
+    data: invoicesData,
+    isLoading: invoicesLoading,
+    error: invoicesError,
+  } = useInvoices(userId, statusFilter ? { status: statusFilter } : undefined);
   const { data: pendingCountData } = usePendingPaymentsCount(userId);
   const downloadInvoice = useDownloadInvoice();
 
@@ -97,47 +98,70 @@ export function UserBillingPage() {
   const pendingCount = pendingCountData?.data?.count ?? 0;
 
   // Tab badge counts
-  const tabCounts = useMemo(() => ({
-    all: allInvoicesData?.data?.length ?? 0,
-    paid: paidInvoicesData?.data?.length ?? 0,
-    sent: sentInvoicesData?.data?.length ?? 0,
-    overdue: overdueInvoicesData?.data?.length ?? 0,
-  }), [allInvoicesData, paidInvoicesData, sentInvoicesData, overdueInvoicesData]);
+  const tabCounts = useMemo(
+    () => ({
+      all: allInvoicesData?.data?.length ?? 0,
+      paid: paidInvoicesData?.data?.length ?? 0,
+      sent: sentInvoicesData?.data?.length ?? 0,
+      overdue: overdueInvoicesData?.data?.length ?? 0,
+    }),
+    [allInvoicesData, paidInvoicesData, sentInvoicesData, overdueInvoicesData],
+  );
 
-  const handleDownload = useCallback((e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    downloadInvoice.mutate(id);
-  }, [downloadInvoice]);
+  const handleDownload = useCallback(
+    (e: React.MouseEvent, id: string) => {
+      e.stopPropagation();
+      downloadInvoice.mutate(id);
+    },
+    [downloadInvoice],
+  );
 
-  const handleInvoiceClick = useCallback((invoice: Invoice) => {
-    if (invoice.bookingId) {
-      navigate(`/my/bookings/${invoice.bookingId}`);
-    }
-  }, [navigate]);
+  const handleInvoiceClick = useCallback(
+    (invoice: Invoice) => {
+      if (invoice.bookingId) {
+        navigate(`/my/bookings/${invoice.bookingId}`);
+      }
+    },
+    [navigate],
+  );
 
-  const fmtCurrency = useCallback((amount: number) => {
-    return amount.toLocaleString(getIntlLocale(locale)) + ' kr';
-  }, [locale]);
+  const fmtCurrency = useCallback(
+    (amount: number) => {
+      return amount.toLocaleString(getIntlLocale(locale)) + ' kr';
+    },
+    [locale],
+  );
 
   const getPeriodLabel = (period: string) => {
     switch (period) {
-      case 'month': return t('billing.periodMonth', 'Siste 30 dager');
-      case 'year': return t('billing.periodYear', 'Siste 12 måneder');
-      case 'all': return t('billing.periodAll', 'Alle perioder');
-      default: return period;
+      case 'month':
+        return t('billing.periodMonth', 'Siste 30 dager');
+      case 'year':
+        return t('billing.periodYear', 'Siste 12 måneder');
+      case 'all':
+        return t('billing.periodAll', 'Alle perioder');
+      default:
+        return period;
     }
   };
 
   // PillTabs with badge counts
-  const filterTabs = useMemo(() => [
-    { id: 'all', label: t('bookings.all'), badge: String(tabCounts.all) },
-    { id: 'paid', label: t('invoice.paid'), badge: tabCounts.paid > 0 ? String(tabCounts.paid) : undefined },
-    { id: 'sent', label: t('invoice.sent'), badge: tabCounts.sent > 0 ? String(tabCounts.sent) : undefined },
-    { id: 'overdue', label: t('invoice.overdue'), badge: tabCounts.overdue > 0 ? String(tabCounts.overdue) : undefined },
-  ], [t, tabCounts]);
+  const filterTabs = useMemo(
+    () => [
+      { id: 'all', label: t('bookings.all'), badge: String(tabCounts.all) },
+      { id: 'paid', label: t('invoice.paid'), badge: tabCounts.paid > 0 ? String(tabCounts.paid) : undefined },
+      { id: 'sent', label: t('invoice.sent'), badge: tabCounts.sent > 0 ? String(tabCounts.sent) : undefined },
+      {
+        id: 'overdue',
+        label: t('invoice.overdue'),
+        badge: tabCounts.overdue > 0 ? String(tabCounts.overdue) : undefined,
+      },
+    ],
+    [t, tabCounts],
+  );
 
   const handleTabChange = useCallback((tabId: string) => {
-    setStatusFilter(tabId === 'all' ? undefined : tabId as InvoiceStatus);
+    setStatusFilter(tabId === 'all' ? undefined : (tabId as InvoiceStatus));
   }, []);
 
   const invoiceColumns: DataTableColumn<Invoice>[] = useMemo(
@@ -213,7 +237,7 @@ export function UserBillingPage() {
         ),
       },
     ],
-    [t, fmtCurrency, handleDownload, downloadInvoice.isLoading]
+    [t, fmtCurrency, handleDownload, downloadInvoice.isLoading],
   );
 
   if (summaryError || invoicesError) {
@@ -226,10 +250,7 @@ export function UserBillingPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        title={t('minside.billing')}
-        subtitle={t('minside.billingDesc')}
-      />
+      <DashboardPageHeader title={t('minside.billing')} subtitle={t('minside.billingDesc')} />
 
       {/* Summary Stats — 4 cards like backoffice */}
       {summaryLoading ? (
@@ -285,9 +306,10 @@ export function UserBillingPage() {
         <EmptyState
           icon={<InboxIcon />}
           title={t('billing.noInvoices')}
-          description={statusFilter
-            ? t('billing.noInvoicesForFilter', 'Ingen fakturaer med denne statusen.')
-            : t('billing.noInvoicesDesc', 'Du har ingen fakturaer ennå.')
+          description={
+            statusFilter
+              ? t('billing.noInvoicesForFilter', 'Ingen fakturaer med denne statusen.')
+              : t('billing.noInvoicesDesc', 'Du har ingen fakturaer ennå.')
           }
         />
       ) : isMobile ? (
@@ -300,12 +322,16 @@ export function UserBillingPage() {
               onClick={() => handleInvoiceClick(invoice)}
               role={invoice.bookingId ? 'button' : undefined}
               tabIndex={invoice.bookingId ? 0 : undefined}
-              onKeyDown={invoice.bookingId ? (e: React.KeyboardEvent) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleInvoiceClick(invoice);
-                }
-              } : undefined}
+              onKeyDown={
+                invoice.bookingId
+                  ? (e: React.KeyboardEvent) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleInvoiceClick(invoice);
+                      }
+                    }
+                  : undefined
+              }
             >
               <Stack direction="vertical" spacing="var(--ds-size-3)">
                 {/* Top row: reference + status */}

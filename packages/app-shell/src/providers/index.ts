@@ -13,38 +13,26 @@ export {
   type ColorScheme,
 } from './ThemeProvider';
 
-// Opt-in providers — Lazy* for tree-shaking; direct provider/hooks via subpath @digilist-saas/app-shell/altinn | ./accessibility-monitoring
+// Opt-in providers — Lazy* for tree-shaking; direct provider/hooks via subpath @digipicks/app-shell/altinn | ./accessibility-monitoring
 export {
   LazyAccessibilityMonitoringProvider,
   type LazyAccessibilityMonitoringProviderProps,
 } from './LazyAccessibilityMonitoringProvider';
-export {
-  LazyAltinnProvider,
-  type LazyAltinnProviderProps,
-} from './LazyAltinnProvider';
+export { LazyAltinnProvider, type LazyAltinnProviderProps } from './LazyAltinnProvider';
 
 export {
-    XalaProviders,
-    useRuntime,
-    useLocale,
-    useDirection,
-    type XalaProvidersProps,
-    type RuntimeContext,
-    type LocaleContextValue,
+  XalaProviders,
+  useRuntime,
+  useLocale,
+  useDirection,
+  type XalaProvidersProps,
+  type RuntimeContext,
+  type LocaleContextValue,
 } from './XalaProviders';
 
 // Account Context
-export {
-    AccountContextProvider,
-    useAccountContext,
-    useRequiredAccountContext,
-} from './AccountContextProvider';
-export type {
-    AccountType,
-    DashboardContext,
-    AccountContextValue,
-    ActiveAccount,
-} from './AccountContextProvider';
+export { AccountContextProvider, useAccountContext, useRequiredAccountContext } from './AccountContextProvider';
+export type { AccountType, DashboardContext, AccountContextValue, ActiveAccount } from './AccountContextProvider';
 
 // Notification Center (for DashboardHeaderSlots variant=minside)
 export {
@@ -83,19 +71,10 @@ export {
 } from './RoleProvider';
 
 // Mode (leietaker / utleier switching)
-export {
-  ModeProvider,
-  useMode,
-  useModeOptional,
-  type DashboardMode,
-  type ModeContextValue,
-} from './ModeProvider';
+export { ModeProvider, useMode, useModeOptional, type DashboardMode, type ModeContextValue } from './ModeProvider';
 
 // Realtime interface (shared contract for swappable implementations)
-export type {
-  RealtimeProviderInterface,
-  RealtimeStatus,
-} from './RealtimeProviderInterface';
+export type { RealtimeProviderInterface, RealtimeStatus } from './RealtimeProviderInterface';
 
 // Convex realtime (backoffice)
 export {
@@ -106,27 +85,20 @@ export {
 
 // Realtime (shared context + hooks; both RealtimeProvider and ConvexRealtimeProvider provide it)
 export {
-    useRealtimeContext,
-    useRealtime,
-    useRealtimeListing,
-    useRealtimeAudit,
-    useRealtimeNotification,
-    useRealtimeMessage,
-    useRealtimeAll,
-    useRealtimeStatus,
-    useRealtimeListingUpdates,
+  useRealtimeContext,
+  useRealtime,
+  useRealtimeListing,
+  useRealtimeAudit,
+  useRealtimeNotification,
+  useRealtimeMessage,
+  useRealtimeAll,
+  useRealtimeStatus,
+  useRealtimeListingUpdates,
 } from './RealtimeContext';
-export type {
-    RealtimeContextValue,
-    UseRealtimeListingUpdatesResult,
-} from './RealtimeContext';
+export type { RealtimeContextValue, UseRealtimeListingUpdatesResult } from './RealtimeContext';
 
 // Page title (header ↔ page communication)
-export {
-  PageTitleProvider,
-  useSetPageTitle,
-  usePageTitle,
-} from './PageTitleContext';
+export { PageTitleProvider, useSetPageTitle, usePageTitle } from './PageTitleContext';
 
 // Realtime (WebSocket provider)
 export { RealtimeProvider } from './RealtimeProvider';

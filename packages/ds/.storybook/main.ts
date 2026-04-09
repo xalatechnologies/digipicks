@@ -91,9 +91,9 @@ const config: StorybookConfig = {
           { find: '@/integrations', replacement: `${srcPath}/integrations` },
 
           // Package aliases
-          { find: '@digilist-saas/design-system', replacement: srcPath },
+          { find: '@digipicks/design-system', replacement: srcPath },
           { find: '@xala-technologies/ui', replacement: srcPath },
-          { find: '@digilist-saas/i18n', replacement: new URL('../../../packages/i18n/src', import.meta.url).pathname },
+          { find: '@digipicks/i18n', replacement: new URL('../../../packages/i18n/src', import.meta.url).pathname },
 
           // Generic @ alias LAST (catches @/stories, @/themes, @/utils, etc.)
           { find: /^@\//, replacement: `${srcPath}/` },

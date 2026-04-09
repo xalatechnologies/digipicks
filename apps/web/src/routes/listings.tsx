@@ -15,9 +15,9 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Paragraph, Button } from '@digilist-saas/ds';
-import { useAuth } from '@digilist-saas/app-shell';
-import { useT } from '@digilist-saas/i18n';
+import { Paragraph, Button } from '@digipicks/ds';
+import { useAuth } from '@digipicks/app-shell';
+import { useT } from '@digipicks/i18n';
 import s from './listings.module.css';
 
 // ---------------------------------------------------------------------------
@@ -124,8 +124,7 @@ const FEATURED_CREATORS = [
 const TESTIMONIALS = [
   {
     id: '1',
-    quote:
-      'I moved from DubClub and my subscriber count doubled in 3 months. The verified record built real trust.',
+    quote: 'I moved from DubClub and my subscriber count doubled in 3 months. The verified record built real trust.',
     name: 'Marcus T.',
     role: 'NBA Creator',
     initials: 'MT',
@@ -140,8 +139,7 @@ const TESTIMONIALS = [
   },
   {
     id: '3',
-    quote:
-      'As a subscriber, I love that every record is verified. No more wondering if a creator is legit.',
+    quote: 'As a subscriber, I love that every record is verified. No more wondering if a creator is legit.',
     name: 'James L.',
     role: 'Subscriber',
     initials: 'JL',
@@ -174,12 +172,24 @@ function HeroSection() {
     <section className={s.hero}>
       {/* Floating sport icons for visual energy */}
       <div className={s.heroOrbs} aria-hidden="true">
-        <span className={s.heroOrb} style={{ top: '12%', left: '8%', animationDelay: '0s' }}>🏀</span>
-        <span className={s.heroOrb} style={{ top: '20%', right: '10%', animationDelay: '1.4s' }}>🏈</span>
-        <span className={s.heroOrb} style={{ bottom: '25%', left: '14%', animationDelay: '2.8s' }}>⚾</span>
-        <span className={s.heroOrb} style={{ bottom: '18%', right: '12%', animationDelay: '0.7s' }}>🏒</span>
-        <span className={s.heroOrb} style={{ top: '45%', left: '4%', animationDelay: '2.1s' }}>⚽</span>
-        <span className={s.heroOrb} style={{ top: '50%', right: '5%', animationDelay: '3.5s' }}>🥊</span>
+        <span className={s.heroOrb} style={{ top: '12%', left: '8%', animationDelay: '0s' }}>
+          🏀
+        </span>
+        <span className={s.heroOrb} style={{ top: '20%', right: '10%', animationDelay: '1.4s' }}>
+          🏈
+        </span>
+        <span className={s.heroOrb} style={{ bottom: '25%', left: '14%', animationDelay: '2.8s' }}>
+          ⚾
+        </span>
+        <span className={s.heroOrb} style={{ bottom: '18%', right: '12%', animationDelay: '0.7s' }}>
+          🏒
+        </span>
+        <span className={s.heroOrb} style={{ top: '45%', left: '4%', animationDelay: '2.1s' }}>
+          ⚽
+        </span>
+        <span className={s.heroOrb} style={{ top: '50%', right: '5%', animationDelay: '3.5s' }}>
+          🥊
+        </span>
       </div>
 
       <div className={s.heroInner}>
@@ -189,9 +199,7 @@ function HeroSection() {
         </div>
         <h1 className={s.heroTitle}>
           {t('landing.hero.titleLine1', 'NOT BUILT FOR')}{' '}
-          <span className={s.heroTitleAccent}>
-            {t('landing.hero.titleAccent', 'EVERYONE')}
-          </span>
+          <span className={s.heroTitleAccent}>{t('landing.hero.titleAccent', 'EVERYONE')}</span>
         </h1>
         <p className={s.heroSubtitle}>
           {t(
@@ -211,7 +219,9 @@ function HeroSection() {
             </>
           ) : (
             <Button
-              onClick={() => { window.location.href = String(import.meta.env.VITE_DASHBOARD_URL || '/min-side'); }}
+              onClick={() => {
+                window.location.href = String(import.meta.env.VITE_DASHBOARD_URL || '/min-side');
+              }}
               data-size="lg"
               color="accent"
             >
@@ -249,14 +259,9 @@ function LiveEventsStrip() {
   const t = useT();
   const [activeSport, setActiveSport] = React.useState<string | null>(null);
 
-  const sports = React.useMemo(
-    () => Array.from(new Set(TODAYS_EVENTS.map((e) => e.sport))),
-    [],
-  );
+  const sports = React.useMemo(() => Array.from(new Set(TODAYS_EVENTS.map((e) => e.sport))), []);
 
-  const filtered = activeSport
-    ? TODAYS_EVENTS.filter((e) => e.sport === activeSport)
-    : TODAYS_EVENTS;
+  const filtered = activeSport ? TODAYS_EVENTS.filter((e) => e.sport === activeSport) : TODAYS_EVENTS;
 
   const liveCount = TODAYS_EVENTS.filter((e) => e.live).length;
 
@@ -322,7 +327,10 @@ function WhySwitchSection() {
         <div className={s.sectionHeader}>
           <h2 className={s.sectionTitle}>{t('landing.whySwitch.title', 'Why Creators Are Switching')}</h2>
           <p className={s.sectionSubtitle}>
-            {t('landing.whySwitch.subtitle', 'Other platforms treat picks like tweets. We treat them like a portfolio.')}
+            {t(
+              'landing.whySwitch.subtitle',
+              'Other platforms treat picks like tweets. We treat them like a portfolio.',
+            )}
           </p>
         </div>
         <div className={s.painGrid}>
@@ -374,14 +382,20 @@ function PlatformPreviewSection() {
         <div className={s.sectionHeader}>
           <h2 className={s.sectionTitle}>{t('landing.preview.title', 'See Your Business at a Glance')}</h2>
           <p className={s.sectionSubtitle}>
-            {t('landing.preview.subtitle', 'Revenue tracking, subscriber analytics, and performance metrics \u2014 all in one dashboard.')}
+            {t(
+              'landing.preview.subtitle',
+              'Revenue tracking, subscriber analytics, and performance metrics \u2014 all in one dashboard.',
+            )}
           </p>
         </div>
         <div className={s.previewContainer}>
           <div className={s.previewText}>
             <h3 className={s.previewTitle}>{t('landing.preview.dashboardTitle', 'Revenue Dashboard')}</h3>
             <p className={s.previewDesc}>
-              {t('landing.preview.dashboardDesc', 'Track MRR, subscriber churn, and revenue per pick in real-time. Know exactly how your business is performing.')}
+              {t(
+                'landing.preview.dashboardDesc',
+                'Track MRR, subscriber churn, and revenue per pick in real-time. Know exactly how your business is performing.',
+              )}
             </p>
           </div>
           <div className={s.previewMockup}>
@@ -454,7 +468,10 @@ function CommandCenterSection() {
           <div className={s.previewText}>
             <h3 className={s.previewTitle}>{t('landing.commandCenter.title', 'Your Command Center')}</h3>
             <p className={s.previewDesc}>
-              {t('landing.commandCenter.desc', 'Manage active picks, monitor results in real-time, broadcast to subscribers, and track your daily P/L \u2014 all from one control room.')}
+              {t(
+                'landing.commandCenter.desc',
+                'Manage active picks, monitor results in real-time, broadcast to subscribers, and track your daily P/L \u2014 all from one control room.',
+              )}
             </p>
           </div>
         </div>
@@ -473,7 +490,10 @@ function CreatorDiscoverySection() {
         <div className={s.sectionHeader}>
           <h2 className={s.sectionTitle}>{t('landing.creators.title', 'Discover Top Creators')}</h2>
           <p className={s.sectionSubtitle}>
-            {t('landing.creators.subtitle', 'Browse verified creators ranked by real performance. Every stat is tracked and audited.')}
+            {t(
+              'landing.creators.subtitle',
+              'Browse verified creators ranked by real performance. Every stat is tracked and audited.',
+            )}
           </p>
         </div>
         <div className={s.creatorsGrid}>
@@ -484,7 +504,9 @@ function CreatorDiscoverySection() {
               role="button"
               tabIndex={0}
               onClick={() => navigate(`/creator/${creator.id}`)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate(`/creator/${creator.id}`); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') navigate(`/creator/${creator.id}`);
+              }}
             >
               <div className={s.creatorCardHeader}>
                 <div className={s.creatorAvatar}>{getInitials(creator.name)}</div>
@@ -556,11 +578,12 @@ function FinalCtaSection() {
   return (
     <section className={s.finalCta}>
       <div className={s.finalCtaInner}>
-        <h2 className={s.finalCtaTitle}>
-          {t('landing.finalCta.title', "IF YOU'RE READY TO BUILD PROPERLY")}
-        </h2>
+        <h2 className={s.finalCtaTitle}>{t('landing.finalCta.title', "IF YOU'RE READY TO BUILD PROPERLY")}</h2>
         <p className={s.finalCtaSubtitle}>
-          {t('landing.finalCta.subtitle', 'EdgePicks is invite-only. Every application is manually reviewed. We only onboard creators who are serious about their craft.')}
+          {t(
+            'landing.finalCta.subtitle',
+            'EdgePicks is invite-only. Every application is manually reviewed. We only onboard creators who are serious about their craft.',
+          )}
         </p>
         <div className={s.finalCtaActions}>
           {!isAuthenticated ? (
@@ -574,7 +597,9 @@ function FinalCtaSection() {
             </>
           ) : (
             <Button
-              onClick={() => { window.location.href = String(import.meta.env.VITE_DASHBOARD_URL || '/min-side'); }}
+              onClick={() => {
+                window.location.href = String(import.meta.env.VITE_DASHBOARD_URL || '/min-side');
+              }}
               data-size="lg"
               color="accent"
             >
@@ -582,9 +607,7 @@ function FinalCtaSection() {
             </Button>
           )}
         </div>
-        <p className={s.finalCtaNote}>
-          {t('landing.finalCta.note', 'All applications are reviewed within 48 hours.')}
-        </p>
+        <p className={s.finalCtaNote}>{t('landing.finalCta.note', 'All applications are reviewed within 48 hours.')}</p>
       </div>
     </section>
   );

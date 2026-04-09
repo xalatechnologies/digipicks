@@ -24,8 +24,8 @@ import {
   ArrowRightIcon,
   useIsMobile,
   type ActivityStatus,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
@@ -59,11 +59,7 @@ export function OverviewPage() {
       <DashboardPageHeader
         subtitle={t('saasAdmin.overview.subtitle')}
         actions={
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => navigate('/platform/tenants')}
-          >
+          <Button type="button" variant="primary" onClick={() => navigate('/platform/tenants')}>
             {t('saasAdmin.overview.manageTenants')}
             <ArrowRightIcon />
           </Button>
@@ -118,9 +114,14 @@ export function OverviewPage() {
               </Button>
             </Stack>
             <Stack direction="vertical" spacing="var(--ds-size-3)">
-              {recentActivity.map((activity: { title: string; description: string; time: string; status: ActivityStatus }, index: number) => (
-                <ActivityItem key={index} {...activity} />
-              ))}
+              {recentActivity.map(
+                (
+                  activity: { title: string; description: string; time: string; status: ActivityStatus },
+                  index: number,
+                ) => (
+                  <ActivityItem key={index} {...activity} />
+                ),
+              )}
             </Stack>
           </Stack>
         </Card>
@@ -133,35 +134,19 @@ export function OverviewPage() {
                 {t('saasAdmin.overview.quickActions')}
               </Heading>
               <Stack direction="vertical" spacing="var(--ds-size-2)">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate('/platform/tenants')}
-                >
+                <Button type="button" variant="secondary" onClick={() => navigate('/platform/tenants')}>
                   <UsersIcon />
                   {t('saasAdmin.overview.actionManageTenants')}
                 </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate('/platform/modules')}
-                >
+                <Button type="button" variant="secondary" onClick={() => navigate('/platform/modules')}>
                   <CheckCircleIcon />
                   {t('saasAdmin.overview.actionConfigModules')}
                 </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate('/platform/audit')}
-                >
+                <Button type="button" variant="secondary" onClick={() => navigate('/platform/audit')}>
                   <ClockIcon />
                   {t('saasAdmin.overview.actionViewAudit')}
                 </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate('/platform/billing')}
-                >
+                <Button type="button" variant="secondary" onClick={() => navigate('/platform/billing')}>
                   <CalendarIcon />
                   {t('saasAdmin.overview.actionBilling')}
                 </Button>
@@ -177,15 +162,11 @@ export function OverviewPage() {
               </Heading>
               <Stack direction="horizontal" spacing="var(--ds-size-3)" align="center">
                 <StatusDot variant="success" />
-                <Paragraph data-size="sm">
-                  {t('saasAdmin.overview.allSystemsOperational')}
-                </Paragraph>
+                <Paragraph data-size="sm">{t('saasAdmin.overview.allSystemsOperational')}</Paragraph>
               </Stack>
               <Stack direction="horizontal" spacing="var(--ds-size-3)" align="center">
                 <StatusDot variant="success" />
-                <Paragraph data-size="sm">
-                  {t('saasAdmin.overview.uptime', { value: stats.systemUptime })}
-                </Paragraph>
+                <Paragraph data-size="sm">{t('saasAdmin.overview.uptime', { value: stats.systemUptime })}</Paragraph>
               </Stack>
             </Stack>
           </Card>

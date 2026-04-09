@@ -8,8 +8,8 @@
 
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { Spinner, useToast } from '@digilist-saas/ds';
-import type { PlatformRole } from '@digilist-saas/app-shell';
+import { Spinner, useToast } from '@digipicks/ds';
+import type { PlatformRole } from '@digipicks/app-shell';
 
 import styles from './ProtectedRoute.module.css';
 
@@ -46,10 +46,7 @@ export function ProtectedRoute({
   useEffect(() => {
     if (!isLoading && isAuthenticated && !hasRequiredRole && !hasShownToast.current) {
       hasShownToast.current = true;
-      error(
-        'Ingen tilgang',
-        'Du har ikke tilgang til denne siden. Kontakt administrator hvis du mener dette er feil.'
-      );
+      error('Ingen tilgang', 'Du har ikke tilgang til denne siden. Kontakt administrator hvis du mener dette er feil.');
     }
   }, [isLoading, isAuthenticated, hasRequiredRole, error]);
 

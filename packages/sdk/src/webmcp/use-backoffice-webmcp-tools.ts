@@ -10,7 +10,7 @@
  *
  * @example
  * ```tsx
- * import { useBackofficeWebMCPTools } from '@digilist-saas/sdk';
+ * import { useBackofficeWebMCPTools } from '@digipicks/sdk';
  *
  * function BackofficeLayoutBridge() {
  *   useBackofficeWebMCPTools();

@@ -30,11 +30,11 @@ import {
   useIsMobile,
   DashboardPageHeader,
   PageContentLayout,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useAuth, useTenantContext } from '@digilist-saas/app-shell';
-import { useCreateSupportTicket } from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
+} from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useAuth, useTenantContext } from '@digipicks/app-shell';
+import { useCreateSupportTicket } from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
 import s from './Help.module.css';
 
 // FAQ section keys — labels resolved inside the component via t()
@@ -85,22 +85,25 @@ export function HelpPage() {
   const { tenantId } = useTenantContext();
   const userId = (user?.id ?? '') as Id<'users'>;
 
-  const faqSections = FAQ_SECTION_KEYS.map(section => ({
+  const faqSections = FAQ_SECTION_KEYS.map((section) => ({
     title: t(section.titleKey),
-    items: section.items.map(item => ({
+    items: section.items.map((item) => ({
       question: t(item.questionKey),
       answer: t(item.answerKey),
     })),
   }));
 
   const filteredSections = searchQuery
-    ? faqSections.map(section => ({
-        ...section,
-        items: section.items.filter(item =>
-          item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.answer.toLowerCase().includes(searchQuery.toLowerCase())
-        ),
-      })).filter(section => section.items.length > 0)
+    ? faqSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter(
+            (item) =>
+              item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              item.answer.toLowerCase().includes(searchQuery.toLowerCase()),
+          ),
+        }))
+        .filter((section) => section.items.length > 0)
     : faqSections;
 
   const handleSubmit = async () => {
@@ -131,10 +134,7 @@ export function HelpPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        title={t('help.title')}
-        subtitle={t('help.description')}
-      />
+      <DashboardPageHeader title={t('help.title')} subtitle={t('help.description')} />
 
       {/* Search */}
       <Card className={s.searchCard}>
@@ -153,7 +153,9 @@ export function HelpPage() {
           <Card key={link.labelKey} className={s.quickLinkCard}>
             <Stack direction="vertical" align="center" spacing="var(--ds-size-2)">
               <IconBox variant={link.variant} size="lg" icon={link.icon} />
-              <Paragraph data-size="sm" className={s.quickLinkLabel}>{t(link.labelKey)}</Paragraph>
+              <Paragraph data-size="sm" className={s.quickLinkLabel}>
+                {t(link.labelKey)}
+              </Paragraph>
             </Stack>
           </Card>
         ))}
@@ -208,7 +210,7 @@ export function HelpPage() {
           <FormField label={t('help.subject')}>
             <Textfield
               value={contactForm.subject}
-              onChange={(e) => setContactForm(prev => ({ ...prev, subject: e.target.value }))}
+              onChange={(e) => setContactForm((prev) => ({ ...prev, subject: e.target.value }))}
               placeholder={t('help.subjectPlaceholder')}
               aria-label={t('help.subject')}
             />
@@ -216,7 +218,7 @@ export function HelpPage() {
           <FormField label={t('help.message')}>
             <Textarea
               value={contactForm.message}
-              onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
+              onChange={(e) => setContactForm((prev) => ({ ...prev, message: e.target.value }))}
               placeholder={t('help.messagePlaceholder')}
               rows={4}
               aria-label={t('help.message')}

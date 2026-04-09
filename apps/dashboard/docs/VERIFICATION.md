@@ -4,14 +4,14 @@
 
 ## Verification Checklist
 
-| Check | Status |
-|-------|--------|
-| `pnpm --filter @digilist-saas/backoffice typecheck` | ✅ Pass |
-| `pnpm --filter @digilist-saas/backoffice lint` | ✅ Pass |
-| `pnpm --filter @digilist-saas/backoffice build` | ✅ Pass |
+| Check                                           | Status  |
+| ----------------------------------------------- | ------- |
+| `pnpm --filter @digipicks/backoffice typecheck` | ✅ Pass |
+| `pnpm --filter @digipicks/backoffice lint`      | ✅ Pass |
+| `pnpm --filter @digipicks/backoffice build`     | ✅ Pass |
 
 ## Phase A Cleanup
 
 - SentryTestComponent removed
-- components/shared re-exports FormSection, FormActions, InfoBox from @digilist-saas/ds
+- components/shared re-exports FormSection, FormActions, InfoBox from @digipicks/ds
 - StatusBadge removed (unused; digilist status badges used instead)

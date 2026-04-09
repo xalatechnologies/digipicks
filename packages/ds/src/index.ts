@@ -1,22 +1,22 @@
 /**
- * @digilist-saas/ds
- * 
+ * @digipicks/ds
+ *
  * Xala Design System - Production-ready components built on Digdir Designsystemet
- * 
+ *
  * ## Component Hierarchy
- * 
+ *
  * ### Primitives (Low-level)
  * - Container, Grid, Stack - Layout primitives
  * - Button, Input, Card, etc. - From @digdir/designsystemet-react
- * 
+ *
  * ### Composed (Mid-level)
  * - ContentLayout, ContentSection, PageHeader
  * - Built from primitives
- * 
+ *
  * ### Blocks (Business logic)
  * - Dashboard, Auth, Messaging, Filters, Navigation
  * - Built from composed components
- * 
+ *
  * ### Shells (Application level)
  * - AppDashboardLayout, PlatformLayout - Complete application layouts
  * - Built from blocks and composed components
@@ -35,12 +35,7 @@ export * from './provider';
 // =============================================================================
 // Theme registry (Designsystemet token-first theming)
 // =============================================================================
-export {
-  DEFAULT_THEME,
-  THEMES,
-  getThemeUrls,
-  type ThemeId,
-} from './themes';
+export { DEFAULT_THEME, THEMES, getThemeUrls, type ThemeId } from './themes';
 
 // =============================================================================
 // Component Layers - Import from specific layers
@@ -189,13 +184,8 @@ export { getNavIcon } from './utils/navIconMap';
 export type { Breakpoint } from './hooks/useBreakpoint';
 
 // Accessibility - WCAG-compliant primitives
-export {
-  SkipLinks,
-} from './accessibility';
-export type {
-  SkipLinksProps,
-  SkipLink,
-} from './accessibility';
+export { SkipLinks } from './accessibility';
+export type { SkipLinksProps, SkipLink } from './accessibility';
 
 // Primitives - Low-level building blocks
 export {
@@ -443,6 +433,7 @@ export {
   CrudListItem,
   CrudFormPage,
   CrudWizard,
+  PushNotificationPrompt,
 } from './blocks';
 
 export type {
@@ -570,6 +561,7 @@ export type {
   CrudFormPageProps,
   CrudWizardProps,
   CrudWizardStep,
+  PushNotificationPromptProps,
 } from './blocks';
 
 // Listing Detail Types
@@ -586,7 +578,7 @@ export type {
   GuidelineSection,
   FAQItem,
   ListingDisplayBaseProps,
-  ActivityType
+  ActivityType,
 } from './types/listing-detail';
 
 // =============================================================================
@@ -616,17 +608,13 @@ export {
   shouldOfferRetry,
   createProblemDetails,
 } from './utils/api-error';
-export type {
-  ProblemDetails,
-  ParsedApiError,
-  ApiErrorCategory,
-} from './utils/api-error';
+export type { ProblemDetails, ParsedApiError, ApiErrorCategory } from './utils/api-error';
 
 // =============================================================================
 // CSS Import Policy
 // =============================================================================
-/** 
+/**
  * We intentionally do NOT export Digdir CSS from this module. Applications
- * must import '@digilist-saas/ds/styles' exactly once in their entry point to ensure
+ * must import '@digipicks/ds/styles' exactly once in their entry point to ensure
  * proper theme switching and prevent CSS duplication.
  */

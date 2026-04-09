@@ -1,6 +1,16 @@
-import { Card, Heading, Paragraph, Switch, Spinner, Stack, DashboardPageHeader, PageContentLayout, useToast } from '@digilist-saas/ds';
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Switch,
+  Spinner,
+  Stack,
+  DashboardPageHeader,
+  PageContentLayout,
+  useToast,
+} from '@digipicks/ds';
 import s from './NotificationSettings.module.css';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 import {
   useNotificationPreferences,
   useUpdateNotificationPreferences,
@@ -8,8 +18,8 @@ import {
   usePushSubscriptionFlow,
   usePushSubscriptions,
   type NotificationPreferences,
-} from '@digilist-saas/sdk';
-import { useAuth, useTenantContext } from '@digilist-saas/app-shell';
+} from '@digipicks/sdk';
+import { useAuth, useTenantContext } from '@digipicks/app-shell';
 import { useState, useEffect } from 'react';
 
 /**
@@ -121,242 +131,238 @@ export function NotificationSettingsPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        title={t('notificationSettings.title')}
-        subtitle={t('notificationSettings.subtitle')}
-      />
+      <DashboardPageHeader title={t('notificationSettings.title')} subtitle={t('notificationSettings.subtitle')} />
       <Stack direction="vertical" spacing="var(--ds-size-6)">
+        {/* Push Notifications Section */}
+        <Card className={s.sectionCard}>
+          <Heading level={2} data-size="md" className={s.sectionHeading}>
+            {t('notificationSettings.pushTitle')}
+          </Heading>
 
-      {/* Push Notifications Section */}
-      <Card className={s.sectionCard}>
-        <Heading level={2} data-size="md" className={s.sectionHeading}>
-          {t('notificationSettings.pushTitle')}
-        </Heading>
-
-        {!isSupported ? (
-          <div className={s.warningBanner}>
-            <Paragraph data-size="sm" className={s.warningText}>
-              {t('notificationSettings.pushNotSupported')}
-            </Paragraph>
-          </div>
-        ) : (
-          <Stack direction="vertical" spacing="var(--ds-size-4)">
-            {/* Main push toggle */}
-            <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
-              <div>
-                <Paragraph data-size="sm" className={s.preferenceLabel}>
-                  {t('notificationSettings.pushEnable')}
-                </Paragraph>
-                <Paragraph data-size="xs" className={s.preferenceDesc}>
-                  {t('notificationSettings.pushDescription')}
-                </Paragraph>
-                {isGranted && hasActiveSubscription && (
-                  <Paragraph data-size="xs" className={s.statusSuccess}>
-                    {t('notificationSettings.pushEnabled')}
-                  </Paragraph>
-                )}
-                {permission === 'denied' && (
-                  <Paragraph data-size="xs" className={s.statusDanger}>
-                    {t('notificationSettings.pushBlocked')}
-                  </Paragraph>
-                )}
-              </div>
-              <Switch
-                checked={hasActiveSubscription && preferences.pushEnabled}
-                onChange={(e) => handlePushToggle(e.target.checked)}
-                disabled={isSubscribing || permission === 'denied'}
-                aria-label={t('notificationSettings.pushEnable')}
-              />
-            </Stack>
-          </Stack>
-        )}
-      </Card>
-
-      {/* Notification Channels Section */}
-      <Card className={s.sectionCard}>
-        <Heading level={2} data-size="md" className={s.sectionHeading}>
-          {t('notificationSettings.channelsTitle')}
-        </Heading>
-
-        <Stack direction="vertical" spacing="var(--ds-size-4)">
-          {/* Email notifications */}
-          <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.emailTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.emailDescription')}
+          {!isSupported ? (
+            <div className={s.warningBanner}>
+              <Paragraph data-size="sm" className={s.warningText}>
+                {t('notificationSettings.pushNotSupported')}
               </Paragraph>
             </div>
-            <Switch
-              checked={preferences.emailEnabled}
-              onChange={(e) => handlePreferenceChange('emailEnabled', e.target.checked)}
-              aria-label={t('notificationSettings.emailTitle')}
-            />
-          </Stack>
-
-          {/* In-app notifications */}
-          <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.inAppTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.inAppDescription')}
-              </Paragraph>
-            </div>
-            <Switch
-              checked={preferences.inAppEnabled}
-              onChange={(e) => handlePreferenceChange('inAppEnabled', e.target.checked)}
-              aria-label={t('notificationSettings.inAppTitle')}
-            />
-          </Stack>
-
-          {/* SMS notifications */}
-          <Stack direction="horizontal" justify="between" align="center">
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.smsTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.smsDescription')}
-              </Paragraph>
-            </div>
-            <Switch
-              checked={preferences.smsEnabled}
-              onChange={(e) => handlePreferenceChange('smsEnabled', e.target.checked)}
-              disabled={true}
-              aria-label={t('notificationSettings.smsTitle')}
-            />
-          </Stack>
-        </Stack>
-      </Card>
-
-      {/* Booking Notification Types Section */}
-      <Card className={s.sectionCard}>
-        <Heading level={2} data-size="md" className={s.sectionHeading}>
-          {t('notificationSettings.bookingTitle')}
-        </Heading>
-
-        <Stack direction="vertical" spacing="var(--ds-size-4)">
-          {/* Booking confirmations */}
-          <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.confirmationsTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.confirmationsDescription')}
-              </Paragraph>
-            </div>
-            <Switch
-              checked={preferences.bookingConfirmationEnabled}
-              onChange={(e) => handlePreferenceChange('bookingConfirmationEnabled', e.target.checked)}
-              aria-label={t('notificationSettings.confirmationsTitle')}
-            />
-          </Stack>
-
-          {/* Booking reminders */}
-          <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.remindersTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.remindersDescription')}
-              </Paragraph>
-            </div>
-            <Switch
-              checked={preferences.bookingReminderEnabled}
-              onChange={(e) => handlePreferenceChange('bookingReminderEnabled', e.target.checked)}
-              aria-label={t('notificationSettings.remindersTitle')}
-            />
-          </Stack>
-
-          {/* Reminder timing - only show if reminders are enabled */}
-          {preferences.bookingReminderEnabled && (
-            <Stack direction="vertical" spacing="var(--ds-size-3)" className={s.nestedGroup}>
-              <Stack direction="horizontal" justify="between" align="center">
+          ) : (
+            <Stack direction="vertical" spacing="var(--ds-size-4)">
+              {/* Main push toggle */}
+              <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
                 <div>
                   <Paragraph data-size="sm" className={s.preferenceLabel}>
-                    {t('notificationSettings.reminder24h')}
+                    {t('notificationSettings.pushEnable')}
                   </Paragraph>
                   <Paragraph data-size="xs" className={s.preferenceDesc}>
-                    {t('notificationSettings.reminder24hDescription')}
+                    {t('notificationSettings.pushDescription')}
                   </Paragraph>
+                  {isGranted && hasActiveSubscription && (
+                    <Paragraph data-size="xs" className={s.statusSuccess}>
+                      {t('notificationSettings.pushEnabled')}
+                    </Paragraph>
+                  )}
+                  {permission === 'denied' && (
+                    <Paragraph data-size="xs" className={s.statusDanger}>
+                      {t('notificationSettings.pushBlocked')}
+                    </Paragraph>
+                  )}
                 </div>
                 <Switch
-                  checked={preferences.reminderTiming.enabled24h}
-                  onChange={(e) => handleReminderTimingChange('enabled24h', e.target.checked)}
-                  aria-label={t('notificationSettings.reminder24h')}
-                />
-              </Stack>
-
-              <Stack direction="horizontal" justify="between" align="center">
-                <div>
-                  <Paragraph data-size="sm" className={s.preferenceLabel}>
-                    {t('notificationSettings.reminder1h')}
-                  </Paragraph>
-                  <Paragraph data-size="xs" className={s.preferenceDesc}>
-                    {t('notificationSettings.reminder1hDescription')}
-                  </Paragraph>
-                </div>
-                <Switch
-                  checked={preferences.reminderTiming.enabled1h}
-                  onChange={(e) => handleReminderTimingChange('enabled1h', e.target.checked)}
-                  aria-label={t('notificationSettings.reminder1h')}
+                  checked={hasActiveSubscription && preferences.pushEnabled}
+                  onChange={(e) => handlePushToggle(e.target.checked)}
+                  disabled={isSubscribing || permission === 'denied'}
+                  aria-label={t('notificationSettings.pushEnable')}
                 />
               </Stack>
             </Stack>
           )}
+        </Card>
 
-          {/* Cancellations */}
-          <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.cancellationsTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.cancellationsDescription')}
-              </Paragraph>
-            </div>
-            <Switch
-              checked={preferences.bookingCancellationEnabled}
-              onChange={(e) => handlePreferenceChange('bookingCancellationEnabled', e.target.checked)}
-              aria-label={t('notificationSettings.cancellationsTitle')}
-            />
+        {/* Notification Channels Section */}
+        <Card className={s.sectionCard}>
+          <Heading level={2} data-size="md" className={s.sectionHeading}>
+            {t('notificationSettings.channelsTitle')}
+          </Heading>
+
+          <Stack direction="vertical" spacing="var(--ds-size-4)">
+            {/* Email notifications */}
+            <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.emailTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.emailDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.emailEnabled}
+                onChange={(e) => handlePreferenceChange('emailEnabled', e.target.checked)}
+                aria-label={t('notificationSettings.emailTitle')}
+              />
+            </Stack>
+
+            {/* In-app notifications */}
+            <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.inAppTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.inAppDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.inAppEnabled}
+                onChange={(e) => handlePreferenceChange('inAppEnabled', e.target.checked)}
+                aria-label={t('notificationSettings.inAppTitle')}
+              />
+            </Stack>
+
+            {/* SMS notifications */}
+            <Stack direction="horizontal" justify="between" align="center">
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.smsTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.smsDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.smsEnabled}
+                onChange={(e) => handlePreferenceChange('smsEnabled', e.target.checked)}
+                disabled={true}
+                aria-label={t('notificationSettings.smsTitle')}
+              />
+            </Stack>
           </Stack>
+        </Card>
 
-          {/* Modifications */}
-          <Stack direction="horizontal" justify="between" align="center">
-            <div>
-              <Paragraph data-size="sm" className={s.preferenceLabel}>
-                {t('notificationSettings.modificationsTitle')}
-              </Paragraph>
-              <Paragraph data-size="xs" className={s.preferenceDesc}>
-                {t('notificationSettings.modificationsDescription')}
-              </Paragraph>
-            </div>
-            <Switch
-              checked={preferences.bookingModificationEnabled}
-              onChange={(e) => handlePreferenceChange('bookingModificationEnabled', e.target.checked)}
-              aria-label={t('notificationSettings.modificationsTitle')}
-            />
+        {/* Booking Notification Types Section */}
+        <Card className={s.sectionCard}>
+          <Heading level={2} data-size="md" className={s.sectionHeading}>
+            {t('notificationSettings.bookingTitle')}
+          </Heading>
+
+          <Stack direction="vertical" spacing="var(--ds-size-4)">
+            {/* Booking confirmations */}
+            <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.confirmationsTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.confirmationsDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.bookingConfirmationEnabled}
+                onChange={(e) => handlePreferenceChange('bookingConfirmationEnabled', e.target.checked)}
+                aria-label={t('notificationSettings.confirmationsTitle')}
+              />
+            </Stack>
+
+            {/* Booking reminders */}
+            <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.remindersTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.remindersDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.bookingReminderEnabled}
+                onChange={(e) => handlePreferenceChange('bookingReminderEnabled', e.target.checked)}
+                aria-label={t('notificationSettings.remindersTitle')}
+              />
+            </Stack>
+
+            {/* Reminder timing - only show if reminders are enabled */}
+            {preferences.bookingReminderEnabled && (
+              <Stack direction="vertical" spacing="var(--ds-size-3)" className={s.nestedGroup}>
+                <Stack direction="horizontal" justify="between" align="center">
+                  <div>
+                    <Paragraph data-size="sm" className={s.preferenceLabel}>
+                      {t('notificationSettings.reminder24h')}
+                    </Paragraph>
+                    <Paragraph data-size="xs" className={s.preferenceDesc}>
+                      {t('notificationSettings.reminder24hDescription')}
+                    </Paragraph>
+                  </div>
+                  <Switch
+                    checked={preferences.reminderTiming.enabled24h}
+                    onChange={(e) => handleReminderTimingChange('enabled24h', e.target.checked)}
+                    aria-label={t('notificationSettings.reminder24h')}
+                  />
+                </Stack>
+
+                <Stack direction="horizontal" justify="between" align="center">
+                  <div>
+                    <Paragraph data-size="sm" className={s.preferenceLabel}>
+                      {t('notificationSettings.reminder1h')}
+                    </Paragraph>
+                    <Paragraph data-size="xs" className={s.preferenceDesc}>
+                      {t('notificationSettings.reminder1hDescription')}
+                    </Paragraph>
+                  </div>
+                  <Switch
+                    checked={preferences.reminderTiming.enabled1h}
+                    onChange={(e) => handleReminderTimingChange('enabled1h', e.target.checked)}
+                    aria-label={t('notificationSettings.reminder1h')}
+                  />
+                </Stack>
+              </Stack>
+            )}
+
+            {/* Cancellations */}
+            <Stack direction="horizontal" justify="between" align="center" className={s.preferenceRow}>
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.cancellationsTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.cancellationsDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.bookingCancellationEnabled}
+                onChange={(e) => handlePreferenceChange('bookingCancellationEnabled', e.target.checked)}
+                aria-label={t('notificationSettings.cancellationsTitle')}
+              />
+            </Stack>
+
+            {/* Modifications */}
+            <Stack direction="horizontal" justify="between" align="center">
+              <div>
+                <Paragraph data-size="sm" className={s.preferenceLabel}>
+                  {t('notificationSettings.modificationsTitle')}
+                </Paragraph>
+                <Paragraph data-size="xs" className={s.preferenceDesc}>
+                  {t('notificationSettings.modificationsDescription')}
+                </Paragraph>
+              </div>
+              <Switch
+                checked={preferences.bookingModificationEnabled}
+                onChange={(e) => handlePreferenceChange('bookingModificationEnabled', e.target.checked)}
+                aria-label={t('notificationSettings.modificationsTitle')}
+              />
+            </Stack>
           </Stack>
-        </Stack>
-      </Card>
+        </Card>
 
-      {/* Save indicator */}
-      {updatePreferencesMutation.isLoading && (
-        <Stack direction="horizontal" align="center" spacing="var(--ds-size-3)" className={s.saveIndicator}>
-          <Spinner data-size="sm" aria-hidden="true" />
-          <Paragraph data-size="sm" className={s.saveIndicatorText}>
-            {t('notificationSettings.saving')}
-          </Paragraph>
-        </Stack>
-      )}
-    </Stack>
+        {/* Save indicator */}
+        {updatePreferencesMutation.isLoading && (
+          <Stack direction="horizontal" align="center" spacing="var(--ds-size-3)" className={s.saveIndicator}>
+            <Spinner data-size="sm" aria-hidden="true" />
+            <Paragraph data-size="sm" className={s.saveIndicatorText}>
+              {t('notificationSettings.saving')}
+            </Paragraph>
+          </Stack>
+        )}
+      </Stack>
     </PageContentLayout>
   );
 }

@@ -3,7 +3,7 @@
  * UTM tagging, native share, clipboard, and social platform handlers.
  */
 
-import type { ShareMedium, ShareData, ShareResult } from '@digilist-saas/shared';
+import type { ShareMedium, ShareData, ShareResult } from '@digipicks/shared';
 
 export type { ShareMedium, ShareData, ShareResult };
 
@@ -90,10 +90,7 @@ export function shareWhatsApp(data: ShareData): ShareResult {
  */
 export function shareFacebook(data: ShareData): ShareResult {
   const url = buildShareUrl(data.url, 'facebook');
-  window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-    '_blank'
-  );
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
   return { success: true, medium: 'facebook' };
 }
 
@@ -103,10 +100,7 @@ export function shareFacebook(data: ShareData): ShareResult {
 export function shareTwitter(data: ShareData): ShareResult {
   const url = buildShareUrl(data.url, 'twitter');
   const text = encodeURIComponent(data.title);
-  window.open(
-    `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`,
-    '_blank'
-  );
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
   return { success: true, medium: 'twitter' };
 }
 
@@ -115,10 +109,7 @@ export function shareTwitter(data: ShareData): ShareResult {
  */
 export function shareLinkedIn(data: ShareData): ShareResult {
   const url = buildShareUrl(data.url, 'linkedin');
-  window.open(
-    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-    '_blank'
-  );
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
   return { success: true, medium: 'linkedin' };
 }
 
@@ -129,7 +120,7 @@ export function shareLinkedIn(data: ShareData): ShareResult {
 export async function shareWithAudit(
   data: ShareData,
   medium: ShareMedium,
-  onAudit?: (result: ShareResult) => Promise<void>
+  onAudit?: (result: ShareResult) => Promise<void>,
 ): Promise<ShareResult> {
   let result: ShareResult;
 

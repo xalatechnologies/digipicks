@@ -2,7 +2,7 @@
  * DashboardHeaderSlots
  *
  * Shared header content for Digilist dashboard apps (minside, backoffice).
- * Uses DashboardHeader from @digilist-saas/ds with GlobalSearch, theme toggle, notifications, user menu.
+ * Uses DashboardHeader from @digipicks/ds with GlobalSearch, theme toggle, notifications, user menu.
  *
  * Variants:
  * - minside: appId="minside", search placeholder for user dashboard
@@ -24,10 +24,16 @@ import {
   SettingsIcon,
   UserIcon,
   BuildingIcon,
-} from '@digilist-saas/ds';
-import { useNotificationUnreadCount, type Id } from '@digilist-saas/sdk';
-import { useI18nLocale, useT } from '@digilist-saas/i18n';
-import { GlobalSearch, useTheme, useNotificationCenterOptional, useAccountContext, useModeOptional } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useNotificationUnreadCount, type Id } from '@digipicks/sdk';
+import { useI18nLocale, useT } from '@digipicks/i18n';
+import {
+  GlobalSearch,
+  useTheme,
+  useNotificationCenterOptional,
+  useAccountContext,
+  useModeOptional,
+} from '@digipicks/app-shell';
 import { usePageTitle } from '../providers/PageTitleContext';
 import headerStyles from './DashboardHeaderSlots.module.css';
 
@@ -81,9 +87,7 @@ export function DashboardHeaderSlots({
   const t = useT();
   const navigate = useNavigate();
   const notificationCenter = useNotificationCenterOptional();
-  const { data: unreadData } = useNotificationUnreadCount(
-    user?.id ? (user.id as Id<'users'>) : undefined,
-  );
+  const { data: unreadData } = useNotificationUnreadCount(user?.id ? (user.id as Id<'users'>) : undefined);
   const unreadCount = unreadData?.count ?? 0;
 
   const accountContext = useAccountContext();
@@ -104,9 +108,10 @@ export function DashboardHeaderSlots({
     }
     return list;
   })();
-  const currentAccountId = accountContext?.accountType === 'organization'
-    ? accountContext.selectedOrganization?.id ?? 'personal'
-    : 'personal';
+  const currentAccountId =
+    accountContext?.accountType === 'organization'
+      ? (accountContext.selectedOrganization?.id ?? 'personal')
+      : 'personal';
   const handleAccountSwitch = (accountId: string) => {
     if (!accountContext) return;
     if (accountId === 'personal') {
@@ -121,9 +126,7 @@ export function DashboardHeaderSlots({
 
   const onNotificationClick =
     onNotificationClickProp ??
-    (notificationCenter
-      ? notificationCenter.openNotificationCenter
-      : () => navigate('/notifications'));
+    (notificationCenter ? notificationCenter.openNotificationCenter : () => navigate('/notifications'));
 
   const showNotifications = variant !== 'docs';
   const showSettings = variant !== 'docs';
@@ -132,29 +135,28 @@ export function DashboardHeaderSlots({
   return (
     <DashboardHeader
       id="main-navigation"
-      leftSlot={pageTitle ? (
-        <Heading data-size="xs" level={1} className={headerStyles.pageTitle}>
-          {pageTitle}
-          {pageTitleCount != null && (
-            <span className={headerStyles.pageTitleCount}> ({pageTitleCount})</span>
-          )}
-        </Heading>
-      ) : undefined}
-      centerSlot={variant !== 'backoffice' ? (
-        <GlobalSearch
-          context={context}
-          appId={appId}
-          placeholder={placeholder}
-          showShortcut
-          enableGlobalShortcut
-        />
-      ) : undefined}
+      leftSlot={
+        pageTitle ? (
+          <Heading data-size="xs" level={1} className={headerStyles.pageTitle}>
+            {pageTitle}
+            {pageTitleCount != null && <span className={headerStyles.pageTitleCount}> ({pageTitleCount})</span>}
+          </Heading>
+        ) : undefined
+      }
+      centerSlot={
+        variant !== 'backoffice' ? (
+          <GlobalSearch context={context} appId={appId} placeholder={placeholder} showShortcut enableGlobalShortcut />
+        ) : undefined
+      }
       rightSlot={
         <HeaderActions spacing={variant === 'minside' ? 'var(--ds-size-2)' : 'var(--ds-size-3)'}>
           <HeaderLanguageSwitch
             language={locale}
             onSwitch={(lang) => setLocale(lang as 'nb' | 'en')}
-            languages={[{ code: 'nb', label: 'NO' }, { code: 'en', label: 'EN' }]}
+            languages={[
+              { code: 'nb', label: 'NO' },
+              { code: 'en', label: 'EN' },
+            ]}
           />
           <HeaderThemeToggle isDark={isDark} onToggle={toggleTheme} />
           {showNotifications && (
@@ -186,25 +188,43 @@ export function DashboardHeaderSlots({
               onLogout={onLogout}
               menuItems={[
                 // Mode toggle (owners only)
-                ...(modeCtx?.canToggle ? [{
-                  label: modeCtx.mode === 'leietaker'
-                    ? t('mode.switchToUtleier', 'Bytt til utleier-modus')
-                    : t('mode.switchToLeietaker', 'Bytt til leietaker-modus'),
-                  icon: <BuildingIcon size={16} />,
-                  onClick: () => {
-                    const newMode = modeCtx.mode === 'leietaker' ? 'utleier' : 'leietaker';
-                    modeCtx.setMode(newMode);
-                    navigate('/');
-                  },
-                }] : []),
+                ...(modeCtx?.canToggle
+                  ? [
+                      {
+                        label:
+                          modeCtx.mode === 'leietaker'
+                            ? t('mode.switchToUtleier', 'Bytt til utleier-modus')
+                            : t('mode.switchToLeietaker', 'Bytt til leietaker-modus'),
+                        icon: <BuildingIcon size={16} />,
+                        onClick: () => {
+                          const newMode = modeCtx.mode === 'leietaker' ? 'utleier' : 'leietaker';
+                          modeCtx.setMode(newMode);
+                          navigate('/');
+                        },
+                      },
+                    ]
+                  : []),
                 // Standard menu items
                 ...(variant === 'minside'
-                  ? [{ label: t('minside.settings', 'Innstillinger'), icon: <SettingsIcon size={16} />, onClick: () => navigate('/preferences') }]
-                  : [
-                      { label: t('nav.myDashboard', 'Min side'), icon: <UserIcon size={16} />, onClick: () => navigate('/') },
-                      { label: t('backoffice.nav.settings', 'Innstillinger'), icon: <SettingsIcon size={16} />, onClick: () => navigate('/settings') },
+                  ? [
+                      {
+                        label: t('minside.settings', 'Innstillinger'),
+                        icon: <SettingsIcon size={16} />,
+                        onClick: () => navigate('/preferences'),
+                      },
                     ]
-                ),
+                  : [
+                      {
+                        label: t('nav.myDashboard', 'Min side'),
+                        icon: <UserIcon size={16} />,
+                        onClick: () => navigate('/'),
+                      },
+                      {
+                        label: t('backoffice.nav.settings', 'Innstillinger'),
+                        icon: <SettingsIcon size={16} />,
+                        onClick: () => navigate('/settings'),
+                      },
+                    ]),
               ]}
             />
           )}

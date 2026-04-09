@@ -40,7 +40,7 @@ for (const appDir of readdirSync(APPS, { withFileTypes: true })) {
   for (const file of walkTsTsx(appPath)) {
     const content = readFileSync(file, 'utf-8');
     if (BAD_IMPORT.test(content)) {
-      VIOLATIONS.push(`${file}: useAuth from app-local; use @digilist-saas/app-shell for SSO`);
+      VIOLATIONS.push(`${file}: useAuth from app-local; use @digipicks/app-shell for SSO`);
     }
   }
 }

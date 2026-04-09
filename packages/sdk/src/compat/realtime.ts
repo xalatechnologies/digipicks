@@ -5,17 +5,17 @@
  * useRealtimeConnection returns real Convex WebSocket status (production-ready).
  * Other hooks are no-ops; live data comes from useQuery in SDK hooks.
  *
- * Types: canonical RealtimeEvent, RealtimeEventType from @digilist-saas/shared/types.
+ * Types: canonical RealtimeEvent, RealtimeEventType from @digipicks/shared/types.
  */
 
 import { useConvexConnectionState } from 'convex/react';
-import type { RealtimeEventHandler } from '@digilist-saas/shared/types';
+import type { RealtimeEventHandler } from '@digipicks/shared/types';
 
 // ---------------------------------------------------------------------------
 // Types (re-export from shared — single source of truth)
 // ---------------------------------------------------------------------------
 
-export type { RealtimeEvent, RealtimeEventHandler, RealtimeEventType } from '@digilist-saas/shared/types';
+export type { RealtimeEvent, RealtimeEventHandler, RealtimeEventType } from '@digipicks/shared/types';
 
 export interface RealtimeConnectionState {
   connected: boolean;
@@ -82,7 +82,10 @@ export const realtimeClient = {
   off: (_event: string, _callback: RealtimeEventHandler | AnyCallback): void => {},
 
   /** No-op listing subscription. Returns unsubscribe function. */
-  onListing: (_idOrCallback: string | RealtimeEventHandler | AnyCallback, _callback?: RealtimeEventHandler | AnyCallback): (() => void) => {
+  onListing: (
+    _idOrCallback: string | RealtimeEventHandler | AnyCallback,
+    _callback?: RealtimeEventHandler | AnyCallback,
+  ): (() => void) => {
     return () => {};
   },
 
@@ -104,5 +107,5 @@ export const realtimeClient = {
  * WebSocket URLs; Convex handles real-time at the query level.
  */
 export function createTenantWebSocketUrl(_baseUrlOrTenantId?: string, _tenantId?: string): string {
-  return "";
+  return '';
 }

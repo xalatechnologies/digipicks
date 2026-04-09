@@ -1,9 +1,9 @@
 import React from 'react';
-import { DesignsystemetProvider, type ColorScheme, type DsSize } from '@digilist-saas/ds';
+import { DesignsystemetProvider, type ColorScheme, type DsSize } from '@digipicks/ds';
 
 /**
  * Example showing correct usage of DesignsystemetProvider.
- * 
+ *
  * The provider should be placed at the root of your application to manage
  * theme, color scheme, and size settings for all child components.
  */
@@ -13,11 +13,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [size, setSize] = React.useState<DsSize>('md');
 
   return (
-    <DesignsystemetProvider 
-      theme={theme} 
-      colorScheme={colorScheme} 
-      size={size}
-    >
+    <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size={size}>
       {children}
     </DesignsystemetProvider>
   );
@@ -25,7 +21,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
 /**
  * Alternative approach: Setting data attributes directly on the HTML root.
- * 
+ *
  * This achieves the same effect as the provider but gives you direct
  * control over the DOM attributes. Useful for integration with
  * non-React parts of your application.
@@ -43,14 +39,14 @@ export function RootAttributes() {
 
 /**
  * Import guidelines:
- * 
+ *
  * - WRONG: Importing Designsystemet CSS directly in app components
  * - WRONG: Importing theme CSS files in components
  * - CORRECT: Import styles once in your application's entry point (main.tsx)
- * 
+ *
  * @example
  * ```typescript
  * // In main.tsx - import once
- * import '@digilist-saas/ds/styles';
+ * import '@digipicks/ds/styles';
  * ```
  */

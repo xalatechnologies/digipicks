@@ -1,6 +1,6 @@
 /**
  * Dialog Components
- * 
+ *
  * Reusable dialog components for confirmations and alerts.
  * Uses native dialog element with design system styling.
  */
@@ -66,7 +66,7 @@ interface DialogBaseProps {
 
 /**
  * Internal modal for ConfirmDialog/AlertDialog.
- * For custom content, use DigDir Dialog (exported from @digilist-saas/ds) with Dialog.Block.
+ * For custom content, use DigDir Dialog (exported from @digipicks/ds) with Dialog.Block.
  */
 function ModalDialog({ open, onClose, children }: DialogBaseProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -88,12 +88,8 @@ function ModalDialog({ open, onClose, children }: DialogBaseProps) {
 
     const handleClick = (e: MouseEvent) => {
       const rect = dialog.getBoundingClientRect();
-      const isInDialog = (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
-      );
+      const isInDialog =
+        e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
       if (!isInDialog) {
         onClose();
       }
@@ -104,11 +100,7 @@ function ModalDialog({ open, onClose, children }: DialogBaseProps) {
   }, [onClose]);
 
   return (
-    <dialog
-      ref={dialogRef}
-      onClose={onClose}
-      className={styles.dialog}
-    >
+    <dialog ref={dialogRef} onClose={onClose} className={styles.dialog}>
       <div className={styles.dialogInner} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
@@ -122,7 +114,7 @@ function ModalDialog({ open, onClose, children }: DialogBaseProps) {
 
 /**
  * Confirmation dialog for destructive or important actions.
- * 
+ *
  * @example
  * ```tsx
  * <ConfirmDialog
@@ -179,20 +171,13 @@ export function ConfirmDialog({
       {/* Body */}
       {description && (
         <div className={styles.body}>
-          <Paragraph className={styles.description}>
-            {description}
-          </Paragraph>
+          <Paragraph className={styles.description}>{description}</Paragraph>
         </div>
       )}
 
       {/* Footer */}
       <div className={styles.footer}>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onClose}
-          disabled={isProcessing}
-        >
+        <Button type="button" variant="secondary" onClick={onClose} disabled={isProcessing}>
           {cancelText}
         </Button>
         <Button
@@ -215,7 +200,7 @@ export function ConfirmDialog({
 
 /**
  * Alert dialog for displaying important information.
- * 
+ *
  * @example
  * ```tsx
  * <AlertDialog
@@ -250,9 +235,7 @@ export function AlertDialog({
       {/* Body */}
       {description && (
         <div className={styles.body}>
-          <Paragraph className={styles.description}>
-            {description}
-          </Paragraph>
+          <Paragraph className={styles.description}>{description}</Paragraph>
         </div>
       )}
 
@@ -271,7 +254,9 @@ export function AlertDialog({
 // =============================================================================
 
 interface DialogContextValue {
-  confirm: (options: Omit<ConfirmDialogProps, 'open' | 'onClose' | 'onConfirm'> & { onConfirm?: () => void | Promise<void> }) => Promise<boolean>;
+  confirm: (
+    options: Omit<ConfirmDialogProps, 'open' | 'onClose' | 'onConfirm'> & { onConfirm?: () => void | Promise<void> },
+  ) => Promise<boolean>;
   alert: (options: Omit<AlertDialogProps, 'open' | 'onClose'>) => Promise<void>;
 }
 
@@ -289,27 +274,32 @@ interface DialogState {
 export function DialogProvider({ children }: { children: ReactNode }) {
   const [dialog, setDialog] = useState<DialogState | null>(null);
 
-  const confirm = useCallback((options: Omit<ConfirmDialogProps, 'open' | 'onClose' | 'onConfirm'> & { onConfirm?: () => void | Promise<void> }): Promise<boolean> => {
-    return new Promise((resolve) => {
-      setDialog({
-        type: 'confirm',
-        props: {
-          ...options,
-          open: true,
-          onClose: () => {
-            setDialog(null);
-            resolve(false);
-          },
-          onConfirm: async () => {
-            await options.onConfirm?.();
-            setDialog(null);
-            resolve(true);
-          },
-        } as ConfirmDialogProps,
-        resolve,
+  const confirm = useCallback(
+    (
+      options: Omit<ConfirmDialogProps, 'open' | 'onClose' | 'onConfirm'> & { onConfirm?: () => void | Promise<void> },
+    ): Promise<boolean> => {
+      return new Promise((resolve) => {
+        setDialog({
+          type: 'confirm',
+          props: {
+            ...options,
+            open: true,
+            onClose: () => {
+              setDialog(null);
+              resolve(false);
+            },
+            onConfirm: async () => {
+              await options.onConfirm?.();
+              setDialog(null);
+              resolve(true);
+            },
+          } as ConfirmDialogProps,
+          resolve,
+        });
       });
-    });
-  }, []);
+    },
+    [],
+  );
 
   const alert = useCallback((options: Omit<AlertDialogProps, 'open' | 'onClose'>): Promise<void> => {
     return new Promise((resolve) => {
@@ -331,23 +321,19 @@ export function DialogProvider({ children }: { children: ReactNode }) {
   return (
     <DialogContext.Provider value={{ confirm, alert }}>
       {children}
-      {dialog?.type === 'confirm' && (
-        <ConfirmDialog {...(dialog.props as ConfirmDialogProps)} />
-      )}
-      {dialog?.type === 'alert' && (
-        <AlertDialog {...(dialog.props as AlertDialogProps)} />
-      )}
+      {dialog?.type === 'confirm' && <ConfirmDialog {...(dialog.props as ConfirmDialogProps)} />}
+      {dialog?.type === 'alert' && <AlertDialog {...(dialog.props as AlertDialogProps)} />}
     </DialogContext.Provider>
   );
 }
 
 /**
  * Hook for imperative dialog access.
- * 
+ *
  * @example
  * ```tsx
  * const { confirm, alert } = useDialog();
- * 
+ *
  * const handleDelete = async () => {
  *   const confirmed = await confirm({
  *     title: 'Slett booking?',

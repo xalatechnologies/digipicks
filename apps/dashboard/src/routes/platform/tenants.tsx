@@ -40,9 +40,9 @@ import {
   useIsMobile,
   useDialog,
   useToast,
-} from '@digilist-saas/ds';
-import type { DataTableColumn, Action } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DataTableColumn, Action } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 
@@ -109,19 +109,25 @@ export function TenantsPage() {
   const rawTenants = useQuery(api.domain.tenantOnboarding.listAllTenants, {});
   const isLoading = rawTenants === undefined;
 
-  const tenants: TenantRow[] = useMemo(() => (rawTenants ?? []).map((t: any) => ({
-    id: t.id,
-    name: t.name,
-    slug: t.slug,
-    status: (t.status || 'active') as TenantStatus,
-    plan: (t.plan || 'basis').toLowerCase(),
-    userCount: t.userCount ?? 0,
-    listingCount: t.listingCount ?? 0,
-    ownerName: t.ownerName || '',
-    ownerEmail: t.ownerEmail || '',
-    createdAt: t.createdAt ? new Date(t.createdAt).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short', year: 'numeric' }) : '–',
-    createdAtRaw: t.createdAt || 0,
-  })), [rawTenants]);
+  const tenants: TenantRow[] = useMemo(
+    () =>
+      (rawTenants ?? []).map((t: any) => ({
+        id: t.id,
+        name: t.name,
+        slug: t.slug,
+        status: (t.status || 'active') as TenantStatus,
+        plan: (t.plan || 'basis').toLowerCase(),
+        userCount: t.userCount ?? 0,
+        listingCount: t.listingCount ?? 0,
+        ownerName: t.ownerName || '',
+        ownerEmail: t.ownerEmail || '',
+        createdAt: t.createdAt
+          ? new Date(t.createdAt).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short', year: 'numeric' })
+          : '–',
+        createdAtRaw: t.createdAt || 0,
+      })),
+    [rawTenants],
+  );
 
   // Filter + sort
   const filtered = useMemo(() => {
@@ -130,11 +136,12 @@ export function TenantsPage() {
     if (planFilter) result = result.filter((r) => r.plan === planFilter);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      result = result.filter((r) =>
-        r.name.toLowerCase().includes(q) ||
-        r.slug.toLowerCase().includes(q) ||
-        r.ownerName.toLowerCase().includes(q) ||
-        r.ownerEmail.toLowerCase().includes(q)
+      result = result.filter(
+        (r) =>
+          r.name.toLowerCase().includes(q) ||
+          r.slug.toLowerCase().includes(q) ||
+          r.ownerName.toLowerCase().includes(q) ||
+          r.ownerEmail.toLowerCase().includes(q),
       );
     }
     result.sort((a, b) => {
@@ -155,11 +162,12 @@ export function TenantsPage() {
     if (!searchQuery.trim() || searchQuery.length < 1) return [];
     const q = searchQuery.toLowerCase();
     return tenants
-      .filter((r) =>
-        r.name.toLowerCase().includes(q) ||
-        r.slug.toLowerCase().includes(q) ||
-        r.ownerName.toLowerCase().includes(q) ||
-        r.ownerEmail.toLowerCase().includes(q)
+      .filter(
+        (r) =>
+          r.name.toLowerCase().includes(q) ||
+          r.slug.toLowerCase().includes(q) ||
+          r.ownerName.toLowerCase().includes(q) ||
+          r.ownerEmail.toLowerCase().includes(q),
       )
       .slice(0, 8)
       .map((r) => {
@@ -182,7 +190,9 @@ export function TenantsPage() {
   // Filter options
   const statusOptions = useMemo(() => {
     const counts: Record<string, number> = {};
-    tenants.forEach((r) => { counts[r.status] = (counts[r.status] || 0) + 1; });
+    tenants.forEach((r) => {
+      counts[r.status] = (counts[r.status] || 0) + 1;
+    });
     return [
       { value: '', label: 'Alle', count: tenants.length },
       { value: 'active', label: 'Aktiv', count: counts['active'] || 0 },
@@ -194,18 +204,23 @@ export function TenantsPage() {
 
   const planOptions = useMemo(() => {
     const counts: Record<string, number> = {};
-    tenants.forEach((r) => { counts[r.plan] = (counts[r.plan] || 0) + 1; });
+    tenants.forEach((r) => {
+      counts[r.plan] = (counts[r.plan] || 0) + 1;
+    });
     return [
       { value: '', label: 'Alle planer', count: tenants.length },
       ...Object.entries(PLAN_MAP).map(([key, val]) => ({
-        value: key, label: `${val.label} (${val.commission})`, count: counts[key] || 0,
+        value: key,
+        label: `${val.label} (${val.commission})`,
+        count: counts[key] || 0,
       })),
     ];
   }, [tenants]);
 
   const activeFilters = useMemo(() => {
     const f: { key: string; label: string }[] = [];
-    if (statusFilter) f.push({ key: 'status', label: `Status: ${(STATUS_MAP[statusFilter] ?? STATUS_FALLBACK).label}` });
+    if (statusFilter)
+      f.push({ key: 'status', label: `Status: ${(STATUS_MAP[statusFilter] ?? STATUS_FALLBACK).label}` });
     if (planFilter) f.push({ key: 'plan', label: `Plan: ${(PLAN_MAP[planFilter] ?? PLAN_FALLBACK).label}` });
     return f;
   }, [statusFilter, planFilter]);
@@ -217,92 +232,230 @@ export function TenantsPage() {
   }, []);
 
   const handleClearAllFilters = useCallback(() => {
-    setStatusFilter(''); setPlanFilter(''); setSearchQuery('');
+    setStatusFilter('');
+    setPlanFilter('');
+    setSearchQuery('');
   }, []);
 
   // Row actions
   const getTenantActions = useCallback(
     (tenant: TenantRow): Action[] => {
       const actions: Action[] = [
-        { label: 'Vis detaljer', icon: <EyeIcon size={16} />, onClick: () => navigate(`/platform/tenants/${tenant.slug}`) },
-        { label: 'Rediger', icon: <EditIcon size={16} />, onClick: () => navigate(`/platform/tenants/${tenant.slug}/edit`) },
+        {
+          label: 'Vis detaljer',
+          icon: <EyeIcon size={16} />,
+          onClick: () => navigate(`/platform/tenants/${tenant.slug}`),
+        },
+        {
+          label: 'Rediger',
+          icon: <EditIcon size={16} />,
+          onClick: () => navigate(`/platform/tenants/${tenant.slug}/edit`),
+        },
       ];
       if (tenant.status === 'active') {
-        actions.push({ label: 'Suspender', icon: <TrashIcon size={16} />, onClick: async () => {
-          const ok = await confirm({ title: 'Suspender utleier', description: `Suspender "${tenant.name}"?`, confirmText: 'Suspender', variant: 'danger' });
-          if (ok) { await updateTenant({ tenantId: tenant.id as any, status: 'suspended' }); showToast({ title: `${tenant.name} suspendert`, variant: 'warning' }); }
-        }, variant: 'danger' });
+        actions.push({
+          label: 'Suspender',
+          icon: <TrashIcon size={16} />,
+          onClick: async () => {
+            const ok = await confirm({
+              title: 'Suspender utleier',
+              description: `Suspender "${tenant.name}"?`,
+              confirmText: 'Suspender',
+              variant: 'danger',
+            });
+            if (ok) {
+              await updateTenant({ tenantId: tenant.id as any, status: 'suspended' });
+              showToast({ title: `${tenant.name} suspendert`, variant: 'warning' });
+            }
+          },
+          variant: 'danger',
+        });
       }
       if (tenant.status === 'suspended') {
-        actions.push({ label: 'Aktiver', icon: <CheckIcon size={16} />, onClick: async () => { await updateTenant({ tenantId: tenant.id as any, status: 'active' }); showToast({ title: `${tenant.name} aktivert`, variant: 'success' }); } });
+        actions.push({
+          label: 'Aktiver',
+          icon: <CheckIcon size={16} />,
+          onClick: async () => {
+            await updateTenant({ tenantId: tenant.id as any, status: 'active' });
+            showToast({ title: `${tenant.name} aktivert`, variant: 'success' });
+          },
+        });
       }
-      actions.push({ label: 'Slett', icon: <TrashIcon size={16} />, onClick: async () => {
-        const ok = await confirm({ title: 'Slett utleier', description: `Slett "${tenant.name}" permanent? Alle data fjernes.`, confirmText: 'Slett', variant: 'danger' });
-        if (ok) { await deleteTenantMut({ tenantId: tenant.id as any }); showToast({ title: `${tenant.name} slettet`, variant: 'error' }); }
-      }, variant: 'danger' });
+      actions.push({
+        label: 'Slett',
+        icon: <TrashIcon size={16} />,
+        onClick: async () => {
+          const ok = await confirm({
+            title: 'Slett utleier',
+            description: `Slett "${tenant.name}" permanent? Alle data fjernes.`,
+            confirmText: 'Slett',
+            variant: 'danger',
+          });
+          if (ok) {
+            await deleteTenantMut({ tenantId: tenant.id as any });
+            showToast({ title: `${tenant.name} slettet`, variant: 'error' });
+          }
+        },
+        variant: 'danger',
+      });
       return actions;
     },
     [navigate, confirm, showToast, updateTenant, deleteTenantMut],
   );
 
   // Table columns
-  const columns: DataTableColumn<TenantRow>[] = useMemo(() => [
-    {
-      id: 'name', header: 'Utleier', sortable: true,
-      render: (row) => (
-        <Stack direction="horizontal" spacing="var(--ds-size-3)" align="center">
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--ds-color-accent-surface-default)', color: 'var(--ds-color-accent-base-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: '0.75rem', flexShrink: 0 }}>
-            {row.name.charAt(0).toUpperCase()}
-          </div>
-          <Stack direction="vertical" spacing="0">
-            <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>{row.name}</Paragraph>
-            <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0 }}>{import.meta.env.VITE_PLATFORM_DOMAIN || 'app.example.com'}/{row.slug}</Paragraph>
+  const columns: DataTableColumn<TenantRow>[] = useMemo(
+    () => [
+      {
+        id: 'name',
+        header: 'Utleier',
+        sortable: true,
+        render: (row) => (
+          <Stack direction="horizontal" spacing="var(--ds-size-3)" align="center">
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                background: 'var(--ds-color-accent-surface-default)',
+                color: 'var(--ds-color-accent-base-default)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 600,
+                fontSize: '0.75rem',
+                flexShrink: 0,
+              }}
+            >
+              {row.name.charAt(0).toUpperCase()}
+            </div>
+            <Stack direction="vertical" spacing="0">
+              <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>
+                {row.name}
+              </Paragraph>
+              <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0 }}>
+                {import.meta.env.VITE_PLATFORM_DOMAIN || 'app.example.com'}/{row.slug}
+              </Paragraph>
+            </Stack>
           </Stack>
-        </Stack>
-      ),
-    },
-    {
-      id: 'status', header: 'Status', width: '100px',
-      render: (row) => { const s = STATUS_MAP[row.status] ?? STATUS_FALLBACK; return <StatusTag color={s.color} size="sm">{s.label}</StatusTag>; },
-    },
-    {
-      id: 'plan', header: 'Plan', width: '130px',
-      render: (row) => {
-        const plan = PLAN_MAP[row.plan];
-        return plan
-          ? <Tag data-size="sm" data-color={plan.color}>{plan.label} · {plan.commission}</Tag>
-          : <Tag data-size="sm" data-color="neutral">{row.plan}</Tag>;
+        ),
       },
-    },
-    {
-      id: 'listingCount', header: 'Lokaler', width: '80px', sortable: true,
-      render: (row) => <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium, 500)' }}>{row.listingCount}</Paragraph>,
-    },
-    {
-      id: 'owner', header: 'Eier', hideOnMobile: true, width: '160px',
-      render: (row) => <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>{row.ownerName || row.ownerEmail || '–'}</Paragraph>,
-    },
-    {
-      id: 'createdAt', header: 'Opprettet', width: '120px', sortable: true, hideOnMobile: true,
-      render: (row) => <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>{row.createdAt}</Paragraph>,
-    },
-    {
-      id: 'actions', header: '', width: '220px',
-      render: (row) => (
-        <Stack direction="horizontal" spacing="var(--ds-size-1)" onClick={(e) => e.stopPropagation()}>
-          <Button type="button" variant="secondary" data-size="sm" onClick={() => navigate(`/platform/tenants/${row.slug}`)}>Vis</Button>
-          <Button type="button" variant="secondary" data-size="sm" onClick={() => navigate(`/platform/tenants/${row.slug}/edit`)}>Rediger</Button>
-          <Button type="button" variant="secondary" data-size="sm" data-color="danger" onClick={async () => {
-            const ok = await confirm({ title: 'Slett utleier', description: `Slett "${row.name}" permanent?`, confirmText: 'Slett', variant: 'danger' });
-            if (ok) {
-              try { await deleteTenantMut({ tenantId: row.id as any }); showToast({ title: `${row.name} slettet`, variant: 'success' }); }
-              catch { showToast({ title: 'Kunne ikke slette', variant: 'error' }); }
-            }
-          }}>Slett</Button>
-        </Stack>
-      ),
-    },
-  ], [getTenantActions]);
+      {
+        id: 'status',
+        header: 'Status',
+        width: '100px',
+        render: (row) => {
+          const s = STATUS_MAP[row.status] ?? STATUS_FALLBACK;
+          return (
+            <StatusTag color={s.color} size="sm">
+              {s.label}
+            </StatusTag>
+          );
+        },
+      },
+      {
+        id: 'plan',
+        header: 'Plan',
+        width: '130px',
+        render: (row) => {
+          const plan = PLAN_MAP[row.plan];
+          return plan ? (
+            <Tag data-size="sm" data-color={plan.color}>
+              {plan.label} · {plan.commission}
+            </Tag>
+          ) : (
+            <Tag data-size="sm" data-color="neutral">
+              {row.plan}
+            </Tag>
+          );
+        },
+      },
+      {
+        id: 'listingCount',
+        header: 'Lokaler',
+        width: '80px',
+        sortable: true,
+        render: (row) => (
+          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium, 500)' }}>
+            {row.listingCount}
+          </Paragraph>
+        ),
+      },
+      {
+        id: 'owner',
+        header: 'Eier',
+        hideOnMobile: true,
+        width: '160px',
+        render: (row) => (
+          <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+            {row.ownerName || row.ownerEmail || '–'}
+          </Paragraph>
+        ),
+      },
+      {
+        id: 'createdAt',
+        header: 'Opprettet',
+        width: '120px',
+        sortable: true,
+        hideOnMobile: true,
+        render: (row) => (
+          <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+            {row.createdAt}
+          </Paragraph>
+        ),
+      },
+      {
+        id: 'actions',
+        header: '',
+        width: '220px',
+        render: (row) => (
+          <Stack direction="horizontal" spacing="var(--ds-size-1)" onClick={(e) => e.stopPropagation()}>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="sm"
+              onClick={() => navigate(`/platform/tenants/${row.slug}`)}
+            >
+              Vis
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="sm"
+              onClick={() => navigate(`/platform/tenants/${row.slug}/edit`)}
+            >
+              Rediger
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="sm"
+              data-color="danger"
+              onClick={async () => {
+                const ok = await confirm({
+                  title: 'Slett utleier',
+                  description: `Slett "${row.name}" permanent?`,
+                  confirmText: 'Slett',
+                  variant: 'danger',
+                });
+                if (ok) {
+                  try {
+                    await deleteTenantMut({ tenantId: row.id as any });
+                    showToast({ title: `${row.name} slettet`, variant: 'success' });
+                  } catch {
+                    showToast({ title: 'Kunne ikke slette', variant: 'error' });
+                  }
+                }
+              }}
+            >
+              Slett
+            </Button>
+          </Stack>
+        ),
+      },
+    ],
+    [getTenantActions],
+  );
 
   // Stats
   const stats = useMemo(() => {
@@ -318,10 +471,7 @@ export function TenantsPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        count={filtered.length}
-        sticky
-      >
+      <DashboardPageHeader count={filtered.length} sticky>
         <FilterToolbar variant="flat" aria-label="Utleierfilter">
           <FilterToolbar.Start>
             <HeaderSearch
@@ -350,7 +500,13 @@ export function TenantsPage() {
               onChange={handleSortChange}
               size="md"
             />
-            <PillDropdown label="Status" options={statusOptions} value={statusFilter} onChange={setStatusFilter} size="md" />
+            <PillDropdown
+              label="Status"
+              options={statusOptions}
+              value={statusFilter}
+              onChange={setStatusFilter}
+              size="md"
+            />
             <PillDropdown label="Plan" options={planOptions} value={planFilter} onChange={setPlanFilter} size="md" />
           </FilterToolbar.Center>
           <FilterToolbar.End>
@@ -380,12 +536,20 @@ export function TenantsPage() {
       ) : filtered.length === 0 ? (
         <EmptyState
           title="Ingen utleiere funnet"
-          description={searchQuery || statusFilter || planFilter ? 'Prøv å endre søk eller filtre.' : 'Opprett din første utleier for å komme i gang.'}
+          description={
+            searchQuery || statusFilter || planFilter
+              ? 'Prøv å endre søk eller filtre.'
+              : 'Opprett din første utleier for å komme i gang.'
+          }
           action={
-            (searchQuery || statusFilter || planFilter) ? (
-              <Button type="button" variant="secondary" onClick={handleClearAllFilters}>Fjern alle filtre</Button>
+            searchQuery || statusFilter || planFilter ? (
+              <Button type="button" variant="secondary" onClick={handleClearAllFilters}>
+                Fjern alle filtre
+              </Button>
             ) : (
-              <Button type="button" variant="primary" onClick={() => navigate('/platform/tenants/new')}>Opprett utleier</Button>
+              <Button type="button" variant="primary" onClick={() => navigate('/platform/tenants/new')}>
+                Opprett utleier
+              </Button>
             )
           }
         />
@@ -397,12 +561,30 @@ export function TenantsPage() {
             return (
               <Card
                 key={tenant.id}
-                style={{ cursor: 'pointer', border: '1px solid var(--ds-color-neutral-border-default)', overflow: 'visible' }}
+                style={{
+                  cursor: 'pointer',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  overflow: 'visible',
+                }}
                 onClick={() => navigate(`/platform/tenants/${tenant.slug}`)}
               >
                 <Stack direction="horizontal" spacing="var(--ds-size-4)" align="start">
                   {/* Avatar */}
-                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--ds-color-accent-surface-default)', color: 'var(--ds-color-accent-base-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: '1rem', flexShrink: 0 }}>
+                  <div
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: '50%',
+                      background: 'var(--ds-color-accent-surface-default)',
+                      color: 'var(--ds-color-accent-base-default)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      flexShrink: 0,
+                    }}
+                  >
                     {tenant.name.charAt(0).toUpperCase()}
                   </div>
 
@@ -410,54 +592,138 @@ export function TenantsPage() {
                   <Stack direction="vertical" spacing="var(--ds-size-2)" style={{ flex: 1, minWidth: 0 }}>
                     {/* Row 1: name + badges */}
                     <Stack direction="horizontal" justify="between" align="center">
-                      <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center" style={{ flexWrap: 'wrap' }}>
-                        <Paragraph data-size="md" style={{ fontWeight: 'var(--ds-font-weight-semibold, 600)', margin: 0 }}>{tenant.name}</Paragraph>
-                        <StatusTag color={badge.color} size="sm">{badge.label}</StatusTag>
-                        {plan && <Tag data-size="sm" data-color={plan.color}>{plan.label} · {plan.commission}</Tag>}
+                      <Stack
+                        direction="horizontal"
+                        spacing="var(--ds-size-2)"
+                        align="center"
+                        style={{ flexWrap: 'wrap' }}
+                      >
+                        <Paragraph
+                          data-size="md"
+                          style={{ fontWeight: 'var(--ds-font-weight-semibold, 600)', margin: 0 }}
+                        >
+                          {tenant.name}
+                        </Paragraph>
+                        <StatusTag color={badge.color} size="sm">
+                          {badge.label}
+                        </StatusTag>
+                        {plan && (
+                          <Tag data-size="sm" data-color={plan.color}>
+                            {plan.label} · {plan.commission}
+                          </Tag>
+                        )}
                       </Stack>
                       <Stack direction="horizontal" spacing="var(--ds-size-2)" onClick={(e) => e.stopPropagation()}>
-                        <Button type="button" variant="secondary" data-size="sm" onClick={() => navigate(`/platform/tenants/${tenant.slug}`)}>Vis</Button>
-                        <Button type="button" variant="secondary" data-size="sm" onClick={() => navigate(`/platform/tenants/${tenant.slug}/edit`)}>Rediger</Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          data-size="sm"
+                          onClick={() => navigate(`/platform/tenants/${tenant.slug}`)}
+                        >
+                          Vis
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          data-size="sm"
+                          onClick={() => navigate(`/platform/tenants/${tenant.slug}/edit`)}
+                        >
+                          Rediger
+                        </Button>
                         {tenant.status === 'active' && (
-                          <Button type="button" variant="secondary" data-size="sm" data-color="danger" onClick={async () => {
-                            const ok = await confirm({ title: 'Suspender utleier', description: `Suspender "${tenant.name}"?`, confirmText: 'Suspender', variant: 'danger' });
-                            if (ok) {
-                              try { await updateTenant({ tenantId: tenant.id as any, status: 'suspended' }); showToast({ title: `${tenant.name} suspendert`, variant: 'warning' }); }
-                              catch { showToast({ title: 'Kunne ikke suspendere', variant: 'error' }); }
-                            }
-                          }}>Suspender</Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            data-size="sm"
+                            data-color="danger"
+                            onClick={async () => {
+                              const ok = await confirm({
+                                title: 'Suspender utleier',
+                                description: `Suspender "${tenant.name}"?`,
+                                confirmText: 'Suspender',
+                                variant: 'danger',
+                              });
+                              if (ok) {
+                                try {
+                                  await updateTenant({ tenantId: tenant.id as any, status: 'suspended' });
+                                  showToast({ title: `${tenant.name} suspendert`, variant: 'warning' });
+                                } catch {
+                                  showToast({ title: 'Kunne ikke suspendere', variant: 'error' });
+                                }
+                              }
+                            }}
+                          >
+                            Suspender
+                          </Button>
                         )}
                         {tenant.status === 'suspended' && (
-                          <Button type="button" variant="secondary" data-size="sm" onClick={async () => {
-                            try { await updateTenant({ tenantId: tenant.id as any, status: 'active' }); showToast({ title: `${tenant.name} aktivert`, variant: 'success' }); }
-                            catch { showToast({ title: 'Kunne ikke aktivere', variant: 'error' }); }
-                          }}>Aktiver</Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            data-size="sm"
+                            onClick={async () => {
+                              try {
+                                await updateTenant({ tenantId: tenant.id as any, status: 'active' });
+                                showToast({ title: `${tenant.name} aktivert`, variant: 'success' });
+                              } catch {
+                                showToast({ title: 'Kunne ikke aktivere', variant: 'error' });
+                              }
+                            }}
+                          >
+                            Aktiver
+                          </Button>
                         )}
-                        <Button type="button" variant="secondary" data-size="sm" data-color="danger" onClick={async () => {
-                          const ok = await confirm({ title: 'Slett utleier', description: `Slett "${tenant.name}" permanent?`, confirmText: 'Slett', variant: 'danger' });
-                          if (ok) {
-                            try { await deleteTenantMut({ tenantId: tenant.id as any }); showToast({ title: `${tenant.name} slettet`, variant: 'success' }); }
-                            catch { showToast({ title: 'Kunne ikke slette', variant: 'error' }); }
-                          }
-                        }}>Slett</Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          data-size="sm"
+                          data-color="danger"
+                          onClick={async () => {
+                            const ok = await confirm({
+                              title: 'Slett utleier',
+                              description: `Slett "${tenant.name}" permanent?`,
+                              confirmText: 'Slett',
+                              variant: 'danger',
+                            });
+                            if (ok) {
+                              try {
+                                await deleteTenantMut({ tenantId: tenant.id as any });
+                                showToast({ title: `${tenant.name} slettet`, variant: 'success' });
+                              } catch {
+                                showToast({ title: 'Kunne ikke slette', variant: 'error' });
+                              }
+                            }
+                          }}
+                        >
+                          Slett
+                        </Button>
                       </Stack>
                     </Stack>
 
                     {/* Row 2: slug + owner */}
                     <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
-                      {import.meta.env.VITE_PLATFORM_DOMAIN || 'app.example.com'}/{tenant.slug}{tenant.ownerName ? ` · Eier: ${tenant.ownerName}` : tenant.ownerEmail ? ` · ${tenant.ownerEmail}` : ''}
+                      {import.meta.env.VITE_PLATFORM_DOMAIN || 'app.example.com'}/{tenant.slug}
+                      {tenant.ownerName
+                        ? ` · Eier: ${tenant.ownerName}`
+                        : tenant.ownerEmail
+                          ? ` · ${tenant.ownerEmail}`
+                          : ''}
                     </Paragraph>
 
                     {/* Row 3: stats */}
                     <Stack direction="horizontal" spacing="var(--ds-size-4)" align="center">
                       <Stack direction="horizontal" spacing="var(--ds-size-1)" align="center">
                         <ListIcon size={14} style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
-                        <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0 }}>{tenant.listingCount} lokaler</Paragraph>
+                        <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0 }}>
+                          {tenant.listingCount} lokaler
+                        </Paragraph>
                       </Stack>
                       {!isMobile && (
                         <Stack direction="horizontal" spacing="var(--ds-size-1)" align="center">
                           <CalendarIcon size={14} style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
-                          <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0 }}>{tenant.createdAt}</Paragraph>
+                          <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0 }}>
+                            {tenant.createdAt}
+                          </Paragraph>
                         </Stack>
                       )}
                     </Stack>

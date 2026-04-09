@@ -70,10 +70,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build shared
-        run: pnpm --filter @digilist-saas/shared build
+        run: pnpm --filter @digipicks/shared build
 
       - name: Build web app
-        run: pnpm --filter @digilist-saas/web build
+        run: pnpm --filter @digipicks/web build
         env:
           VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
 

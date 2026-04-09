@@ -1,5 +1,5 @@
 /**
- * @digilist-saas/shared
+ * @digipicks/shared
  *
  * Shared types, constants, and navigation for DigilistSaaS.
  */

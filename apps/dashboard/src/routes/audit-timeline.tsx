@@ -21,11 +21,11 @@ import {
   Stack,
   FormField,
   useIsMobile,
-} from '@digilist-saas/ds';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useTenantActivity } from '@digilist-saas/sdk';
-import { useAuthBridge } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useTenantActivity } from '@digipicks/sdk';
+import { useAuthBridge } from '@digipicks/app-shell';
 import styles from './audit-timeline.module.css';
 
 const OUTCOME_OPTIONS = [
@@ -66,19 +66,20 @@ export function AuditTimelinePage() {
   // Filter to decision-like actions and apply outcome filter
   const filteredEntries = useMemo(() => {
     const decisionActions = ['approved', 'rejected', 'cancelled', 'confirmed', 'resolved', 'assigned'];
-    const decisions = activities.filter(a =>
-      decisionActions.some(d => a.action.includes(d))
-    );
+    const decisions = activities.filter((a) => decisionActions.some((d) => a.action.includes(d)));
 
     if (outcomeFilter === 'all') return decisions;
-    return decisions.filter(a => a.action.includes(outcomeFilter));
+    return decisions.filter((a) => a.action.includes(outcomeFilter));
   }, [activities, outcomeFilter]);
 
   const intlLocale = getIntlLocale(locale);
   const formatDateTime = (ts: number) => {
     const date = new Date(ts);
-    return date.toLocaleDateString(intlLocale) + ' ' +
-      date.toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit' });
+    return (
+      date.toLocaleDateString(intlLocale) +
+      ' ' +
+      date.toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit' })
+    );
   };
 
   return (
@@ -103,8 +104,10 @@ export function AuditTimelinePage() {
           <div className={styles.filterField}>
             <FormField label={t('auditTimeline.outcome')}>
               <PillDropdown
-                label={t(OUTCOME_OPTIONS.find(o => o.value === outcomeFilter)?.labelKey ?? 'auditTimeline.outcomeAll')}
-                options={OUTCOME_OPTIONS.map(o => ({ value: o.value, label: t(o.labelKey) }))}
+                label={t(
+                  OUTCOME_OPTIONS.find((o) => o.value === outcomeFilter)?.labelKey ?? 'auditTimeline.outcomeAll',
+                )}
+                options={OUTCOME_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) }))}
                 value={outcomeFilter}
                 onChange={(v) => setOutcomeFilter(v as DecisionOutcome | 'all')}
                 className={styles.fullWidth}
@@ -125,9 +128,7 @@ export function AuditTimelinePage() {
           </Stack>
         ) : filteredEntries.length === 0 ? (
           <div className={styles.emptyWrapper}>
-            <Paragraph className={styles.emptyText}>
-              {t('auditTimeline.emptyState')}
-            </Paragraph>
+            <Paragraph className={styles.emptyText}>{t('auditTimeline.emptyState')}</Paragraph>
           </div>
         ) : (
           <Stack direction="vertical" spacing="var(--ds-size-4)">
@@ -149,9 +150,7 @@ export function AuditTimelinePage() {
                         border: `2px solid ${color.text}`,
                       }}
                     />
-                    {index < filteredEntries.length - 1 && (
-                      <div className={styles.timelineLine} />
-                    )}
+                    {index < filteredEntries.length - 1 && <div className={styles.timelineLine} />}
                   </Stack>
 
                   {/* Content */}
@@ -159,16 +158,15 @@ export function AuditTimelinePage() {
                     <Stack direction="horizontal" justify="between" align="start" wrap spacing="var(--ds-size-2)">
                       <div>
                         <Paragraph data-size="sm" className={styles.contentTitle}>
-                          {entry.entityType} — {entry.entityId.length > 16 ? `${entry.entityId.slice(0, 16)}…` : entry.entityId}
+                          {entry.entityType} —{' '}
+                          {entry.entityId.length > 16 ? `${entry.entityId.slice(0, 16)}…` : entry.entityId}
                         </Paragraph>
                         <Paragraph data-size="xs" className={styles.contentUser}>
                           {entry.userName || entry.userEmail || '–'}
                         </Paragraph>
                       </div>
                       <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
-                        <Badge style={{ backgroundColor: color.bg, color: color.text }}>
-                          {entry.action}
-                        </Badge>
+                        <Badge style={{ backgroundColor: color.bg, color: color.text }}>{entry.action}</Badge>
                         <Paragraph data-size="xs" className={styles.contentTimestamp}>
                           {formatDateTime(entry.timestamp)}
                         </Paragraph>

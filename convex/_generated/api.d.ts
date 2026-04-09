@@ -27,22 +27,29 @@ import type * as billing_adyen from "../billing/adyen.js";
 import type * as billing_stripe from "../billing/stripe.js";
 import type * as billing_stripeConnect from "../billing/stripeConnect.js";
 import type * as billing_stripePaymentIntent from "../billing/stripePaymentIntent.js";
+import type * as billing_stripeTransfers from "../billing/stripeTransfers.js";
 import type * as billing_vipps from "../billing/vipps.js";
 import type * as billing_webhooks from "../billing/webhooks.js";
 import type * as cronFunctions from "../cronFunctions.js";
 import type * as crons from "../crons.js";
 import type * as domain_additionalServices from "../domain/additionalServices.js";
 import type * as domain_addons from "../domain/addons.js";
+import type * as domain_adminPayouts from "../domain/adminPayouts.js";
 import type * as domain_analytics from "../domain/analytics.js";
 import type * as domain_audit from "../domain/audit.js";
 import type * as domain_authSessions from "../domain/authSessions.js";
 import type * as domain_billing from "../domain/billing.js";
+import type * as domain_broadcasts from "../domain/broadcasts.js";
 import type * as domain_classification from "../domain/classification.js";
 import type * as domain_compliance from "../domain/compliance.js";
+import type * as domain_discord from "../domain/discord.js";
+import type * as domain_disputes from "../domain/disputes.js";
+import type * as domain_emailCampaigns from "../domain/emailCampaigns.js";
 import type * as domain_externalReviews from "../domain/externalReviews.js";
 import type * as domain_favorites from "../domain/favorites.js";
 import type * as domain_gdpr from "../domain/gdpr.js";
 import type * as domain_guides from "../domain/guides.js";
+import type * as domain_insights from "../domain/insights.js";
 import type * as domain_integrationDispatch from "../domain/integrationDispatch.js";
 import type * as domain_integrations from "../domain/integrations.js";
 import type * as domain_licensing from "../domain/licensing.js";
@@ -54,7 +61,6 @@ import type * as domain_monitoring from "../domain/monitoring.js";
 import type * as domain_notifications from "../domain/notifications.js";
 import type * as domain_organizationVerify from "../domain/organizationVerify.js";
 import type * as domain_payouts from "../domain/payouts.js";
-import type * as domain_broadcasts from "../domain/broadcasts.js";
 import type * as domain_picks from "../domain/picks.js";
 import type * as domain_platformAdmin from "../domain/platformAdmin.js";
 import type * as domain_pricing from "../domain/pricing.js";
@@ -142,22 +148,29 @@ declare const fullApi: ApiFromModules<{
   "billing/stripe": typeof billing_stripe;
   "billing/stripeConnect": typeof billing_stripeConnect;
   "billing/stripePaymentIntent": typeof billing_stripePaymentIntent;
+  "billing/stripeTransfers": typeof billing_stripeTransfers;
   "billing/vipps": typeof billing_vipps;
   "billing/webhooks": typeof billing_webhooks;
   cronFunctions: typeof cronFunctions;
   crons: typeof crons;
   "domain/additionalServices": typeof domain_additionalServices;
   "domain/addons": typeof domain_addons;
+  "domain/adminPayouts": typeof domain_adminPayouts;
   "domain/analytics": typeof domain_analytics;
   "domain/audit": typeof domain_audit;
   "domain/authSessions": typeof domain_authSessions;
   "domain/billing": typeof domain_billing;
+  "domain/broadcasts": typeof domain_broadcasts;
   "domain/classification": typeof domain_classification;
   "domain/compliance": typeof domain_compliance;
+  "domain/discord": typeof domain_discord;
+  "domain/disputes": typeof domain_disputes;
+  "domain/emailCampaigns": typeof domain_emailCampaigns;
   "domain/externalReviews": typeof domain_externalReviews;
   "domain/favorites": typeof domain_favorites;
   "domain/gdpr": typeof domain_gdpr;
   "domain/guides": typeof domain_guides;
+  "domain/insights": typeof domain_insights;
   "domain/integrationDispatch": typeof domain_integrationDispatch;
   "domain/integrations": typeof domain_integrations;
   "domain/licensing": typeof domain_licensing;
@@ -169,7 +182,6 @@ declare const fullApi: ApiFromModules<{
   "domain/notifications": typeof domain_notifications;
   "domain/organizationVerify": typeof domain_organizationVerify;
   "domain/payouts": typeof domain_payouts;
-  "domain/broadcasts": typeof domain_broadcasts;
   "domain/picks": typeof domain_picks;
   "domain/platformAdmin": typeof domain_platformAdmin;
   "domain/pricing": typeof domain_pricing;
@@ -1443,6 +1455,12 @@ export declare const components: {
         { id: string },
         { success: boolean }
       >;
+      removeCreatorBrandAsset: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
       removeThemeOverride: FunctionReference<
         "mutation",
         "internal",
@@ -1476,6 +1494,26 @@ export declare const components: {
         },
         { id: string }
       >;
+      updateCreatorBranding: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accentColor?: string;
+          borderRadius?: string;
+          creatorId: string;
+          customCSS?: string;
+          customDomain?: string;
+          darkMode?: boolean;
+          displayName?: string;
+          fontFamily?: string;
+          metadata?: any;
+          primaryColor?: string;
+          secondaryColor?: string;
+          tagline?: string;
+          tenantId: string;
+        },
+        { id: string }
+      >;
       updateFlag: FunctionReference<
         "mutation",
         "internal",
@@ -1495,6 +1533,20 @@ export declare const components: {
         {
           alt?: string;
           assetType: string;
+          metadata?: any;
+          storageId?: string;
+          tenantId: string;
+          url: string;
+        },
+        { id: string }
+      >;
+      uploadCreatorBrandAsset: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          alt?: string;
+          assetType: string;
+          creatorId: string;
           metadata?: any;
           storageId?: string;
           tenantId: string;
@@ -1527,6 +1579,24 @@ export declare const components: {
         { tenantId: string },
         any
       >;
+      getCreatorBranding: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        any
+      >;
+      getCreatorByCustomDomain: FunctionReference<
+        "query",
+        "internal",
+        { domain: string },
+        any
+      >;
+      getCreatorThemeCSS: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        string
+      >;
       getFlag: FunctionReference<
         "query",
         "internal",
@@ -1543,6 +1613,12 @@ export declare const components: {
         "query",
         "internal",
         { limit?: number; tenantId: string },
+        Array<any>
+      >;
+      listCreatorBrandAssets: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
         Array<any>
       >;
       listFlags: FunctionReference<
@@ -4270,6 +4346,8 @@ export declare const components: {
           stripeSubscriptionId?: string;
           tenantId: string;
           tierId: string;
+          trialEndDate?: number;
+          trialStartDate?: number;
           userId: string;
         },
         { id: string }
@@ -4308,16 +4386,40 @@ export declare const components: {
         },
         { id: string }
       >;
+      getCreatorAccount: FunctionReference<
+        "query",
+        "internal",
+        { userId: string },
+        any
+      >;
+      getCreatorAccountByStripeId: FunctionReference<
+        "query",
+        "internal",
+        { stripeAccountId: string },
+        any
+      >;
       getMembership: FunctionReference<
         "query",
         "internal",
         { id: string },
         any
       >;
+      getMembershipByStripeSubscription: FunctionReference<
+        "query",
+        "internal",
+        { stripeSubscriptionId: string },
+        any
+      >;
       getMembershipByUser: FunctionReference<
         "query",
         "internal",
         { userId: string },
+        any
+      >;
+      getMembershipByUserAndCreator: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
         any
       >;
       getMembershipStats: FunctionReference<
@@ -4333,13 +4435,37 @@ export declare const components: {
         { slug: string; tenantId: string },
         any
       >;
+      getTrialStatus: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
+        any
+      >;
+      getUserCreatorSubscription: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
+        any
+      >;
       listBenefitUsage: FunctionReference<
         "query",
         "internal",
         { benefitType?: string; membershipId: string },
         Array<any>
       >;
+      listCreatorSubscribers: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; status?: string },
+        Array<any>
+      >;
       listDueForRenewal: FunctionReference<
+        "query",
+        "internal",
+        { beforeDate: number },
+        Array<any>
+      >;
+      listExpiringTrials: FunctionReference<
         "query",
         "internal",
         { beforeDate: number },
@@ -4354,8 +4480,15 @@ export declare const components: {
           status?: string;
           tenantId: string;
           tierId?: string;
+          userId?: string;
         },
         any
+      >;
+      listMembershipsByCreatorIds: FunctionReference<
+        "query",
+        "internal",
+        { creatorIds: Array<string>; userId: string },
+        Array<any>
       >;
       listTiers: FunctionReference<
         "query",
@@ -4363,12 +4496,26 @@ export declare const components: {
         { activeOnly?: boolean; publicOnly?: boolean; tenantId: string },
         Array<any>
       >;
+      updateCreatorAccount: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          chargesEnabled?: boolean;
+          detailsSubmitted?: boolean;
+          id: string;
+          metadata?: any;
+          payoutsEnabled?: boolean;
+          status?: string;
+        },
+        { success: boolean }
+      >;
       updateMembership: FunctionReference<
         "mutation",
         "internal",
         {
           autoRenew?: boolean;
           benefitsUsedThisPeriod?: any;
+          convertedFromTrial?: boolean;
           endDate?: number;
           failedPaymentCount?: number;
           id: string;
@@ -4434,49 +4581,6 @@ export declare const components: {
         "mutation",
         "internal",
         { delta: number; id: string },
-        { success: boolean }
-      >;
-      getCreatorAccount: FunctionReference<
-        "query",
-        "internal",
-        { userId: string },
-        any
-      >;
-      getCreatorAccountByStripeId: FunctionReference<
-        "query",
-        "internal",
-        { stripeAccountId: string },
-        any
-      >;
-      getMembershipByStripeSubscription: FunctionReference<
-        "query",
-        "internal",
-        { stripeSubscriptionId: string },
-        any
-      >;
-      getUserCreatorSubscription: FunctionReference<
-        "query",
-        "internal",
-        { creatorId: string; userId: string },
-        any
-      >;
-      listCreatorSubscribers: FunctionReference<
-        "query",
-        "internal",
-        { creatorId: string; status?: string },
-        Array<any>
-      >;
-      updateCreatorAccount: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          chargesEnabled?: boolean;
-          detailsSubmitted?: boolean;
-          id: string;
-          metadata?: any;
-          payoutsEnabled?: boolean;
-          status?: string;
-        },
         { success: boolean }
       >;
     };
@@ -4772,6 +4876,388 @@ export declare const components: {
       >;
     };
   };
+  picks: {
+    functions: {
+      addPickCollaborator: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          creatorId: string;
+          pickId: string;
+          role: string;
+          splitPercent: number;
+          tenantId: string;
+        },
+        { id: string }
+      >;
+      bankrollInsights: FunctionReference<
+        "query",
+        "internal",
+        { bankroll: number; tenantId: string; userId: string },
+        {
+          kellySuggestions: Array<{
+            avgOdds: number;
+            confidence: string;
+            historicalWinRate: number;
+            kellyFraction: number;
+            suggestedDollarAmount: number;
+            suggestedUnits: number;
+          }>;
+          projection: {
+            breakEvenPicks?: number;
+            next100PicksExpected: number;
+            next50PicksExpected: number;
+          };
+          riskMetrics: {
+            currentDrawdown: number;
+            maxDrawdown: number;
+            maxDrawdownPercent: number;
+            sharpeRatio: number;
+            variance: number;
+          };
+          sampleSize: number;
+        }
+      >;
+      create: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          analysis?: string;
+          confidence: string;
+          creatorId: string;
+          event: string;
+          eventDate?: number;
+          league?: string;
+          metadata?: any;
+          oddsAmerican: string;
+          oddsDecimal: number;
+          pickType: string;
+          selection: string;
+          sport: string;
+          status?: string;
+          tenantId: string;
+          units: number;
+        },
+        { id: string }
+      >;
+      creatorStats: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        {
+          losses: number;
+          netUnits: number;
+          pending: number;
+          pushes: number;
+          roi: number;
+          totalPicks: number;
+          voids: number;
+          winRate: number;
+          wins: number;
+        }
+      >;
+      creatorStatsBySport: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        Array<{
+          avgOdds: number;
+          losses: number;
+          netUnits: number;
+          pushes: number;
+          roi: number;
+          sport: string;
+          totalPicks: number;
+          winRate: number;
+          wins: number;
+        }>
+      >;
+      get: FunctionReference<
+        "query",
+        "internal",
+        { id: string; tenantId?: string },
+        any
+      >;
+      grade: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          gradedBy: string;
+          id: string;
+          result: "won" | "lost" | "push" | "void";
+          tenantId?: string;
+        },
+        { success: boolean }
+      >;
+      isTailed: FunctionReference<
+        "query",
+        "internal",
+        { pickId: string; userId: string },
+        boolean
+      >;
+      leaderboard: FunctionReference<
+        "query",
+        "internal",
+        {
+          limit?: number;
+          sortBy?: "roi" | "winRate" | "streak" | "totalPicks";
+          sport?: string;
+          tenantId: string;
+          timeframe?: "30d" | "90d" | "all";
+        },
+        Array<{
+          avgOdds: number;
+          creatorId: string;
+          currentStreak: number;
+          losses: number;
+          netUnits: number;
+          pushes: number;
+          roi: number;
+          streakType: "W" | "L" | "none";
+          totalPicks: number;
+          winRate: number;
+          wins: number;
+        }>
+      >;
+      list: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          limit?: number;
+          result?: string;
+          sport?: string;
+          status?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
+      listPickCollaborators: FunctionReference<
+        "query",
+        "internal",
+        { pickId: string },
+        Array<any>
+      >;
+      listPicksByCollaborator: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        Array<any>
+      >;
+      listPublishedFeed: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorIds?: Array<string>;
+          cursor?: number;
+          limit?: number;
+          result?: string;
+          sport?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
+      listTailed: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          result?: string;
+          sport?: string;
+          tenantId: string;
+          userId: string;
+        },
+        Array<any>
+      >;
+      performancePredictions: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        {
+          bestEdges: Array<{
+            league?: string;
+            pickType: string;
+            picks: number;
+            roi: number;
+            sport: string;
+            winRate: number;
+          }>;
+          confidenceCalibration: Array<{
+            avgOdds: number;
+            confidence: string;
+            picks: number;
+            roi: number;
+            winRate: number;
+          }>;
+          currentStreak: { length: number; type: "win" | "loss" | "none" };
+          longestLossStreak: number;
+          longestWinStreak: number;
+          overallWinRate: number;
+          pickTypeBreakdown: Array<{
+            pickType: string;
+            picks: number;
+            roi: number;
+            winRate: number;
+          }>;
+          recentWinRate: number;
+          sampleSize: number;
+          trend: "improving" | "declining" | "stable";
+        }
+      >;
+      personalStats: FunctionReference<
+        "query",
+        "internal",
+        { startingBankroll?: number; tenantId: string; userId: string },
+        {
+          currentBankroll?: number;
+          losses: number;
+          netUnits: number;
+          pending: number;
+          pushes: number;
+          roi: number;
+          sportBreakdown: Array<{
+            losses: number;
+            netUnits: number;
+            picks: number;
+            sport: string;
+            winRate: number;
+            wins: number;
+          }>;
+          totalTailed: number;
+          totalWagered: number;
+          voids: number;
+          winRate: number;
+          wins: number;
+        }
+      >;
+      remove: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      removePickCollaborator: FunctionReference<
+        "mutation",
+        "internal",
+        { creatorId: string; pickId: string },
+        { success: boolean }
+      >;
+      setPickCollaborators: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          collaborators: Array<{
+            creatorId: string;
+            role: string;
+            splitPercent: number;
+          }>;
+          pickId: string;
+          tenantId: string;
+        },
+        { success: boolean }
+      >;
+      sportDashboard: FunctionReference<
+        "query",
+        "internal",
+        {
+          sport: string;
+          tenantId: string;
+          timeframe?: "7d" | "30d" | "90d" | "all";
+        },
+        {
+          avgOdds: number;
+          gradedPicks: number;
+          losses: number;
+          netUnits: number;
+          pendingPicks: number;
+          pickTypeBreakdown: Array<{
+            count: number;
+            losses: number;
+            netUnits: number;
+            pickType: string;
+            winRate: number;
+            wins: number;
+          }>;
+          pushes: number;
+          recentResults: Array<{ count: number; result: string }>;
+          roi: number;
+          sport: string;
+          topCreators: Array<{
+            creatorId: string;
+            losses: number;
+            netUnits: number;
+            roi: number;
+            winRate: number;
+            wins: number;
+          }>;
+          totalCreators: number;
+          totalPicks: number;
+          winRate: number;
+          wins: number;
+        }
+      >;
+      sportOverview: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string; timeframe?: "7d" | "30d" | "90d" | "all" },
+        Array<{
+          gradedPicks: number;
+          losses: number;
+          netUnits: number;
+          roi: number;
+          sport: string;
+          totalCreators: number;
+          totalPicks: number;
+          winRate: number;
+          wins: number;
+        }>
+      >;
+      tailPick: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          pickId: string;
+          startingBankroll?: number;
+          tenantId: string;
+          userId: string;
+        },
+        { id: string }
+      >;
+      untailPick: FunctionReference<
+        "mutation",
+        "internal",
+        { pickId: string; userId: string },
+        { success: boolean }
+      >;
+      update: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          analysis?: string;
+          confidence?: string;
+          event?: string;
+          eventDate?: number;
+          id: string;
+          league?: string;
+          metadata?: any;
+          oddsAmerican?: string;
+          oddsDecimal?: number;
+          pickType?: string;
+          selection?: string;
+          sport?: string;
+          status?: string;
+          units?: number;
+        },
+        { success: boolean }
+      >;
+      validatePickSplits: FunctionReference<
+        "query",
+        "internal",
+        { pickId: string },
+        { collaboratorCount: number; totalPercent: number; valid: boolean }
+      >;
+    };
+  };
   broadcasts: {
     functions: {
       get: FunctionReference<"query", "internal", { id: string }, any>;
@@ -4832,90 +5318,418 @@ export declare const components: {
       >;
     };
   };
-  picks: {
-    functions: {
-      create: FunctionReference<
+  disputes: {
+    import: {
+      importDispute: FunctionReference<
         "mutation",
         "internal",
         {
-          analysis?: string;
-          confidence: string;
-          creatorId: string;
-          event: string;
-          eventDate?: number;
-          league?: string;
-          metadata?: any;
-          oddsAmerican: string;
-          oddsDecimal: number;
-          pickType: string;
-          selection: string;
-          sport: string;
-          status?: string;
+          category: string;
+          closedAt?: number;
+          description: string;
+          escalatedAt?: number;
+          evidenceUrls?: Array<string>;
+          filedByUserId: string;
+          mediatorUserId?: string;
+          messageCount?: number;
+          priority: string;
+          relatedMembershipId?: string;
+          relatedPickId?: string;
+          resolution?: string;
+          resolutionNote?: string;
+          resolvedAt?: number;
+          respondentUserId: string;
+          status: string;
+          subject: string;
+          tags?: Array<string>;
           tenantId: string;
-          units: number;
         },
         { id: string }
       >;
-      creatorStats: FunctionReference<
-        "query",
-        "internal",
-        { creatorId: string; tenantId: string },
-        {
-          losses: number;
-          netUnits: number;
-          pending: number;
-          pushes: number;
-          roi: number;
-          totalPicks: number;
-          voids: number;
-          winRate: number;
-          wins: number;
-        }
-      >;
-      get: FunctionReference<"query", "internal", { id: string }, any>;
-      grade: FunctionReference<
+      importDisputeMessage: FunctionReference<
         "mutation",
         "internal",
-        { gradedBy: string; id: string; result: "lost" | "push" | "void" | "won" },
+        {
+          attachmentUrls?: Array<string>;
+          authorUserId: string;
+          body: string;
+          disputeId: string;
+          tenantId: string;
+          type: string;
+        },
+        { id: string }
+      >;
+    };
+    mutations: {
+      addMessage: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          attachmentUrls?: Array<string>;
+          authorUserId: string;
+          body: string;
+          disputeId: string;
+          tenantId: string;
+          type: string;
+        },
+        { id: string }
+      >;
+      assignMediator: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; mediatorUserId: string },
         { success: boolean }
       >;
-      list: FunctionReference<
+      changeStatus: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; status: string },
+        { success: boolean }
+      >;
+      createDispute: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          category: string;
+          description: string;
+          evidenceUrls?: Array<string>;
+          filedByUserId: string;
+          priority: string;
+          relatedMembershipId?: string;
+          relatedPickId?: string;
+          respondentUserId: string;
+          subject: string;
+          tags?: Array<string>;
+          tenantId: string;
+        },
+        { id: string }
+      >;
+      escalateDispute: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; newMediatorUserId?: string; newPriority?: string },
+        { success: boolean }
+      >;
+      resolveDispute: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; resolution: string; resolutionNote?: string },
+        { success: boolean }
+      >;
+      updateDispute: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          category?: string;
+          description?: string;
+          id: string;
+          priority?: string;
+          subject?: string;
+          tags?: Array<string>;
+        },
+        { success: boolean }
+      >;
+    };
+    queries: {
+      getDispute: FunctionReference<"query", "internal", { id: string }, any>;
+      getDisputeCounts: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string },
+        any
+      >;
+      listDisputeMessages: FunctionReference<
+        "query",
+        "internal",
+        { disputeId: string; limit?: number },
+        Array<any>
+      >;
+      listDisputes: FunctionReference<
         "query",
         "internal",
         {
-          creatorId?: string;
+          category?: string;
+          filedByUserId?: string;
           limit?: number;
-          result?: string;
-          sport?: string;
+          mediatorUserId?: string;
+          respondentUserId?: string;
           status?: string;
           tenantId: string;
         },
         Array<any>
       >;
-      remove: FunctionReference<
+    };
+  };
+  discord: {
+    functions: {
+      createSyncLogEntry: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          action: "assign" | "remove";
+          discordRoleId: string;
+          discordUserId: string;
+          guildId: string;
+          membershipId?: string;
+          tenantId: string;
+          tierId?: string;
+          trigger: string;
+          userId: string;
+        },
+        { id: string }
+      >;
+      disconnectUser: FunctionReference<
+        "mutation",
+        "internal",
+        { tenantId: string; userId: string },
+        { success: boolean }
+      >;
+      getConnection: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string; userId: string },
+        any
+      >;
+      getConnectionByDiscordId: FunctionReference<
+        "query",
+        "internal",
+        { discordUserId: string },
+        any
+      >;
+      getRoleMappingByTier: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string; tierId: string },
+        any
+      >;
+      getServerConfig: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        any
+      >;
+      listConnections: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number; tenantId: string },
+        Array<any>
+      >;
+      listPendingSyncs: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number },
+        Array<any>
+      >;
+      listRoleMappings: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        Array<any>
+      >;
+      listSyncLog: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number; tenantId: string; userId: string },
+        Array<any>
+      >;
+      removeRoleMapping: FunctionReference<
+        "mutation",
+        "internal",
+        { tenantId: string; tierId: string },
+        { success: boolean }
+      >;
+      toggleServerConfig: FunctionReference<
+        "mutation",
+        "internal",
+        { creatorId: string; isEnabled: boolean; tenantId: string },
+        { success: boolean }
+      >;
+      updateSyncLogStatus: FunctionReference<
+        "mutation",
+        "internal",
+        { error?: string; id: string; status: "success" | "failed" },
+        { success: boolean }
+      >;
+      upsertConnection: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accessToken: string;
+          discordUserId: string;
+          discordUsername: string;
+          refreshToken: string;
+          scopes: Array<string>;
+          tenantId: string;
+          tokenExpiresAt: number;
+          userId: string;
+        },
+        { id: string }
+      >;
+      upsertRoleMapping: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          creatorId: string;
+          discordRoleId: string;
+          discordRoleName?: string;
+          tenantId: string;
+          tierId: string;
+        },
+        { id: string }
+      >;
+      upsertServerConfig: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          botToken: string;
+          clientId: string;
+          clientSecret: string;
+          creatorId: string;
+          guildId: string;
+          guildName?: string;
+          isEnabled?: boolean;
+          tenantId: string;
+        },
+        { id: string }
+      >;
+    };
+  };
+  emailCampaigns: {
+    functions: {
+      addRecipients: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          campaignId: string;
+          recipients: Array<{ email: string; userId: string }>;
+          tenantId: string;
+        },
+        { added: number }
+      >;
+      cancel: FunctionReference<
         "mutation",
         "internal",
         { id: string },
+        { success: boolean }
+      >;
+      create: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          body: string;
+          campaignType: string;
+          creatorId: string;
+          metadata?: any;
+          name: string;
+          preheader?: string;
+          segment: {
+            activeSinceDays?: number;
+            inactiveSinceDays?: number;
+            tags?: Array<string>;
+            tierId?: string;
+            type: string;
+          };
+          subject: string;
+          templateCategory?: string;
+          tenantId: string;
+        },
+        { id: string }
+      >;
+      get: FunctionReference<"query", "internal", { id: string }, any>;
+      getAnalytics: FunctionReference<
+        "query",
+        "internal",
+        { campaignId: string },
+        any
+      >;
+      isUnsubscribed: FunctionReference<
+        "query",
+        "internal",
+        { email: string; tenantId: string },
+        boolean
+      >;
+      list: FunctionReference<
+        "query",
+        "internal",
+        {
+          campaignType?: string;
+          limit?: number;
+          status?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
+      listRecipients: FunctionReference<
+        "query",
+        "internal",
+        { campaignId: string; limit?: number; status?: string },
+        Array<any>
+      >;
+      listScheduledReady: FunctionReference<
+        "query",
+        "internal",
+        { now: number },
+        Array<any>
+      >;
+      markSending: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      markSent: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      resubscribe: FunctionReference<
+        "mutation",
+        "internal",
+        { email: string; tenantId: string },
+        { success: boolean }
+      >;
+      schedule: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; scheduledAt: number },
+        { success: boolean }
+      >;
+      unsubscribe: FunctionReference<
+        "mutation",
+        "internal",
+        { email: string; reason?: string; tenantId: string; userId: string },
         { success: boolean }
       >;
       update: FunctionReference<
         "mutation",
         "internal",
         {
-          analysis?: string;
-          confidence?: string;
-          event?: string;
-          eventDate?: number;
+          body?: string;
+          campaignType?: string;
           id: string;
-          league?: string;
           metadata?: any;
-          oddsAmerican?: string;
-          oddsDecimal?: number;
-          pickType?: string;
-          selection?: string;
-          sport?: string;
-          status?: string;
-          units?: number;
+          name?: string;
+          preheader?: string;
+          segment?: {
+            activeSinceDays?: number;
+            inactiveSinceDays?: number;
+            tags?: Array<string>;
+            tierId?: string;
+            type: string;
+          };
+          subject?: string;
+        },
+        { success: boolean }
+      >;
+      updateRecipientStatus: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          bounceReason?: string;
+          id: string;
+          resendId?: string;
+          status: string;
         },
         { success: boolean }
       >;

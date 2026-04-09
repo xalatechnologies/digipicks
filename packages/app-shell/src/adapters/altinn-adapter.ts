@@ -3,7 +3,7 @@
  * Extracted from AltinnProvider to reduce business logic in provider (guardrail compliance).
  */
 
-import type { AltinnParty } from '@digilist-saas/shared';
+import type { AltinnParty } from '@digipicks/shared';
 
 export interface AltinnApiParty {
   partyId: number;

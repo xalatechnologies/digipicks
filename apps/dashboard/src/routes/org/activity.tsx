@@ -21,13 +21,13 @@ import {
   PillDropdown,
   EmptyState,
   InboxIcon,
-} from '@digilist-saas/ds';
-import { useTenantActivity, useTenantActivityStats } from '@digilist-saas/sdk';
-import type { TenantActivityEntry } from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useLocale, useT } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useTenantContext } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useTenantActivity, useTenantActivityStats } from '@digipicks/sdk';
+import type { TenantActivityEntry } from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useLocale, useT } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useTenantContext } from '@digipicks/app-shell';
 import s from './Activity.module.css';
 
 type EntityTypeFilter = 'all' | 'booking' | 'resource' | 'user' | 'payment';
@@ -59,7 +59,7 @@ export function OrganizationActivityPage() {
   });
 
   const todayCount = useMemo(() => {
-    return activities.filter(a => a.timestamp >= todayStart.getTime()).length;
+    return activities.filter((a) => a.timestamp >= todayStart.getTime()).length;
   }, [activities, todayStart]);
 
   const bookingCount = weekStats?.byEntityType?.booking ?? 0;
@@ -80,21 +80,31 @@ export function OrganizationActivityPage() {
 
   const getEntityTypeLabel = (entityType: string) => {
     switch (entityType) {
-      case 'booking': return t('org.activityTypeBooking');
-      case 'resource': return t('org.activityTypeResource', 'Ressurs');
-      case 'user': return t('org.activityTypeMember');
-      case 'payment': return t('org.activityTypeInvoice');
-      default: return entityType;
+      case 'booking':
+        return t('org.activityTypeBooking');
+      case 'resource':
+        return t('org.activityTypeResource', 'Ressurs');
+      case 'user':
+        return t('org.activityTypeMember');
+      case 'payment':
+        return t('org.activityTypeInvoice');
+      default:
+        return entityType;
     }
   };
 
   const getEntityTypeColor = (entityType: string) => {
     switch (entityType) {
-      case 'booking': return { bg: 'var(--ds-color-accent-surface-default)', text: 'var(--ds-color-accent-text-default)' };
-      case 'user': return { bg: 'var(--ds-color-info-surface-default)', text: 'var(--ds-color-info-text-default)' };
-      case 'payment': return { bg: 'var(--ds-color-success-surface-default)', text: 'var(--ds-color-success-text-default)' };
-      case 'resource': return { bg: 'var(--ds-color-warning-surface-default)', text: 'var(--ds-color-warning-text-default)' };
-      default: return { bg: 'var(--ds-color-neutral-surface-default)', text: 'var(--ds-color-neutral-text-default)' };
+      case 'booking':
+        return { bg: 'var(--ds-color-accent-surface-default)', text: 'var(--ds-color-accent-text-default)' };
+      case 'user':
+        return { bg: 'var(--ds-color-info-surface-default)', text: 'var(--ds-color-info-text-default)' };
+      case 'payment':
+        return { bg: 'var(--ds-color-success-surface-default)', text: 'var(--ds-color-success-text-default)' };
+      case 'resource':
+        return { bg: 'var(--ds-color-warning-surface-default)', text: 'var(--ds-color-warning-text-default)' };
+      default:
+        return { bg: 'var(--ds-color-neutral-surface-default)', text: 'var(--ds-color-neutral-text-default)' };
     }
   };
 
@@ -145,15 +155,13 @@ export function OrganizationActivityPage() {
             <Spinner aria-label={t('common.loading')} data-size="lg" />
           </Stack>
         ) : activities.length === 0 ? (
-          <EmptyState
-            icon={<InboxIcon />}
-            title={t('org.noActivity')}
-          />
+          <EmptyState icon={<InboxIcon />} title={t('org.noActivity')} />
         ) : (
           <Stack direction="vertical" spacing="var(--ds-size-3)">
             {activities.map((activity) => {
               const color = getEntityTypeColor(activity.entityType);
-              const displayName = activity.userName ?? activity.user?.name ?? activity.userEmail ?? activity.user?.email ?? 'System';
+              const displayName =
+                activity.userName ?? activity.user?.name ?? activity.userEmail ?? activity.user?.email ?? 'System';
               return (
                 <Stack
                   key={activity.id}

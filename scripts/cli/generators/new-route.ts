@@ -20,7 +20,7 @@ export async function newRoute(args: string[], flags: Record<string, string | bo
   }
 
   const routePath = args[1] || (await ask('Route path (kebab-case, e.g. "invoices" or "bookings/detail")'));
-  const routeType = (args[2] as RouteType) || (await choose('Page type?', [...ROUTE_TYPES])) as RouteType;
+  const routeType = (args[2] as RouteType) || ((await choose('Page type?', [...ROUTE_TYPES])) as RouteType);
 
   const segments = routePath.split('/');
   const lastSegment = segments[segments.length - 1];
@@ -43,9 +43,10 @@ export async function newRoute(args: string[], flags: Record<string, string | bo
   const camel = toCamel(entityName);
   const fileName = toKebab(lastSegment);
   const relativeDir = `apps/${app}/src/routes`;
-  const routeFile = segments.length > 1
-    ? `${relativeDir}/${segments.slice(0, -1).join('/')}/${fileName}.tsx`
-    : `${relativeDir}/${fileName}.tsx`;
+  const routeFile =
+    segments.length > 1
+      ? `${relativeDir}/${segments.slice(0, -1).join('/')}/${fileName}.tsx`
+      : `${relativeDir}/${fileName}.tsx`;
   const cssFile = routeFile.replace('.tsx', '.module.css');
 
   // Generate page content based on type
@@ -77,10 +78,10 @@ export async function newRoute(args: string[], flags: Record<string, string | bo
   writer.printSummary();
 
   // Print manual steps
-  const componentName = routeType === 'detail' ? `${pascal}DetailPage` : routeType === 'form' ? `${pascal}FormPage` : `${pascalPlural}Page`;
-  const importPath = segments.length > 1
-    ? `@/routes/${segments.slice(0, -1).join('/')}/${fileName}`
-    : `@/routes/${fileName}`;
+  const componentName =
+    routeType === 'detail' ? `${pascal}DetailPage` : routeType === 'form' ? `${pascal}FormPage` : `${pascalPlural}Page`;
+  const importPath =
+    segments.length > 1 ? `@/routes/${segments.slice(0, -1).join('/')}/${fileName}` : `@/routes/${fileName}`;
 
   printManualStep(`Add import to apps/${app}/src/App.tsx:`, `import { ${componentName} } from '${importPath}';`);
 
@@ -95,20 +96,25 @@ export async function newRoute(args: string[], flags: Record<string, string | bo
   const urlPath = routeType === 'detail' ? `${routePath}/:id` : routePath;
   printManualStep(`Add route to apps/${app}/src/App.tsx:`, `<Route path="${urlPath}" element={${routeElement}} />`);
 
-  printManualStep(`Add i18n keys to packages/i18n/locales/nb.json:`, [
-    `"${namespace}": {`,
-    `  "title": "${toTitle(pluralize(entityName))}",`,
-    routeType === 'list' ? `  "searchPlaceholder": "Søk...",` : '',
-    routeType === 'list' ? `  "filterToolbar": "Filtrer ${pluralize(entityName)}",` : '',
-    routeType === 'list' ? `  "emptyTitle": "Ingen ${pluralize(entityName)}",` : '',
-    routeType === 'list' ? `  "emptyDesc": "Kom i gang ved å opprette en.",` : '',
-    routeType === 'list' ? `  "columnName": "Navn",` : '',
-    routeType === 'list' ? `  "columnStatus": "Status",` : '',
-    routeType === 'detail' ? `  "detailTitle": "${toTitle(entityName)}",` : '',
-    routeType === 'form' ? `  "formTitle": "${toTitle(entityName)}",` : '',
-    routeType === 'form' ? `  "saveSuccess": "Lagret!",` : '',
-    `}`,
-  ].filter(Boolean).join('\n'));
+  printManualStep(
+    `Add i18n keys to packages/i18n/locales/nb.json:`,
+    [
+      `"${namespace}": {`,
+      `  "title": "${toTitle(pluralize(entityName))}",`,
+      routeType === 'list' ? `  "searchPlaceholder": "Søk...",` : '',
+      routeType === 'list' ? `  "filterToolbar": "Filtrer ${pluralize(entityName)}",` : '',
+      routeType === 'list' ? `  "emptyTitle": "Ingen ${pluralize(entityName)}",` : '',
+      routeType === 'list' ? `  "emptyDesc": "Kom i gang ved å opprette en.",` : '',
+      routeType === 'list' ? `  "columnName": "Navn",` : '',
+      routeType === 'list' ? `  "columnStatus": "Status",` : '',
+      routeType === 'detail' ? `  "detailTitle": "${toTitle(entityName)}",` : '',
+      routeType === 'form' ? `  "formTitle": "${toTitle(entityName)}",` : '',
+      routeType === 'form' ? `  "saveSuccess": "Lagret!",` : '',
+      `}`,
+    ]
+      .filter(Boolean)
+      .join('\n'),
+  );
 
   printSuccess(`Route "${routePath}" created in ${app} app.`);
 }
@@ -151,14 +157,14 @@ import {
   FilterToolbar,
   DashboardPageHeader,
   PageContentLayout,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useSessionTenantId } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useSessionTenantId } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './${fileName}.module.css';
 
-// TODO: Import SDK hook (e.g. use${pascalPlural} from '@digilist-saas/sdk')
+// TODO: Import SDK hook (e.g. use${pascalPlural} from '@digipicks/sdk')
 
 // TODO: Define entity type (or import from SDK)
 interface ${pascal} {
@@ -334,9 +340,9 @@ import {
   BackButton,
   PageContentLayout,
   ErrorState,
-} from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useT } from '@digipicks/i18n';
 import styles from './${fileName}.module.css';
 
 export function ${pascal}DetailPage() {
@@ -420,10 +426,10 @@ import {
   BackButton,
   PageContentLayout,
   ErrorState,
-} from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useSessionTenantId } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useSessionTenantId } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './${fileName}.module.css';
 
 export function ${pascal}FormPage() {

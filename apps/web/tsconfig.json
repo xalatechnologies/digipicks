@@ -20,8 +20,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@digilist-saas/sdk": ["../../packages/sdk/src"],
-      "@digilist-saas/sdk/*": ["../../packages/sdk/src/*"]
+      "@digipicks/sdk": ["../../packages/sdk/src"],
+      "@digipicks/sdk/*": ["../../packages/sdk/src/*"]
     }
   },
   "include": ["src"],

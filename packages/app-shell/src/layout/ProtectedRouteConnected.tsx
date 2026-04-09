@@ -10,12 +10,9 @@
  * @formerly BackofficeProtectedRouteConnected (renamed during app consolidation)
  */
 
-import {
-  useAuthBridge,
-  useRoleContext,
-} from '@digilist-saas/app-shell';
+import { useAuthBridge, useRoleContext } from '@digipicks/app-shell';
 import { ProtectedRoute } from './ProtectedRoute';
-import type { PlatformRole } from '@digilist-saas/app-shell';
+import type { PlatformRole } from '@digipicks/app-shell';
 import type { Capability } from '../capabilities';
 import { useCapabilities } from '../hooks/useCapabilities';
 
@@ -44,9 +41,11 @@ export function ProtectedRouteConnected({
   const { hasCapability, hasAnyCapability } = useCapabilities();
 
   // Role hierarchy: superadmin > admin > user
-  const hasRequiredRoleCheck = !requiredRole || effectiveRole === requiredRole
-    || (requiredRole === 'user' && ['superadmin', 'admin'].includes(effectiveRole!))
-    || (requiredRole === 'admin' && effectiveRole === 'superadmin');
+  const hasRequiredRoleCheck =
+    !requiredRole ||
+    effectiveRole === requiredRole ||
+    (requiredRole === 'user' && ['superadmin', 'admin'].includes(effectiveRole!)) ||
+    (requiredRole === 'admin' && effectiveRole === 'superadmin');
 
   // Capability checks (only applied if specified)
   const hasRequiredCapabilityCheck = !requiredCapability || hasCapability(requiredCapability);

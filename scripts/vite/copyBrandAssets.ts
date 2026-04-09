@@ -1,5 +1,5 @@
 /**
- * Vite plugin: copy Digilist logo from @digilist-saas/shared to app public/.
+ * Vite plugin: copy Digilist logo from @digipicks/shared to app public/.
  * One asset (logo.svg) used for header, favicon, and PWA icon.
  */
 

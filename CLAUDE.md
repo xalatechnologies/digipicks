@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 20 Convex components, 38 domain facades, 51 SDK hooks, 1,488 passing tests, 17/17 SaaS module coverage. OpenAPI REST adapter with Swagger UI. See `docs/architecture/PLATFORM_STATE.md` for the full inventory.
 
-The 2 apps (`web`, `dashboard`) use the `@digilist-saas/ds` design system (62 components following [Digdir Designsystemet](https://designsystemet.no/no)) and the `@digilist-saas/sdk` adapter layer backed by Convex.
+The 2 apps (`web`, `dashboard`) use the `@digipicks/ds` design system (62 components following [Digdir Designsystemet](https://designsystemet.no/no)) and the `@digipicks/sdk` adapter layer backed by Convex.
 
 ## Commands
 
@@ -121,6 +121,7 @@ convex/components/
 Domain files in `convex/domain/` serve as **facades** that delegate to components. This preserves the `api.domain.{module}.{function}` paths that SDK hooks use — no SDK changes needed when components are swapped.
 
 Facade responsibilities:
+
 1. Accept typed `v.id("tenants")` args from SDK
 2. Convert to `string` for component calls
 3. Enrich results with core table data (user names, resource names)
@@ -139,41 +140,42 @@ Facade responsibilities:
 
 ### Shared Infrastructure (Auth, Realtime, RBAC, Feature Flags)
 
-**All apps must use shared infrastructure for consistent SSO, RBAC, and feature gating.** Do not implement auth, realtime, RBAC, or feature flags in app-local code. Import from `@digilist-saas/app-shell` or `@digilist-saas/sdk`.
+**All apps must use shared infrastructure for consistent SSO, RBAC, and feature gating.** Do not implement auth, realtime, RBAC, or feature flags in app-local code. Import from `@digipicks/app-shell` or `@digipicks/sdk`.
 
-| Concern | Source | Exports |
-|---------|--------|---------|
-| **Auth** | `@digilist-saas/app-shell` | `AuthProvider`, `useAuth` — wraps SDK; same session/SSO across apps |
-| **Realtime** | `@digilist-saas/app-shell` | `RealtimeProvider`, `useRealtimeListingUpdates`, `useRealtimeBooking`, etc. |
-| **RBAC** | `@digilist-saas/app-shell` | `useRBAC`, `ROLE_CAPABILITIES`, `getCapabilitiesForRole` |
-| **Feature flags** | `@digilist-saas/app-shell` | `FeatureGate` — gates by tenant module config |
+| Concern           | Source                 | Exports                                                                     |
+| ----------------- | ---------------------- | --------------------------------------------------------------------------- |
+| **Auth**          | `@digipicks/app-shell` | `AuthProvider`, `useAuth` — wraps SDK; same session/SSO across apps         |
+| **Realtime**      | `@digipicks/app-shell` | `RealtimeProvider`, `useRealtimeListingUpdates`, `useRealtimeBooking`, etc. |
+| **RBAC**          | `@digipicks/app-shell` | `useRBAC`, `ROLE_CAPABILITIES`, `getCapabilitiesForRole`                    |
+| **Feature flags** | `@digipicks/app-shell` | `FeatureGate` — gates by tenant module config                               |
 
 **Rule:** Apps and packages (e.g. digilist) must import these from app-shell or SDK. No app-local `useAuth`, `AuthProvider`, or `RealtimeProvider` implementations except when app-shell is explicitly extended (e.g. backoffice roles). See `docs/SHARED_INFRASTRUCTURE.md` for current state and migration notes.
 
 ### Shared Packages
 
-- **`@digilist-saas/app-shell`** — Provider composition (`XalaProviders`), auth context (`AuthProvider`), route guards (`RequireAuth`/`ProtectedRoute`), realtime (`RealtimeProvider`/`ConvexRealtimeProvider`), RBAC (`useRBAC`), feature flags (`FeatureGate`), shared layout.
-- **`@digilist-saas/i18n`** — i18next with `nb`, `en`, `ar` locales
-- **`@digilist-saas/shared`** — Types, constants, navigation config; multi-entry (`./types`, `./constants`, `./navigation`)
-- **`@digilist-saas/ds`** — Design system following [Digdir Designsystemet](https://designsystemet.no/no) for principles and compliance; includes component registry (`./registry`)
-- **`@digilist-saas/ds-themes`** — Theme tokens for the design system
+- **`@digipicks/app-shell`** — Provider composition (`XalaProviders`), auth context (`AuthProvider`), route guards (`RequireAuth`/`ProtectedRoute`), realtime (`RealtimeProvider`/`ConvexRealtimeProvider`), RBAC (`useRBAC`), feature flags (`FeatureGate`), shared layout.
+- **`@digipicks/i18n`** — i18next with `nb`, `en`, `ar` locales
+- **`@digipicks/shared`** — Types, constants, navigation config; multi-entry (`./types`, `./constants`, `./navigation`)
+- **`@digipicks/ds`** — Design system following [Digdir Designsystemet](https://designsystemet.no/no) for principles and compliance; includes component registry (`./registry`)
+- **`@digipicks/ds-themes`** — Theme tokens for the design system
 
 ### Registry — Dictionary, Gazetteer & Gatekeeper
 
-**`@digilist-saas/ds/registry`** is the authoritative reference for components, patterns, and standards. AI agents and developers MUST consult it before generating UI, auth, or infrastructure code.
+**`@digipicks/ds/registry`** is the authoritative reference for components, patterns, and standards. AI agents and developers MUST consult it before generating UI, auth, or infrastructure code.
 
 - **Dictionary** — Maps intents and raw HTML → canonical components (`resolveNeed()`, `getComponent()`)
 - **Gazetteer** — Index of components, patterns, guidelines, providers (`GAZETTEER_INDEX`)
 - **Gatekeeper** — Non-negotiable rules (`PROHIBITIONS`, `REQUIREMENTS`, `DECISION_FLOWS`)
 - **Guide** — `packages/ds/registry/AGENT_GUIDE.md` — Start here for guided tour
 
-### Using @digilist-saas/shared Types
+### Using @digipicks/shared Types
 
-The `@digilist-saas/shared` package is the **single source of truth for platform types** (auth, tenant, category, amenity, api, etc.). Import these from shared instead of defining locally.
+The `@digipicks/shared` package is the **single source of truth for platform types** (auth, tenant, category, amenity, api, etc.). Import these from shared instead of defining locally.
 
-**For Convex-backed domain entities** (Listing, Booking, User, Organization): the **SDK is canonical**. Shared has some overlapping types (listing.ts, booking.ts) that may be stale or conflict with the Convex schema. Prefer importing from `@digilist-saas/sdk` for Listing, ListingStatus, BookingModel, Booking, User (org-scoped), Organization.
+**For Convex-backed domain entities** (Listing, Booking, User, Organization): the **SDK is canonical**. Shared has some overlapping types (listing.ts, booking.ts) that may be stale or conflict with the Convex schema. Prefer importing from `@digipicks/sdk` for Listing, ListingStatus, BookingModel, Booking, User (org-scoped), Organization.
 
 **Type files** (`packages/shared/src/types/`):
+
 - `common.ts` — Base types: `Id`, `Timestamp`, `Pricing`, `Location`, `Image`, `App`, `Locale`
 - `auth.ts` — `User`, `Session`, `Role`, `Permission`, `AuthState`
 - `tenant.ts` — `Tenant`, `Organization`, `TenantUser`
@@ -185,57 +187,63 @@ The `@digilist-saas/shared` package is the **single source of truth for platform
 - `api.ts` — `PaginatedResponse`, `ProblemDetails`, `ApiError`, `QueryOptions`
 
 **Usage examples**:
+
 ```typescript
 // Import specific types
-import type { Listing, Category, Amenity } from '@digilist-saas/shared/types';
+import type { Listing, Category, Amenity } from '@digipicks/shared/types';
 
 // Import from main entry (re-exports all)
-import type { ListingFilterState, PaginatedResponse } from '@digilist-saas/shared';
+import type { ListingFilterState, PaginatedResponse } from '@digipicks/shared';
 
 // Import constants
-import { APPS, SUPPORTED_LOCALES } from '@digilist-saas/shared/constants';
+import { APPS, SUPPORTED_LOCALES } from '@digipicks/shared/constants';
 ```
 
 **Adding new types**:
+
 1. Add to the appropriate file in `packages/shared/src/types/`
 2. Export from `packages/shared/src/types/index.ts`
-3. Run `pnpm -F @digilist-saas/shared build` to rebuild
+3. Run `pnpm -F @digipicks/shared build` to rebuild
 
 ### Thin App Pattern
 
 Every app follows the same entry structure — compose providers, render routes:
+
 ```
 XalaConvexProvider (sdk) → ThemeProvider → I18nProvider → AuthProvider/BackofficeAuthBridge → [RealtimeProvider|ConvexRealtimeProvider] → BrowserRouter → App
 ```
 
-Both apps (`web`, `dashboard`) use `@digilist-saas/ds` for the design system (Digdir Designsystemet) and `@digilist-saas/sdk` for data hooks. Business logic lives in Convex functions and SDK hooks, not in apps.
+Both apps (`web`, `dashboard`) use `@digipicks/ds` for the design system (Digdir Designsystemet) and `@digipicks/sdk` for data hooks. Business logic lives in Convex functions and SDK hooks, not in apps.
 
 ### Convex Function Patterns
 
 **Component function** (inside `convex/components/{name}/functions.ts`):
+
 ```typescript
-import { query, mutation } from "./_generated/server";  // Component's own server
-import { v } from "convex/values";
+import { query, mutation } from './_generated/server'; // Component's own server
+import { v } from 'convex/values';
 
 export const list = query({
-  args: { tenantId: v.string(), /* v.string() for ALL external refs */ },
+  args: { tenantId: v.string() /* v.string() for ALL external refs */ },
   returns: v.array(v.any()),
   handler: async (ctx, args) => {
-    return ctx.db.query("reviews")
-      .withIndex("by_tenant", q => q.eq("tenantId", args.tenantId))
+    return ctx.db
+      .query('reviews')
+      .withIndex('by_tenant', (q) => q.eq('tenantId', args.tenantId))
       .collect();
   },
 });
 ```
 
 **Facade function** (in `convex/domain/{module}.ts`):
+
 ```typescript
-import { query } from "../_generated/server";  // App's server
-import { components } from "../_generated/api";
-import { v } from "convex/values";
+import { query } from '../_generated/server'; // App's server
+import { components } from '../_generated/api';
+import { v } from 'convex/values';
 
 export const list = query({
-  args: { tenantId: v.id("tenants") },  // Typed IDs from SDK
+  args: { tenantId: v.id('tenants') }, // Typed IDs from SDK
   handler: async (ctx, { tenantId }) => {
     // 1. Delegate to component (convert typed ID to string)
     const data = await ctx.runQuery(components.reviews.functions.list, {
@@ -249,15 +257,17 @@ export const list = query({
 ```
 
 **App-level function** (core tables like resources, search):
+
 ```typescript
-import { query, mutation } from "../_generated/server";
-import { v } from "convex/values";
+import { query, mutation } from '../_generated/server';
+import { v } from 'convex/values';
 
 export const list = query({
-  args: { tenantId: v.id("tenants") },
+  args: { tenantId: v.id('tenants') },
   handler: async (ctx, args) => {
-    return ctx.db.query("resources")
-      .withIndex("by_tenant", q => q.eq("tenantId", args.tenantId))
+    return ctx.db
+      .query('resources')
+      .withIndex('by_tenant', (q) => q.eq('tenantId', args.tenantId))
       .collect();
   },
 });
@@ -266,6 +276,7 @@ export const list = query({
 ### Database Schema
 
 **Core tables** (in `convex/schema.ts`) — 13 tables shared across all components:
+
 - **Identity**: tenants, organizations, users, tenantUsers
 - **Custody**: custodyGrants, custodySubgrants
 - **Infrastructure**: outboxEvents (event bus), componentRegistry (component slots)
@@ -274,6 +285,7 @@ export const list = query({
 **CRITICAL RULE**: Facade args must use `v.string()` (not `v.id("tableName")`) for ANY table that moved to a component. Only core tables above can use `v.id()`. This includes resources, bookings, reviews, sessions, roles, payments, etc.
 
 **Component tables** (in `convex/components/{name}/schema.ts`) — isolated per component:
+
 - Each component defines its own tables with `v.string()` for external references
 - Components cannot directly query other components' tables
 - Cross-component data access happens through the facade layer
@@ -283,6 +295,7 @@ Status types are defined in `convex/types.ts` as string literal unions.
 ### Component Contract Pattern
 
 Every component should define a contract (`contract.ts`) declaring its API shape:
+
 ```typescript
 import { defineContract } from "../../lib/componentContract";
 
@@ -344,12 +357,12 @@ git push origin develop
 
 ## Test Structure (1,465 tests)
 
-| Layer | Tests | Files |
-|-------|-------|-------|
-| Component (Convex) | ~625 | 20 |
-| Domain facade (Convex) | ~410 | 24 |
-| Lib infrastructure | ~215 | 13 |
-| SDK hooks | 217 | 16 |
+| Layer                  | Tests | Files |
+| ---------------------- | ----- | ----- |
+| Component (Convex)     | ~625  | 20    |
+| Domain facade (Convex) | ~410  | 24    |
+| Lib infrastructure     | ~215  | 13    |
+| SDK hooks              | 217   | 16    |
 
 - **SDK tests** (`packages/sdk/src/__tests__/`): Vitest + jsdom + React Testing Library
 - **Component tests** (`convex/components/**/__tests__/`): Vitest + edge-runtime + `convex-test`
@@ -364,6 +377,7 @@ Test config: `convex/vitest.config.ts` for all Convex tests (components + domain
 ## Relevant Docs
 
 ### Architecture (docs/architecture/)
+
 - `PLATFORM_STATE.md` — Current platform inventory: 19 components, 35 facades, 49 SDK hooks, 51 dashboard routes
 - `architecture-overview-v1.md` — Full system architecture, three-plane design, domain model, scale metrics
 - `domain-contracts-v1.md` — Component contracts and API shapes (49 facades documented)
@@ -379,6 +393,7 @@ Test config: `convex/vitest.config.ts` for all Convex tests (components + domain
 - `alerting-runbook-v1.md` — Alerting and incident runbook
 
 ### Platform (docs/)
+
 - `SHARED_INFRASTRUCTURE.md` — Auth, realtime, RBAC, feature flags: canonical sources and migration
 - `CONVENTIONS.md` — Tenant boundaries, idempotency, RFC7807 errors, outbox events, audit requirements
 - `SECURITY_INVARIANTS.md` — Non-negotiable security rules (tenant isolation, auth, authorization, audit)
@@ -390,44 +405,48 @@ Test config: `convex/vitest.config.ts` for all Convex tests (components + domain
 
 ## UI Standards (Non-Negotiable)
 
-These rules mirror `@digilist-saas/ds/registry/gatekeeper.ts`. Violations block approval.
+These rules mirror `@digipicks/ds/registry/gatekeeper.ts`. Violations block approval.
 
 ### NEVER
+
 - Raw HTML for UI (`<button>`, `<input>`, `<select>`, `<table>`, `<h1>`–`<h6>`, `<p>`) → use DS: `Button`, `Textfield`, `Select`, `DataTable`, `Heading`, `Paragraph`
-- Direct `@digdir/*` imports → import from `@digilist-saas/ds`
-- Inline `<svg>` → use Icon components from `@digilist-saas/ds`
+- Direct `@digdir/*` imports → import from `@digipicks/ds`
+- Inline `<svg>` → use Icon components from `@digipicks/ds`
 - Plain `.css` files → use `.module.css`
 - Hardcoded colors (hex/rgb/rgba) → use `--ds-color-*` tokens
 - Hardcoded `px` for spacing → use `--ds-size-*` tokens
-- App-local AuthProvider/useAuth → use `@digilist-saas/app-shell`
-- App-local realtime/WebSocket providers → use `RealtimeProvider` from `@digilist-saas/app-shell`
-- Hardcoded Norwegian/English UI strings → use `t()` from `@digilist-saas/i18n`
+- App-local AuthProvider/useAuth → use `@digipicks/app-shell`
+- App-local realtime/WebSocket providers → use `RealtimeProvider` from `@digipicks/app-shell`
+- Hardcoded Norwegian/English UI strings → use `t()` from `@digipicks/i18n`
 
 ### ALWAYS
-- Import UI components from `@digilist-saas/ds`
+
+- Import UI components from `@digipicks/ds`
 - Use `.module.css` for component styles with `--ds-*` tokens
 - Use `t('namespace.key')` for all user-facing text
-- Check `@digilist-saas/ds/registry` (gatekeeper, gazetteer) before adding new UI patterns
+- Check `@digipicks/ds/registry` (gatekeeper, gazetteer) before adding new UI patterns
 - Use `data-size`, `data-color` props (not className) for DS component variants
 
 ### When You Need...
 
-| Need | Use | Source |
-|------|-----|--------|
-| Button | `<Button>` | `@digilist-saas/ds` |
-| Text input | `<Textfield>` | `@digilist-saas/ds` |
-| Dropdown | `<Select>` or `<NativeSelect>` | `@digilist-saas/ds` |
-| Layout | `ContentLayout`, `PageHeader` | `@digilist-saas/ds` |
-| Dialog | `useDialog().confirm()` + `ConfirmDialog` | `@digilist-saas/ds` |
-| Auth gate | `AuthProvider` + `ProtectedRoute` | `@digilist-saas/app-shell` |
-| Data display | `<DataTable>` | `@digilist-saas/ds` |
-| Side panel | `<Drawer>` or `<FilterDrawer>` | `@digilist-saas/ds` |
-| Dashboard | `DashboardLayout` | `@digilist-saas/app-shell` |
+| Need         | Use                                       | Source                 |
+| ------------ | ----------------------------------------- | ---------------------- |
+| Button       | `<Button>`                                | `@digipicks/ds`        |
+| Text input   | `<Textfield>`                             | `@digipicks/ds`        |
+| Dropdown     | `<Select>` or `<NativeSelect>`            | `@digipicks/ds`        |
+| Layout       | `ContentLayout`, `PageHeader`             | `@digipicks/ds`        |
+| Dialog       | `useDialog().confirm()` + `ConfirmDialog` | `@digipicks/ds`        |
+| Auth gate    | `AuthProvider` + `ProtectedRoute`         | `@digipicks/app-shell` |
+| Data display | `<DataTable>`                             | `@digipicks/ds`        |
+| Side panel   | `<Drawer>` or `<FilterDrawer>`            | `@digipicks/ds`        |
+| Dashboard    | `DashboardLayout`                         | `@digipicks/app-shell` |
 
 <!-- convex-ai-start -->
+
 This project uses [Convex](https://convex.dev) as its backend.
 
 When working on Convex code, **always read `convex/_generated/ai/guidelines.md` first** for important guidelines on how to correctly use Convex APIs and patterns. The file contains rules that override what you may have learned about Convex from training data.
 
 Convex agent skills for common tasks can be installed by running `npx convex ai-files install`.
+
 <!-- convex-ai-end -->

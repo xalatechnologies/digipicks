@@ -6,16 +6,10 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Stack,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useDocsGuidesList } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button, Stack } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useDocsGuidesList } from '@digipicks/sdk';
+import { env } from '@digipicks/app-shell';
 import s from './blog.module.css';
 
 export function BlogPage() {
@@ -55,9 +49,7 @@ export function BlogPage() {
         <Paragraph>{t('common.loading')}</Paragraph>
       ) : items.length === 0 ? (
         <div className={s.emptyState}>
-          <Paragraph className={s.emptyText}>
-            {t('blog.noArticles')}
-          </Paragraph>
+          <Paragraph className={s.emptyText}>{t('blog.noArticles')}</Paragraph>
         </div>
       ) : (
         <div className={s.guideGrid}>
@@ -76,11 +68,7 @@ export function BlogPage() {
                   {guide.description}
                 </Paragraph>
               )}
-              <Button
-                variant="tertiary"
-                data-size="sm"
-                onClick={() => navigate(`/blog/${guide.slug}`)}
-              >
+              <Button variant="tertiary" data-size="sm" onClick={() => navigate(`/blog/${guide.slug}`)}>
                 {t('blog.readMore')}
               </Button>
             </Card>

@@ -27,13 +27,9 @@ import {
   useDialog,
   useToast,
   LoadingState,
-} from '@digilist-saas/ds';
-import {
-  useUser,
-  useDeactivateUser,
-  useReactivateUser,
-} from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useUser, useDeactivateUser, useReactivateUser } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './UserDetailPage.module.css';
 
 const ROLE_LABEL_KEYS: Record<string, string> = {
@@ -126,16 +122,18 @@ export function UserDetailPage() {
   };
 
   if (isLoading) {
-    return (
-      <LoadingState message={t('common.loading')} size="lg" />
-    );
+    return <LoadingState message={t('common.loading')} size="lg" />;
   }
 
   if (!user) {
     return (
       <Stack direction="vertical" align="center" spacing="var(--ds-size-4)" className={styles.notFoundPadding}>
-        <Heading level={3} data-size="sm" className={styles.headingNoMargin}>{t('users.detail.notFound')}</Heading>
-        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('users.detail.notFoundDesc')}</Paragraph>
+        <Heading level={3} data-size="sm" className={styles.headingNoMargin}>
+          {t('users.detail.notFound')}
+        </Heading>
+        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+          {t('users.detail.notFoundDesc')}
+        </Paragraph>
         <Link to="/users">
           <Button variant="secondary" data-size="sm" type="button">
             <ArrowLeftIcon />
@@ -164,11 +162,13 @@ export function UserDetailPage() {
               {user.name}
             </Heading>
             <Stack direction="horizontal" spacing="var(--ds-size-2)" className={styles.badgeRow}>
-              <Badge variant={roleColors[user.role]}>
-                {getRoleLabel(user.role)}
-              </Badge>
+              <Badge variant={roleColors[user.role]}>{getRoleLabel(user.role)}</Badge>
               <Badge variant={statusColors[user.status]}>
-                {user.status === 'active' ? t('users.detail.statusActive') : user.status === 'inactive' ? t('users.detail.statusInactive') : t('users.detail.statusSuspended')}
+                {user.status === 'active'
+                  ? t('users.detail.statusActive')
+                  : user.status === 'inactive'
+                    ? t('users.detail.statusInactive')
+                    : t('users.detail.statusSuspended')}
               </Badge>
             </Stack>
           </div>
@@ -212,12 +212,16 @@ export function UserDetailPage() {
           {/* Contact Information */}
           <Card>
             <Stack spacing={4}>
-              <Heading level={3} data-size="sm">{t('users.detail.contactInfo')}</Heading>
+              <Heading level={3} data-size="sm">
+                {t('users.detail.contactInfo')}
+              </Heading>
 
               <Stack direction="vertical" spacing="var(--ds-size-1)">
                 <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
                   <MailIcon className={styles.iconSubtle} />
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('common.email')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('common.email')}
+                  </Paragraph>
                 </Stack>
                 <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
                   <a href={`mailto:${user.email}`} className={styles.linkColor}>
@@ -227,7 +231,8 @@ export function UserDetailPage() {
                     variant="tertiary"
                     data-size="sm"
                     onClick={() => handleCopyToClipboard(user.email, 'email')}
-                    aria-label={t('users.detail.copyEmail')} type="button"
+                    aria-label={t('users.detail.copyEmail')}
+                    type="button"
                   >
                     {copiedField === 'email' ? <CheckCircleIcon /> : <CopyIcon />}
                   </Button>
@@ -238,7 +243,9 @@ export function UserDetailPage() {
                 <Stack direction="vertical" spacing="var(--ds-size-1)">
                   <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
                     <PhoneIcon className={styles.iconSubtle} />
-                    <Paragraph data-size="sm" className={styles.subtleText}>{t('users.detail.phone')}</Paragraph>
+                    <Paragraph data-size="sm" className={styles.subtleText}>
+                      {t('users.detail.phone')}
+                    </Paragraph>
                   </Stack>
                   <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
                     <a href={`tel:${user.phone}`} className={styles.linkColor}>
@@ -248,7 +255,8 @@ export function UserDetailPage() {
                       variant="tertiary"
                       data-size="sm"
                       onClick={() => handleCopyToClipboard(user.phone!, 'phone')}
-                      aria-label={t('users.detail.copyPhone')} type="button"
+                      aria-label={t('users.detail.copyPhone')}
+                      type="button"
                     >
                       {copiedField === 'phone' ? <CheckCircleIcon /> : <CopyIcon />}
                     </Button>
@@ -261,10 +269,14 @@ export function UserDetailPage() {
           {/* Role and Status */}
           <Card>
             <Stack spacing={4}>
-              <Heading level={3} data-size="sm">{t('users.detail.roleAndAccess')}</Heading>
+              <Heading level={3} data-size="sm">
+                {t('users.detail.roleAndAccess')}
+              </Heading>
 
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.subtleText}>{t('common.role')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('common.role')}
+                </Paragraph>
                 <Badge variant={roleColors[user.role]} data-size="lg">
                   <ShieldCheckIcon />
                   {getRoleLabel(user.role)}
@@ -272,7 +284,9 @@ export function UserDetailPage() {
               </Stack>
 
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.subtleText}>{t('common.status')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('common.status')}
+                </Paragraph>
                 <Badge variant={statusColors[user.status]} data-size="lg">
                   {user.status === 'active' ? (
                     <>
@@ -288,7 +302,9 @@ export function UserDetailPage() {
               </Stack>
 
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.subtleText}>{t('users.detail.accessLevel')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('users.detail.accessLevel')}
+                </Paragraph>
                 <Paragraph data-size="sm" className={styles.headingNoMargin}>
                   {t('users.detail.accessDescription', { level: getAccessLevel(user.role) })}
                 </Paragraph>
@@ -299,13 +315,17 @@ export function UserDetailPage() {
           {/* Account Information */}
           <Card>
             <Stack spacing={4}>
-              <Heading level={3} data-size="sm">{t('users.detail.accountInfo')}</Heading>
+              <Heading level={3} data-size="sm">
+                {t('users.detail.accountInfo')}
+              </Heading>
 
               {user.lastLoginAt && (
                 <Stack direction="vertical" spacing="var(--ds-size-1)">
                   <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
                     <ClockIcon className={styles.iconSubtle} />
-                    <Paragraph data-size="sm" className={styles.subtleText}>{t('users.detail.lastLogin')}</Paragraph>
+                    <Paragraph data-size="sm" className={styles.subtleText}>
+                      {t('users.detail.lastLogin')}
+                    </Paragraph>
                   </Stack>
                   <Paragraph data-size="sm" className={styles.fontMedium}>
                     {new Date(user.lastLoginAt).toLocaleString('nb-NO', {
@@ -320,7 +340,9 @@ export function UserDetailPage() {
               )}
 
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.subtleText}>{t('users.detail.created')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('users.detail.created')}
+                </Paragraph>
                 <Paragraph data-size="sm" className={styles.fontMedium}>
                   {new Date(user.createdAt).toLocaleDateString('nb-NO', {
                     day: '2-digit',
@@ -331,7 +353,9 @@ export function UserDetailPage() {
               </Stack>
 
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.subtleText}>{t('users.detail.userId')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.subtleText}>
+                  {t('users.detail.userId')}
+                </Paragraph>
                 <Paragraph data-size="sm" className={styles.monoSubtle}>
                   {user.id}
                 </Paragraph>

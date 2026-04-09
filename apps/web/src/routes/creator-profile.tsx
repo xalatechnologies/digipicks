@@ -7,20 +7,19 @@
 
 import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Card, Heading, Paragraph, Button, Spinner, StatusTag, Tag } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Spinner,
-  StatusTag,
-  Tag,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useCreatorProfile, usePublicTiers, useIsSubscribed, useSubscribe, useCreatorBranding, type Pick as PickType } from '@digilist-saas/sdk';
-import { env, useAuth } from '@digilist-saas/app-shell';
+  useCreatorProfile,
+  usePublicTiers,
+  useIsSubscribed,
+  useSubscribe,
+  useCreatorBranding,
+  type Pick as PickType,
+} from '@digipicks/sdk';
+import { env, useAuth } from '@digipicks/app-shell';
 import { useQuery } from 'convex/react';
-import { api } from '@digilist-saas/sdk/convex-api';
+import { api } from '@digipicks/sdk/convex-api';
 import s from './creator-profile.module.css';
 
 // ---------------------------------------------------------------------------
@@ -29,16 +28,25 @@ import s from './creator-profile.module.css';
 
 function resultColor(result: string): 'success' | 'danger' | 'warning' | 'neutral' {
   switch (result) {
-    case 'won': return 'success';
-    case 'lost': return 'danger';
-    case 'push': return 'warning';
-    default: return 'neutral';
+    case 'won':
+      return 'success';
+    case 'lost':
+      return 'danger';
+    case 'push':
+      return 'warning';
+    default:
+      return 'neutral';
   }
 }
 
 function getInitials(name?: string, email?: string): string {
   if (name) {
-    return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2);
+    return name
+      .split(' ')
+      .map((w) => w[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
   if (email) return email[0].toUpperCase();
   return '?';
@@ -101,19 +109,16 @@ export function CreatorProfilePage() {
   // Fetch creator brand config + assets for custom header/logo
   const creatorBrand = useQuery(
     api.domain.tenantConfig.getCreatorBranding,
-    tenantId && creatorId ? { tenantId, creatorId } : 'skip'
+    tenantId && creatorId ? { tenantId, creatorId } : 'skip',
   );
   const creatorAssets = useQuery(
     api.domain.tenantConfig.listCreatorBrandAssets,
-    tenantId && creatorId ? { tenantId, creatorId } : 'skip'
+    tenantId && creatorId ? { tenantId, creatorId } : 'skip',
   );
   const creatorLogo = creatorAssets?.find((a: any) => a.assetType === 'logo');
   const creatorBanner = creatorAssets?.find((a: any) => a.assetType === 'banner');
 
-  const { profile, isLoading } = useCreatorProfile(
-    tenantId as any,
-    creatorId
-  );
+  const { profile, isLoading } = useCreatorProfile(tenantId as any, creatorId);
 
   const { tiers } = usePublicTiers(tenantId || undefined);
   const userId = auth.isAuthenticated ? (auth as any).user?.id : undefined;
@@ -158,13 +163,10 @@ export function CreatorProfilePage() {
 
   const roiData = useMemo(
     () => (profile?.recentPicks ? buildRoiChart(profile.recentPicks) : []),
-    [profile?.recentPicks]
+    [profile?.recentPicks],
   );
 
-  const maxAbsRoi = useMemo(
-    () => Math.max(1, ...roiData.map((d) => Math.abs(d.roi))),
-    [roiData]
-  );
+  const maxAbsRoi = useMemo(() => Math.max(1, ...roiData.map((d) => Math.abs(d.roi))), [roiData]);
 
   // Loading
   if (isLoading) {
@@ -199,12 +201,7 @@ export function CreatorProfilePage() {
   return (
     <div className={s.pageContainer}>
       {/* Creator banner (white-label) */}
-      {creatorBanner?.url && (
-        <div
-          className={s.brandBanner}
-          style={{ backgroundImage: `url(${creatorBanner.url})` }}
-        />
-      )}
+      {creatorBanner?.url && <div className={s.brandBanner} style={{ backgroundImage: `url(${creatorBanner.url})` }} />}
 
       {/* Branded header bar (white-label) */}
       {hasBranding && (
@@ -212,14 +209,10 @@ export function CreatorProfilePage() {
           className={s.brandHeader}
           style={{ backgroundColor: 'var(--creator-brand-primary, var(--ds-color-accent-base-default))' }}
         >
-          {logoUrl && (
-            <img src={logoUrl} alt={brandedName} className={s.brandLogo} />
-          )}
+          {logoUrl && <img src={logoUrl} alt={brandedName} className={s.brandLogo} />}
           <div className={s.brandHeaderText}>
             <span className={s.brandName}>{brandedName}</span>
-            {brandedTagline && (
-              <span className={s.brandTagline}>{brandedTagline}</span>
-            )}
+            {brandedTagline && <span className={s.brandTagline}>{brandedTagline}</span>}
           </div>
         </div>
       )}
@@ -227,11 +220,7 @@ export function CreatorProfilePage() {
       {/* Profile header */}
       <div className={s.profileHeader}>
         {profile.avatarUrl ? (
-          <img
-            src={profile.avatarUrl}
-            alt={brandedName}
-            className={s.avatar}
-          />
+          <img src={profile.avatarUrl} alt={brandedName} className={s.avatar} />
         ) : (
           <div className={s.avatarPlaceholder} aria-hidden="true">
             {getInitials(profile.name, profile.email)}
@@ -264,15 +253,8 @@ export function CreatorProfilePage() {
               {t('creator.subscribed', 'Subscribed')}
             </StatusTag>
           ) : (
-            <Button
-              variant="primary"
-              data-size="md"
-              onClick={handleSubscribe}
-              disabled={subscribing}
-            >
-              {subscribing
-                ? t('common.loading', 'Loading...')
-                : t('creator.subscribe', 'Subscribe')}
+            <Button variant="primary" data-size="md" onClick={handleSubscribe} disabled={subscribing}>
+              {subscribing ? t('common.loading', 'Loading...') : t('creator.subscribe', 'Subscribe')}
             </Button>
           )}
         </div>
@@ -284,22 +266,15 @@ export function CreatorProfilePage() {
           <Card>
             <div className={s.statCard}>
               <div className={s.statValue}>{stats.totalPicks}</div>
-              <div className={s.statLabel}>
-                {t('creator.stats.totalPicks', 'Total Picks')}
-              </div>
+              <div className={s.statLabel}>{t('creator.stats.totalPicks', 'Total Picks')}</div>
             </div>
           </Card>
           <Card>
             <div className={s.statCard}>
-              <div
-                className={s.statValue}
-                style={{ color: 'var(--ds-color-success-text-default)' }}
-              >
+              <div className={s.statValue} style={{ color: 'var(--ds-color-success-text-default)' }}>
                 {stats.winRate > 0 ? `${(stats.winRate * 100).toFixed(0)}%` : '\u2014'}
               </div>
-              <div className={s.statLabel}>
-                {t('creator.stats.winRate', 'Win Rate')}
-              </div>
+              <div className={s.statLabel}>{t('creator.stats.winRate', 'Win Rate')}</div>
             </div>
           </Card>
           <Card>
@@ -308,16 +283,12 @@ export function CreatorProfilePage() {
                 className={s.statValue}
                 style={{
                   color:
-                    stats.roi >= 0
-                      ? 'var(--ds-color-success-text-default)'
-                      : 'var(--ds-color-danger-text-default)',
+                    stats.roi >= 0 ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-danger-text-default)',
                 }}
               >
                 {stats.roi > 0 ? `+${stats.roi}%` : stats.roi < 0 ? `${stats.roi}%` : '\u2014'}
               </div>
-              <div className={s.statLabel}>
-                {t('creator.stats.roi', 'ROI')}
-              </div>
+              <div className={s.statLabel}>{t('creator.stats.roi', 'ROI')}</div>
             </div>
           </Card>
           <Card>
@@ -334,9 +305,7 @@ export function CreatorProfilePage() {
                 {stats.netUnits >= 0 ? '+' : ''}
                 {stats.netUnits.toFixed(1)}u
               </div>
-              <div className={s.statLabel}>
-                {t('creator.stats.netUnits', 'Net Units')}
-              </div>
+              <div className={s.statLabel}>{t('creator.stats.netUnits', 'Net Units')}</div>
             </div>
           </Card>
         </div>
@@ -372,9 +341,7 @@ export function CreatorProfilePage() {
               {roiData.length > 0 && (
                 <>
                   <span className={s.chartLabel}>{roiData[0].date.slice(5)}</span>
-                  <span className={s.chartLabel}>
-                    {roiData[roiData.length - 1].date.slice(5)}
-                  </span>
+                  <span className={s.chartLabel}>{roiData[roiData.length - 1].date.slice(5)}</span>
                 </>
               )}
             </div>
@@ -389,21 +356,14 @@ export function CreatorProfilePage() {
         </Heading>
 
         {profile.recentPicks.length === 0 ? (
-          <Paragraph className={s.emptyPicks}>
-            {t('creator.noPicks', 'No picks posted yet.')}
-          </Paragraph>
+          <Paragraph className={s.emptyPicks}>{t('creator.noPicks', 'No picks posted yet.')}</Paragraph>
         ) : (
           <div className={s.picksList}>
             {profile.recentPicks.map((pick) => (
               <Card key={pick.id} className={s.pickCard}>
                 <div className={s.pickHeader}>
-                  <Paragraph className={s.pickEvent}>
-                    {pick.event}
-                  </Paragraph>
-                  <StatusTag
-                    color={resultColor(pick.result)}
-                    size="sm"
-                  >
+                  <Paragraph className={s.pickEvent}>{pick.event}</Paragraph>
+                  <StatusTag color={resultColor(pick.result)} size="sm">
                     {pick.result.toUpperCase()}
                   </StatusTag>
                 </div>
@@ -413,8 +373,7 @@ export function CreatorProfilePage() {
                   </Tag>
                   <span className={s.pickDetail}>{pick.pickType}</span>
                   <span className={s.pickDetail}>
-                    <span className={s.pickOdds}>{pick.oddsAmerican}</span>
-                    {' '}({pick.oddsDecimal.toFixed(2)})
+                    <span className={s.pickOdds}>{pick.oddsAmerican}</span> ({pick.oddsDecimal.toFixed(2)})
                   </span>
                   <span className={s.pickDetail}>{pick.units}u</span>
                   <Tag data-size="sm" data-color="neutral">
@@ -437,7 +396,10 @@ export function CreatorProfilePage() {
         <Heading level={3} data-size="sm">
           {t('creator.ctaTitle', 'Get access to all picks')}
         </Heading>
-        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 'var(--ds-size-2) 0 var(--ds-size-4)' }}>
+        <Paragraph
+          data-size="sm"
+          style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 'var(--ds-size-2) 0 var(--ds-size-4)' }}
+        >
           {t('creator.ctaDescription', 'Subscribe to unlock premium picks, detailed analysis, and real-time alerts.')}
         </Paragraph>
         {isSubscribed ? (
@@ -445,15 +407,8 @@ export function CreatorProfilePage() {
             {t('creator.alreadySubscribed', 'You are subscribed to this creator.')}
           </Paragraph>
         ) : (
-          <Button
-            variant="primary"
-            data-size="lg"
-            onClick={handleSubscribe}
-            disabled={subscribing}
-          >
-            {subscribing
-              ? t('common.loading', 'Loading...')
-              : t('creator.subscribeCta', 'Subscribe Now')}
+          <Button variant="primary" data-size="lg" onClick={handleSubscribe} disabled={subscribing}>
+            {subscribing ? t('common.loading', 'Loading...') : t('creator.subscribeCta', 'Subscribe Now')}
           </Button>
         )}
       </Card>

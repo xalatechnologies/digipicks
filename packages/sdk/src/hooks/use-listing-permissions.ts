@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react';
 import { useAuth } from './use-auth';
-import type { ListingPermissions } from '@digilist-saas/shared';
+import type { ListingPermissions } from '@digipicks/shared';
 import type { ListingStatus } from './use-listings';
 
 export interface UseListingPermissionsOptions {
@@ -30,9 +30,7 @@ function normalizeStatus(status: ListingStatus): string {
   return (typeof status === 'string' ? status : '')?.toLowerCase() ?? '';
 }
 
-export function useListingPermissions(
-  options?: UseListingPermissionsOptions
-): UseListingPermissionsReturn {
+export function useListingPermissions(options?: UseListingPermissionsOptions): UseListingPermissionsReturn {
   const sdkAuth = useAuth();
   const isAdmin = options?.isAdmin ?? sdkAuth.isAdmin;
   const user = options?.user ?? sdkAuth.user;
@@ -48,13 +46,10 @@ export function useListingPermissions(
       canDuplicate: !!user,
       canViewAudit: isAdmin,
     }),
-    [isAdmin, user]
+    [isAdmin, user],
   );
 
-  const canPerformAction = useMemo(
-    () => (action: keyof ListingPermissions) => permissions[action],
-    [permissions]
-  );
+  const canPerformAction = useMemo(() => (action: keyof ListingPermissions) => permissions[action], [permissions]);
 
   const canEditListing = useMemo(
     () => (status: ListingStatus) => {
@@ -62,7 +57,7 @@ export function useListingPermissions(
       if (isAdmin) return true;
       return normalizeStatus(status) === 'draft';
     },
-    [isAdmin, user]
+    [isAdmin, user],
   );
 
   const canPublishListing = useMemo(
@@ -71,7 +66,7 @@ export function useListingPermissions(
       const s = normalizeStatus(status);
       return s === 'draft' || s === 'archived';
     },
-    [isAdmin]
+    [isAdmin],
   );
 
   const canArchiveListing = useMemo(
@@ -79,13 +74,10 @@ export function useListingPermissions(
       if (!isAdmin) return false;
       return normalizeStatus(status) === 'published';
     },
-    [isAdmin]
+    [isAdmin],
   );
 
-  const canDeleteListing = useMemo(
-    () => (_status: ListingStatus) => isAdmin,
-    [isAdmin]
-  );
+  const canDeleteListing = useMemo(() => (_status: ListingStatus) => isAdmin, [isAdmin]);
 
   return {
     permissions,

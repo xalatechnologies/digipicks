@@ -5,9 +5,9 @@
  * and pricing models with clear, transparent breakdowns.
  */
 
-import type { BookingMode } from '@digilist-saas/shared';
+import type { BookingMode } from '@digipicks/shared';
 
-export type { BookingMode } from '@digilist-saas/shared';
+export type { BookingMode } from '@digipicks/shared';
 
 export type PricingModel =
   | 'per_hour'
@@ -164,10 +164,7 @@ function getPricingModelLabel(model: PricingModel): string {
 /**
  * Calculate price for a booking with full transparency
  */
-export function calculateBookingPrice(
-  config: ResourcePricingConfig,
-  booking: BookingDetails
-): PriceCalculationResult {
+export function calculateBookingPrice(config: ResourcePricingConfig, booking: BookingDetails): PriceCalculationResult {
   const items: PriceLineItem[] = [];
   let subtotal = 0;
   const currency = config.currency || 'NOK';
@@ -410,10 +407,7 @@ export function calculateBookingPrice(
 /**
  * Determine the effective pricing model based on booking mode and config
  */
-function determineEffectiveModel(
-  config: ResourcePricingConfig,
-  booking: BookingDetails
-): PricingModel {
+function determineEffectiveModel(config: ResourcePricingConfig, booking: BookingDetails): PricingModel {
   // If config has explicit model, use it
   if (config.model) return config.model;
 
@@ -452,7 +446,7 @@ function buildExplanation(
   model: PricingModel,
   booking: BookingDetails,
   config: ResourcePricingConfig,
-  currency: string
+  currency: string,
 ): string {
   const parts: string[] = [];
 
@@ -562,7 +556,7 @@ export function getConstraintsSummary(config: ResourcePricingConfig): string[] {
  */
 export function validateBookingConstraints(
   config: ResourcePricingConfig,
-  booking: BookingDetails
+  booking: BookingDetails,
 ): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 

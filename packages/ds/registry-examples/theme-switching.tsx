@@ -1,10 +1,10 @@
 import React from 'react';
-import { DesignsystemetProvider, Select, Button, Label } from '@digilist-saas/ds';
-import { DEFAULT_THEME, THEMES, type ThemeId } from '@digilist-saas/ds';
+import { DesignsystemetProvider, Select, Button, Label } from '@digipicks/ds';
+import { DEFAULT_THEME, THEMES, type ThemeId } from '@digipicks/ds';
 
 /**
  * Example: Runtime theme switching using DesignsystemetProvider.
- * 
+ *
  * This component demonstrates how to create a theme switcher that allows
  * users to change the visual appearance of the application at runtime.
  * The provider manages theme loading through a single <link> element.
@@ -18,14 +18,10 @@ export function ThemeSwitcher() {
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size={size}>
       <div style={{ padding: 24 }}>
         <h2>Theme Controls</h2>
-        
+
         <div style={{ marginBottom: 16 }}>
           <Label htmlFor="theme-select">Select Theme</Label>
-          <Select
-            id="theme-select"
-            value={theme}
-            onChange={(e) => setTheme(e.target.value as ThemeId)}
-          >
+          <Select id="theme-select" value={theme} onChange={(e) => setTheme(e.target.value as ThemeId)}>
             {Object.keys(THEMES).map((key) => (
               <option key={key} value={key}>
                 {key}
@@ -49,20 +45,14 @@ export function ThemeSwitcher() {
 
         <div style={{ marginBottom: 16 }}>
           <Label htmlFor="size-select">Size Mode</Label>
-          <Select
-            id="size-select"
-            value={size}
-            onChange={(e) => setSize(e.target.value as 'sm' | 'md' | 'lg')}
-          >
+          <Select id="size-select" value={size} onChange={(e) => setSize(e.target.value as 'sm' | 'md' | 'lg')}>
             <option value="sm">Small (compact)</option>
             <option value="md">Medium (default)</option>
             <option value="lg">Large (spacious)</option>
           </Select>
         </div>
 
-        <Button onClick={() => console.log('Current theme:', theme)}>
-          Test Button
-        </Button>
+        <Button onClick={() => console.log('Current theme:', theme)}>Test Button</Button>
       </div>
     </DesignsystemetProvider>
   );
@@ -70,11 +60,11 @@ export function ThemeSwitcher() {
 
 /**
  * Hook for programmatic theme switching without the provider.
- * 
+ *
  * This hook provides functions to directly manipulate theme properties
  * when you need more control than the provider offers. Useful for
  * integration with non-React code or advanced scenarios.
- * 
+ *
  * @returns {Object} Theme manipulation functions
  * @returns {Function} setTheme - Changes the active theme
  * @returns {Function} setColorScheme - Sets light/dark/auto mode
@@ -103,19 +93,19 @@ export function useThemeSwitch() {
 
 /**
  * Theme loading guidelines:
- * 
+ *
  * Manual CSS imports are prohibited as they bypass the single import rule:
- * 
+ *
  * @example
  * ```typescript
  * // WRONG - Direct theme/CSS import bypasses single-import rule
  * import '@digdir/designsystemet-css'; // or any theme CSS directly
- * 
+ *
  * // CORRECT - Use the provider or helper functions
  * // The provider manages a single <link> element for theme CSS
  * // This ensures Designsystemet CSS is imported only once
  * ```
- * 
+ *
  * Why this matters:
  * - Prevents CSS conflicts and duplication
  * - Enables runtime theme switching

@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digilist-saas/ds';
-import { DEFAULT_THEME, type ThemeId } from '@digilist-saas/ds';
-import { I18nProvider } from '@digilist-saas/i18n';
-import { useTenantConfig, useTenantBranding, useBackofficeWebMCPTools, useMinsideWebMCPTools } from '@digilist-saas/sdk';
+import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digipicks/ds';
+import { DEFAULT_THEME, type ThemeId } from '@digipicks/ds';
+import { I18nProvider } from '@digipicks/i18n';
+import { useTenantConfig, useTenantBranding, useBackofficeWebMCPTools, useMinsideWebMCPTools } from '@digipicks/sdk';
 
 import {
   BackofficeAuthBridge,
@@ -22,10 +22,10 @@ import {
   useBundledTheme,
   env,
   FeatureGate,
-} from '@digilist-saas/app-shell';
-import { ProtectedRouteConnected } from '@digilist-saas/app-shell';
-import { DashboardLayout } from '@digilist-saas/app-shell';
-import { createAuditableErrorHandler, captureException, initSentry } from '@digilist-saas/app-shell';
+} from '@digipicks/app-shell';
+import { ProtectedRouteConnected } from '@digipicks/app-shell';
+import { DashboardLayout } from '@digipicks/app-shell';
+import { createAuditableErrorHandler, captureException, initSentry } from '@digipicks/app-shell';
 
 // Auth pages (public)
 import { LoginPage } from '@/routes/login';
@@ -41,8 +41,6 @@ import { NotificationsPage } from '@/routes/notifications';
 import { SupportPage } from '@/routes/support';
 import { AuditPage } from '@/routes/audit';
 import { SettingsPage } from '@/routes/settings';
-
-
 
 // Admin pages
 import { UsersManagementPage } from '@/routes/users-management';
@@ -178,10 +176,14 @@ function DashboardLayoutBridge() {
   const { effectiveRole } = useBackofficeRole();
   const { mode, isOwner } = useMode();
 
-  const variant = effectiveRole === 'superadmin' ? 'platform'
-    : effectiveRole === 'admin' ? 'backoffice'
-    : (isOwner && mode === 'utleier') ? 'backoffice'
-    : 'minside';
+  const variant =
+    effectiveRole === 'superadmin'
+      ? 'platform'
+      : effectiveRole === 'admin'
+        ? 'backoffice'
+        : isOwner && mode === 'utleier'
+          ? 'backoffice'
+          : 'minside';
 
   // Expose tools to AI agents via WebMCP (Chrome 146+)
   if (variant !== 'minside') {
@@ -194,18 +196,9 @@ function DashboardLayoutBridge() {
   return (
     <>
       {variant === 'platform' ? (
-        <DashboardLayout
-          variant="platform"
-          user={user}
-          onLogout={logout}
-        />
+        <DashboardLayout variant="platform" user={user} onLogout={logout} />
       ) : variant === 'backoffice' ? (
-        <DashboardLayout
-          variant="backoffice"
-          user={user}
-          onLogout={logout}
-          effectiveRole={effectiveRole}
-        />
+        <DashboardLayout variant="backoffice" user={user} onLogout={logout} effectiveRole={effectiveRole} />
       ) : (
         <DashboardLayout variant="minside" />
       )}
@@ -223,7 +216,16 @@ export function App() {
 }
 
 // Valid theme IDs for type-safe resolution
-const VALID_THEMES: ThemeId[] = ['digdir', 'altinn', 'uutilsynet', 'portal', 'digilist', 'xala-navy', 'steinkjer', 'hamar'];
+const VALID_THEMES: ThemeId[] = [
+  'digdir',
+  'altinn',
+  'uutilsynet',
+  'portal',
+  'digilist',
+  'xala-navy',
+  'steinkjer',
+  'hamar',
+];
 
 function resolveThemeId(themeName: string | undefined): ThemeId {
   if (!themeName) return DEFAULT_THEME;
@@ -263,119 +265,373 @@ function AppWithTheme() {
                 <BackofficeAuthBridge>
                   <BackofficeRoleProvider>
                     <ModeProvider>
-                    <AccountContextBridge>
-                      <AccountSelectionWrapper>
-                        <ConvexRealtimeProvider wsUrl={env.wsUrl || undefined} tenantId={env.tenantId || undefined}>
-                          <RealtimeToast />
-                          <NotificationCenterProvider>
-                            <Routes>
-                              {/* ===== Public routes ===== */}
-                              <Route path="/login" element={<LoginPage />} />
-                              <Route path="/auth/callback" element={<AuthCallbackPage />} />
-                              <Route path="/auth/magic-link" element={<MagicLinkCallbackPage />} />
-                              <Route path="/role-selection" element={<RoleSelectionPage />} />
-                              <Route path="/onboarding" element={<OnboardingPage />} />
+                      <AccountContextBridge>
+                        <AccountSelectionWrapper>
+                          <ConvexRealtimeProvider wsUrl={env.wsUrl || undefined} tenantId={env.tenantId || undefined}>
+                            <RealtimeToast />
+                            <NotificationCenterProvider>
+                              <Routes>
+                                {/* ===== Public routes ===== */}
+                                <Route path="/login" element={<LoginPage />} />
+                                <Route path="/auth/callback" element={<AuthCallbackPage />} />
+                                <Route path="/auth/magic-link" element={<MagicLinkCallbackPage />} />
+                                <Route path="/role-selection" element={<RoleSelectionPage />} />
+                                <Route path="/onboarding" element={<OnboardingPage />} />
 
-                              {/* ===== Protected layout ===== */}
-                              <Route
-                                path="/"
-                                element={
-                                  <ProtectedRouteConnected>
-                                    <DashboardLayoutBridge />
-                                  </ProtectedRouteConnected>
-                                }
-                              >
-                                {/* Role-aware index */}
-                                <Route index element={<RoleAwareIndex />} />
-                                <Route path="welcome" element={<WelcomePage />} />
+                                {/* ===== Protected layout ===== */}
+                                <Route
+                                  path="/"
+                                  element={
+                                    <ProtectedRouteConnected>
+                                      <DashboardLayoutBridge />
+                                    </ProtectedRouteConnected>
+                                  }
+                                >
+                                  {/* Role-aware index */}
+                                  <Route index element={<RoleAwareIndex />} />
+                                  <Route path="welcome" element={<WelcomePage />} />
 
-                                {/* ─── Content management (admin + owner in utleier) ─── */}
+                                  {/* ─── Content management (admin + owner in utleier) ─── */}
 
+                                  {/* ─── Shared: Messaging & notifications ─── */}
+                                  <Route path="notifications" element={<NotificationsPage />} />
+                                  <Route path="notification-settings" element={<NotificationSettingsPage />} />
 
+                                  <Route path="help" element={<HelpPage />} />
 
-                                {/* ─── Shared: Messaging & notifications ─── */}
-                                <Route path="notifications" element={<NotificationsPage />} />
-                                <Route path="notification-settings" element={<NotificationSettingsPage />} />
+                                  {/* ─── DigiPicks: Creator pick management ─── */}
+                                  <Route path="picks" element={<PicksPage />} />
+                                  <Route path="picks/new" element={<PickEditPage />} />
+                                  <Route path="picks/:id" element={<PickEditPage />} />
 
-                                <Route path="help" element={<HelpPage />} />
+                                  {/* ─── DigiPicks: Creator white-label branding ─── */}
+                                  <Route path="branding" element={<CreatorBrandingPage />} />
 
-                                {/* ─── DigiPicks: Creator pick management ─── */}
-                                <Route path="picks" element={<PicksPage />} />
-                                <Route path="picks/new" element={<PickEditPage />} />
-                                <Route path="picks/:id" element={<PickEditPage />} />
+                                  {/* ─── DigiPicks: Broadcast messaging ─── */}
+                                  <Route path="broadcasts" element={<BroadcastsPage />} />
+                                  <Route path="broadcasts/compose" element={<BroadcastComposePage />} />
+                                  <Route path="broadcasts/inbox" element={<BroadcastInboxPage />} />
 
-                                {/* ─── DigiPicks: Creator white-label branding ─── */}
-                                <Route path="branding" element={<CreatorBrandingPage />} />
+                                  {/* ─── DigiPicks: Stripe integration ─── */}
+                                  <Route path="payouts" element={<PayoutsPage />} />
+                                  <Route path="subscribers" element={<SubscribersPage />} />
+                                  <Route path="trial-settings" element={<TrialSettingsPage />} />
 
-                                {/* ─── DigiPicks: Broadcast messaging ─── */}
-                                <Route path="broadcasts" element={<BroadcastsPage />} />
-                                <Route path="broadcasts/compose" element={<BroadcastComposePage />} />
-                                <Route path="broadcasts/inbox" element={<BroadcastInboxPage />} />
+                                  {/* ─── Admin: Operations ─── */}
+                                  <Route
+                                    path="support"
+                                    element={
+                                      <FeatureGate
+                                        module="support"
+                                        fallback={<Navigate to="/" replace />}
+                                        appId="backoffice"
+                                      >
+                                        <ProtectedRouteConnected requiredRole="admin">
+                                          <SupportPage />
+                                        </ProtectedRouteConnected>
+                                      </FeatureGate>
+                                    }
+                                  />
+                                  <Route
+                                    path="email-templates"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <EmailTemplatesPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="email-templates/new"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <EmailTemplateEditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="email-templates/:slug"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <EmailTemplateEditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="form-builder"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <FormBuilderPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="form-builder/new"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <FormBuilderEditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="form-builder/:slug"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <FormBuilderEditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="integrations"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <IntegrationsPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="integrations/new"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <IntegrationEditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="integrations/:slug"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <IntegrationEditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="audit"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <AuditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="settings"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="user">
+                                        <SettingsPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
 
-                                {/* ─── DigiPicks: Stripe integration ─── */}
-                                <Route path="payouts" element={<PayoutsPage />} />
-                                <Route path="subscribers" element={<SubscribersPage />} />
-                                <Route path="trial-settings" element={<TrialSettingsPage />} />
+                                  <Route
+                                    path="users-management"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin" requiredCapability="CAP_USER_ADMIN">
+                                        <UsersManagementPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="users/:id"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin" requiredCapability="CAP_USER_ADMIN">
+                                        <UserDetailPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="audit-timeline"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <AuditTimelinePage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="equipment-services"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <EquipmentServicesPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  {/* ─── TenantAdmin routes ─── */}
+                                  <Route
+                                    path="tenant/settings"
+                                    element={
+                                      <ProtectedRouteConnected
+                                        requiredRole="admin"
+                                        requiredCapability="CAP_TENANT_SETTINGS"
+                                      >
+                                        <TenantSettingsPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="tenant/branding"
+                                    element={
+                                      <ProtectedRouteConnected
+                                        requiredRole="admin"
+                                        requiredCapability="CAP_TENANT_BRANDING"
+                                      >
+                                        <TenantBrandingPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route path="tenant/audit-log" element={<Navigate to="/audit" replace />} />
 
-                                {/* ─── Admin: Operations ─── */}
-                                <Route path="support" element={<FeatureGate module="support" fallback={<Navigate to="/" replace />} appId="backoffice"><ProtectedRouteConnected requiredRole="admin"><SupportPage /></ProtectedRouteConnected></FeatureGate>} />
-                                <Route path="email-templates" element={<ProtectedRouteConnected requiredRole="admin"><EmailTemplatesPage /></ProtectedRouteConnected>} />
-                                <Route path="email-templates/new" element={<ProtectedRouteConnected requiredRole="admin"><EmailTemplateEditPage /></ProtectedRouteConnected>} />
-                                <Route path="email-templates/:slug" element={<ProtectedRouteConnected requiredRole="admin"><EmailTemplateEditPage /></ProtectedRouteConnected>} />
-                                <Route path="form-builder" element={<ProtectedRouteConnected requiredRole="admin"><FormBuilderPage /></ProtectedRouteConnected>} />
-                                <Route path="form-builder/new" element={<ProtectedRouteConnected requiredRole="admin"><FormBuilderEditPage /></ProtectedRouteConnected>} />
-                                <Route path="form-builder/:slug" element={<ProtectedRouteConnected requiredRole="admin"><FormBuilderEditPage /></ProtectedRouteConnected>} />
-                                <Route path="integrations" element={<ProtectedRouteConnected requiredRole="admin"><IntegrationsPage /></ProtectedRouteConnected>} />
-                                <Route path="integrations/new" element={<ProtectedRouteConnected requiredRole="admin"><IntegrationEditPage /></ProtectedRouteConnected>} />
-                                <Route path="integrations/:slug" element={<ProtectedRouteConnected requiredRole="admin"><IntegrationEditPage /></ProtectedRouteConnected>} />
-                                <Route path="audit" element={<ProtectedRouteConnected requiredRole="admin"><AuditPage /></ProtectedRouteConnected>} />
-                                <Route path="settings" element={<ProtectedRouteConnected requiredRole="user"><SettingsPage /></ProtectedRouteConnected>} />
+                                  {/* ─── Platform (superadmin, capability: CAP_PLATFORM_ADMIN) ─── */}
+                                  <Route
+                                    path="platform"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <PlatformOverviewPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/tenants"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE">
+                                        <PlatformTenantsPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/tenants/new"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE">
+                                        <PlatformTenantFormPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/tenants/:slug"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE">
+                                        <PlatformTenantFormPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/tenants/:slug/edit"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE">
+                                        <PlatformTenantFormPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/users"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <PlatformUsersPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/users/:id"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <PlatformUserDetailPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/users/:id/edit"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <PlatformUserFormPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/modules"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_MODULE_MANAGE">
+                                        <PlatformModulesPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/billing"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_BILLING">
+                                        <PlatformBillingPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/audit"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <PlatformAuditPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/moderation"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <PlatformModerationPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
 
-                                <Route path="users-management" element={<ProtectedRouteConnected requiredRole="admin" requiredCapability="CAP_USER_ADMIN"><UsersManagementPage /></ProtectedRouteConnected>} />
-                                <Route path="users/:id" element={<ProtectedRouteConnected requiredRole="admin" requiredCapability="CAP_USER_ADMIN"><UserDetailPage /></ProtectedRouteConnected>} />
-                                <Route path="audit-timeline" element={<ProtectedRouteConnected requiredRole="admin"><AuditTimelinePage /></ProtectedRouteConnected>} />
-                                <Route path="equipment-services" element={<ProtectedRouteConnected requiredRole="admin"><EquipmentServicesPage /></ProtectedRouteConnected>} />
-                                {/* ─── TenantAdmin routes ─── */}
-                                <Route path="tenant/settings" element={<ProtectedRouteConnected requiredRole="admin" requiredCapability="CAP_TENANT_SETTINGS"><TenantSettingsPage /></ProtectedRouteConnected>} />
-                                <Route path="tenant/branding" element={<ProtectedRouteConnected requiredRole="admin" requiredCapability="CAP_TENANT_BRANDING"><TenantBrandingPage /></ProtectedRouteConnected>} />
-                                <Route path="tenant/audit-log" element={<Navigate to="/audit" replace />} />
+                                  {/* ─── Owner application flow ─── */}
 
-                                {/* ─── Platform (superadmin, capability: CAP_PLATFORM_ADMIN) ─── */}
-                                <Route path="platform" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN"><PlatformOverviewPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/tenants" element={<ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE"><PlatformTenantsPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/tenants/new" element={<ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE"><PlatformTenantFormPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/tenants/:slug" element={<ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE"><PlatformTenantFormPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/tenants/:slug/edit" element={<ProtectedRouteConnected requiredCapability="CAP_TENANT_MANAGE"><PlatformTenantFormPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/users" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN"><PlatformUsersPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/users/:id" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN"><PlatformUserDetailPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/users/:id/edit" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN"><PlatformUserFormPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/modules" element={<ProtectedRouteConnected requiredCapability="CAP_MODULE_MANAGE"><PlatformModulesPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/billing" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_BILLING"><PlatformBillingPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/audit" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN"><PlatformAuditPage /></ProtectedRouteConnected>} />
-                                <Route path="platform/moderation" element={<ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN"><PlatformModerationPage /></ProtectedRouteConnected>} />
+                                  {/* ===== Personal routes (all user roles — context-driven) ===== */}
+                                  <Route path="my/billing" element={<UserBillingPage />} />
+                                  <Route path="my/preferences" element={<UserPreferencesPage />} />
+                                  <Route path="gdpr" element={<GDPRPage />} />
 
-                                {/* ─── Owner application flow ─── */}
+                                  {/* ===== Organization portal routes (role=user, context=organization) ===== */}
+                                  <Route
+                                    path="org"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="user">
+                                        <OrganizationDashboardPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="org/invoices"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="user">
+                                        <OrganizationInvoicesPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="org/members"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="user">
+                                        <OrganizationMembersPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="org/settings"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="user">
+                                        <OrganizationSettingsPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="org/activity"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="user">
+                                        <OrganizationActivityPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                </Route>
 
-                                {/* ===== Personal routes (all user roles — context-driven) ===== */}
-                                <Route path="my/billing" element={<UserBillingPage />} />
-                                <Route path="my/preferences" element={<UserPreferencesPage />} />
-                                <Route path="gdpr" element={<GDPRPage />} />
-
-
-                                {/* ===== Organization portal routes (role=user, context=organization) ===== */}
-                                <Route path="org" element={<ProtectedRouteConnected requiredRole="user"><OrganizationDashboardPage /></ProtectedRouteConnected>} />
-                                <Route path="org/invoices" element={<ProtectedRouteConnected requiredRole="user"><OrganizationInvoicesPage /></ProtectedRouteConnected>} />
-                                <Route path="org/members" element={<ProtectedRouteConnected requiredRole="user"><OrganizationMembersPage /></ProtectedRouteConnected>} />
-                                <Route path="org/settings" element={<ProtectedRouteConnected requiredRole="user"><OrganizationSettingsPage /></ProtectedRouteConnected>} />
-                                <Route path="org/activity" element={<ProtectedRouteConnected requiredRole="user"><OrganizationActivityPage /></ProtectedRouteConnected>} />
-                              </Route>
-
-                              <Route path="*" element={<Navigate to="/" replace />} />
-                            </Routes>
-                          </NotificationCenterProvider>
-                        </ConvexRealtimeProvider>
-                      </AccountSelectionWrapper>
-                    </AccountContextBridge>
+                                <Route path="*" element={<Navigate to="/" replace />} />
+                              </Routes>
+                            </NotificationCenterProvider>
+                          </ConvexRealtimeProvider>
+                        </AccountSelectionWrapper>
+                      </AccountContextBridge>
                     </ModeProvider>
                   </BackofficeRoleProvider>
                 </BackofficeAuthBridge>

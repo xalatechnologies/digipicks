@@ -7,8 +7,8 @@
  */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spinner } from '@digilist-saas/ds';
-import { useAuthBridge, useRole, env } from '@digilist-saas/app-shell';
+import { Spinner } from '@digipicks/ds';
+import { useAuthBridge, useRole, env } from '@digipicks/app-shell';
 
 /**
  * Extract and consume SSO payload from URL hash.
@@ -32,7 +32,9 @@ function consumeSSOFromHash(): boolean {
         if (parsed.tenantId) {
           localStorage.setItem('digilist_saas_digilist_tenant_id', parsed.tenantId);
         }
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       // Also set the cross-domain cookie for AuthBridge detection
       const domain = window.location.hostname.split('.').slice(-2).join('.');
       document.cookie = `digilist_saas_session_digilist=${encodeURIComponent(token)}; path=/; domain=.${domain}; max-age=${30 * 24 * 3600}; SameSite=Lax`;
@@ -71,10 +73,17 @@ export function LoginPage(): React.ReactElement {
 
     // On logout: clear all session data from this domain before redirecting
     if (isLogout) {
-      ['digilist_saas_digilist_session_token', 'digilist_saas_digilist_user', 'digilist_saas_digilist_tenant_id',
-       'backoffice_mock_user', 'digilist_saas_backoffice_user', 'digilist_saas_backoffice_tenant_id',
-       'backoffice_effective_role', 'backoffice_remember_role_choice', 'dashboard_mode',
-      ].forEach(k => localStorage.removeItem(k));
+      [
+        'digilist_saas_digilist_session_token',
+        'digilist_saas_digilist_user',
+        'digilist_saas_digilist_tenant_id',
+        'backoffice_mock_user',
+        'digilist_saas_backoffice_user',
+        'digilist_saas_backoffice_tenant_id',
+        'backoffice_effective_role',
+        'backoffice_remember_role_choice',
+        'dashboard_mode',
+      ].forEach((k) => localStorage.removeItem(k));
       // Clear SSO cookies
       const domain = window.location.hostname.split('.').slice(-2).join('.');
       document.cookie = `digilist_saas_session_digilist=; path=/; domain=.${domain}; max-age=0`;

@@ -7,19 +7,8 @@
  * gives real subscribe for legacy WebSocket events.
  */
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  type ReactNode,
-} from 'react';
-import type {
-  RealtimeEvent,
-  RealtimeEventHandler,
-  RealtimeEventType,
-} from '@digilist-saas/shared/types';
+import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
+import type { RealtimeEvent, RealtimeEventHandler, RealtimeEventType } from '@digipicks/shared/types';
 import type { RealtimeProviderInterface } from './RealtimeProviderInterface';
 
 // ---------------------------------------------------------------------------
@@ -56,9 +45,7 @@ const RealtimeContext = createContext<RealtimeContextValue | null>(null);
 export function useRealtimeContext(): RealtimeContextValue {
   const context = useContext(RealtimeContext);
   if (!context) {
-    throw new Error(
-      'useRealtimeContext must be used within RealtimeProvider or ConvexRealtimeProvider'
-    );
+    throw new Error('useRealtimeContext must be used within RealtimeProvider or ConvexRealtimeProvider');
   }
   return context;
 }
@@ -133,23 +120,21 @@ export interface UseRealtimeListingUpdatesResult {
 
 export function useRealtimeListingUpdates(
   listingId: string,
-  onUpdate?: RealtimeEventHandler
+  onUpdate?: RealtimeEventHandler,
 ): UseRealtimeListingUpdatesResult {
   const [lastEvent, setLastEvent] = useState<RealtimeEvent | null>(null);
   const { subscribe, isConnected } = useRealtimeContext();
 
   const handler = useCallback(
     (event: RealtimeEvent) => {
-      const eventData = (event.data ?? event.payload) as
-        | { listingId?: string }
-        | undefined;
+      const eventData = (event.data ?? event.payload) as { listingId?: string } | undefined;
       const id = eventData?.listingId;
       if (id === listingId) {
         setLastEvent(event);
         onUpdate?.(event);
       }
     },
-    [listingId, onUpdate]
+    [listingId, onUpdate],
   );
 
   useEffect(() => {
@@ -169,13 +154,6 @@ export interface RealtimeContextProviderProps {
   children: ReactNode;
 }
 
-export function RealtimeContextProvider({
-  value,
-  children,
-}: RealtimeContextProviderProps) {
-  return (
-    <RealtimeContext.Provider value={value}>
-      {children}
-    </RealtimeContext.Provider>
-  );
+export function RealtimeContextProvider({ value, children }: RealtimeContextProviderProps) {
+  return <RealtimeContext.Provider value={value}>{children}</RealtimeContext.Provider>;
 }

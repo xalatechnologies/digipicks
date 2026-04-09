@@ -18,10 +18,10 @@ import {
   DashboardPageHeader,
   PageContentLayout,
   useIsMobile,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useSetPageTitle, useIsOwner, useIsNormalUser, env } from '@digilist-saas/app-shell';
-import { useModeOptional } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useSetPageTitle, useIsOwner, useIsNormalUser, env } from '@digipicks/app-shell';
+import { useModeOptional } from '@digipicks/app-shell';
 import { useNavigate } from 'react-router-dom';
 
 export function PersonalHomePage() {
@@ -57,7 +57,9 @@ export function PersonalHomePage() {
       <Grid columns={isMobile ? '1fr' : '1fr 1fr'} gap="var(--ds-size-4)">
         <Card data-color="neutral">
           <Stack direction="vertical" spacing="var(--ds-size-4)">
-            <Heading level={3} data-size="sm">{t('minside.welcome', 'Velkommen')}</Heading>
+            <Heading level={3} data-size="sm">
+              {t('minside.welcome', 'Velkommen')}
+            </Heading>
             <Paragraph>
               Dette er din personlige startside. Her kan du administrere din profil og dine innstillinger.
             </Paragraph>
@@ -67,14 +69,21 @@ export function PersonalHomePage() {
         {isOwner && (
           <Card data-color="neutral">
             <Stack direction="vertical" spacing="var(--ds-size-4)">
-              <Heading level={3} data-size="sm">{t('mode.utleierDashboard', 'Utleier-dashboard')}</Heading>
+              <Heading level={3} data-size="sm">
+                {t('mode.utleierDashboard', 'Utleier-dashboard')}
+              </Heading>
               <Paragraph data-size="sm" data-color="subtle">
                 {t('mode.switchDesc', 'Administrer organisasjon, brukere og abonnement')}
               </Paragraph>
-              <Button type="button" variant="primary" data-size="lg" onClick={() => {
-                modeCtx?.setMode('utleier');
-                navigate('/');
-              }}>
+              <Button
+                type="button"
+                variant="primary"
+                data-size="lg"
+                onClick={() => {
+                  modeCtx?.setMode('utleier');
+                  navigate('/');
+                }}
+              >
                 <BuildingIcon size={16} />
                 {t('mode.switchToUtleier', 'Bytt til utleier')}
                 <ArrowRightIcon size={16} />

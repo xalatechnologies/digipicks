@@ -10,7 +10,7 @@
  *
  * @example
  * ```tsx
- * import { useWebMCPTools } from '@digilist-saas/sdk';
+ * import { useWebMCPTools } from '@digipicks/sdk';
  *
  * function MainLayout() {
  *   useWebMCPTools();
@@ -24,11 +24,7 @@ import { useConvex } from 'convex/react';
 import { useSessionTenantId } from '../hooks/use-tenant-id';
 import { useAuth } from '../hooks/use-auth';
 import type { WebMCPContext, ModelContextTool } from './types';
-import {
-  createSearchListingsTool,
-  createGetListingDetailsTool,
-  createToggleFavoriteTool,
-} from './tools';
+import { createSearchListingsTool, createGetListingDetailsTool, createToggleFavoriteTool } from './tools';
 
 export interface UseWebMCPToolsOptions {
   /** Disable tool registration (default: true) */
@@ -57,16 +53,11 @@ export function useWebMCPTools(options?: UseWebMCPToolsOptions) {
     };
 
     // Read-only tools — always registered
-    const tools: ModelContextTool[] = [
-      createSearchListingsTool(ctx),
-      createGetListingDetailsTool(ctx),
-    ];
+    const tools: ModelContextTool[] = [createSearchListingsTool(ctx), createGetListingDetailsTool(ctx)];
 
     // Mutation tools — only when authenticated
     if (userId) {
-      tools.push(
-        createToggleFavoriteTool(ctx),
-      );
+      tools.push(createToggleFavoriteTool(ctx));
     }
 
     const mc = navigator.modelContext!;

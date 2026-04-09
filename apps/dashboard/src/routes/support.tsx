@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo, type KeyboardEvent } from 'react';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 import {
   Card,
   Heading,
@@ -22,7 +22,7 @@ import {
   Textarea,
   Tag,
   ErrorState,
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import {
   useSupportTickets,
   useSupportTicket,
@@ -38,9 +38,9 @@ import {
   formatTimeAgo,
   type SupportTicket,
   type SupportTicketMessage,
-} from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useAuthBridge } from '@digilist-saas/app-shell';
+} from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useAuthBridge } from '@digipicks/app-shell';
 import styles from './support.module.css';
 
 type FilterType = 'all' | 'open' | 'in_progress' | 'waiting' | 'resolved';
@@ -97,7 +97,11 @@ export function SupportPage() {
 
   // Fetch tickets
   const statusFilter = filter === 'all' ? undefined : filter;
-  const { tickets, isLoading: isLoadingTickets, error: ticketsError } = useSupportTickets(tenantId, { status: statusFilter });
+  const {
+    tickets,
+    isLoading: isLoadingTickets,
+    error: ticketsError,
+  } = useSupportTickets(tenantId, { status: statusFilter });
   const { counts } = useSupportTicketCounts(tenantId);
 
   // Fetch selected ticket detail & messages
@@ -120,10 +124,11 @@ export function SupportPage() {
   const filteredTickets = useMemo(() => {
     if (!searchQuery) return tickets;
     const q = searchQuery.toLowerCase();
-    return tickets.filter((t) =>
-      t.subject.toLowerCase().includes(q) ||
-      (t.reporterName && t.reporterName.toLowerCase().includes(q)) ||
-      (t.assigneeName && t.assigneeName.toLowerCase().includes(q))
+    return tickets.filter(
+      (t) =>
+        t.subject.toLowerCase().includes(q) ||
+        (t.reporterName && t.reporterName.toLowerCase().includes(q)) ||
+        (t.assigneeName && t.assigneeName.toLowerCase().includes(q)),
     );
   }, [tickets, searchQuery]);
 
@@ -244,10 +249,7 @@ export function SupportPage() {
                 {counts.open} {t('support.open')}
               </Badge>
             )}
-            <Button
-              data-size="sm"
-              onClick={() => setShowNewTicketForm(true)}
-            >
+            <Button data-size="sm" onClick={() => setShowNewTicketForm(true)}>
               {t('support.newTicket')}
             </Button>
           </Stack>
@@ -303,7 +305,12 @@ export function SupportPage() {
                     className={isSelected ? styles.ticketItemSelected : styles.ticketItemUnselected}
                   >
                     <Stack direction="horizontal" justify="between" align="center">
-                      <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center" className={styles.flexOneShrink}>
+                      <Stack
+                        direction="horizontal"
+                        spacing="var(--ds-size-2)"
+                        align="center"
+                        className={styles.flexOneShrink}
+                      >
                         <div
                           className={styles.priorityDot}
                           style={{ backgroundColor: PRIORITY_COLORS[ticket.priority] || PRIORITY_COLORS.normal }}
@@ -321,8 +328,15 @@ export function SupportPage() {
                         {ticket.reporterName}
                       </Paragraph>
                       <Stack direction="horizontal" spacing="var(--ds-size-1)">
-                        <Tag data-size="sm" data-color="neutral">{t(CATEGORY_LABEL_KEYS[ticket.category] || ticket.category)}</Tag>
-                        <Tag data-size="sm" data-color={ticket.status === 'open' ? 'info' : ticket.status === 'resolved' ? 'success' : 'warning'}>
+                        <Tag data-size="sm" data-color="neutral">
+                          {t(CATEGORY_LABEL_KEYS[ticket.category] || ticket.category)}
+                        </Tag>
+                        <Tag
+                          data-size="sm"
+                          data-color={
+                            ticket.status === 'open' ? 'info' : ticket.status === 'resolved' ? 'success' : 'warning'
+                          }
+                        >
                           {t(STATUS_LABEL_KEYS[ticket.status] || ticket.status)}
                         </Tag>
                       </Stack>
@@ -343,18 +357,26 @@ export function SupportPage() {
         <Card className={styles.threadPanel}>
           {!selectedTicket ? (
             <Stack direction="vertical" align="center" justify="center" className={styles.threadEmptyState}>
-              <Paragraph className={styles.subtleText}>
-                {t('support.selectTicket')}
-              </Paragraph>
+              <Paragraph className={styles.subtleText}>{t('support.selectTicket')}</Paragraph>
             </Stack>
           ) : (
             <>
               {/* Header */}
               <Stack direction="vertical" spacing="var(--ds-size-2)" className={styles.threadHeader}>
                 <Stack direction="horizontal" justify="between" align="center">
-                  <Heading data-size="xs" className={styles.headingNoMargin}>{selectedTicket.subject}</Heading>
+                  <Heading data-size="xs" className={styles.headingNoMargin}>
+                    {selectedTicket.subject}
+                  </Heading>
                   <Stack direction="horizontal" spacing="var(--ds-size-2)">
-                    <Tag data-color={selectedTicket.status === 'open' ? 'info' : selectedTicket.status === 'resolved' ? 'success' : 'warning'}>
+                    <Tag
+                      data-color={
+                        selectedTicket.status === 'open'
+                          ? 'info'
+                          : selectedTicket.status === 'resolved'
+                            ? 'success'
+                            : 'warning'
+                      }
+                    >
                       {t(STATUS_LABEL_KEYS[selectedTicket.status] || selectedTicket.status)}
                     </Tag>
                     <Tag data-color="neutral">
@@ -375,9 +397,7 @@ export function SupportPage() {
                   </Stack>
                 ) : messages.length === 0 ? (
                   <Stack direction="vertical" align="center" className={styles.loadingPadding}>
-                    <Paragraph className={styles.subtleText}>
-                      {t('support.noMessagesYet')}
-                    </Paragraph>
+                    <Paragraph className={styles.subtleText}>{t('support.noMessagesYet')}</Paragraph>
                   </Stack>
                 ) : (
                   messages.map((msg: SupportTicketMessage) => {
@@ -406,7 +426,9 @@ export function SupportPage() {
                             {msg.authorName || t('common.unknown')}
                           </Paragraph>
                           {isInternal && (
-                            <Tag data-size="sm" data-color="warning">{t('support.internalNoteTag')}</Tag>
+                            <Tag data-size="sm" data-color="warning">
+                              {t('support.internalNoteTag')}
+                            </Tag>
                           )}
                           <Paragraph data-size="xs" className={styles.subtleText}>
                             {formatTimeAgo(msg.createdAt)}
@@ -420,9 +442,11 @@ export function SupportPage() {
                               : isSelf
                                 ? 'var(--ds-color-brand-1-surface-default)'
                                 : 'var(--ds-color-neutral-surface-default)',
-                            border: `1px solid ${isInternal
-                              ? 'var(--ds-color-warning-border-subtle)'
-                              : 'var(--ds-color-neutral-border-subtle)'}`,
+                            border: `1px solid ${
+                              isInternal
+                                ? 'var(--ds-color-warning-border-subtle)'
+                                : 'var(--ds-color-neutral-border-subtle)'
+                            }`,
                           }}
                         >
                           <Paragraph data-size="sm" className={styles.messageBody}>
@@ -454,7 +478,9 @@ export function SupportPage() {
                       value={messageInput}
                       onChange={(e: any) => setMessageInput(e.target.value)}
                       onKeyDown={handleKeyPress as any}
-                      placeholder={messageType === 'reply' ? t('support.replyPlaceholder') : t('support.internalNotePlaceholder')}
+                      placeholder={
+                        messageType === 'reply' ? t('support.replyPlaceholder') : t('support.internalNotePlaceholder')
+                      }
                       rows={2}
                       className={styles.flexOne}
                     />
@@ -483,12 +509,7 @@ export function SupportPage() {
                   {t('support.reporter')}
                 </Paragraph>
                 <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
-                  <Stack
-                    direction="horizontal"
-                    justify="center"
-                    align="center"
-                    className={styles.reporterAvatar}
-                  >
+                  <Stack direction="horizontal" justify="center" align="center" className={styles.reporterAvatar}>
                     <UserIcon className={styles.reporterAvatarIcon} />
                   </Stack>
                   <Stack direction="vertical" spacing="0">
@@ -549,7 +570,9 @@ export function SupportPage() {
                     { value: '', label: t('support.unassigned') },
                     ...allUsers.map((u: any) => ({ value: u.id, label: u.name || u.email })),
                   ]}
-                  onChange={(v) => { if (v) handleAssign(v); }}
+                  onChange={(v) => {
+                    if (v) handleAssign(v);
+                  }}
                   size="sm"
                 />
               </Stack>
@@ -562,7 +585,13 @@ export function SupportPage() {
                 <Stack direction="horizontal" spacing="var(--ds-size-1)" align="center">
                   <CalendarIcon className={styles.calendarIconSm} />
                   <Paragraph data-size="sm" className={styles.noMargin}>
-                    {new Date(selectedTicket.createdAt).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {new Date(selectedTicket.createdAt).toLocaleDateString('nb-NO', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   </Paragraph>
                 </Stack>
               </Stack>
@@ -573,10 +602,22 @@ export function SupportPage() {
                   <Paragraph data-size="xs" className={styles.sectionLabel}>
                     {t('support.slaDeadline')}
                   </Paragraph>
-                  <Paragraph data-size="sm" className={styles.noMargin} style={{
-                    color: new Date(selectedTicket.slaDeadline) < new Date() ? 'var(--ds-color-danger-text-default)' : undefined,
-                  }}>
-                    {new Date(selectedTicket.slaDeadline).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  <Paragraph
+                    data-size="sm"
+                    className={styles.noMargin}
+                    style={{
+                      color:
+                        new Date(selectedTicket.slaDeadline) < new Date()
+                          ? 'var(--ds-color-danger-text-default)'
+                          : undefined,
+                    }}
+                  >
+                    {new Date(selectedTicket.slaDeadline).toLocaleDateString('nb-NO', {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   </Paragraph>
                 </Stack>
               )}
@@ -585,12 +626,10 @@ export function SupportPage() {
 
               {/* Quick Actions */}
               <Stack direction="vertical" spacing="var(--ds-size-2)">
-                {(selectedTicket.status === 'open' || selectedTicket.status === 'in_progress' || selectedTicket.status === 'waiting') && (
-                  <Button
-                    data-size="sm"
-                    onClick={handleResolve}
-                    className={styles.fullWidthButton}
-                  >
+                {(selectedTicket.status === 'open' ||
+                  selectedTicket.status === 'in_progress' ||
+                  selectedTicket.status === 'waiting') && (
+                  <Button data-size="sm" onClick={handleResolve} className={styles.fullWidthButton}>
                     <CheckCircleIcon className={styles.actionIcon} />
                     {t('support.resolve')}
                   </Button>
@@ -609,32 +648,17 @@ export function SupportPage() {
                 )}
                 {selectedTicket.status === 'resolved' && (
                   <>
-                    <Button
-                      data-size="sm"
-                      variant="secondary"
-                      onClick={handleClose}
-                      className={styles.fullWidthButton}
-                    >
+                    <Button data-size="sm" variant="secondary" onClick={handleClose} className={styles.fullWidthButton}>
                       <XIcon className={styles.actionIcon} />
                       {t('support.close')}
                     </Button>
-                    <Button
-                      data-size="sm"
-                      variant="tertiary"
-                      onClick={handleReopen}
-                      className={styles.fullWidthButton}
-                    >
+                    <Button data-size="sm" variant="tertiary" onClick={handleReopen} className={styles.fullWidthButton}>
                       {t('support.reopen')}
                     </Button>
                   </>
                 )}
                 {selectedTicket.status === 'closed' && (
-                  <Button
-                    data-size="sm"
-                    variant="tertiary"
-                    onClick={handleReopen}
-                    className={styles.fullWidthButton}
-                  >
+                  <Button data-size="sm" variant="tertiary" onClick={handleReopen} className={styles.fullWidthButton}>
                     {t('support.reopen')}
                   </Button>
                 )}
@@ -648,13 +672,22 @@ export function SupportPage() {
       {showNewTicketForm && (
         <div
           className={styles.modalOverlay}
-          onClick={(e) => { if (e.target === e.currentTarget) setShowNewTicketForm(false); }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowNewTicketForm(false);
+          }}
         >
           <Card className={styles.modalCard}>
             <Stack direction="vertical" spacing="var(--ds-size-4)">
               <Stack direction="horizontal" justify="between" align="center">
-                <Heading data-size="xs" className={styles.headingNoMargin}>{t('support.newTicket')}</Heading>
-                <Button variant="tertiary" data-size="sm" onClick={() => setShowNewTicketForm(false)} aria-label={t('common.close')}>
+                <Heading data-size="xs" className={styles.headingNoMargin}>
+                  {t('support.newTicket')}
+                </Heading>
+                <Button
+                  variant="tertiary"
+                  data-size="sm"
+                  onClick={() => setShowNewTicketForm(false)}
+                  aria-label={t('common.close')}
+                >
                   <XIcon />
                 </Button>
               </Stack>
@@ -667,7 +700,9 @@ export function SupportPage() {
               />
 
               <div>
-                <Paragraph data-size="sm" className={styles.newTicketLabel}>{t('support.description')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.newTicketLabel}>
+                  {t('support.description')}
+                </Paragraph>
                 <Textarea
                   aria-label={t('support.description')}
                   value={newTicketDescription}
@@ -679,7 +714,9 @@ export function SupportPage() {
 
               <Stack direction="horizontal" spacing="var(--ds-size-4)">
                 <Stack direction="vertical" spacing="var(--ds-size-1)" className={styles.flexOne}>
-                  <Paragraph data-size="sm" className={styles.newTicketFieldLabel}>{t('support.category')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.newTicketFieldLabel}>
+                    {t('support.category')}
+                  </Paragraph>
                   <PillDropdown
                     label={t(CATEGORY_LABEL_KEYS[newTicketCategory] || newTicketCategory)}
                     value={newTicketCategory}
@@ -689,7 +726,9 @@ export function SupportPage() {
                   />
                 </Stack>
                 <Stack direction="vertical" spacing="var(--ds-size-1)" className={styles.flexOne}>
-                  <Paragraph data-size="sm" className={styles.newTicketFieldLabel}>{t('support.priority')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.newTicketFieldLabel}>
+                    {t('support.priority')}
+                  </Paragraph>
                   <PillDropdown
                     label={t(PRIORITY_LABEL_KEYS[newTicketPriority] || newTicketPriority)}
                     value={newTicketPriority}

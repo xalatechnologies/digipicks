@@ -7,9 +7,9 @@
  */
 
 import { useState, useMemo, type FormEvent } from 'react';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useTenantContext } from '@digilist-saas/app-shell';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useTenantContext } from '@digipicks/app-shell';
 import {
   useAddons,
   useCreateAddon,
@@ -19,9 +19,9 @@ import {
   useCreateAdditionalService,
   useUpdateAdditionalService,
   useDeleteAdditionalService,
-} from '@digilist-saas/sdk';
-import type { Addon } from '@digilist-saas/sdk';
-import type { AdditionalService } from '@digilist-saas/sdk';
+} from '@digipicks/sdk';
+import type { Addon } from '@digipicks/sdk';
+import type { AdditionalService } from '@digipicks/sdk';
 import {
   Card,
   Heading,
@@ -45,8 +45,8 @@ import {
   useIsMobile,
   EditIcon,
   PlusIcon,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
 import styles from './equipment-services.module.css';
 
 export function EquipmentServicesPage() {
@@ -66,15 +66,25 @@ export function EquipmentServicesPage() {
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [serviceSubmitting, setServiceSubmitting] = useState(false);
   const [serviceForm, setServiceForm] = useState({
-    name: '', description: '', price: '', currency: 'NOK',
-    isRequired: false, displayOrder: '',
+    name: '',
+    description: '',
+    price: '',
+    currency: 'NOK',
+    isRequired: false,
+    displayOrder: '',
   });
 
   // ── Form state ──
   const [addonForm, setAddonForm] = useState({
-    name: '', slug: '', description: '', category: '',
-    priceType: 'per_booking', price: '', currency: 'NOK',
-    maxQuantity: '', requiresApproval: false,
+    name: '',
+    slug: '',
+    description: '',
+    category: '',
+    priceType: 'per_booking',
+    price: '',
+    currency: 'NOK',
+    maxQuantity: '',
+    requiresApproval: false,
     availabilityType: 'optional' as 'optional' | 'required' | 'included',
   });
 
@@ -84,7 +94,7 @@ export function EquipmentServicesPage() {
   // Fetch additional services (deduplicate by name — seed may create per-resource entries)
   const { services: rawServices, isLoading: servicesLoading } = useAdditionalServicesByTenant(tenantId ?? undefined);
   const services = rawServices.filter(
-    (svc: any, idx: number, arr: any[]) => arr.findIndex((s: any) => s.name === svc.name) === idx
+    (svc: any, idx: number, arr: any[]) => arr.findIndex((s: any) => s.name === svc.name) === idx,
   );
 
   // ── Mutations ──
@@ -168,7 +178,9 @@ export function EquipmentServicesPage() {
         });
       }
       closeServiceModal();
-    } finally { setServiceSubmitting(false); }
+    } finally {
+      setServiceSubmitting(false);
+    }
   };
 
   const handleDeleteService = async (id: string, name: string) => {
@@ -188,19 +200,36 @@ export function EquipmentServicesPage() {
 
   const priceTypeLabel = (priceType: string) => {
     switch (priceType) {
-      case 'fixed': return t('equipmentServices.priceFixed');
-      case 'per_hour': return t('equipmentServices.pricePerHour');
-      case 'per_day': return t('equipmentServices.pricePerDay');
-      case 'per_unit': return t('equipmentServices.pricePerUnit');
-      case 'per_booking': return t('equipmentServices.pricePerBooking');
-      default: return priceType;
+      case 'fixed':
+        return t('equipmentServices.priceFixed');
+      case 'per_hour':
+        return t('equipmentServices.pricePerHour');
+      case 'per_day':
+        return t('equipmentServices.pricePerDay');
+      case 'per_unit':
+        return t('equipmentServices.pricePerUnit');
+      case 'per_booking':
+        return t('equipmentServices.pricePerBooking');
+      default:
+        return priceType;
     }
   };
 
   // ── Open modal for create ──
   const openCreate = () => {
     setEditingId(null);
-    setAddonForm({ name: '', slug: '', description: '', category: '', priceType: 'per_booking', price: '', currency: 'NOK', maxQuantity: '', requiresApproval: false, availabilityType: 'optional' });
+    setAddonForm({
+      name: '',
+      slug: '',
+      description: '',
+      category: '',
+      priceType: 'per_booking',
+      price: '',
+      currency: 'NOK',
+      maxQuantity: '',
+      requiresApproval: false,
+      availabilityType: 'optional',
+    });
     setModalOpen(true);
   };
 
@@ -234,7 +263,7 @@ export function EquipmentServicesPage() {
     if (!tenantId) return;
     setSubmitting(true);
     try {
-      const effectivePrice = addonForm.availabilityType === 'included' ? 0 : (parseFloat(addonForm.price) || 0);
+      const effectivePrice = addonForm.availabilityType === 'included' ? 0 : parseFloat(addonForm.price) || 0;
       const metadata = { availabilityType: addonForm.availabilityType };
       if (editingId) {
         await updateAddon({
@@ -250,7 +279,12 @@ export function EquipmentServicesPage() {
           metadata,
         });
       } else {
-        const slug = addonForm.slug || addonForm.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        const slug =
+          addonForm.slug ||
+          addonForm.name
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
         await createAddon({
           tenantId: tenantId as any,
           name: addonForm.name,
@@ -266,7 +300,9 @@ export function EquipmentServicesPage() {
         });
       }
       closeModal();
-    } finally { setSubmitting(false); }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // ── Drawer form ref for footer submit ──
@@ -276,22 +312,51 @@ export function EquipmentServicesPage() {
   const renderModalForm = () => {
     const isEdit = !!editingId;
     return (
-      <form ref={(el) => { formRef.current = el; }} onSubmit={handleSubmitAddon}>
-        <DrawerSection title={t('equipmentServices.addonDetails')} description={isEdit ? t('equipmentServices.editAddonDesc') : t('equipmentServices.newAddonDesc')}>
+      <form
+        ref={(el) => {
+          formRef.current = el;
+        }}
+        onSubmit={handleSubmitAddon}
+      >
+        <DrawerSection
+          title={t('equipmentServices.addonDetails')}
+          description={isEdit ? t('equipmentServices.editAddonDesc') : t('equipmentServices.newAddonDesc')}
+        >
           <Stack spacing="var(--ds-size-3)">
-            <Textfield label={t('common.name')} value={addonForm.name} onChange={(e) => setAddonForm(p => ({ ...p, name: e.target.value }))} required data-size="sm" placeholder="Projektor og lerret" />
-            <Textfield label={t('equipmentServices.category')} value={addonForm.category} onChange={(e) => setAddonForm(p => ({ ...p, category: e.target.value }))} data-size="sm" placeholder="teknikk" />
-            <Textfield label={t('common.description')} value={addonForm.description} onChange={(e) => setAddonForm(p => ({ ...p, description: e.target.value }))} data-size="sm" placeholder="Portabel projektor med 3m lerret" />
+            <Textfield
+              label={t('common.name')}
+              value={addonForm.name}
+              onChange={(e) => setAddonForm((p) => ({ ...p, name: e.target.value }))}
+              required
+              data-size="sm"
+              placeholder="Projektor og lerret"
+            />
+            <Textfield
+              label={t('equipmentServices.category')}
+              value={addonForm.category}
+              onChange={(e) => setAddonForm((p) => ({ ...p, category: e.target.value }))}
+              data-size="sm"
+              placeholder="teknikk"
+            />
+            <Textfield
+              label={t('common.description')}
+              value={addonForm.description}
+              onChange={(e) => setAddonForm((p) => ({ ...p, description: e.target.value }))}
+              data-size="sm"
+              placeholder="Portabel projektor med 3m lerret"
+            />
           </Stack>
         </DrawerSection>
         <DrawerSection title={t('equipmentServices.pricingSection')} collapsible>
           <Stack spacing="var(--ds-size-3)">
             <Stack spacing="var(--ds-size-1)">
-              <Paragraph data-size="sm" className={styles.formLabel}>{t('equipmentServices.priceType')}</Paragraph>
+              <Paragraph data-size="sm" className={styles.formLabel}>
+                {t('equipmentServices.priceType')}
+              </Paragraph>
               <PillDropdown
                 label={priceTypeLabel(addonForm.priceType)}
                 value={addonForm.priceType}
-                onChange={(val) => setAddonForm(p => ({ ...p, priceType: val }))}
+                onChange={(val) => setAddonForm((p) => ({ ...p, priceType: val }))}
                 options={[
                   { value: 'per_booking', label: t('equipmentServices.pricePerBooking') },
                   { value: 'per_unit', label: t('equipmentServices.pricePerUnit') },
@@ -301,24 +366,44 @@ export function EquipmentServicesPage() {
                 ariaLabel={t('equipmentServices.priceType')}
               />
             </Stack>
-            <Textfield label={t('pricing.amount')} type="number" value={addonForm.availabilityType === 'included' ? '0' : addonForm.price} onChange={(e) => setAddonForm(p => ({ ...p, price: e.target.value }))} required data-size="sm" placeholder="1200" disabled={addonForm.availabilityType === 'included'} />
-            <Textfield label={t('equipmentServices.maxQuantity')} type="number" value={addonForm.maxQuantity} onChange={(e) => setAddonForm(p => ({ ...p, maxQuantity: e.target.value }))} data-size="sm" placeholder="1" />
+            <Textfield
+              label={t('pricing.amount')}
+              type="number"
+              value={addonForm.availabilityType === 'included' ? '0' : addonForm.price}
+              onChange={(e) => setAddonForm((p) => ({ ...p, price: e.target.value }))}
+              required
+              data-size="sm"
+              placeholder="1200"
+              disabled={addonForm.availabilityType === 'included'}
+            />
+            <Textfield
+              label={t('equipmentServices.maxQuantity')}
+              type="number"
+              value={addonForm.maxQuantity}
+              onChange={(e) => setAddonForm((p) => ({ ...p, maxQuantity: e.target.value }))}
+              data-size="sm"
+              placeholder="1"
+            />
           </Stack>
         </DrawerSection>
         <DrawerSection title={t('equipmentServices.settingsSection')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-size-3)">
             <Stack spacing="var(--ds-size-1)">
-              <Paragraph data-size="sm" className={styles.formLabel}>{t('equipmentServices.availabilityType')}</Paragraph>
+              <Paragraph data-size="sm" className={styles.formLabel}>
+                {t('equipmentServices.availabilityType')}
+              </Paragraph>
               <PillDropdown
                 label={
-                  addonForm.availabilityType === 'optional' ? t('equipmentServices.availabilityOptional')
-                    : addonForm.availabilityType === 'required' ? t('equipmentServices.availabilityRequired')
+                  addonForm.availabilityType === 'optional'
+                    ? t('equipmentServices.availabilityOptional')
+                    : addonForm.availabilityType === 'required'
+                      ? t('equipmentServices.availabilityRequired')
                       : t('equipmentServices.availabilityIncluded')
                 }
                 value={addonForm.availabilityType}
                 onChange={(val) => {
                   const newType = val as 'optional' | 'required' | 'included';
-                  setAddonForm(p => ({
+                  setAddonForm((p) => ({
                     ...p,
                     availabilityType: newType,
                     ...(newType === 'included' ? { price: '0' } : {}),
@@ -332,7 +417,12 @@ export function EquipmentServicesPage() {
                 ariaLabel={t('equipmentServices.availabilityType')}
               />
             </Stack>
-            <SettingsToggle label={t('equipmentServices.requiresApproval')} description={t('equipmentServices.requiresApprovalDesc')} checked={addonForm.requiresApproval} onChange={(checked) => setAddonForm(p => ({ ...p, requiresApproval: checked }))} />
+            <SettingsToggle
+              label={t('equipmentServices.requiresApproval')}
+              description={t('equipmentServices.requiresApprovalDesc')}
+              checked={addonForm.requiresApproval}
+              onChange={(checked) => setAddonForm((p) => ({ ...p, requiresApproval: checked }))}
+            />
           </Stack>
         </DrawerSection>
       </form>
@@ -345,23 +435,17 @@ export function EquipmentServicesPage() {
       {
         id: 'name',
         header: t('common.name'),
-        render: (addon) => (
-          <span className={styles.cellMedium}>{addon.name}</span>
-        ),
+        render: (addon) => <span className={styles.cellMedium}>{addon.name}</span>,
       },
       {
         id: 'category',
         header: t('equipmentServices.category'),
-        render: (addon) => addon.category ? <Badge>{addon.category}</Badge> : <span>—</span>,
+        render: (addon) => (addon.category ? <Badge>{addon.category}</Badge> : <span>—</span>),
       },
       {
         id: 'price',
         header: t('pricing.amount'),
-        render: (addon) => (
-          <span className={styles.cellSemibold}>
-            {formatPrice(addon.price, addon.currency)}
-          </span>
-        ),
+        render: (addon) => <span className={styles.cellSemibold}>{formatPrice(addon.price, addon.currency)}</span>,
       },
       {
         id: 'priceType',
@@ -373,26 +457,25 @@ export function EquipmentServicesPage() {
         header: t('equipmentServices.availabilityType'),
         render: (addon) => {
           const type = (addon.metadata?.availabilityType as string) ?? 'optional';
-          const label = type === 'required'
-            ? t('equipmentServices.availabilityRequired')
-            : type === 'included'
-              ? t('equipmentServices.availabilityIncluded')
-              : t('equipmentServices.availabilityOptional');
-          const color = type === 'required'
-            ? 'var(--ds-color-warning-surface-default)'
-            : type === 'included'
-              ? 'var(--ds-color-success-surface-default)'
-              : 'var(--ds-color-neutral-surface-default)';
-          const textColor = type === 'required'
-            ? 'var(--ds-color-warning-text-default)'
-            : type === 'included'
-              ? 'var(--ds-color-success-text-default)'
-              : 'var(--ds-color-neutral-text-default)';
-          return (
-            <Badge style={{ backgroundColor: color, color: textColor }}>
-              {label}
-            </Badge>
-          );
+          const label =
+            type === 'required'
+              ? t('equipmentServices.availabilityRequired')
+              : type === 'included'
+                ? t('equipmentServices.availabilityIncluded')
+                : t('equipmentServices.availabilityOptional');
+          const color =
+            type === 'required'
+              ? 'var(--ds-color-warning-surface-default)'
+              : type === 'included'
+                ? 'var(--ds-color-success-surface-default)'
+                : 'var(--ds-color-neutral-surface-default)';
+          const textColor =
+            type === 'required'
+              ? 'var(--ds-color-warning-text-default)'
+              : type === 'included'
+                ? 'var(--ds-color-success-text-default)'
+                : 'var(--ds-color-neutral-text-default)';
+          return <Badge style={{ backgroundColor: color, color: textColor }}>{label}</Badge>;
         },
       },
       {
@@ -422,9 +505,7 @@ export function EquipmentServicesPage() {
               backgroundColor: addon.isActive
                 ? 'var(--ds-color-success-surface-default)'
                 : 'var(--ds-color-neutral-surface-default)',
-              color: addon.isActive
-                ? 'var(--ds-color-success-text-default)'
-                : 'var(--ds-color-neutral-text-default)',
+              color: addon.isActive ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-default)',
             }}
           >
             {addon.isActive ? t('common.active') : t('common.inactive')}
@@ -452,7 +533,7 @@ export function EquipmentServicesPage() {
         ),
       },
     ],
-    [locale]
+    [locale],
   );
 
   // Additional services columns
@@ -461,9 +542,7 @@ export function EquipmentServicesPage() {
       {
         id: 'name',
         header: t('common.name'),
-        render: (service) => (
-          <span className={styles.cellMedium}>{service.name}</span>
-        ),
+        render: (service) => <span className={styles.cellMedium}>{service.name}</span>,
       },
       {
         id: 'description',
@@ -478,9 +557,7 @@ export function EquipmentServicesPage() {
         id: 'price',
         header: t('pricing.amount'),
         render: (service) => (
-          <span className={styles.cellSemibold}>
-            {formatPrice(service.price, service.currency)}
-          </span>
+          <span className={styles.cellSemibold}>{formatPrice(service.price, service.currency)}</span>
         ),
       },
       {
@@ -522,7 +599,7 @@ export function EquipmentServicesPage() {
         ),
       },
     ],
-    [locale]
+    [locale],
   );
 
   const activeAddons = addons.filter((a) => a.isActive);
@@ -562,15 +639,19 @@ export function EquipmentServicesPage() {
 
       {/* Stats */}
       <Grid columns={isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'} gap="var(--ds-size-4)">
-        {([
+        {[
           { label: t('equipmentServices.totalAddons'), count: addons.length },
           { label: t('equipmentServices.totalServices'), count: services.length },
           { label: t('equipmentServices.activeItems'), count: activeAddons.length },
           { label: t('equipmentServices.requiresApprovalCount'), count: approvalRequired.length },
-        ]).map(({ label, count }, i) => (
+        ].map(({ label, count }, i) => (
           <Card key={i} className={styles.statCard}>
-            <Paragraph data-size="sm" className={styles.statLabel}>{label}</Paragraph>
-            <Heading level={2} data-size="xl" className={styles.statValue}>{count}</Heading>
+            <Paragraph data-size="sm" className={styles.statLabel}>
+              {label}
+            </Paragraph>
+            <Heading level={2} data-size="xl" className={styles.statValue}>
+              {count}
+            </Heading>
           </Card>
         ))}
       </Grid>
@@ -687,22 +768,55 @@ export function EquipmentServicesPage() {
           </Stack>
         }
       >
-        <form ref={(el) => { serviceFormRef.current = el; }} onSubmit={handleSubmitService}>
-          <DrawerSection title={t('equipmentServices.serviceDetails')} description={editingServiceId ? t('equipmentServices.editServiceDesc') : t('equipmentServices.newServiceDesc')}>
+        <form
+          ref={(el) => {
+            serviceFormRef.current = el;
+          }}
+          onSubmit={handleSubmitService}
+        >
+          <DrawerSection
+            title={t('equipmentServices.serviceDetails')}
+            description={
+              editingServiceId ? t('equipmentServices.editServiceDesc') : t('equipmentServices.newServiceDesc')
+            }
+          >
             <Stack spacing="var(--ds-size-3)">
-              <Textfield label={t('common.name')} value={serviceForm.name} onChange={(e) => setServiceForm(p => ({ ...p, name: e.target.value }))} required data-size="sm" placeholder={t('equipmentServices.serviceNamePlaceholder')} />
-              <Textfield label={t('common.description')} value={serviceForm.description} onChange={(e) => setServiceForm(p => ({ ...p, description: e.target.value }))} data-size="sm" placeholder={t('equipmentServices.serviceDescPlaceholder')} />
+              <Textfield
+                label={t('common.name')}
+                value={serviceForm.name}
+                onChange={(e) => setServiceForm((p) => ({ ...p, name: e.target.value }))}
+                required
+                data-size="sm"
+                placeholder={t('equipmentServices.serviceNamePlaceholder')}
+              />
+              <Textfield
+                label={t('common.description')}
+                value={serviceForm.description}
+                onChange={(e) => setServiceForm((p) => ({ ...p, description: e.target.value }))}
+                data-size="sm"
+                placeholder={t('equipmentServices.serviceDescPlaceholder')}
+              />
             </Stack>
           </DrawerSection>
           <DrawerSection title={t('equipmentServices.pricingSection')} collapsible>
             <Stack spacing="var(--ds-size-3)">
-              <Textfield label={t('pricing.amount')} type="number" value={serviceForm.price} onChange={(e) => setServiceForm(p => ({ ...p, price: e.target.value }))} required data-size="sm" placeholder="500" />
+              <Textfield
+                label={t('pricing.amount')}
+                type="number"
+                value={serviceForm.price}
+                onChange={(e) => setServiceForm((p) => ({ ...p, price: e.target.value }))}
+                required
+                data-size="sm"
+                placeholder="500"
+              />
               <Stack spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.formLabel}>{t('equipmentServices.currency')}</Paragraph>
+                <Paragraph data-size="sm" className={styles.formLabel}>
+                  {t('equipmentServices.currency')}
+                </Paragraph>
                 <PillDropdown
                   label={serviceForm.currency}
                   value={serviceForm.currency}
-                  onChange={(val) => setServiceForm(p => ({ ...p, currency: val }))}
+                  onChange={(val) => setServiceForm((p) => ({ ...p, currency: val }))}
                   options={[
                     { value: 'NOK', label: 'NOK' },
                     { value: 'EUR', label: 'EUR' },
@@ -715,8 +829,20 @@ export function EquipmentServicesPage() {
           </DrawerSection>
           <DrawerSection title={t('equipmentServices.settingsSection')} collapsible defaultCollapsed>
             <Stack spacing="var(--ds-size-3)">
-              <SettingsToggle label={t('equipmentServices.serviceRequired')} description={t('equipmentServices.serviceRequiredDesc')} checked={serviceForm.isRequired} onChange={(checked) => setServiceForm(p => ({ ...p, isRequired: checked }))} />
-              <Textfield label={t('equipmentServices.displayOrder')} type="number" value={serviceForm.displayOrder} onChange={(e) => setServiceForm(p => ({ ...p, displayOrder: e.target.value }))} data-size="sm" placeholder="1" />
+              <SettingsToggle
+                label={t('equipmentServices.serviceRequired')}
+                description={t('equipmentServices.serviceRequiredDesc')}
+                checked={serviceForm.isRequired}
+                onChange={(checked) => setServiceForm((p) => ({ ...p, isRequired: checked }))}
+              />
+              <Textfield
+                label={t('equipmentServices.displayOrder')}
+                type="number"
+                value={serviceForm.displayOrder}
+                onChange={(e) => setServiceForm((p) => ({ ...p, displayOrder: e.target.value }))}
+                data-size="sm"
+                placeholder="1"
+              />
             </Stack>
           </DrawerSection>
         </form>

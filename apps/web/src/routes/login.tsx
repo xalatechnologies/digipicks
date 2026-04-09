@@ -32,30 +32,57 @@ import {
   Paragraph,
   Card,
   Stack,
-} from '@digilist-saas/ds';
-import type { DemoUser } from '@digilist-saas/ds';
-import { useAuth } from '@digilist-saas/app-shell';
-import { useEmailCode } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DemoUser } from '@digipicks/ds';
+import { useAuth } from '@digipicks/app-shell';
+import { useEmailCode } from '@digipicks/sdk';
+import { env } from '@digipicks/app-shell';
+import { useT } from '@digipicks/i18n';
 
 const DEV_AUTH = env.devAuth;
 
 const DEMO_USERS: DemoUser[] = [
-  { key: 'superadmin', name: 'Platform Admin', role: 'Superadmin', initials: 'PA', color: 'var(--ds-color-danger-base-default, #EF4444)' },
-  { key: 'admin', name: 'Tenant Admin', role: 'Admin', initials: 'TA', color: 'var(--ds-color-accent-base-default, #4F6BFF)' },
-  { key: 'user', name: 'Tenant Owner', role: 'Bruker / Eier', initials: 'TO', color: 'var(--ds-color-brand-1-base-default, #8B5CF6)' },
+  {
+    key: 'superadmin',
+    name: 'Platform Admin',
+    role: 'Superadmin',
+    initials: 'PA',
+    color: 'var(--ds-color-danger-base-default, #EF4444)',
+  },
+  {
+    key: 'admin',
+    name: 'Tenant Admin',
+    role: 'Admin',
+    initials: 'TA',
+    color: 'var(--ds-color-accent-base-default, #4F6BFF)',
+  },
+  {
+    key: 'user',
+    name: 'Tenant Owner',
+    role: 'Bruker / Eier',
+    initials: 'TO',
+    color: 'var(--ds-color-brand-1-base-default, #8B5CF6)',
+  },
 ];
 
 // Synchronous cleanup on logout — runs before React hooks initialize
 function cleanupOnLogout() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('logout') === 'true') {
-    ['digilist_saas_digilist_session_token', 'digilist_saas_digilist_user', 'digilist_saas_digilist_tenant_id',
-      'digilist_saas_web_session_token', 'digilist_saas_web_user', 'digilist_saas_web_tenant_id',
-      'digilist_saas_default_session_token', 'digilist_saas_default_user', 'digilist_saas_default_tenant_id',
-      'digilist_saas_user', 'digilist_saas_session_token', 'digilist_saas_tenant_id',
-    ].forEach(k => localStorage.removeItem(k));
+    [
+      'digilist_saas_digilist_session_token',
+      'digilist_saas_digilist_user',
+      'digilist_saas_digilist_tenant_id',
+      'digilist_saas_web_session_token',
+      'digilist_saas_web_user',
+      'digilist_saas_web_tenant_id',
+      'digilist_saas_default_session_token',
+      'digilist_saas_default_user',
+      'digilist_saas_default_tenant_id',
+      'digilist_saas_user',
+      'digilist_saas_session_token',
+      'digilist_saas_tenant_id',
+    ].forEach((k) => localStorage.removeItem(k));
     // Clear cross-domain cookie
     const host = window.location.hostname;
     const parts = host.split('.');
@@ -84,57 +111,66 @@ function CodeInput({
   const [digits, setDigits] = useState<string[]>(['', '', '', '', '', '']);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handleChange = useCallback((index: number, value: string) => {
-    // Only allow digits
-    const digit = value.replace(/\D/g, '').slice(-1);
-    const newDigits = [...digits];
-    newDigits[index] = digit;
-    setDigits(newDigits);
-
-    // Auto-advance to next
-    if (digit && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-
-    // Auto-submit when all 6 digits entered
-    if (digit && index === 5) {
-      const code = newDigits.join('');
-      if (code.length === 6) {
-        onComplete(code);
-      }
-    }
-  }, [digits, onComplete]);
-
-  const handleKeyDown = useCallback((index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !digits[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+  const handleChange = useCallback(
+    (index: number, value: string) => {
+      // Only allow digits
+      const digit = value.replace(/\D/g, '').slice(-1);
       const newDigits = [...digits];
-      newDigits[index - 1] = '';
-      setDigits(newDigits);
-    }
-  }, [digits]);
-
-  const handlePaste = useCallback((e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    if (pasted.length > 0) {
-      const newDigits = [...digits];
-      for (let i = 0; i < 6; i++) {
-        newDigits[i] = pasted[i] || '';
-      }
+      newDigits[index] = digit;
       setDigits(newDigits);
 
-      // Focus appropriate input
-      const nextEmpty = newDigits.findIndex(d => !d);
-      if (nextEmpty >= 0) {
-        inputRefs.current[nextEmpty]?.focus();
-      } else {
-        inputRefs.current[5]?.focus();
-        // All filled — auto-submit
-        onComplete(newDigits.join(''));
+      // Auto-advance to next
+      if (digit && index < 5) {
+        inputRefs.current[index + 1]?.focus();
       }
-    }
-  }, [digits, onComplete]);
+
+      // Auto-submit when all 6 digits entered
+      if (digit && index === 5) {
+        const code = newDigits.join('');
+        if (code.length === 6) {
+          onComplete(code);
+        }
+      }
+    },
+    [digits, onComplete],
+  );
+
+  const handleKeyDown = useCallback(
+    (index: number, e: React.KeyboardEvent) => {
+      if (e.key === 'Backspace' && !digits[index] && index > 0) {
+        inputRefs.current[index - 1]?.focus();
+        const newDigits = [...digits];
+        newDigits[index - 1] = '';
+        setDigits(newDigits);
+      }
+    },
+    [digits],
+  );
+
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent) => {
+      e.preventDefault();
+      const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+      if (pasted.length > 0) {
+        const newDigits = [...digits];
+        for (let i = 0; i < 6; i++) {
+          newDigits[i] = pasted[i] || '';
+        }
+        setDigits(newDigits);
+
+        // Focus appropriate input
+        const nextEmpty = newDigits.findIndex((d) => !d);
+        if (nextEmpty >= 0) {
+          inputRefs.current[nextEmpty]?.focus();
+        } else {
+          inputRefs.current[5]?.focus();
+          // All filled — auto-submit
+          onComplete(newDigits.join(''));
+        }
+      }
+    },
+    [digits, onComplete],
+  );
 
   // Reset on error
   useEffect(() => {
@@ -160,7 +196,9 @@ function CodeInput({
       {digits.map((digit, i) => (
         <input
           key={i}
-          ref={(el) => { inputRefs.current[i] = el; }}
+          ref={(el) => {
+            inputRefs.current[i] = el;
+          }}
           type="text"
           inputMode="numeric"
           autoComplete="one-time-code"
@@ -288,7 +326,7 @@ export function LoginPage(): React.ReactElement {
     try {
       await verifyCode(code);
     } catch (err) {
-      setCodeErrorTrigger(prev => prev + 1);
+      setCodeErrorTrigger((prev) => prev + 1);
     }
   };
 
@@ -346,7 +384,7 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName={import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation"}
+      brandName={import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation'}
       brandTagline="ENKEL SAAS"
       logoHref="/"
       title={t('web.login.title')}
@@ -367,7 +405,14 @@ export function LoginPage(): React.ReactElement {
           {/* Remembered Emails — quick one-tap login */}
           {rememberedEmails.length > 0 && (
             <Card style={{ padding: 'var(--ds-size-4)', marginBottom: 'var(--ds-size-3)' }}>
-              <Paragraph data-size="sm" style={{ margin: '0 0 var(--ds-size-2)', color: 'var(--ds-color-neutral-text-subtle)', fontWeight: 500 }}>
+              <Paragraph
+                data-size="sm"
+                style={{
+                  margin: '0 0 var(--ds-size-2)',
+                  color: 'var(--ds-color-neutral-text-subtle)',
+                  fontWeight: 500,
+                }}
+              >
                 Tidligere brukte e-poster
               </Paragraph>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -401,30 +446,32 @@ export function LoginPage(): React.ReactElement {
                       e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default, #E5E7EB)';
                     }}
                   >
-                    <div style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: 'var(--ds-color-accent-surface-default, #EEF2FF)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                    }}>
+                    <div
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: 'var(--ds-color-accent-surface-default, #EEF2FF)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
                       <MailIcon size={16} />
                     </div>
-                    <span style={{
-                      fontSize: '14px',
-                      color: 'var(--ds-color-neutral-text-default)',
-                      flex: 1,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}>
+                    <span
+                      style={{
+                        fontSize: '14px',
+                        color: 'var(--ds-color-neutral-text-default)',
+                        flex: 1,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
                       {savedEmail}
                     </span>
-                    <span style={{ fontSize: '12px', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      →
-                    </span>
+                    <span style={{ fontSize: '12px', color: 'var(--ds-color-neutral-text-subtle)' }}>→</span>
                   </button>
                 ))}
               </div>
@@ -471,7 +518,10 @@ export function LoginPage(): React.ReactElement {
             <Heading level={3} data-size="xs" style={{ margin: '0 0 var(--ds-size-1)' }}>
               Logg inn med e-post
             </Heading>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: '0 0 var(--ds-size-4)' }}>
+            <Paragraph
+              data-size="sm"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: '0 0 var(--ds-size-4)' }}
+            >
               Vi sender en innloggingskode til e-postadressen din.
             </Paragraph>
             <form onSubmit={handleEmailSubmit}>
@@ -513,8 +563,12 @@ export function LoginPage(): React.ReactElement {
               display: 'block',
               margin: '0 auto',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.textDecoration = 'underline';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.textDecoration = 'none';
+            }}
           >
             ← Tilbake til alle innloggingsmetoder
           </button>
@@ -525,42 +579,53 @@ export function LoginPage(): React.ReactElement {
       {/* STEP 2: Code Verification                                          */}
       {/* ================================================================== */}
       {step === 'code' && (
-        <Card style={{
-          padding: '40px 36px 32px',
-          borderRadius: '20px',
-          boxShadow: '0 2px 16px rgba(0, 0, 0, 0.06)',
-          border: '1px solid var(--ds-color-neutral-border-subtle, #F0F0F0)',
-        }}>
+        <Card
+          style={{
+            padding: '40px 36px 32px',
+            borderRadius: '20px',
+            boxShadow: '0 2px 16px rgba(0, 0, 0, 0.06)',
+            border: '1px solid var(--ds-color-neutral-border-subtle, #F0F0F0)',
+          }}
+        >
           {/* Icon */}
-          <div style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: '50%',
-            background: 'var(--ds-color-accent-surface-default, #E8F0FE)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 20px',
-          }}>
+          <div
+            style={{
+              width: '52px',
+              height: '52px',
+              borderRadius: '50%',
+              background: 'var(--ds-color-accent-surface-default, #E8F0FE)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 20px',
+            }}
+          >
             <MailIcon size={24} />
           </div>
 
           {/* Title */}
-          <Heading level={2} data-size="sm" style={{
-            margin: '0 0 8px',
-            textAlign: 'center',
-            fontWeight: 700,
-            letterSpacing: '-0.01em',
-          }}>
+          <Heading
+            level={2}
+            data-size="sm"
+            style={{
+              margin: '0 0 8px',
+              textAlign: 'center',
+              fontWeight: 700,
+              letterSpacing: '-0.01em',
+            }}
+          >
             Innloggingskode sendt
           </Heading>
 
           {/* Subtitle */}
-          <Paragraph data-size="sm" style={{
-            color: 'var(--ds-color-neutral-text-subtle)',
-            margin: '0 0 28px',
-            textAlign: 'center',
-          }}>
+          <Paragraph
+            data-size="sm"
+            style={{
+              color: 'var(--ds-color-neutral-text-subtle)',
+              margin: '0 0 28px',
+              textAlign: 'center',
+            }}
+          >
             Skriv inn koden vi sendte til{' '}
             <strong style={{ color: 'var(--ds-color-neutral-text-default)', fontWeight: 600 }}>{email}</strong>
           </Paragraph>
@@ -577,42 +642,55 @@ export function LoginPage(): React.ReactElement {
 
           {/* Verifying state */}
           {isVerifying && (
-            <Paragraph data-size="sm" style={{
-              color: 'var(--ds-color-accent-text-default)',
-              margin: '0 0 20px',
-              textAlign: 'center',
-              fontWeight: 500,
-            }}>
+            <Paragraph
+              data-size="sm"
+              style={{
+                color: 'var(--ds-color-accent-text-default)',
+                margin: '0 0 20px',
+                textAlign: 'center',
+                fontWeight: 500,
+              }}
+            >
               Verifiserer...
             </Paragraph>
           )}
 
           {/* Help Section — left aligned like Vend */}
-          <div style={{
-            borderTop: '1px solid var(--ds-color-neutral-border-subtle, #F0F0F0)',
-            paddingTop: '20px',
-            marginBottom: '20px',
-          }}>
-            <Paragraph data-size="sm" style={{
-              color: 'var(--ds-color-neutral-text-default)',
-              margin: '0 0 4px',
-              fontWeight: 600,
-            }}>
+          <div
+            style={{
+              borderTop: '1px solid var(--ds-color-neutral-border-subtle, #F0F0F0)',
+              paddingTop: '20px',
+              marginBottom: '20px',
+            }}
+          >
+            <Paragraph
+              data-size="sm"
+              style={{
+                color: 'var(--ds-color-neutral-text-default)',
+                margin: '0 0 4px',
+                fontWeight: 600,
+              }}
+            >
               Ikke fått kode?
             </Paragraph>
-            <Paragraph data-size="sm" style={{
-              color: 'var(--ds-color-neutral-text-subtle)',
-              margin: '0 0 14px',
-              lineHeight: '1.5',
-            }}>
+            <Paragraph
+              data-size="sm"
+              style={{
+                color: 'var(--ds-color-neutral-text-subtle)',
+                margin: '0 0 14px',
+                lineHeight: '1.5',
+              }}
+            >
               Du bør ha fått den innen 20 sekunder. Sjekk søppelpostmappen din.
             </Paragraph>
             {/* Actions row — Send ny kode + Tilbake on same line */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
               <Button
                 variant="secondary"
                 data-size="sm"
@@ -644,8 +722,12 @@ export function LoginPage(): React.ReactElement {
                   padding: '8px 0',
                   textDecoration: 'none',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.textDecoration = 'underline';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.textDecoration = 'none';
+                }}
               >
                 Tilbake til innlogging
               </button>

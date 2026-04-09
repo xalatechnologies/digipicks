@@ -10,7 +10,7 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 import {
   Card,
   Heading,
@@ -25,11 +25,11 @@ import {
   FormField,
   StatusTag,
   useIsMobile,
-} from '@digilist-saas/ds';
-import { useAuth, env } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useAuth, env } from '@digipicks/app-shell';
 import { useMutation, useQuery } from 'convex/react';
-import { api } from '@digilist-saas/sdk/convex-api';
-import { useFileUpload } from '@digilist-saas/sdk/hooks/use-file-upload';
+import { api } from '@digipicks/sdk/convex-api';
+import { useFileUpload } from '@digipicks/sdk/hooks/use-file-upload';
 import styles from './creator-branding.module.css';
 
 const COLOR_PRESETS = [
@@ -51,12 +51,12 @@ export function CreatorBrandingPage() {
   // Fetch existing creator branding
   const existingBranding = useQuery(
     api.domain.tenantConfig.getCreatorBranding,
-    tenantId && creatorId ? { tenantId, creatorId } : 'skip'
+    tenantId && creatorId ? { tenantId, creatorId } : 'skip',
   );
 
   const existingAssets = useQuery(
     api.domain.tenantConfig.listCreatorBrandAssets,
-    tenantId && creatorId ? { tenantId, creatorId } : 'skip'
+    tenantId && creatorId ? { tenantId, creatorId } : 'skip',
   );
 
   const updateBrandingMutation = useMutation(api.domain.tenantConfig.updateCreatorBranding);
@@ -158,16 +158,13 @@ export function CreatorBrandingPage() {
         setIsUploading(null);
       }
     },
-    [tenantId, creatorId, uploadBase64Image, uploadAssetMutation]
+    [tenantId, creatorId, uploadBase64Image, uploadAssetMutation],
   );
 
-  const handleDropzoneClick = useCallback(
-    (assetType: 'logo' | 'banner') => {
-      const ref = assetType === 'logo' ? logoInputRef : bannerInputRef;
-      ref.current?.click();
-    },
-    []
-  );
+  const handleDropzoneClick = useCallback((assetType: 'logo' | 'banner') => {
+    const ref = assetType === 'logo' ? logoInputRef : bannerInputRef;
+    ref.current?.click();
+  }, []);
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, assetType: 'logo' | 'banner') => {
@@ -177,25 +174,18 @@ export function CreatorBrandingPage() {
       }
       e.target.value = '';
     },
-    [handleFileUpload]
+    [handleFileUpload],
   );
 
   // Resolve asset URLs from fetched data
-  const logoAsset = existingAssets?.find(
-    (a: any) => a.assetType === 'logo'
-  );
-  const bannerAsset = existingAssets?.find(
-    (a: any) => a.assetType === 'banner'
-  );
+  const logoAsset = existingAssets?.find((a: any) => a.assetType === 'logo');
+  const bannerAsset = existingAssets?.find((a: any) => a.assetType === 'banner');
 
   return (
     <PageContentLayout>
       <DashboardPageHeader
         title={t('creatorBranding.title', 'Your Brand')}
-        subtitle={t(
-          'creatorBranding.subtitle',
-          'Customize how your profile looks to subscribers'
-        )}
+        subtitle={t('creatorBranding.subtitle', 'Customize how your profile looks to subscribers')}
         actions={
           <Button
             type="button"
@@ -205,9 +195,7 @@ export function CreatorBrandingPage() {
             disabled={isSaving}
             className={styles.saveButton}
           >
-            {isSaving
-              ? t('common.saving', 'Saving...')
-              : t('common.save', 'Save')}
+            {isSaving ? t('common.saving', 'Saving...') : t('common.save', 'Save')}
           </Button>
         }
       />
@@ -221,12 +209,7 @@ export function CreatorBrandingPage() {
         <Paragraph data-size="sm" className={styles.labelMarginBottom}>
           {t('creatorBranding.presets', 'Presets')}
         </Paragraph>
-        <Stack
-          direction="horizontal"
-          spacing="var(--ds-size-2)"
-          wrap
-          className={styles.presetsMarginBottom}
-        >
+        <Stack direction="horizontal" spacing="var(--ds-size-2)" wrap className={styles.presetsMarginBottom}>
           {COLOR_PRESETS.map((preset) => (
             <Button
               key={preset.name}
@@ -241,11 +224,7 @@ export function CreatorBrandingPage() {
                     : undefined,
               }}
             >
-              <Stack
-                direction="horizontal"
-                align="center"
-                spacing="var(--ds-size-2)"
-              >
+              <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                 <div
                   style={{
                     width: '20px',
@@ -334,18 +313,16 @@ export function CreatorBrandingPage() {
               onClick={() => handleDropzoneClick('logo')}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick('logo'); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick('logo');
+              }}
             >
               {isUploading === 'logo' ? (
                 <Paragraph data-size="sm" className={styles.subtleText}>
                   {t('common.uploading', 'Uploading...')}
                 </Paragraph>
               ) : logoAsset?.url ? (
-                <img
-                  src={logoAsset.url}
-                  alt={logoAsset.alt || 'Logo'}
-                  className={styles.assetPreview}
-                />
+                <img src={logoAsset.url} alt={logoAsset.alt || 'Logo'} className={styles.assetPreview} />
               ) : (
                 <Stack direction="vertical" align="center" spacing="var(--ds-size-1)">
                   <Paragraph data-size="sm" className={styles.subtleText}>
@@ -374,18 +351,16 @@ export function CreatorBrandingPage() {
               onClick={() => handleDropzoneClick('banner')}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick('banner'); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick('banner');
+              }}
             >
               {isUploading === 'banner' ? (
                 <Paragraph data-size="sm" className={styles.subtleText}>
                   {t('common.uploading', 'Uploading...')}
                 </Paragraph>
               ) : bannerAsset?.url ? (
-                <img
-                  src={bannerAsset.url}
-                  alt={bannerAsset.alt || 'Banner'}
-                  className={styles.assetPreview}
-                />
+                <img src={bannerAsset.url} alt={bannerAsset.alt || 'Banner'} className={styles.assetPreview} />
               ) : (
                 <Stack direction="vertical" align="center" spacing="var(--ds-size-1)">
                   <Paragraph data-size="sm" className={styles.subtleText}>
@@ -407,29 +382,19 @@ export function CreatorBrandingPage() {
           {t('creatorBranding.identity', 'Brand Identity')}
         </Heading>
         <Stack direction="vertical" spacing="var(--ds-size-4)">
-          <FormField
-            label={t('creatorBranding.displayName', 'Brand Name')}
-          >
+          <FormField label={t('creatorBranding.displayName', 'Brand Name')}>
             <Input
               value={branding.displayName}
               onChange={(e) => updateField('displayName', e.target.value)}
-              placeholder={t(
-                'creatorBranding.displayNamePlaceholder',
-                'Override your display name for subscribers'
-              )}
+              placeholder={t('creatorBranding.displayNamePlaceholder', 'Override your display name for subscribers')}
               className={styles.fullWidthInput}
             />
           </FormField>
-          <FormField
-            label={t('creatorBranding.tagline', 'Tagline')}
-          >
+          <FormField label={t('creatorBranding.tagline', 'Tagline')}>
             <Input
               value={branding.tagline}
               onChange={(e) => updateField('tagline', e.target.value)}
-              placeholder={t(
-                'creatorBranding.taglinePlaceholder',
-                'e.g. "Sharp picks. Sharp profits."'
-              )}
+              placeholder={t('creatorBranding.taglinePlaceholder', 'e.g. "Sharp picks. Sharp profits."')}
               className={styles.fullWidthInput}
             />
           </FormField>
@@ -444,12 +409,10 @@ export function CreatorBrandingPage() {
         <Paragraph data-size="sm" className={styles.subtleText} style={{ marginBottom: 'var(--ds-size-3)' }}>
           {t(
             'creatorBranding.customDomainHint',
-            'Point your own domain to your creator page. Add a CNAME record pointing to creators.digipicks.com.'
+            'Point your own domain to your creator page. Add a CNAME record pointing to creators.digipicks.com.',
           )}
         </Paragraph>
-        <FormField
-          label={t('creatorBranding.domain', 'Domain')}
-        >
+        <FormField label={t('creatorBranding.domain', 'Domain')}>
           <Input
             value={branding.customDomain}
             onChange={(e) => updateField('customDomain', e.target.value)}
@@ -461,9 +424,7 @@ export function CreatorBrandingPage() {
           <div className={styles.domainStatus}>
             <div
               className={`${styles.domainDot} ${
-                existingBranding?.customDomain === branding.customDomain
-                  ? styles.domainActive
-                  : styles.domainPending
+                existingBranding?.customDomain === branding.customDomain ? styles.domainActive : styles.domainPending
               }`}
             />
             <Paragraph data-size="xs" className={styles.subtleText}>
@@ -482,16 +443,9 @@ export function CreatorBrandingPage() {
         </Heading>
         <div className={styles.previewContainer}>
           {/* Mock creator header */}
-          <div
-            className={styles.previewHeader}
-            style={{ backgroundColor: branding.primaryColor }}
-          >
+          <div className={styles.previewHeader} style={{ backgroundColor: branding.primaryColor }}>
             {logoAsset?.url ? (
-              <img
-                src={logoAsset.url}
-                alt="Logo preview"
-                className={styles.previewLogo}
-              />
+              <img src={logoAsset.url} alt="Logo preview" className={styles.previewLogo} />
             ) : (
               <div className={styles.previewLogoPlaceholder} />
             )}
@@ -499,11 +453,7 @@ export function CreatorBrandingPage() {
               <div style={{ fontWeight: 600, fontSize: '14px' }}>
                 {branding.displayName || t('creatorBranding.yourName', 'Your Name')}
               </div>
-              {branding.tagline && (
-                <div style={{ fontSize: '11px', opacity: 0.8 }}>
-                  {branding.tagline}
-                </div>
-              )}
+              {branding.tagline && <div style={{ fontSize: '11px', opacity: 0.8 }}>{branding.tagline}</div>}
             </div>
           </div>
 
@@ -515,36 +465,25 @@ export function CreatorBrandingPage() {
                 <div className={styles.previewStatLabel}>Picks</div>
               </div>
               <div className={styles.previewStat}>
-                <div
-                  className={styles.previewStatValue}
-                  style={{ color: branding.accentColor }}
-                >
+                <div className={styles.previewStatValue} style={{ color: branding.accentColor }}>
                   62%
                 </div>
                 <div className={styles.previewStatLabel}>Win Rate</div>
               </div>
               <div className={styles.previewStat}>
-                <div
-                  className={styles.previewStatValue}
-                  style={{ color: branding.accentColor }}
-                >
+                <div className={styles.previewStatValue} style={{ color: branding.accentColor }}>
                   +18.4%
                 </div>
                 <div className={styles.previewStatLabel}>ROI</div>
               </div>
             </div>
 
-            <div
-              className={styles.previewCta}
-              style={{ backgroundColor: branding.accentColor }}
-            >
+            <div className={styles.previewCta} style={{ backgroundColor: branding.accentColor }}>
               {t('creatorBranding.previewSubscribe', 'Subscribe')}
             </div>
           </div>
 
-          <div className={styles.previewFooter}>
-            {branding.customDomain || 'digipicks.com/creator/you'}
-          </div>
+          <div className={styles.previewFooter}>{branding.customDomain || 'digipicks.com/creator/you'}</div>
         </div>
       </Card>
 
@@ -553,9 +492,7 @@ export function CreatorBrandingPage() {
         <Heading level={2} data-size="sm" className={styles.sectionHeading}>
           {t('creatorBranding.advanced', 'Advanced')}
         </Heading>
-        <FormField
-          label={t('creatorBranding.customCSS', 'Custom CSS')}
-        >
+        <FormField label={t('creatorBranding.customCSS', 'Custom CSS')}>
           <Textfield
             value={branding.customCSS}
             onChange={(e) => updateField('customCSS', e.target.value)}
@@ -566,7 +503,7 @@ export function CreatorBrandingPage() {
         <Paragraph data-size="xs" className={styles.subtleText} style={{ marginTop: 'var(--ds-size-2)' }}>
           {t(
             'creatorBranding.customCSSHint',
-            'Advanced: Add custom CSS rules to fine-tune your branded page. Use --creator-brand-* variables.'
+            'Advanced: Add custom CSS rules to fine-tune your branded page. Use --creator-brand-* variables.',
           )}
         </Paragraph>
       </Card>

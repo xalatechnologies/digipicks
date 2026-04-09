@@ -13,7 +13,7 @@ import { ChevronRightIcon, MenuIcon } from '../../primitives/icons';
 import { cn } from '../../utils';
 import styles from './TreeNavSidebar.module.css';
 
-/** Tree nav item compatible with @digilist-saas/shared DocsTreeNavItem */
+/** Tree nav item compatible with @digipicks/shared DocsTreeNavItem */
 export interface TreeNavItem {
   id: string;
   label: string;
@@ -96,9 +96,7 @@ function TreeNavItemComp({
           to={item.href}
           end={item.href === '/'}
           onClick={onItemClick}
-          className={({ isActive }) =>
-            cn(styles.treeItemInner, isActive && styles.treeItemInnerActive)
-          }
+          className={({ isActive }) => cn(styles.treeItemInner, isActive && styles.treeItemInnerActive)}
         >
           {hasChildren ? (
             <Button
@@ -153,7 +151,7 @@ export function TreeNavSidebar({
   const currentPath = location.pathname;
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
   const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < mobileBreakpoint : false
+    typeof window !== 'undefined' ? window.innerWidth < mobileBreakpoint : false,
   );
   const [drawerOpen, setDrawerOpen] = useState(false);
 

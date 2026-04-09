@@ -6,15 +6,10 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useDocsArticle } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useDocsArticle } from '@digipicks/sdk';
+import { env } from '@digipicks/app-shell';
 import s from './blog.module.css';
 
 export function BlogArticlePage() {
@@ -27,21 +22,18 @@ export function BlogArticlePage() {
   const tenantId = env.tenantId || '';
 
   const article = useDocsArticle(
-    tenantId && guideSlug && articleSlug
-      ? { tenantId, guideSlug, articleSlug }
-      : 'skip'
-  ) as {
-    _id: string;
-    title: string;
-    content?: string;
-    description?: string;
-  } | null | undefined;
+    tenantId && guideSlug && articleSlug ? { tenantId, guideSlug, articleSlug } : 'skip',
+  ) as
+    | {
+        _id: string;
+        title: string;
+        content?: string;
+        description?: string;
+      }
+    | null
+    | undefined;
 
-  const isLoading =
-    tenantId !== '' &&
-    guideSlug !== undefined &&
-    articleSlug !== undefined &&
-    article === undefined;
+  const isLoading = tenantId !== '' && guideSlug !== undefined && articleSlug !== undefined && article === undefined;
 
   if (isLoading) {
     return (
@@ -55,9 +47,7 @@ export function BlogArticlePage() {
     return (
       <div className={s.pageContainer}>
         <div className={s.emptyState}>
-          <Paragraph className={s.emptyText}>
-            {t('blog.noArticles')}
-          </Paragraph>
+          <Paragraph className={s.emptyText}>{t('blog.noArticles')}</Paragraph>
           <Button variant="tertiary" onClick={() => navigate(`/blog/${guideSlug}`)}>
             {t('blog.backToList')}
           </Button>
@@ -89,10 +79,7 @@ export function BlogArticlePage() {
           </Paragraph>
         )}
         {article.content && (
-          <div
-            className={s.guideDescription}
-            dangerouslySetInnerHTML={{ __html: article.content }}
-          />
+          <div className={s.guideDescription} dangerouslySetInnerHTML={{ __html: article.content }} />
         )}
       </Card>
     </div>

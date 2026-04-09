@@ -1,13 +1,13 @@
 /**
  * Designsystemet CSS import.
- * 
+ *
  * This is the ONLY place in the monorepo that imports Designsystemet CSS.
- * All other imports should go through the @digilist-saas/ds facade to ensure
+ * All other imports should go through the @digipicks/ds facade to ensure
  * consistent styling and prevent duplicate CSS loading.
- * 
+ *
  * @example
  * ```typescript
- * import '@digilist-saas/ds/styles'; // Do this once in your application's entry point
+ * import '@digipicks/ds/styles'; // Do this once in your application's entry point
  * ```
  */
 import '@digdir/designsystemet-css';
@@ -19,9 +19,9 @@ import './responsive/responsive.css';
 
 /**
  * Theme Loading Strategy:
- * 
+ *
  * We do NOT import a theme here to allow tenant runtime switching via a <link> tag.
- * Theme CSS URLs are provided by @digilist-saas/ds-themes, which enables dynamic theme
+ * Theme CSS URLs are provided by @digipicks/ds-themes, which enables dynamic theme
  * changes without page reloads or CSS conflicts.
  */
-export { }; // keep this as a module
+export {}; // keep this as a module

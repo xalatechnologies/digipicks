@@ -21,9 +21,9 @@ import {
   CalendarIcon,
   CheckCircleIcon,
   useIsMobile,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import styles from './billing.module.css';
@@ -58,9 +58,7 @@ export function BillingPage() {
     id: t.id,
     tenant: t.name,
     type: t.plan || 'Starter',
-    amount: t.plan === 'Enterprise' ? '12 500 NOK'
-      : t.plan === 'Professional' ? '6 000 NOK'
-        : '1 500 NOK',
+    amount: t.plan === 'Enterprise' ? '12 500 NOK' : t.plan === 'Professional' ? '6 000 NOK' : '1 500 NOK',
     status: (t.status === 'active' ? 'paid' : 'pending') as 'paid' | 'pending' | 'overdue',
     date: t.createdAt ? new Date(t.createdAt).toISOString().split('T')[0] : '\u2013',
   }));
@@ -71,7 +69,11 @@ export function BillingPage() {
         id: 'tenant',
         header: t('saasAdmin.billing.columnTenant'),
         sortable: true,
-        render: (row) => <Paragraph data-size="sm" className={styles.tenantName}>{row.tenant}</Paragraph>,
+        render: (row) => (
+          <Paragraph data-size="sm" className={styles.tenantName}>
+            {row.tenant}
+          </Paragraph>
+        ),
       },
       {
         id: 'type',
@@ -83,7 +85,11 @@ export function BillingPage() {
         id: 'amount',
         header: t('saasAdmin.billing.columnAmount'),
         width: '140px',
-        render: (row) => <Paragraph data-size="sm" className={styles.amount}>{row.amount}</Paragraph>,
+        render: (row) => (
+          <Paragraph data-size="sm" className={styles.amount}>
+            {row.amount}
+          </Paragraph>
+        ),
       },
       {
         id: 'status',
@@ -108,18 +114,20 @@ export function BillingPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        subtitle={t('saasAdmin.billing.subtitle')}
-      />
+      <DashboardPageHeader subtitle={t('saasAdmin.billing.subtitle')} />
 
       {/* Revenue stats */}
       <Grid columns={isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'} gap="var(--ds-size-3)">
         <StatCard
           title={t('saasAdmin.billing.mrr')}
-          value={transactions.reduce((sum, t) => {
-            const num = parseInt(t.amount.replace(/\s/g, '').replace('NOK', ''));
-            return sum + (isNaN(num) ? 0 : num);
-          }, 0).toLocaleString('nb-NO') + ' NOK'}
+          value={
+            transactions
+              .reduce((sum, t) => {
+                const num = parseInt(t.amount.replace(/\s/g, '').replace('NOK', ''));
+                return sum + (isNaN(num) ? 0 : num);
+              }, 0)
+              .toLocaleString('nb-NO') + ' NOK'
+          }
           description={t('saasAdmin.billing.mrrDesc')}
           color="var(--ds-color-success-text-default)"
           icon={<CalendarIcon />}
@@ -132,7 +140,7 @@ export function BillingPage() {
         />
         <StatCard
           title={t('saasAdmin.billing.pendingInvoices')}
-          value={transactions.filter(t => t.status === 'pending').length}
+          value={transactions.filter((t) => t.status === 'pending').length}
           description={t('saasAdmin.billing.pendingDesc')}
           color="var(--ds-color-warning-text-default)"
           icon={<CalendarIcon />}
@@ -147,17 +155,9 @@ export function BillingPage() {
           </Heading>
 
           {transactions.length === 0 && !isLoading ? (
-            <EmptyState
-              title={t('saasAdmin.billing.emptyTitle')}
-              description={t('saasAdmin.billing.emptyDesc')}
-            />
+            <EmptyState title={t('saasAdmin.billing.emptyTitle')} description={t('saasAdmin.billing.emptyDesc')} />
           ) : (
-            <DataTable<TransactionRow>
-              columns={columns}
-              data={transactions}
-              getRowKey={(row) => row.id}
-              size="sm"
-            />
+            <DataTable<TransactionRow> columns={columns} data={transactions} getRowKey={(row) => row.id} size="sm" />
           )}
         </Stack>
       </Card>

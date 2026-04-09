@@ -8,9 +8,8 @@
  * - Email templates
  */
 
-
 import { useState } from 'react';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 import {
   Card,
   Heading,
@@ -24,7 +23,7 @@ import {
   Grid,
   FormField,
   useIsMobile,
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import styles from './branding.module.css';
 
 const COLOR_PRESETS = [
@@ -50,11 +49,11 @@ export function TenantBrandingPage() {
   });
 
   const updateBranding = (key: string, value: string) => {
-    setBranding(prev => ({ ...prev, [key]: value }));
+    setBranding((prev) => ({ ...prev, [key]: value }));
   };
 
-  const applyPreset = (preset: typeof COLOR_PRESETS[0]) => {
-    setBranding(prev => ({
+  const applyPreset = (preset: (typeof COLOR_PRESETS)[0]) => {
+    setBranding((prev) => ({
       ...prev,
       primaryColor: preset.primary,
       accentColor: preset.accent,
@@ -63,7 +62,7 @@ export function TenantBrandingPage() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsSaving(false);
   };
 
@@ -97,7 +96,7 @@ export function TenantBrandingPage() {
           {t('tenantBranding.presets')}
         </Paragraph>
         <Stack direction="horizontal" spacing="var(--ds-size-2)" wrap className={styles.presetsMarginBottom}>
-          {COLOR_PRESETS.map(preset => (
+          {COLOR_PRESETS.map((preset) => (
             <Button
               key={preset.nameKey}
               type="button"
@@ -105,9 +104,10 @@ export function TenantBrandingPage() {
               data-size="sm"
               onClick={() => applyPreset(preset)}
               style={{
-                border: branding.primaryColor === preset.primary
-                  ? '2px solid var(--ds-color-accent-border-default)'
-                  : undefined,
+                border:
+                  branding.primaryColor === preset.primary
+                    ? '2px solid var(--ds-color-accent-border-default)'
+                    : undefined,
               }}
             >
               <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
@@ -263,9 +263,7 @@ export function TenantBrandingPage() {
             </div>
           </div>
           {/* Mock footer */}
-          <div className={styles.previewFooter}>
-            {branding.footerText}
-          </div>
+          <div className={styles.previewFooter}>{branding.footerText}</div>
         </div>
       </Card>
     </PageContentLayout>

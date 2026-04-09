@@ -5,7 +5,7 @@
  * scrollable sections, and footer with Apply + Reset actions.
  * Reduces boilerplate across 5+ filter drawer implementations.
  *
- * @module @digilist-saas/ds/composed/FilterDrawer
+ * @module @digipicks/ds/composed/FilterDrawer
  */
 
 import React from 'react';
@@ -40,8 +40,7 @@ export interface FilterDrawerLabels {
   title?: string;
 }
 
-export interface FilterDrawerProps
-  extends Omit<DrawerProps, 'footer' | 'title' | 'children'> {
+export interface FilterDrawerProps extends Omit<DrawerProps, 'footer' | 'title' | 'children'> {
   /** Whether the drawer is open */
   isOpen: boolean;
   /** Callback when drawer closes */
@@ -122,24 +121,18 @@ export function FilterDrawer({
 
   const footer = (
     <div className={styles.footer}>
-      {footerInfo && <Paragraph data-size="sm" className={styles.footerInfo}>{footerInfo}</Paragraph>}
+      {footerInfo && (
+        <Paragraph data-size="sm" className={styles.footerInfo}>
+          {footerInfo}
+        </Paragraph>
+      )}
       <div className={styles.actions}>
         {showReset && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleReset}
-            className={styles.actionBtn}
-          >
+          <Button type="button" variant="secondary" onClick={handleReset} className={styles.actionBtn}>
             {labels.resetLabel}
           </Button>
         )}
-        <Button
-          type="button"
-          variant="primary"
-          onClick={handleApply}
-          className={styles.actionBtn}
-        >
+        <Button type="button" variant="primary" onClick={handleApply} className={styles.actionBtn}>
           {labels.applyLabel}
         </Button>
       </div>

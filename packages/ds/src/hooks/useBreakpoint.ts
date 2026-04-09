@@ -20,9 +20,7 @@ export type Breakpoint = keyof typeof DS_BREAKPOINTS;
  */
 export function useBreakpoint(breakpoint: Breakpoint | number = 'md'): boolean {
   const bp = typeof breakpoint === 'number' ? breakpoint : DS_BREAKPOINTS[breakpoint];
-  const [matches, setMatches] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth >= bp : false
-  );
+  const [matches, setMatches] = useState(() => (typeof window !== 'undefined' ? window.innerWidth >= bp : false));
 
   useEffect(() => {
     const mql = window.matchMedia(`(min-width: ${bp}px)`);
@@ -35,7 +33,7 @@ export function useBreakpoint(breakpoint: Breakpoint | number = 'md'): boolean {
   return matches;
 }
 
-/** @deprecated Use `!useBreakpoint('md')` or `useIsMobile()` from `@digilist-saas/ds` instead of local definitions. */
+/** @deprecated Use `!useBreakpoint('md')` or `useIsMobile()` from `@digipicks/ds` instead of local definitions. */
 export function useIsMobile(breakpoint = 768): boolean {
   return !useBreakpoint(breakpoint);
 }

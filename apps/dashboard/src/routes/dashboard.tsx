@@ -12,9 +12,9 @@ import {
   Grid,
   useIsMobile,
   ActivityItem,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useCapabilities, useSetPageTitle } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useCapabilities, useSetPageTitle } from '@digipicks/app-shell';
 import { useNavigate } from 'react-router-dom';
 
 export function DashboardPage(): React.ReactElement {
@@ -113,13 +113,13 @@ export function DashboardPage(): React.ReactElement {
                     Manage Users
                   </button>
                 )}
-                 <button
-                    type="button"
-                    className="ds-btn ds-btn--secondary ds-btn--lg"
-                    onClick={() => navigate('/settings')}
-                  >
-                    System Settings
-                  </button>
+                <button
+                  type="button"
+                  className="ds-btn ds-btn--secondary ds-btn--lg"
+                  onClick={() => navigate('/settings')}
+                >
+                  System Settings
+                </button>
               </Stack>
             </Stack>
           </Card>
@@ -127,9 +127,7 @@ export function DashboardPage(): React.ReactElement {
           {/* System status card */}
           <Card data-color="neutral">
             <Stack direction="horizontal" spacing="var(--ds-size-3)" align="center">
-              <Paragraph data-size="sm">
-                System Status: Operational
-              </Paragraph>
+              <Paragraph data-size="sm">System Status: Operational</Paragraph>
             </Stack>
             <Paragraph data-size="xs" data-color="subtle">
               Last updated just now

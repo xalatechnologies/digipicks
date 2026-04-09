@@ -3,25 +3,17 @@
  * Dynamically imports theme CSS with ?inline and injects into document head.
  */
 import * as React from 'react';
-import type { ThemeId } from '@digilist-saas/ds';
+import type { ThemeId } from '@digipicks/ds';
 
 const THEME_IMPORTS: Record<string, () => Promise<{ default: string }>> = {
-  digilist: () =>
-    import('@digilist-saas/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
-  'xala-navy': () =>
-    import('@digilist-saas/ds/themes/xala-navy-theme.css?inline').then((m) => m as { default: string }),
-  steinkjer: () =>
-    import('@digilist-saas/ds/themes/steinkjer-theme.css?inline').then((m) => m as { default: string }),
-  hamar: () =>
-    import('@digilist-saas/ds/themes/hamar-theme.css?inline').then((m) => m as { default: string }),
-  digdir: () =>
-    import('@digilist-saas/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
-  altinn: () =>
-    import('@digilist-saas/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
-  uutilsynet: () =>
-    import('@digilist-saas/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
-  portal: () =>
-    import('@digilist-saas/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
+  digilist: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
+  'xala-navy': () => import('@digipicks/ds/themes/xala-navy-theme.css?inline').then((m) => m as { default: string }),
+  steinkjer: () => import('@digipicks/ds/themes/steinkjer-theme.css?inline').then((m) => m as { default: string }),
+  hamar: () => import('@digipicks/ds/themes/hamar-theme.css?inline').then((m) => m as { default: string }),
+  digdir: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
+  altinn: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
+  uutilsynet: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
+  portal: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
 };
 
 const STYLE_ID = 'dynamic-theme-css';

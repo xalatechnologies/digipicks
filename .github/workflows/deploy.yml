@@ -80,10 +80,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared
-        run: pnpm --filter @digilist-saas/shared build
+        run: pnpm --filter @digipicks/shared build
 
       - name: Build ${{ matrix.app }}
-        run: pnpm --filter @digilist-saas/${{ matrix.app }} build
+        run: pnpm --filter @digipicks/${{ matrix.app }} build
         env:
           VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
           VITE_PLATFORM_NAME: ${{ vars.VITE_PLATFORM_NAME }}

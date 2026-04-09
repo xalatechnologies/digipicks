@@ -8,9 +8,8 @@
  * - Integration settings
  */
 
-
 import { useState } from 'react';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 import {
   Card,
   Heading,
@@ -25,22 +24,46 @@ import {
   Grid,
   FormField,
   useIsMobile,
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import styles from './settings.module.css';
 
 const FEATURES = [
   { key: 'bookingEnabled', labelKey: 'tenantSettings.bookingEnabled', descKey: 'tenantSettings.bookingEnabledDesc' },
-  { key: 'seasonalLeaseEnabled', labelKey: 'tenantSettings.seasonalLeaseEnabled', descKey: 'tenantSettings.seasonalLeaseEnabledDesc' },
-  { key: 'organizationPortalEnabled', labelKey: 'tenantSettings.organizationPortalEnabled', descKey: 'tenantSettings.organizationPortalEnabledDesc' },
-  { key: 'publicListingsEnabled', labelKey: 'tenantSettings.publicListingsEnabled', descKey: 'tenantSettings.publicListingsEnabledDesc' },
+  {
+    key: 'seasonalLeaseEnabled',
+    labelKey: 'tenantSettings.seasonalLeaseEnabled',
+    descKey: 'tenantSettings.seasonalLeaseEnabledDesc',
+  },
+  {
+    key: 'organizationPortalEnabled',
+    labelKey: 'tenantSettings.organizationPortalEnabled',
+    descKey: 'tenantSettings.organizationPortalEnabledDesc',
+  },
+  {
+    key: 'publicListingsEnabled',
+    labelKey: 'tenantSettings.publicListingsEnabled',
+    descKey: 'tenantSettings.publicListingsEnabledDesc',
+  },
   { key: 'reviewsEnabled', labelKey: 'tenantSettings.reviewsEnabled', descKey: 'tenantSettings.reviewsEnabledDesc' },
 ] as const;
 
 const INTEGRATIONS = [
   { key: 'paymentEnabled', labelKey: 'tenantSettings.paymentEnabled', descKey: 'tenantSettings.paymentEnabledDesc' },
-  { key: 'vippsIntegration', labelKey: 'tenantSettings.vippsIntegration', descKey: 'tenantSettings.vippsIntegrationDesc' },
-  { key: 'emailNotifications', labelKey: 'tenantSettings.emailNotifications', descKey: 'tenantSettings.emailNotificationsDesc' },
-  { key: 'smsNotifications', labelKey: 'tenantSettings.smsNotifications', descKey: 'tenantSettings.smsNotificationsDesc' },
+  {
+    key: 'vippsIntegration',
+    labelKey: 'tenantSettings.vippsIntegration',
+    descKey: 'tenantSettings.vippsIntegrationDesc',
+  },
+  {
+    key: 'emailNotifications',
+    labelKey: 'tenantSettings.emailNotifications',
+    descKey: 'tenantSettings.emailNotificationsDesc',
+  },
+  {
+    key: 'smsNotifications',
+    labelKey: 'tenantSettings.smsNotifications',
+    descKey: 'tenantSettings.smsNotificationsDesc',
+  },
 ] as const;
 
 export function TenantSettingsPage() {
@@ -69,12 +92,12 @@ export function TenantSettingsPage() {
   });
 
   const updateSetting = (key: string, value: any) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSave = async () => {
     setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsSaving(false);
   };
 
@@ -122,7 +145,13 @@ export function TenantSettingsPage() {
           <Grid columns={isMobile ? '1fr' : 'repeat(3, 1fr)'} gap="var(--ds-size-4)">
             <FormField label={t('tenantSettings.language')}>
               <PillDropdown
-                label={[{ value: 'nb', label: 'Norsk (bokmål)' }, { value: 'nn', label: 'Norsk (nynorsk)' }, { value: 'en', label: 'English' }].find(o => o.value === settings.defaultLanguage)?.label ?? t('tenantSettings.selectLanguage')}
+                label={
+                  [
+                    { value: 'nb', label: 'Norsk (bokmål)' },
+                    { value: 'nn', label: 'Norsk (nynorsk)' },
+                    { value: 'en', label: 'English' },
+                  ].find((o) => o.value === settings.defaultLanguage)?.label ?? t('tenantSettings.selectLanguage')
+                }
                 options={[
                   { value: 'nb', label: 'Norsk (bokmål)' },
                   { value: 'nn', label: 'Norsk (nynorsk)' },
@@ -136,7 +165,12 @@ export function TenantSettingsPage() {
             </FormField>
             <FormField label={t('tenantSettings.timezone')}>
               <PillDropdown
-                label={[{ value: 'Europe/Oslo', label: 'Europe/Oslo (CET)' }, { value: 'UTC', label: 'UTC' }].find(o => o.value === settings.timezone)?.label ?? t('tenantSettings.selectTimezone')}
+                label={
+                  [
+                    { value: 'Europe/Oslo', label: 'Europe/Oslo (CET)' },
+                    { value: 'UTC', label: 'UTC' },
+                  ].find((o) => o.value === settings.timezone)?.label ?? t('tenantSettings.selectTimezone')
+                }
                 options={[
                   { value: 'Europe/Oslo', label: 'Europe/Oslo (CET)' },
                   { value: 'UTC', label: 'UTC' },
@@ -149,7 +183,13 @@ export function TenantSettingsPage() {
             </FormField>
             <FormField label={t('tenantSettings.currency')}>
               <PillDropdown
-                label={[{ value: 'NOK', label: 'NOK' }, { value: 'EUR', label: 'EUR' }, { value: 'SEK', label: 'SEK' }].find(o => o.value === settings.currency)?.label ?? t('tenantSettings.selectCurrency')}
+                label={
+                  [
+                    { value: 'NOK', label: 'NOK' },
+                    { value: 'EUR', label: 'EUR' },
+                    { value: 'SEK', label: 'SEK' },
+                  ].find((o) => o.value === settings.currency)?.label ?? t('tenantSettings.selectCurrency')
+                }
                 options={[
                   { value: 'NOK', label: 'NOK' },
                   { value: 'EUR', label: 'EUR' },
@@ -171,7 +211,7 @@ export function TenantSettingsPage() {
           {t('tenantSettings.features')}
         </Heading>
         <Stack direction="vertical" spacing="var(--ds-size-4)">
-          {FEATURES.map(feature => (
+          {FEATURES.map((feature) => (
             <Stack
               key={feature.key}
               direction="horizontal"
@@ -180,7 +220,9 @@ export function TenantSettingsPage() {
               className={styles.toggleRow}
             >
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.toggleLabel}>{t(feature.labelKey)}</Paragraph>
+                <Paragraph data-size="sm" className={styles.toggleLabel}>
+                  {t(feature.labelKey)}
+                </Paragraph>
                 <Paragraph data-size="xs" className={styles.toggleDescription}>
                   {t(feature.descKey)}
                 </Paragraph>
@@ -201,7 +243,7 @@ export function TenantSettingsPage() {
           {t('tenantSettings.integrations')}
         </Heading>
         <Stack direction="vertical" spacing="var(--ds-size-4)">
-          {INTEGRATIONS.map(integration => (
+          {INTEGRATIONS.map((integration) => (
             <Stack
               key={integration.key}
               direction="horizontal"
@@ -210,7 +252,9 @@ export function TenantSettingsPage() {
               className={styles.toggleRow}
             >
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={styles.toggleLabel}>{t(integration.labelKey)}</Paragraph>
+                <Paragraph data-size="sm" className={styles.toggleLabel}>
+                  {t(integration.labelKey)}
+                </Paragraph>
                 <Paragraph data-size="xs" className={styles.toggleDescription}>
                   {t(integration.descKey)}
                 </Paragraph>

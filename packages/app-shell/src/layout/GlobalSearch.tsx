@@ -10,8 +10,8 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderSearch } from '@digilist-saas/ds';
-import type { SearchResultItem, SearchResultGroup } from '@digilist-saas/ds';
+import { HeaderSearch } from '@digipicks/ds';
+import type { SearchResultItem, SearchResultGroup } from '@digipicks/ds';
 import {
   usePublicGlobalSearch,
   usePublicListings,
@@ -19,8 +19,8 @@ import {
   useResolveTenantId,
   type TenantId,
   type Listing,
-} from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import { searchResponseToGroups } from './globalSearchUtils';
 
 export type GlobalSearchContext = 'web' | 'dashboard' | 'learning';
@@ -83,7 +83,7 @@ function useTranslateAdapter(): ((key: string, fallback?: string) => string) | u
       const r = t(key, { defaultValue: fallback });
       return typeof r === 'string' ? r : (fallback ?? key);
     },
-    [t]
+    [t],
   );
 }
 
@@ -176,7 +176,7 @@ function useWebSearchResults(tenantId?: string) {
       navigate(urls.listing(result.id));
       setSearchQuery('');
     },
-    [navigate, searchQuery]
+    [navigate, searchQuery],
   );
 
   const handleSubmit = useCallback(
@@ -186,7 +186,7 @@ function useWebSearchResults(tenantId?: string) {
         setSearchQuery('');
       }
     },
-    [navigate, searchQuery]
+    [navigate, searchQuery],
   );
 
   return {
@@ -199,10 +199,7 @@ function useWebSearchResults(tenantId?: string) {
   };
 }
 
-function useDashboardSearchResults(
-  urls: Required<GlobalSearchUrlConfig>,
-  resolvedTenantId: string | undefined
-) {
+function useDashboardSearchResults(urls: Required<GlobalSearchUrlConfig>, resolvedTenantId: string | undefined) {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const t = useTranslateAdapter();
@@ -213,10 +210,7 @@ function useDashboardSearchResults(
     limit: 20,
   });
 
-  const searchResults = useMemo(
-    () => searchResponseToGroups(searchData, t),
-    [searchData, t]
-  );
+  const searchResults = useMemo(() => searchResponseToGroups(searchData, t), [searchData, t]);
 
   const handleResultSelect = useCallback(
     (result: SearchResultItem) => {
@@ -244,7 +238,7 @@ function useDashboardSearchResults(
       navigate(urls.listing(result.id));
       setSearchQuery('');
     },
-    [navigate, searchQuery, urls]
+    [navigate, searchQuery, urls],
   );
 
   const handleSubmit = useCallback(() => {
@@ -281,7 +275,7 @@ function GlobalSearchWeb(props: Omit<GlobalSearchProps, 'context'>) {
   const baseUrls = WEB_URLS;
   const urls = useMemo(
     () => ({ ...baseUrls, ...props.urlConfig }) as Required<GlobalSearchUrlConfig>,
-    [props.urlConfig]
+    [props.urlConfig],
   );
   // Keep preview scope aligned with full search results on the web listings page.
   // Only scope by tenant when explicitly provided by caller.
@@ -305,14 +299,11 @@ function GlobalSearchWeb(props: Omit<GlobalSearchProps, 'context'>) {
 }
 
 function GlobalSearchDashboard(props: Omit<GlobalSearchProps, 'context'>) {
-  const resolvedTenantId = useResolveTenantId(
-    props.tenantId as TenantId | undefined,
-    props.appId ?? 'backoffice'
-  );
+  const resolvedTenantId = useResolveTenantId(props.tenantId as TenantId | undefined, props.appId ?? 'backoffice');
   const baseUrls = DASHBOARD_URLS;
   const urls = useMemo(
     () => ({ ...baseUrls, ...props.urlConfig }) as Required<GlobalSearchUrlConfig>,
-    [props.urlConfig]
+    [props.urlConfig],
   );
   const state = useDashboardSearchResults(urls, resolvedTenantId);
   return (

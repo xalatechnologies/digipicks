@@ -23,15 +23,12 @@ import {
   ErrorState,
   InboxIcon,
   RevisionDiffView,
-} from '@digilist-saas/ds';
-import type { DataTableColumn, ActiveFilter } from '@digilist-saas/ds';
-import {
-  useTenantActivity,
-  useUsers,
-} from '@digilist-saas/sdk';
-import { useAuthBridge } from '@digilist-saas/app-shell';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
+} from '@digipicks/ds';
+import type { DataTableColumn, ActiveFilter } from '@digipicks/ds';
+import { useTenantActivity, useUsers } from '@digipicks/sdk';
+import { useAuthBridge } from '@digipicks/app-shell';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
 import styles from './audit.module.css';
 
 // ============================================================================
@@ -90,19 +87,31 @@ function getActionBadgeColor(action: string): 'success' | 'danger' | 'warning' |
 
 function getEntityBadgeColor(entityType: string): 'success' | 'danger' | 'warning' | 'info' | 'neutral' {
   switch (entityType) {
-    case 'booking': return 'info';
-    case 'resource': return 'success';
-    case 'session': return 'danger';
-    case 'user': return 'warning';
-    case 'conversation': return 'info';
-    case 'notification': return 'neutral';
-    case 'allocation': return 'warning';
-    default: return 'neutral';
+    case 'booking':
+      return 'info';
+    case 'resource':
+      return 'success';
+    case 'session':
+      return 'danger';
+    case 'user':
+      return 'warning';
+    case 'conversation':
+      return 'info';
+    case 'notification':
+      return 'neutral';
+    case 'allocation':
+      return 'warning';
+    default:
+      return 'neutral';
   }
 }
 
 /** Relative time using i18n keys from common namespace */
-function formatRelativeTime(ts: number, locale: string, t: (key: string, opts?: Record<string, unknown>) => string): string {
+function formatRelativeTime(
+  ts: number,
+  locale: string,
+  t: (key: string, opts?: Record<string, unknown>) => string,
+): string {
   const now = Date.now();
   const diff = now - ts;
   const seconds = Math.floor(diff / 1000);
@@ -153,7 +162,11 @@ const ENTITY_LABEL_KEYS: Record<string, string> = {
   favorite: 'auditLog.entityFavorite',
 };
 
-function getEventDescription(action: string, entityType: string, t: (key: string, opts?: Record<string, unknown>) => string): string {
+function getEventDescription(
+  action: string,
+  entityType: string,
+  t: (key: string, opts?: Record<string, unknown>) => string,
+): string {
   const actionKey = ACTION_VERB_KEYS[action];
   const entityKey = ENTITY_LABEL_KEYS[entityType];
   const actionLabel = actionKey ? t(actionKey) : action.replace(/_/g, ' ');
@@ -232,32 +245,33 @@ export function AuditPage() {
   });
 
   // Map to table rows
-  const allRows: AuditRow[] = useMemo(() =>
-    (activities ?? []).map(a => ({
-      id: a.id,
-      entityType: a.entityType,
-      entityId: a.entityId,
-      action: a.action,
-      userName: a.userName,
-      userEmail: a.userEmail,
-      userId: a.userId ?? undefined,
-      timestamp: a.timestamp,
-      metadata: a.metadata as Record<string, unknown> | undefined,
-    })),
-    [activities]
+  const allRows: AuditRow[] = useMemo(
+    () =>
+      (activities ?? []).map((a) => ({
+        id: a.id,
+        entityType: a.entityType,
+        entityId: a.entityId,
+        action: a.action,
+        userName: a.userName,
+        userEmail: a.userEmail,
+        userId: a.userId ?? undefined,
+        timestamp: a.timestamp,
+        metadata: a.metadata as Record<string, unknown> | undefined,
+      })),
+    [activities],
   );
 
   // Action filter
   const actionFilteredRows = useMemo(() => {
     if (actionFilter === 'all') return allRows;
-    return allRows.filter(r => r.action.includes(actionFilter));
+    return allRows.filter((r) => r.action.includes(actionFilter));
   }, [allRows, actionFilter]);
 
   // Search filter
   const searchedRows = useMemo(() => {
     if (!searchQuery) return actionFilteredRows;
     const q = searchQuery.toLowerCase();
-    return actionFilteredRows.filter(row => {
+    return actionFilteredRows.filter((row) => {
       const name = row.userName || row.userEmail || '';
       const desc = getEventDescription(row.action, row.entityType, t);
       return (
@@ -271,7 +285,7 @@ export function AuditPage() {
 
   // Sorting
   const sortedRows = useMemo(() => {
-    const opt = SORT_OPTIONS.find(o => o.id === sortId);
+    const opt = SORT_OPTIONS.find((o) => o.id === sortId);
     if (!opt) return searchedRows;
     const sorted = [...searchedRows];
     sorted.sort((a, b) => {
@@ -303,11 +317,11 @@ export function AuditPage() {
   const activeFilters = useMemo((): ActiveFilter[] => {
     const tags: ActiveFilter[] = [];
     if (entityTypeFilter !== 'all') {
-      const opt = ENTITY_TYPE_OPTIONS.find(o => o.id === entityTypeFilter);
+      const opt = ENTITY_TYPE_OPTIONS.find((o) => o.id === entityTypeFilter);
       tags.push({ key: 'entityType', label: opt ? t(opt.labelKey) : entityTypeFilter });
     }
     if (actionFilter !== 'all') {
-      const opt = ACTION_OPTIONS.find(o => o.id === actionFilter);
+      const opt = ACTION_OPTIONS.find((o) => o.id === actionFilter);
       tags.push({ key: 'action', label: opt ? t(opt.labelKey) : actionFilter });
     }
     if (searchQuery) {
@@ -318,11 +332,24 @@ export function AuditPage() {
 
   const resetPage = useCallback(() => setPage(1), []);
 
-  const handleRemoveFilter = useCallback((key: string) => {
-    if (key === 'entityType') { setEntityTypeFilter('all'); resetPage(); }
-    if (key === 'action') { setActionFilter('all'); resetPage(); }
-    if (key === 'search') { setSearchQuery(''); setSearchValue(''); resetPage(); }
-  }, [resetPage]);
+  const handleRemoveFilter = useCallback(
+    (key: string) => {
+      if (key === 'entityType') {
+        setEntityTypeFilter('all');
+        resetPage();
+      }
+      if (key === 'action') {
+        setActionFilter('all');
+        resetPage();
+      }
+      if (key === 'search') {
+        setSearchQuery('');
+        setSearchValue('');
+        resetPage();
+      }
+    },
+    [resetPage],
+  );
 
   const handleClearAll = useCallback(() => {
     setEntityTypeFilter('all');
@@ -334,120 +361,132 @@ export function AuditPage() {
   }, [resetPage]);
 
   // Format helpers
-  const formatDateTimeFull = useCallback((ts: number) => {
-    return new Date(ts).toLocaleDateString(intlLocale, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-    } as Intl.DateTimeFormatOptions);
-  }, [intlLocale]);
+  const formatDateTimeFull = useCallback(
+    (ts: number) => {
+      return new Date(ts).toLocaleDateString(intlLocale, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      } as Intl.DateTimeFormatOptions);
+    },
+    [intlLocale],
+  );
 
   // Dropdown options
   const entityTypeLabel = useMemo(() => {
-    const opt = ENTITY_TYPE_OPTIONS.find(o => o.id === entityTypeFilter);
+    const opt = ENTITY_TYPE_OPTIONS.find((o) => o.id === entityTypeFilter);
     return opt ? t(opt.labelKey) : t('auditLog.allTypes');
   }, [entityTypeFilter, t]);
 
-  const entityTypeDropdownOptions = useMemo(() =>
-    ENTITY_TYPE_OPTIONS.map(o => ({ value: o.id, label: t(o.labelKey) })),
-    [t]
+  const entityTypeDropdownOptions = useMemo(
+    () => ENTITY_TYPE_OPTIONS.map((o) => ({ value: o.id, label: t(o.labelKey) })),
+    [t],
   );
 
   const actionLabel = useMemo(() => {
-    const opt = ACTION_OPTIONS.find(o => o.id === actionFilter);
+    const opt = ACTION_OPTIONS.find((o) => o.id === actionFilter);
     return opt ? t(opt.labelKey) : t('auditLog.actionAll');
   }, [actionFilter, t]);
 
-  const actionDropdownOptions = useMemo(() =>
-    ACTION_OPTIONS.map(o => ({ value: o.id, label: t(o.labelKey) })),
-    [t]
-  );
+  const actionDropdownOptions = useMemo(() => ACTION_OPTIONS.map((o) => ({ value: o.id, label: t(o.labelKey) })), [t]);
 
   const currentSortLabel = useMemo(() => {
-    const opt = SORT_OPTIONS.find(o => o.id === sortId);
+    const opt = SORT_OPTIONS.find((o) => o.id === sortId);
     return opt ? t(opt.labelKey) : t('auditLog.sortNewest');
   }, [sortId, t]);
 
-  const sortDropdownOptions = useMemo(() =>
-    SORT_OPTIONS.map(o => ({ value: o.id, label: t(o.labelKey) })),
-    []
-  );
+  const sortDropdownOptions = useMemo(() => SORT_OPTIONS.map((o) => ({ value: o.id, label: t(o.labelKey) })), []);
 
   // Table columns — optimized for useful info
-  const columns: DataTableColumn<AuditRow>[] = useMemo(() => [
-    {
-      id: 'description',
-      header: t('auditLog.details'),
-      render: (row) => {
-        const desc = getEventDescription(row.action, row.entityType, t);
-        const changedCount = getChangedFieldsCount(row.metadata);
-        return (
-          <div>
-            <Paragraph data-size="sm" className={styles.cellTitle}>{desc}</Paragraph>
-            {changedCount !== null && changedCount > 0 && (
-              <Paragraph data-size="xs" className={styles.cellSubtle}>
-                {t('auditLog.fieldChanged', { count: changedCount })}
+  const columns: DataTableColumn<AuditRow>[] = useMemo(
+    () => [
+      {
+        id: 'description',
+        header: t('auditLog.details'),
+        render: (row) => {
+          const desc = getEventDescription(row.action, row.entityType, t);
+          const changedCount = getChangedFieldsCount(row.metadata);
+          return (
+            <div>
+              <Paragraph data-size="sm" className={styles.cellTitle}>
+                {desc}
               </Paragraph>
-            )}
-          </div>
-        );
+              {changedCount !== null && changedCount > 0 && (
+                <Paragraph data-size="xs" className={styles.cellSubtle}>
+                  {t('auditLog.fieldChanged', { count: changedCount })}
+                </Paragraph>
+              )}
+            </div>
+          );
+        },
       },
-    },
-    {
-      id: 'entityType',
-      header: t('auditLog.entityType'),
-      width: '120px',
-      render: (row) => (
-        <Tag data-color={getEntityBadgeColor(row.entityType)} data-size="sm">
-          {t(`auditLog.type${row.entityType.charAt(0).toUpperCase() + row.entityType.slice(1)}`, { defaultValue: row.entityType })}
-        </Tag>
-      ),
-    },
-    {
-      id: 'action',
-      header: t('auditLog.action'),
-      width: '140px',
-      render: (row) => (
-        <Badge data-color={getActionBadgeColor(row.action)}>
-          {row.action.replace(/_/g, ' ')}
-        </Badge>
-      ),
-    },
-    {
-      id: 'user',
-      header: t('auditLog.user'),
-      width: '180px',
-      render: (row) => {
-        const name = row.userName || userNameMap.get(row.userId ?? '') || row.userEmail;
-        return (
-          <div>
-            <Paragraph data-size="sm" className={styles.cellDefault}>
-              {name || t('auditLog.systemAction')}
-            </Paragraph>
-            {name && row.userEmail && row.userName && (
-              <Paragraph data-size="xs" className={styles.cellSubtle}>
-                {row.userEmail}
+      {
+        id: 'entityType',
+        header: t('auditLog.entityType'),
+        width: '120px',
+        render: (row) => (
+          <Tag data-color={getEntityBadgeColor(row.entityType)} data-size="sm">
+            {t(`auditLog.type${row.entityType.charAt(0).toUpperCase() + row.entityType.slice(1)}`, {
+              defaultValue: row.entityType,
+            })}
+          </Tag>
+        ),
+      },
+      {
+        id: 'action',
+        header: t('auditLog.action'),
+        width: '140px',
+        render: (row) => <Badge data-color={getActionBadgeColor(row.action)}>{row.action.replace(/_/g, ' ')}</Badge>,
+      },
+      {
+        id: 'user',
+        header: t('auditLog.user'),
+        width: '180px',
+        render: (row) => {
+          const name = row.userName || userNameMap.get(row.userId ?? '') || row.userEmail;
+          return (
+            <div>
+              <Paragraph data-size="sm" className={styles.cellDefault}>
+                {name || t('auditLog.systemAction')}
               </Paragraph>
-            )}
-          </div>
-        );
+              {name && row.userEmail && row.userName && (
+                <Paragraph data-size="xs" className={styles.cellSubtle}>
+                  {row.userEmail}
+                </Paragraph>
+              )}
+            </div>
+          );
+        },
       },
-    },
-    {
-      id: 'timestamp',
-      header: t('auditLog.timestamp'),
-      width: '130px',
-      render: (row) => {
-        const relative = formatRelativeTime(row.timestamp, intlLocale, t);
-        const absolute = new Date(row.timestamp).toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit' });
-        return (
-          <div>
-            <Paragraph data-size="sm" className={styles.cellDefault}>{relative}</Paragraph>
-            <Paragraph data-size="xs" className={styles.cellSubtle}>{absolute}</Paragraph>
-          </div>
-        );
+      {
+        id: 'timestamp',
+        header: t('auditLog.timestamp'),
+        width: '130px',
+        render: (row) => {
+          const relative = formatRelativeTime(row.timestamp, intlLocale, t);
+          const absolute = new Date(row.timestamp).toLocaleTimeString(intlLocale, {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+          return (
+            <div>
+              <Paragraph data-size="sm" className={styles.cellDefault}>
+                {relative}
+              </Paragraph>
+              <Paragraph data-size="xs" className={styles.cellSubtle}>
+                {absolute}
+              </Paragraph>
+            </div>
+          );
+        },
       },
-    },
-  ], [t, intlLocale, userNameMap]);
+    ],
+    [t, intlLocale, userNameMap],
+  );
 
   return (
     <Stack direction="vertical" className={styles.outerStack}>
@@ -467,7 +506,10 @@ export function AuditPage() {
               placeholder={t('auditLog.filter') + '...'}
               value={searchValue}
               onSearchChange={(v) => setSearchValue(v)}
-              onSearch={(v) => { setSearchQuery(v || ''); resetPage(); }}
+              onSearch={(v) => {
+                setSearchQuery(v || '');
+                resetPage();
+              }}
               width="320px"
             />
           </FilterToolbar.Start>
@@ -476,7 +518,10 @@ export function AuditPage() {
               label={entityTypeLabel}
               options={entityTypeDropdownOptions}
               value={entityTypeFilter}
-              onChange={(v) => { setEntityTypeFilter(v); resetPage(); }}
+              onChange={(v) => {
+                setEntityTypeFilter(v);
+                resetPage();
+              }}
               size="md"
               ariaLabel={t('auditLog.entityType')}
             />
@@ -484,7 +529,10 @@ export function AuditPage() {
               label={actionLabel}
               options={actionDropdownOptions}
               value={actionFilter}
-              onChange={(v) => { setActionFilter(v); resetPage(); }}
+              onChange={(v) => {
+                setActionFilter(v);
+                resetPage();
+              }}
               size="md"
               ariaLabel={t('auditLog.action')}
             />
@@ -492,7 +540,10 @@ export function AuditPage() {
               label={currentSortLabel}
               options={sortDropdownOptions}
               value={sortId}
-              onChange={(v) => { setSortId(v); resetPage(); }}
+              onChange={(v) => {
+                setSortId(v);
+                resetPage();
+              }}
               size="md"
               ariaLabel={t('auditLog.sort')}
             />
@@ -504,9 +555,12 @@ export function AuditPage() {
               data-size="md"
               onClick={() => {
                 const header = `${t('auditLog.csvTimestamp')},${t('auditLog.csvType')},${t('auditLog.csvAction')},${t('auditLog.csvDescription')},${t('auditLog.csvUser')},${t('auditLog.csvEmail')}\n`;
-                const csv = filteredRows.map(r =>
-                  `${new Date(r.timestamp).toISOString()},${r.entityType},${r.action},"${getEventDescription(r.action, r.entityType, t)}",${r.userName || ''},${r.userEmail || ''}`
-                ).join('\n');
+                const csv = filteredRows
+                  .map(
+                    (r) =>
+                      `${new Date(r.timestamp).toISOString()},${r.entityType},${r.action},"${getEventDescription(r.action, r.entityType, t)}",${r.userName || ''},${r.userEmail || ''}`,
+                  )
+                  .join('\n');
                 const blob = new Blob([header + csv], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -532,10 +586,7 @@ export function AuditPage() {
             <Spinner aria-label={t('common.loading')} data-size="lg" />
           </Stack>
         ) : filteredRows.length === 0 ? (
-          <EmptyState
-            title={t('auditLog.noEvents')}
-            icon={<InboxIcon />}
-          />
+          <EmptyState title={t('auditLog.noEvents')} icon={<InboxIcon />} />
         ) : (
           <DataTable<AuditRow>
             columns={columns}
@@ -572,7 +623,10 @@ export function AuditPage() {
                 </Paragraph>
                 <Stack direction="horizontal" spacing="var(--ds-size-2)">
                   <Tag data-color={getEntityBadgeColor(selectedEvent.entityType)} data-size="sm">
-                    {t(`auditLog.type${selectedEvent.entityType.charAt(0).toUpperCase() + selectedEvent.entityType.slice(1)}`, { defaultValue: selectedEvent.entityType })}
+                    {t(
+                      `auditLog.type${selectedEvent.entityType.charAt(0).toUpperCase() + selectedEvent.entityType.slice(1)}`,
+                      { defaultValue: selectedEvent.entityType },
+                    )}
                   </Tag>
                   <Badge data-color={getActionBadgeColor(selectedEvent.action)}>
                     {selectedEvent.action.replace(/_/g, ' ')}
@@ -596,7 +650,9 @@ export function AuditPage() {
                     {t('auditLog.user')}
                   </Paragraph>
                   <Paragraph data-size="sm" className={styles.drawerValueBold}>
-                    {selectedEvent.userName || userNameMap.get(selectedEvent.userId ?? '') || t('auditLog.systemAction')}
+                    {selectedEvent.userName ||
+                      userNameMap.get(selectedEvent.userId ?? '') ||
+                      t('auditLog.systemAction')}
                   </Paragraph>
                 </Stack>
                 {selectedEvent.userEmail && (

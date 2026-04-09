@@ -20,7 +20,20 @@ function createTempFile(content: string, ext = '.tsx'): string {
 
 // ---------- NO_RAW_HTML patterns ----------
 
-const RAW_HTML_TAGS = ['<button', '<input', '<select', '<textarea', '<table', '<h1', '<h2', '<h3', '<h4', '<h5', '<h6', '<p>'];
+const RAW_HTML_TAGS = [
+  '<button',
+  '<input',
+  '<select',
+  '<textarea',
+  '<table',
+  '<h1',
+  '<h2',
+  '<h3',
+  '<h4',
+  '<h5',
+  '<h6',
+  '<p>',
+];
 
 function checkNoRawHtml(content: string): string[] {
   const violations: string[] = [];
@@ -126,8 +139,8 @@ describe('DS_IMPORTS_ONLY policy', () => {
     expect(v).toHaveLength(1);
   });
 
-  it('passes for @digilist-saas/ds import', () => {
-    const v = checkDsImportsOnly("import { Button } from '@digilist-saas/ds';");
+  it('passes for @digipicks/ds import', () => {
+    const v = checkDsImportsOnly("import { Button } from '@digipicks/ds';");
     expect(v).toHaveLength(0);
   });
 });
@@ -270,12 +283,7 @@ describe('TOKEN_SPACING_ONLY policy', () => {
 
 function checkI18nRequired(content: string): string[] {
   const violations: string[] = [];
-  const attrPatterns = [
-    /\baria-label="([^"]+)"/,
-    /\bplaceholder="([^"]+)"/,
-    /\btitle="([^"]+)"/,
-    /\balt="([^"]+)"/,
-  ];
+  const attrPatterns = [/\baria-label="([^"]+)"/, /\bplaceholder="([^"]+)"/, /\btitle="([^"]+)"/, /\balt="([^"]+)"/];
   const lines = content.split('\n');
   for (const line of lines) {
     if (line.trim().startsWith('//') || line.trim().startsWith('*')) continue;

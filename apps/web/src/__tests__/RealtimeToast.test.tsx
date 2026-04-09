@@ -9,18 +9,14 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import {
-  RealtimeToast,
-  RealtimeProvider,
-  ConvexRealtimeProvider,
-} from '@digilist-saas/app-shell';
+import { RealtimeToast, RealtimeProvider, ConvexRealtimeProvider } from '@digipicks/app-shell';
 
 expect.extend(toHaveNoViolations);
 
 // Mock realtimeClient so tests can trigger events without WebSocket
 const handlers: { booking?: (e: unknown) => void; notification?: (e: unknown) => void } = {};
-vi.mock('@digilist-saas/sdk', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('@digilist-saas/sdk')>();
+vi.mock('@digipicks/sdk', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@digipicks/sdk')>();
   return {
     ...mod,
     realtimeClient: {
@@ -54,8 +50,7 @@ describe('RealtimeToast', () => {
     delete handlers.notification;
   });
 
-  const renderWithProvider = (ui: React.ReactElement) =>
-    render(ui, { wrapper: RealtimeProviderWrapper });
+  const renderWithProvider = (ui: React.ReactElement) => render(ui, { wrapper: RealtimeProviderWrapper });
 
   describe('Accessibility Compliance', () => {
     it('should not have any accessibility violations when empty', async () => {
@@ -291,7 +286,7 @@ describe('RealtimeToast', () => {
   });
 
   describe('Design System Compliance', () => {
-    it('should only import from @digilist-saas/ds', () => {
+    it('should only import from @digipicks/ds', () => {
       expect(true).toBe(true);
     });
   });
@@ -303,7 +298,7 @@ describe('RealtimeToast with ConvexRealtimeProvider (production)', () => {
       render(
         <ConvexRealtimeProvider>
           <RealtimeToast />
-        </ConvexRealtimeProvider>
+        </ConvexRealtimeProvider>,
       );
     }).not.toThrow();
   });
@@ -312,7 +307,7 @@ describe('RealtimeToast with ConvexRealtimeProvider (production)', () => {
     const { container } = render(
       <ConvexRealtimeProvider>
         <RealtimeToast />
-      </ConvexRealtimeProvider>
+      </ConvexRealtimeProvider>,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

@@ -23,40 +23,49 @@ export async function newApp(args: string[], flags: Record<string, string | bool
   const base = `apps/${name}`;
 
   // 1. package.json
-  writer.create(`${base}/package.json`, JSON.stringify({
-    name: `@digilist-saas/${name}`,
-    private: true,
-    version: '0.0.0',
-    type: 'module',
-    scripts: {
-      dev: `vite --port ${port}`,
-      build: 'vite build',
-      preview: 'vite preview',
-      typecheck: 'tsc --noEmit',
-      lint: 'eslint .',
-    },
-    dependencies: {
-      '@digilist-saas/ds': 'workspace:*',
-      '@digilist-saas/app-shell': 'workspace:*',
-      '@digilist-saas/i18n': 'workspace:*',
-      '@digilist-saas/sdk': 'workspace:*',
-      '@digilist-saas/shared': 'workspace:*',
-      convex: '^1.31.7',
-      react: '^18.3.1',
-      'react-dom': '^18.3.1',
-      'react-router-dom': '^6.22.0',
-    },
-    devDependencies: {
-      '@types/react': '^18.3.12',
-      '@types/react-dom': '^18.3.1',
-      '@vitejs/plugin-react': '^4.3.4',
-      typescript: '~5.6.3',
-      vite: '^6.0.0',
-    },
-  }, null, 2) + '\n');
+  writer.create(
+    `${base}/package.json`,
+    JSON.stringify(
+      {
+        name: `@digipicks/${name}`,
+        private: true,
+        version: '0.0.0',
+        type: 'module',
+        scripts: {
+          dev: `vite --port ${port}`,
+          build: 'vite build',
+          preview: 'vite preview',
+          typecheck: 'tsc --noEmit',
+          lint: 'eslint .',
+        },
+        dependencies: {
+          '@digipicks/ds': 'workspace:*',
+          '@digipicks/app-shell': 'workspace:*',
+          '@digipicks/i18n': 'workspace:*',
+          '@digipicks/sdk': 'workspace:*',
+          '@digipicks/shared': 'workspace:*',
+          convex: '^1.31.7',
+          react: '^18.3.1',
+          'react-dom': '^18.3.1',
+          'react-router-dom': '^6.22.0',
+        },
+        devDependencies: {
+          '@types/react': '^18.3.12',
+          '@types/react-dom': '^18.3.1',
+          '@vitejs/plugin-react': '^4.3.4',
+          typescript: '~5.6.3',
+          vite: '^6.0.0',
+        },
+      },
+      null,
+      2,
+    ) + '\n',
+  );
 
   // 2. index.html
-  writer.create(`${base}/index.html`, `<!doctype html>
+  writer.create(
+    `${base}/index.html`,
+    `<!doctype html>
 <html lang="no">
   <head>
     <meta charset="UTF-8" />
@@ -68,37 +77,47 @@ export async function newApp(args: string[], flags: Record<string, string | bool
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-`);
+`,
+  );
 
   // 3. tsconfig.json
-  writer.create(`${base}/tsconfig.json`, JSON.stringify({
-    compilerOptions: {
-      target: 'ES2020',
-      useDefineForClassFields: true,
-      lib: ['ES2020', 'DOM', 'DOM.Iterable'],
-      module: 'ESNext',
-      skipLibCheck: true,
-      moduleResolution: 'bundler',
-      allowImportingTsExtensions: true,
-      isolatedModules: true,
-      moduleDetection: 'force',
-      noEmit: true,
-      jsx: 'react-jsx',
-      strict: true,
-      noUnusedLocals: true,
-      noUnusedParameters: true,
-      noFallthroughCasesInSwitch: true,
-      paths: {
-        '@/*': ['./src/*'],
-        '@digilist-saas/sdk': ['../../packages/sdk/src'],
-        '@digilist-saas/sdk/*': ['../../packages/sdk/src/*'],
+  writer.create(
+    `${base}/tsconfig.json`,
+    JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2020',
+          useDefineForClassFields: true,
+          lib: ['ES2020', 'DOM', 'DOM.Iterable'],
+          module: 'ESNext',
+          skipLibCheck: true,
+          moduleResolution: 'bundler',
+          allowImportingTsExtensions: true,
+          isolatedModules: true,
+          moduleDetection: 'force',
+          noEmit: true,
+          jsx: 'react-jsx',
+          strict: true,
+          noUnusedLocals: true,
+          noUnusedParameters: true,
+          noFallthroughCasesInSwitch: true,
+          paths: {
+            '@/*': ['./src/*'],
+            '@digipicks/sdk': ['../../packages/sdk/src'],
+            '@digipicks/sdk/*': ['../../packages/sdk/src/*'],
+          },
+        },
+        include: ['src'],
       },
-    },
-    include: ['src'],
-  }, null, 2) + '\n');
+      null,
+      2,
+    ) + '\n',
+  );
 
   // 4. vite.config.ts
-  writer.create(`${base}/vite.config.ts`, `import { defineConfig } from 'vite';
+  writer.create(
+    `${base}/vite.config.ts`,
+    `import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
@@ -108,29 +127,35 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@digilist-saas/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
+      '@digipicks/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
     },
   },
   optimizeDeps: {
-    exclude: ['@digilist-saas/sdk'],
+    exclude: ['@digipicks/sdk'],
   },
   server: {
     port: ${port},
   },
 });
-`);
+`,
+  );
 
   // 5. src/vite-env.d.ts
-  writer.create(`${base}/src/vite-env.d.ts`, `/// <reference types="vite/client" />
-`);
+  writer.create(
+    `${base}/src/vite-env.d.ts`,
+    `/// <reference types="vite/client" />
+`,
+  );
 
   // 6. src/main.tsx
-  writer.create(`${base}/src/main.tsx`, `import { StrictMode } from 'react';
+  writer.create(
+    `${base}/src/main.tsx`,
+    `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { XalaConvexProvider } from '@digilist-saas/sdk';
+import { XalaConvexProvider } from '@digipicks/sdk';
 
-import '@digilist-saas/ds/styles';
-import '@digilist-saas/ds/platform-base';
+import '@digipicks/ds/styles';
+import '@digipicks/ds/platform-base';
 import { App } from '@/App';
 
 createRoot(document.getElementById('root')!).render(
@@ -140,20 +165,23 @@ createRoot(document.getElementById('root')!).render(
     </XalaConvexProvider>
   </StrictMode>,
 );
-`);
+`,
+  );
 
   // 7. src/App.tsx — variant-specific
   writer.create(`${base}/src/App.tsx`, generateAppTsx(name, variant, pascal));
 
   // 8. Dashboard page
-  writer.create(`${base}/src/routes/dashboard.tsx`, `import {
+  writer.create(
+    `${base}/src/routes/dashboard.tsx`,
+    `import {
   Heading,
   Paragraph,
   PageContentLayout,
   DashboardPageHeader,
-} from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useT } from '@digipicks/i18n';
 
 export function DashboardPage() {
   const t = useT();
@@ -171,12 +199,15 @@ export function DashboardPage() {
     </PageContentLayout>
   );
 }
-`);
+`,
+  );
 
   // 9. Login page
-  writer.create(`${base}/src/routes/login.tsx`, `import { Heading, Paragraph, Button, Stack, Card, PageContentLayout } from '@digilist-saas/ds';
+  writer.create(
+    `${base}/src/routes/login.tsx`,
+    `import { Heading, Paragraph, Button, Stack, Card, PageContentLayout } from '@digipicks/ds';
 import { useNavigate } from 'react-router-dom';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 
 export function LoginPage() {
   const t = useT();
@@ -196,7 +227,8 @@ export function LoginPage() {
     </PageContentLayout>
   );
 }
-`);
+`,
+  );
 
   await writer.execute();
   writer.printSummary();
@@ -211,9 +243,9 @@ export function LoginPage() {
 function generateAppTsx(name: string, variant: string, pascal: string): string {
   if (variant === 'backoffice') {
     return `import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digilist-saas/ds';
-import { DEFAULT_THEME } from '@digilist-saas/ds';
-import { I18nProvider } from '@digilist-saas/i18n';
+import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digipicks/ds';
+import { DEFAULT_THEME } from '@digipicks/ds';
+import { I18nProvider } from '@digipicks/i18n';
 import {
   AuthBridge,
   BackofficeRoleProvider,
@@ -225,9 +257,9 @@ import {
   ThemeProvider,
   useTheme,
   env,
-} from '@digilist-saas/app-shell';
-import { BackofficeProtectedRouteConnected } from '@digilist-saas/app-shell';
-import { DashboardLayout } from '@digilist-saas/app-shell';
+} from '@digipicks/app-shell';
+import { BackofficeProtectedRouteConnected } from '@digipicks/app-shell';
+import { DashboardLayout } from '@digipicks/app-shell';
 import { DashboardPage } from '@/routes/dashboard';
 import { LoginPage } from '@/routes/login';
 
@@ -281,9 +313,9 @@ export function App() {
 
   if (variant === 'minside') {
     return `import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digilist-saas/ds';
-import { DEFAULT_THEME } from '@digilist-saas/ds';
-import { I18nProvider } from '@digilist-saas/i18n';
+import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digipicks/ds';
+import { DEFAULT_THEME } from '@digipicks/ds';
+import { I18nProvider } from '@digipicks/i18n';
 import {
   AuthProvider,
   useAuth,
@@ -291,9 +323,9 @@ import {
   NotificationCenterProvider,
   ThemeProvider,
   env,
-} from '@digilist-saas/app-shell';
-import { DashboardLayout } from '@digilist-saas/app-shell';
-import { ProtectedRoute } from '@digilist-saas/app-shell';
+} from '@digipicks/app-shell';
+import { DashboardLayout } from '@digipicks/app-shell';
+import { ProtectedRoute } from '@digipicks/app-shell';
 import { DashboardPage } from '@/routes/dashboard';
 import { LoginPage } from '@/routes/login';
 
@@ -334,10 +366,10 @@ export function App() {
 
   // web variant (public, no sidebar)
   return `import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digilist-saas/ds';
-import { DEFAULT_THEME } from '@digilist-saas/ds';
-import { I18nProvider } from '@digilist-saas/i18n';
-import { ThemeProvider } from '@digilist-saas/app-shell';
+import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider } from '@digipicks/ds';
+import { DEFAULT_THEME } from '@digipicks/ds';
+import { I18nProvider } from '@digipicks/i18n';
+import { ThemeProvider } from '@digipicks/app-shell';
 import { DashboardPage } from '@/routes/dashboard';
 
 export function App() {

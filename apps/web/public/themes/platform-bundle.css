@@ -2,9 +2,9 @@
  * Platform theme bundle — single import for all Digilist apps.
  * Order: Digdir native tokens, common extensions, color scheme, base document styles.
  *
- * Usage: import '@digilist-saas/ds-themes/platform';
+ * Usage: import '@digipicks/ds-themes/platform';
  */
 @import '@digdir/designsystemet-css/theme.css'; /* Native Digdir tokens (sizes, typography, colors) */
-@import './common-extensions.css';               /* Platform tokens + component CSS + mobile */
-@import './xala-navy-theme.css';                 /* Color scheme override */
-@import './base.css';                            /* Base document styles */
+@import './common-extensions.css'; /* Platform tokens + component CSS + mobile */
+@import './xala-navy-theme.css'; /* Color scheme override */
+@import './base.css'; /* Base document styles */

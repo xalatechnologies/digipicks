@@ -1,5 +1,5 @@
 {
-  "name": "@digilist-saas/ds",
+  "name": "@digipicks/ds",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -43,7 +43,7 @@
   "dependencies": {
     "@digdir/designsystemet-css": "^1.0.0",
     "@digdir/designsystemet-react": "^1.9.0",
-    "@digilist-saas/i18n": "workspace:^",
+    "@digipicks/i18n": "workspace:^",
     "mapbox-gl": "^3.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -10,20 +10,11 @@
 
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Stack,
-  NativeSelect,
-  PillTabs,
-  StatusTag,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { usePickFeedFollowing, usePickFeedForYou } from '@digilist-saas/sdk';
-import type { FeedPick } from '@digilist-saas/sdk';
-import { useAuth, env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button, Stack, NativeSelect, PillTabs, StatusTag } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { usePickFeedFollowing, usePickFeedForYou } from '@digipicks/sdk';
+import type { FeedPick } from '@digipicks/sdk';
+import { useAuth, env } from '@digipicks/app-shell';
 import s from './picks-feed.module.css';
 
 // ---------------------------------------------------------------------------
@@ -66,19 +57,27 @@ function formatTimeAgo(iso: string): string {
 
 function resultColor(result: string): 'success' | 'danger' | 'warning' | 'neutral' {
   switch (result) {
-    case 'won': return 'success';
-    case 'lost': return 'danger';
-    case 'push': return 'warning';
-    case 'void': return 'neutral';
-    default: return 'neutral';
+    case 'won':
+      return 'success';
+    case 'lost':
+      return 'danger';
+    case 'push':
+      return 'warning';
+    case 'void':
+      return 'neutral';
+    default:
+      return 'neutral';
   }
 }
 
 function confidenceClass(c: string): string {
   switch (c) {
-    case 'high': return s.confidenceHigh;
-    case 'medium': return s.confidenceMedium;
-    default: return s.confidenceLow;
+    case 'high':
+      return s.confidenceHigh;
+    case 'medium':
+      return s.confidenceMedium;
+    default:
+      return s.confidenceLow;
   }
 }
 
@@ -90,13 +89,9 @@ function UnlockedPickCard({ pick }: { pick: FeedPick }) {
   return (
     <Card className={s.pickCard}>
       <div className={s.pickCardHeader}>
-        <div className={s.creatorAvatar}>
-          {getInitials(pick.creator?.displayName || pick.creator?.name)}
-        </div>
+        <div className={s.creatorAvatar}>{getInitials(pick.creator?.displayName || pick.creator?.name)}</div>
         <div className={s.creatorInfo}>
-          <div className={s.creatorName}>
-            {pick.creator?.displayName || pick.creator?.name || 'Unknown'}
-          </div>
+          <div className={s.creatorName}>{pick.creator?.displayName || pick.creator?.name || 'Unknown'}</div>
           <div className={s.pickTimestamp}>{formatTimeAgo(pick.createdAt)}</div>
         </div>
         {pick.result !== 'pending' && (
@@ -109,11 +104,13 @@ function UnlockedPickCard({ pick }: { pick: FeedPick }) {
       <div className={s.pickBody}>
         <div className={s.pickEvent}>{pick.event}</div>
         <div className={s.pickMeta}>
-          <StatusTag color="neutral" data-size="sm">{pick.sport}</StatusTag>
-          <StatusTag color="neutral" data-size="sm">{pick.pickType}</StatusTag>
-          <span className={confidenceClass(pick.confidence)}>
-            {pick.confidence} confidence
-          </span>
+          <StatusTag color="neutral" data-size="sm">
+            {pick.sport}
+          </StatusTag>
+          <StatusTag color="neutral" data-size="sm">
+            {pick.pickType}
+          </StatusTag>
+          <span className={confidenceClass(pick.confidence)}>{pick.confidence} confidence</span>
         </div>
 
         <div className={s.pickDetails}>
@@ -151,13 +148,9 @@ function LockedPickCard({ pick, onSubscribe }: { pick: FeedPick; onSubscribe: ()
   return (
     <Card className={s.pickCard}>
       <div className={s.pickCardHeader}>
-        <div className={s.creatorAvatar}>
-          {getInitials(pick.creator?.displayName || pick.creator?.name)}
-        </div>
+        <div className={s.creatorAvatar}>{getInitials(pick.creator?.displayName || pick.creator?.name)}</div>
         <div className={s.creatorInfo}>
-          <div className={s.creatorName}>
-            {pick.creator?.displayName || pick.creator?.name || 'Unknown'}
-          </div>
+          <div className={s.creatorName}>{pick.creator?.displayName || pick.creator?.name || 'Unknown'}</div>
           <div className={s.pickTimestamp}>{formatTimeAgo(pick.createdAt)}</div>
         </div>
         {pick.result !== 'pending' && (
@@ -170,11 +163,13 @@ function LockedPickCard({ pick, onSubscribe }: { pick: FeedPick; onSubscribe: ()
       <div className={s.pickBody}>
         <div className={s.pickEvent}>{pick.event}</div>
         <div className={s.pickMeta}>
-          <StatusTag color="neutral" data-size="sm">{pick.sport}</StatusTag>
-          <StatusTag color="neutral" data-size="sm">{pick.pickType}</StatusTag>
-          <span className={confidenceClass(pick.confidence)}>
-            {pick.confidence} confidence
-          </span>
+          <StatusTag color="neutral" data-size="sm">
+            {pick.sport}
+          </StatusTag>
+          <StatusTag color="neutral" data-size="sm">
+            {pick.pickType}
+          </StatusTag>
+          <span className={confidenceClass(pick.confidence)}>{pick.confidence} confidence</span>
         </div>
 
         <div className={s.lockedOverlay}>
@@ -195,7 +190,9 @@ function LockedPickCard({ pick, onSubscribe }: { pick: FeedPick; onSubscribe: ()
             </div>
           </div>
           <div className={s.lockedCta}>
-            <span className={s.lockIcon} aria-hidden="true">&#128274;</span>
+            <span className={s.lockIcon} aria-hidden="true">
+              &#128274;
+            </span>
             <span className={s.lockText}>Subscribe to unlock this pick</span>
             <Button data-size="sm" variant="primary" onClick={onSubscribe}>
               Subscribe
@@ -222,11 +219,14 @@ export function PicksFeedPage() {
   const [sportFilter, setSportFilter] = useState('All');
   const [resultFilter, setResultFilter] = useState('All');
 
-  const feedParams = useMemo(() => ({
-    sport: sportFilter !== 'All' ? sportFilter : undefined,
-    result: resultFilter !== 'All' ? resultFilter : undefined,
-    limit: PAGE_SIZE,
-  }), [sportFilter, resultFilter]);
+  const feedParams = useMemo(
+    () => ({
+      sport: sportFilter !== 'All' ? sportFilter : undefined,
+      result: resultFilter !== 'All' ? resultFilter : undefined,
+      limit: PAGE_SIZE,
+    }),
+    [sportFilter, resultFilter],
+  );
 
   const forYou = usePickFeedForYou(tenantId as any, userId, feedParams);
   const following = usePickFeedFollowing(tenantId as any, userId, feedParams);
@@ -312,7 +312,10 @@ export function PicksFeedPage() {
         <div className={s.emptyState}>
           <Paragraph className={s.emptyText}>
             {isFollowingTab
-              ? t('picks.feed.emptyFollowing', 'No picks from creators you follow yet. Subscribe to creators to see their picks here.')
+              ? t(
+                  'picks.feed.emptyFollowing',
+                  'No picks from creators you follow yet. Subscribe to creators to see their picks here.',
+                )
               : t('picks.feed.emptyForYou', 'No picks available yet. Check back soon!')}
           </Paragraph>
           {isFollowingTab && (
@@ -328,7 +331,7 @@ export function PicksFeedPage() {
               <UnlockedPickCard key={pick.id} pick={pick} />
             ) : (
               <LockedPickCard key={pick.id} pick={pick} onSubscribe={handleSubscribe} />
-            )
+            ),
           )}
         </div>
       )}

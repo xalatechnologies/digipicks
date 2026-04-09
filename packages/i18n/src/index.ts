@@ -1,5 +1,5 @@
 /**
- * @digilist-saas/i18n
+ * @digipicks/i18n
  *
  * Centralized localization package for DigilistSaaS.
  * Provides i18n utilities, hooks, and shared translations.
@@ -24,43 +24,43 @@ export type Locale = 'nb' | 'en' | 'ar';
 export type Direction = 'ltr' | 'rtl';
 
 export interface LocaleConfig {
-    defaultLocale: Locale;
-    supportedLocales: Locale[];
+  defaultLocale: Locale;
+  supportedLocales: Locale[];
 }
 
 // Direction mapping
 const LOCALE_DIRECTION: Record<Locale, Direction> = {
-    nb: 'ltr',
-    en: 'ltr',
-    ar: 'rtl',
+  nb: 'ltr',
+  en: 'ltr',
+  ar: 'rtl',
 };
 
 /**
  * Get direction for a locale
  */
 export function getDirection(locale: Locale): Direction {
-    return LOCALE_DIRECTION[locale] || 'ltr';
+  return LOCALE_DIRECTION[locale] || 'ltr';
 }
 
 // Shared translations bundled with the package
 export const sharedTranslations = {
-    nb: { translation: nbTranslations },
-    en: { translation: enTranslations },
-    ar: { translation: arTranslations },
+  nb: { translation: nbTranslations },
+  en: { translation: enTranslations },
+  ar: { translation: arTranslations },
 };
 
 // Initialize i18n synchronously
 i18n.use(initReactI18next).init({
-    lng: 'nb',
-    fallbackLng: 'nb',
-    supportedLngs: ['nb', 'en', 'ar'],
-    resources: sharedTranslations,
-    interpolation: {
-        escapeValue: false, // React already escapes
-    },
-    react: {
-        useSuspense: false, // Disable suspense for synchronous loading
-    },
+  lng: 'nb',
+  fallbackLng: 'nb',
+  supportedLngs: ['nb', 'en', 'ar'],
+  resources: sharedTranslations,
+  interpolation: {
+    escapeValue: false, // React already escapes
+  },
+  react: {
+    useSuspense: false, // Disable suspense for synchronous loading
+  },
 });
 
 /**
@@ -68,53 +68,49 @@ i18n.use(initReactI18next).init({
  * Config is optional - if not provided, uses already initialized state
  */
 export function initI18n(config?: Partial<LocaleConfig> & { resources?: Record<string, Record<string, object>> }) {
-    // If no config, just return the already-initialized instance
-    if (!config) {
-        return i18n;
-    }
-
-    const { defaultLocale = 'nb', supportedLocales = ['nb', 'en', 'ar'], resources } = config;
-
-    // Merge shared translations with app-specific
-    const mergedResources: Record<string, Record<string, object>> = { ...sharedTranslations };
-    if (resources) {
-        for (const [locale, namespaces] of Object.entries(resources)) {
-            if (mergedResources[locale]) {
-                mergedResources[locale] = {
-                    ...mergedResources[locale],
-                    ...namespaces,
-                };
-            } else {
-                mergedResources[locale] = namespaces;
-            }
-        }
-    }
-
-    i18n.init({
-        lng: defaultLocale,
-        fallbackLng: 'nb',
-        supportedLngs: supportedLocales,
-        resources: mergedResources,
-        interpolation: {
-            escapeValue: false,
-        },
-        react: {
-            useSuspense: false,
-        },
-    });
-
+  // If no config, just return the already-initialized instance
+  if (!config) {
     return i18n;
+  }
+
+  const { defaultLocale = 'nb', supportedLocales = ['nb', 'en', 'ar'], resources } = config;
+
+  // Merge shared translations with app-specific
+  const mergedResources: Record<string, Record<string, object>> = { ...sharedTranslations };
+  if (resources) {
+    for (const [locale, namespaces] of Object.entries(resources)) {
+      if (mergedResources[locale]) {
+        mergedResources[locale] = {
+          ...mergedResources[locale],
+          ...namespaces,
+        };
+      } else {
+        mergedResources[locale] = namespaces;
+      }
+    }
+  }
+
+  i18n.init({
+    lng: defaultLocale,
+    fallbackLng: 'nb',
+    supportedLngs: supportedLocales,
+    resources: mergedResources,
+    interpolation: {
+      escapeValue: false,
+    },
+    react: {
+      useSuspense: false,
+    },
+  });
+
+  return i18n;
 }
 
 /**
  * Load translations for a namespace
  */
-export function loadTranslations(
-    locale: Locale,
-    namespace: string,
-    translations: object
-): void {
-    i18n.addResourceBundle(locale, namespace, translations, true, true);
+export function loadTranslations(locale: Locale, namespace: string, translations: object): void {
+  i18n.addResourceBundle(locale, namespace, translations, true, true);
 }
 
 /**
@@ -125,34 +121,34 @@ export function loadTranslations(
  * t('backoffice.nav.dashboard')
  */
 export function useT(namespace?: string) {
-    const { t } = useTranslation(namespace);
-    return t;
+  const { t } = useTranslation(namespace);
+  return t;
 }
 
 /**
  * useLocale - Get current locale and direction
  */
 export function useI18nLocale() {
-    const { i18n: i18nInstance } = useTranslation();
+  const { i18n: i18nInstance } = useTranslation();
 
-    const locale = (i18nInstance.language || 'nb') as Locale;
-    const direction = getDirection(locale);
+  const locale = (i18nInstance.language || 'nb') as Locale;
+  const direction = getDirection(locale);
 
-    const setLocale = useCallback(
-        (newLocale: Locale) => {
-            i18nInstance.changeLanguage(newLocale);
-        },
-        [i18nInstance]
-    );
+  const setLocale = useCallback(
+    (newLocale: Locale) => {
+      i18nInstance.changeLanguage(newLocale);
+    },
+    [i18nInstance],
+  );
 
-    return useMemo(
-        () => ({
-            locale,
-            direction,
-            setLocale,
-        }),
-        [locale, direction, setLocale]
-    );
+  return useMemo(
+    () => ({
+      locale,
+      direction,
+      setLocale,
+    }),
+    [locale, direction, setLocale],
+  );
 }
 
 // Formatting helpers
@@ -161,64 +157,49 @@ export function useI18nLocale() {
  * Format date according to locale
  */
 export function formatDate(date: Date, locale: Locale): string {
-    return new Intl.DateTimeFormat(locale, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }).format(date);
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
 }
 
 /**
  * Format date and time according to locale
  */
-export function formatDateTime(
-    date: Date,
-    locale: Locale,
-    timezone?: string
-): string {
-    return new Intl.DateTimeFormat(locale, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: timezone,
-    }).format(date);
+export function formatDateTime(date: Date, locale: Locale, timezone?: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: timezone,
+  }).format(date);
 }
 
 /**
  * Format number according to locale
  */
 export function formatNumber(value: number, locale: Locale): string {
-    return new Intl.NumberFormat(locale).format(value);
+  return new Intl.NumberFormat(locale).format(value);
 }
 
 /**
  * Format currency according to locale
  */
-export function formatCurrency(
-    amount: number,
-    currency: string,
-    locale: Locale
-): string {
-    return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency,
-    }).format(amount);
+export function formatCurrency(amount: number, currency: string, locale: Locale): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(amount);
 }
 
 /**
  * Format relative time
  */
-export function formatRelativeTime(
-    value: number,
-    unit: Intl.RelativeTimeFormatUnit,
-    locale: Locale
-): string {
-    return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(
-        value,
-        unit
-    );
+export function formatRelativeTime(value: number, unit: Intl.RelativeTimeFormatUnit, locale: Locale): string {
+  return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(value, unit);
 }
 
 /**
@@ -228,13 +209,10 @@ export function formatRelativeTime(
  * const { t, locale, setLocale } = useI18n();
  */
 export function useI18n(namespace?: string) {
-    const t = useT(namespace);
-    const { locale, setLocale } = useI18nLocale();
+  const t = useT(namespace);
+  const { locale, setLocale } = useI18nLocale();
 
-    return useMemo(
-        () => ({ t, locale, setLocale }),
-        [t, locale, setLocale]
-    );
+  return useMemo(() => ({ t, locale, setLocale }), [t, locale, setLocale]);
 }
 
 /**
@@ -248,7 +226,7 @@ export const useLocale = useI18nLocale;
  */
 import React from 'react';
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-    return React.createElement(I18nextProvider, { i18n }, children);
+  return React.createElement(I18nextProvider, { i18n }, children);
 }
 
 // Re-exports

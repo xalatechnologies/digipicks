@@ -8,9 +8,8 @@
  * - Invite users
  */
 
-
 import { useState, useMemo } from 'react';
-import { useT } from '@digilist-saas/i18n';
+import { useT } from '@digipicks/i18n';
 import {
   Card,
   Heading,
@@ -29,12 +28,12 @@ import {
   Grid,
   useIsMobile,
   useToast,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
 import s from './users-management.module.css';
-import { useUsers, useDeactivateUser, useReactivateUser, useUpdateUser } from '@digilist-saas/sdk';
-import { useAuthBridge } from '@digilist-saas/app-shell';
-import type { UserId, TenantId } from '@digilist-saas/sdk';
+import { useUsers, useDeactivateUser, useReactivateUser, useUpdateUser } from '@digipicks/sdk';
+import { useAuthBridge } from '@digipicks/app-shell';
+import type { UserId, TenantId } from '@digipicks/sdk';
 
 const ROLE_LABEL_KEYS: Record<string, string> = {
   admin: 'usersManagement.roleAdmin',
@@ -122,8 +121,7 @@ export function UsersManagementPage() {
     setShowInvite(false);
   };
 
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('nb-NO');
+  const formatDate = (dateStr: string) => new Date(dateStr).toLocaleDateString('nb-NO');
 
   const userColumns: DataTableColumn<UserRow>[] = useMemo(
     () => [
@@ -132,12 +130,14 @@ export function UsersManagementPage() {
         header: t('usersManagement.user'),
         render: (user) => (
           <Stack direction="horizontal" spacing="var(--ds-size-3)" align="center">
-            <div className={s.avatar}>
-              {user.name.charAt(0)}
-            </div>
+            <div className={s.avatar}>{user.name.charAt(0)}</div>
             <div>
-              <Paragraph data-size="sm" className={s.userName}>{user.name}</Paragraph>
-              <Paragraph data-size="xs" className={s.userEmail}>{user.email}</Paragraph>
+              <Paragraph data-size="sm" className={s.userName}>
+                {user.name}
+              </Paragraph>
+              <Paragraph data-size="xs" className={s.userEmail}>
+                {user.email}
+              </Paragraph>
             </div>
           </Stack>
         ),
@@ -148,7 +148,7 @@ export function UsersManagementPage() {
         render: (user) => (
           <PillDropdown
             label={t(ROLE_LABEL_KEYS[user.role] ?? user.role)}
-            options={ROLE_IDS.map(r => ({ value: r, label: t(ROLE_LABEL_KEYS[r]) }))}
+            options={ROLE_IDS.map((r) => ({ value: r, label: t(ROLE_LABEL_KEYS[r]) }))}
             value={user.role}
             onChange={(v) => handleRoleChange(user.id, v)}
             className={s.pillDropdown}
@@ -186,7 +186,7 @@ export function UsersManagementPage() {
         ),
       },
     ],
-    [t, handleDeactivate, handleRoleChange]
+    [t, handleDeactivate, handleRoleChange],
   );
 
   return (
@@ -226,7 +226,7 @@ export function UsersManagementPage() {
             <FormField label={t('usersManagement.role')}>
               <PillDropdown
                 label={t(ROLE_LABEL_KEYS[inviteRole] ?? 'usersManagement.selectRole')}
-                options={ROLE_IDS.map(r => ({ value: r, label: t(ROLE_LABEL_KEYS[r]) }))}
+                options={ROLE_IDS.map((r) => ({ value: r, label: t(ROLE_LABEL_KEYS[r]) }))}
                 value={inviteRole}
                 onChange={(v) => setInviteRole(v)}
                 ariaLabel={t('usersManagement.selectRole')}
@@ -249,19 +249,27 @@ export function UsersManagementPage() {
       {/* Stats */}
       <Grid columns={isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'} gap="var(--ds-size-4)">
         <Card className={s.statCard}>
-          <Paragraph data-size="sm" className={s.statLabel}>{t('common.total')}</Paragraph>
-          <Heading level={2} data-size="xl" className={s.statValue}>{users.length}</Heading>
-        </Card>
-        <Card className={s.statCard}>
-          <Paragraph data-size="sm" className={s.statLabel}>{t('common.active')}</Paragraph>
-          <Heading level={2} data-size="xl" className={s.statValueSuccess}>
-            {users.filter(u => u.status === 'active').length}
+          <Paragraph data-size="sm" className={s.statLabel}>
+            {t('common.total')}
+          </Paragraph>
+          <Heading level={2} data-size="xl" className={s.statValue}>
+            {users.length}
           </Heading>
         </Card>
         <Card className={s.statCard}>
-          <Paragraph data-size="sm" className={s.statLabel}>{t('usersManagement.administrators')}</Paragraph>
+          <Paragraph data-size="sm" className={s.statLabel}>
+            {t('common.active')}
+          </Paragraph>
+          <Heading level={2} data-size="xl" className={s.statValueSuccess}>
+            {users.filter((u) => u.status === 'active').length}
+          </Heading>
+        </Card>
+        <Card className={s.statCard}>
+          <Paragraph data-size="sm" className={s.statLabel}>
+            {t('usersManagement.administrators')}
+          </Paragraph>
           <Heading level={2} data-size="xl" className={s.statValue}>
-            {users.filter(u => u.role === 'admin').length}
+            {users.filter((u) => u.role === 'admin').length}
           </Heading>
         </Card>
       </Grid>

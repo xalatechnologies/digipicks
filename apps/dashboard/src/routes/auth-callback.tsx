@@ -4,9 +4,9 @@
  * Receives sessionToken from URL params after OAuth redirect,
  * validates the session, stores it, and reloads into the app.
  */
-import { useOAuthCallback } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
-import { Stack, Heading, Paragraph, Button } from '@digilist-saas/ds';
+import { useOAuthCallback } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
+import { Stack, Heading, Paragraph, Button } from '@digipicks/ds';
 import s from './auth-callback.module.css';
 
 export function AuthCallbackPage() {
@@ -24,12 +24,7 @@ export function AuthCallbackPage() {
 
   if (error) {
     return (
-      <Stack
-        direction="vertical"
-        spacing="var(--ds-size-4)"
-        align="center"
-        className={s.container}
-      >
+      <Stack direction="vertical" spacing="var(--ds-size-4)" align="center" className={s.container}>
         <Heading level={2} data-size="md" className={s.centerText}>
           {t('authCallback.loginFailed')}
         </Heading>

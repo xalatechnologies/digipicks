@@ -9,7 +9,7 @@
  * hasPermission('listings.view')  // delegates to CAP_LISTING_READ
  */
 
-import { useAuth as useSdkAuth } from '@digilist-saas/sdk';
+import { useAuth as useSdkAuth } from '@digipicks/sdk';
 import type { Capability } from '../capabilities';
 import { useCapabilities } from './useCapabilities';
 
@@ -33,7 +33,7 @@ const PERMISSION_TO_CAPABILITY: Record<Permission, Capability> = {
   'listings.view': 'CAP_LISTING_READ',
   'listings.create': 'CAP_LISTING_CREATE',
   'listings.edit': 'CAP_LISTING_EDIT',
-  'listings.delete': 'CAP_LISTING_EDIT',        // delete uses same cap as edit
+  'listings.delete': 'CAP_LISTING_EDIT', // delete uses same cap as edit
   'users.view': 'CAP_USER_VIEW',
   'users.manage': 'CAP_USER_ADMIN',
   'settings.view': 'CAP_SETTINGS_VIEW',
@@ -72,9 +72,7 @@ export function useRBAC(options?: UseRBACOptions) {
   };
 
   /** Returns permission result with optional reason for auditability. */
-  const hasPermissionWithReason = (
-    permission: Permission
-  ): { allowed: boolean; reason?: string } => {
+  const hasPermissionWithReason = (permission: Permission): { allowed: boolean; reason?: string } => {
     const allowed = hasPermission(permission);
     if (!user) return { allowed: false, reason: 'Not authenticated' };
     const role = (user.role ?? '').toLowerCase();
