@@ -37,6 +37,8 @@ export interface Pick {
     resultAt?: number;
     gradedBy?: string;
     eventDate?: number;
+    scheduledPublishAt?: number;
+    publishedAt?: number;
     status: PickStatus;
     metadata?: Record<string, unknown>;
     createdAt: string;
@@ -65,6 +67,8 @@ export interface CreatePickInput {
     confidence: Confidence;
     analysis?: string;
     eventDate?: number;
+    /** Epoch ms — when set, pick is created as draft and auto-published at this time. */
+    scheduledPublishAt?: number;
     status?: PickStatus;
     metadata?: Record<string, unknown>;
 }
@@ -83,8 +87,17 @@ export interface UpdatePickInput {
     confidence?: Confidence;
     analysis?: string;
     eventDate?: number;
+    /** Epoch ms — set or update scheduled publish time. */
+    scheduledPublishAt?: number;
     status?: PickStatus;
     metadata?: Record<string, unknown>;
+}
+
+export interface SetScheduledPublishInput {
+    id: string;
+    callerId: Id<"users">;
+    /** Epoch ms — when to auto-publish. Omit to clear. */
+    scheduledPublishAt?: number;
 }
 
 export interface GradePickInput {
@@ -141,6 +154,8 @@ function transformPick(raw: any): Pick {
         resultAt: raw.resultAt,
         gradedBy: raw.gradedBy,
         eventDate: raw.eventDate,
+        scheduledPublishAt: raw.scheduledPublishAt,
+        publishedAt: raw.publishedAt,
         status: raw.status,
         metadata: raw.metadata,
         createdAt: new Date(raw._creationTime).toISOString(),
@@ -310,6 +325,21 @@ export function useDeletePick() {
     return {
         mutate: (input: { id: string; callerId: Id<"users"> }) => mutation(input),
         mutateAsync: async (input: { id: string; callerId: Id<"users"> }) => mutation(input),
+        isLoading: false,
+        error: null,
+    };
+}
+
+/**
+ * Set or clear the scheduled publish time for a draft pick.
+ * Connected to: api.domain.picks.setScheduledPublish
+ */
+export function useSetScheduledPublish() {
+    const mutation = useConvexMutation(api.domain.picks.setScheduledPublish);
+
+    return {
+        mutate: (input: SetScheduledPublishInput) => mutation(input),
+        mutateAsync: async (input: SetScheduledPublishInput) => mutation(input),
         isLoading: false,
         error: null,
     };

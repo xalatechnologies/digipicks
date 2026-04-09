@@ -701,6 +701,7 @@ export const create = mutation({
         confidence: v.string(),
         analysis: v.optional(v.string()),
         eventDate: v.optional(v.number()),
+        scheduledPublishAt: v.optional(v.number()),
         status: v.optional(v.string()),
         metadata: v.optional(v.any()),
     },
@@ -727,6 +728,7 @@ export const create = mutation({
             confidence: args.confidence,
             analysis: args.analysis,
             eventDate: args.eventDate,
+            scheduledPublishAt: args.scheduledPublishAt,
             status: args.status,
             metadata: args.metadata,
         });
@@ -777,6 +779,7 @@ export const update = mutation({
         confidence: v.optional(v.string()),
         analysis: v.optional(v.string()),
         eventDate: v.optional(v.number()),
+        scheduledPublishAt: v.optional(v.number()),
         status: v.optional(v.string()),
         metadata: v.optional(v.any()),
     },
@@ -917,6 +920,69 @@ export const remove = mutation({
             creatorId: (pick as any)?.creatorId,
             event: (pick as any)?.event,
             sport: (pick as any)?.sport,
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Set or clear the scheduled publish time for a draft pick.
+ * Pass scheduledPublishAt to schedule, or omit/null to clear.
+ */
+export const setScheduledPublish = mutation({
+    args: {
+        id: v.string(),
+        callerId: v.id("users"),
+        scheduledPublishAt: v.optional(v.number()),
+    },
+    handler: async (ctx, { id, callerId, scheduledPublishAt }) => {
+        await requireActiveUser(ctx, callerId);
+
+        const pick = await ctx.runQuery(components.picks.functions.get, { id });
+        if (!pick) {
+            throw new Error("Pick not found");
+        }
+
+        // Ownership check
+        if ((pick as any)?.creatorId !== (callerId as string)) {
+            throw new Error("Not authorized: only the pick creator can schedule this pick");
+        }
+
+        // Can only schedule draft picks
+        if ((pick as any)?.status !== "draft") {
+            throw new Error("Only draft picks can be scheduled for future publication");
+        }
+
+        await rateLimit(ctx, {
+            name: "mutatePick",
+            key: rateLimitKeys.user(callerId as string),
+            throws: true,
+        });
+
+        const result = await ctx.runMutation(components.picks.functions.update, {
+            id,
+            scheduledPublishAt,
+            status: "draft",
+        });
+
+        await withAudit(ctx, {
+            tenantId: (pick as any)?.tenantId ?? "",
+            userId: callerId as string,
+            entityType: "pick",
+            entityId: id,
+            action: "scheduled",
+            previousState: { scheduledPublishAt: (pick as any)?.scheduledPublishAt },
+            newState: { scheduledPublishAt },
+            sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.pick.scheduled", (pick as any)?.tenantId ?? "", "picks", {
+            pickId: id,
+            creatorId: (pick as any)?.creatorId,
+            event: (pick as any)?.event,
+            sport: (pick as any)?.sport,
+            scheduledPublishAt,
         });
 
         return result;
