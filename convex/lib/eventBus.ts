@@ -65,6 +65,42 @@ async function safeGetReview(
     }
 }
 
+/** Look up a pick by ID, returning null if deleted or not found. */
+async function safeGetPick(
+    ctx: { runQuery: (ref: any, args: any) => Promise<any> },
+    pickId: string
+): Promise<Record<string, unknown> | null> {
+    try {
+        return await ctx.runQuery(components.picks.functions.get, { id: pickId });
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Check if a user has disabled notifications for a given category.
+ * Returns true if the notification should be sent (default: enabled).
+ */
+async function shouldNotify(
+    ctx: { runQuery: (ref: any, args: any) => Promise<any> },
+    userId: string,
+    category: string
+): Promise<boolean> {
+    try {
+        const prefs = await ctx.runQuery(
+            components.notifications.functions.getPreferences,
+            { userId }
+        ) as Array<{ channel: string; category: string; enabled: boolean }>;
+        const match = prefs.find(
+            (p) => p.channel === "in_app" && p.category === category
+        );
+        // Default to enabled if no preference exists
+        return match ? match.enabled : true;
+    } catch {
+        return true;
+    }
+}
+
 // =============================================================================
 // EVENT PROCESSING
 // =============================================================================
@@ -336,7 +372,7 @@ export const processEvents = internalMutation({
                             { creatorId: payload.creatorId as string, status: "active" }
                         );
                         for (const sub of subscribers as any[]) {
-                            if (sub.userId) {
+                            if (sub.userId && await shouldNotify(ctx, sub.userId as string, "picks")) {
                                 await ctx.runMutation(components.notifications.functions.create, {
                                     tenantId: event.tenantId,
                                     userId: sub.userId as string,
@@ -366,7 +402,7 @@ export const processEvents = internalMutation({
                             { creatorId: payload.creatorId as string, status: "active" }
                         );
                         for (const sub of subscribers as any[]) {
-                            if (sub.userId) {
+                            if (sub.userId && await shouldNotify(ctx, sub.userId as string, "picks")) {
                                 await ctx.runMutation(components.notifications.functions.create, {
                                     tenantId: event.tenantId,
                                     userId: sub.userId as string,
@@ -383,6 +419,45 @@ export const processEvents = internalMutation({
                 } else if (event.topic === "picks.pick.updated") {
                     // No subscriber notification for pick edits — creator-only action
 
+                } else if (event.topic === "picks.pick.removed") {
+                    // Notify active subscribers that a pick was removed
+                    if (payload.creatorId) {
+                        const subscribers = await ctx.runQuery(
+                            components.subscriptions.functions.listCreatorSubscribers,
+                            { creatorId: payload.creatorId as string, status: "active" }
+                        );
+                        for (const sub of subscribers as any[]) {
+                            if (sub.userId && await shouldNotify(ctx, sub.userId as string, "picks")) {
+                                await ctx.runMutation(components.notifications.functions.create, {
+                                    tenantId: event.tenantId,
+                                    userId: sub.userId as string,
+                                    type: "pick_removed",
+                                    title: "Pick fjernet",
+                                    body: `En ${payload.sport ?? ""} pick er fjernet av skaperen.`.trim(),
+                                    metadata: { pickId: payload.pickId, creatorId: payload.creatorId, sport: payload.sport },
+                                });
+                            }
+                        }
+                    }
+
+                } else if (event.topic === "picks.tail.created") {
+                    // Notify the pick creator that someone tailed their pick
+                    if (payload.pickId) {
+                        const pick = await safeGetPick(ctx, payload.pickId as string);
+                        const creatorId = (pick as any)?.creatorId as string | undefined;
+                        if (creatorId && await shouldNotify(ctx, creatorId, "picks")) {
+                            await ctx.runMutation(components.notifications.functions.create, {
+                                tenantId: event.tenantId,
+                                userId: creatorId,
+                                type: "pick_tailed",
+                                title: "Noen fulgte din pick!",
+                                body: "En bruker har fulgt din pick.",
+                                link: `/picks/${payload.pickId}`,
+                                metadata: { pickId: payload.pickId, tailedByUserId: payload.userId },
+                            });
+                        }
+                    }
+
                 } else if (event.topic === "picks.copost.created") {
                     // Notify subscribers of ALL collaborators about the co-posted pick
                     const collaborators = (payload.collaborators as any[]) ?? [];
@@ -394,7 +469,7 @@ export const processEvents = internalMutation({
                             { creatorId: collab.creatorId as string, status: "active" }
                         );
                         for (const sub of subscribers as any[]) {
-                            if (sub.userId && !notifiedUsers.has(sub.userId as string)) {
+                            if (sub.userId && !notifiedUsers.has(sub.userId as string) && await shouldNotify(ctx, sub.userId as string, "picks")) {
                                 notifiedUsers.add(sub.userId as string);
                                 await ctx.runMutation(components.notifications.functions.create, {
                                     tenantId: event.tenantId,
