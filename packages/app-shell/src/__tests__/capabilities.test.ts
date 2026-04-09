@@ -48,13 +48,17 @@ describe('getCapabilitiesForRole', () => {
     expect(caps).not.toContain('CAP_PLATFORM_BILLING');
   });
 
-  it('returns same caps for user as admin', () => {
+  it('creator has fewer capabilities than admin', () => {
     const adminCaps = getCapabilitiesForRole('admin');
-    const userCaps = getCapabilitiesForRole('user');
-    expect(userCaps).toEqual(adminCaps);
+    const creatorCaps = getCapabilitiesForRole('creator');
+    expect(creatorCaps.length).toBeLessThan(adminCaps.length);
   });
 
-
+  it('subscriber has minimal read-only capabilities', () => {
+    const subCaps = getCapabilitiesForRole('subscriber');
+    expect(subCaps).toContain('CAP_LISTING_READ');
+    expect(subCaps).not.toContain('CAP_LISTING_EDIT');
+  });
 
   it('returns empty array for undefined role', () => {
     expect(getCapabilitiesForRole(undefined)).toEqual([]);
@@ -77,8 +81,6 @@ describe('roleHasCapability', () => {
   it('admin has CAP_GDPR_MANAGE', () => {
     expect(roleHasCapability('admin', 'CAP_GDPR_MANAGE')).toBe(true);
   });
-
-
 
   it('undefined role has no capabilities', () => {
     expect(roleHasCapability(undefined, 'CAP_PLATFORM_ADMIN')).toBe(false);
@@ -119,7 +121,7 @@ describe('isSuperadminRole', () => {
 // =============================================================================
 
 describe('ROLE_CAPABILITIES completeness', () => {
-  const ALL_ROLES: PlatformRole[] = ['superadmin', 'admin', 'user'];
+  const ALL_ROLES: PlatformRole[] = ['superadmin', 'admin', 'creator', 'subscriber'];
 
   it('defines capabilities for every PlatformRole', () => {
     for (const role of ALL_ROLES) {
@@ -139,8 +141,8 @@ describe('ROLE_CAPABILITIES completeness', () => {
     expect(superCaps.size).toBeGreaterThan(adminCaps.length);
   });
 
-  it('documents simplified platform role order (superadmin → admin → user)', () => {
-    const hierarchy: PlatformRole[] = ['superadmin', 'admin', 'user'];
-    expect(hierarchy).toEqual(['superadmin', 'admin', 'user']);
+  it('documents DigiPicks 4-role order (superadmin → admin → creator → subscriber)', () => {
+    const hierarchy: PlatformRole[] = ['superadmin', 'admin', 'creator', 'subscriber'];
+    expect(hierarchy).toEqual(['superadmin', 'admin', 'creator', 'subscriber']);
   });
 });

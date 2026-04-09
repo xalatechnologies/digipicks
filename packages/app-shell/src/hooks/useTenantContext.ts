@@ -20,7 +20,7 @@ export interface TenantContextValue {
   /** Resolved tenantId for data queries. undefined = no tenant context (personal mode). */
   tenantId: string | undefined;
   /** Source of the tenantId resolution */
-  source: 'superadmin' | 'admin' | 'owner' | 'user' | 'none';
+  source: 'superadmin' | 'admin' | 'creator' | 'subscriber' | 'none';
   /** Whether the current context has a management tenant */
   hasTenant: boolean;
 }
@@ -41,15 +41,12 @@ export function useTenantContext(): TenantContextValue {
       return { tenantId: tid, source: 'admin' as const, hasTenant: !!tid };
     }
 
-    // User role: check mode
-    if (effectiveRole === 'user' && user?.tenantId && modeCtx?.mode === 'utleier') {
-      return { tenantId: user.tenantId, source: 'owner' as const, hasTenant: true };
+    if (effectiveRole === 'creator' && user?.tenantId) {
+      return { tenantId: user.tenantId, source: 'creator' as const, hasTenant: true };
     }
 
-    // Normal user or owner in leietaker mode — use env.tenantId as fallback
-    // for read-only queries (my bookings, calendar). Without a tenantId,
-    // the multi-tenant backend can't resolve any data.
+    // Subscriber — use env.tenantId as fallback for read-only queries.
     const fallback = env.tenantId || undefined;
-    return { tenantId: fallback, source: 'user' as const, hasTenant: false };
+    return { tenantId: fallback, source: 'subscriber' as const, hasTenant: false };
   }, [effectiveRole, user?.tenantId, modeCtx?.mode]);
 }

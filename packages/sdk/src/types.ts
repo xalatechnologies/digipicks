@@ -255,7 +255,7 @@ export interface OrganizationMember {
   id: string;
   userId: string;
   organizationId: string;
-  role: 'admin' | 'member';
+  role: 'admin' | 'creator' | 'subscriber';
   joinedAt: string;
   user?: {
     name?: string;
@@ -374,7 +374,7 @@ export interface CreateOrganizationDTO {
 // User Extended Types
 // ============================================================================
 
-export type UserRole = 'admin' | 'manager' | 'member' | 'viewer' | 'guest';
+export type UserRole = 'superadmin' | 'admin' | 'creator' | 'subscriber';
 
 export type UserStatus = 'active' | 'invited' | 'disabled' | 'suspended';
 

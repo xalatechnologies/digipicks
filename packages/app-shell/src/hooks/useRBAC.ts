@@ -63,10 +63,11 @@ export function useRBAC(options?: UseRBACOptions) {
     // Fallback for apps without RoleProvider (e.g. standalone SDK auth)
     if (!user) return false;
     const role = (user.role ?? '').toLowerCase();
-    if (['superadmin', 'admin', 'owner'].includes(role)) return true;
+    if (['superadmin', 'admin'].includes(role)) return true;
     // Minimal fallback for non-admin roles
     const fallbackPerms: Record<string, Permission[]> = {
-      user: ['listings.view'],
+      creator: ['listings.view', 'listings.create', 'listings.edit'],
+      subscriber: ['listings.view'],
     };
     return (fallbackPerms[role] ?? []).includes(permission);
   };

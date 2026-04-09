@@ -40,11 +40,12 @@ export function ProtectedRouteConnected({
   const { effectiveRole, getHomeRoute, isInitializing } = useRoleContext();
   const { hasCapability, hasAnyCapability } = useCapabilities();
 
-  // Role hierarchy: superadmin > admin > user
+  // Role hierarchy: superadmin > admin > creator > subscriber
   const hasRequiredRoleCheck =
     !requiredRole ||
     effectiveRole === requiredRole ||
-    (requiredRole === 'user' && ['superadmin', 'admin'].includes(effectiveRole!)) ||
+    (requiredRole === 'subscriber' && ['superadmin', 'admin', 'creator'].includes(effectiveRole!)) ||
+    (requiredRole === 'creator' && ['superadmin', 'admin'].includes(effectiveRole!)) ||
     (requiredRole === 'admin' && effectiveRole === 'superadmin');
 
   // Capability checks (only applied if specified)

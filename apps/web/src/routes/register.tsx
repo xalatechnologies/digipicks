@@ -229,7 +229,7 @@ export function RegisterPage(): React.ReactElement {
     },
   ];
 
-  const integrations = ['BankID', 'Vipps', 'Visma', 'RCO', 'ISO 27001 / 27701'];
+  const integrations = ['Stripe', 'Discord', 'Google', 'PCI DSS'];
 
   const privacyUrl = import.meta.env.VITE_PRIVACY_URL || '/privacy';
   const termsUrl = import.meta.env.VITE_TERMS_URL || '/terms';
@@ -243,29 +243,29 @@ export function RegisterPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName={import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation'}
-      brandTagline="OPPRETT KONTO"
+      brandName={import.meta.env.VITE_PLATFORM_NAME || 'DigiPicks'}
+      brandTagline="CREATE ACCOUNT"
       logoHref="/"
-      title={t('web.register.title', 'Opprett konto')}
+      title={t('web.register.title', 'Create your account')}
       panelTitle={
         isOwnerIntent
-          ? t('web.register.ownerPanelTitle', 'Bli utleier på plattformen')
-          : t('web.register.panelTitle', 'Bli med på plattformen')
+          ? t('web.register.ownerPanelTitle', 'Become a DigiPicks creator')
+          : t('web.register.panelTitle', 'Join DigiPicks')
       }
       panelSubtitle={
         isOwnerIntent
-          ? t('web.register.ownerPanelSubtitle', 'Start å leie ut i dag')
-          : t('web.register.panelSubtitle', 'Opprett din gratis konto')
+          ? t('web.register.ownerPanelSubtitle', 'Monetize your picks')
+          : t('web.register.panelSubtitle', 'Create your free account')
       }
       panelDescription={
         isOwnerIntent
           ? t(
               'web.register.ownerPanelDescription',
-              'Registrer deg for å legge ut lokaler, utstyr og arrangementer. Nå tusenvis av potensielle kunder.',
+              'Apply to publish picks, build subscribers, and get paid out monthly. We review every creator to keep DigiPicks curated and trust-first.',
             )
           : t(
               'web.register.panelDescription',
-              'Registrer deg for å utforske lokaler, arrangementer og tjenester. Bli eier og publiser dine egne annonser.',
+              'Find verified sports-picks creators, follow your favorites, and track every pick. Cancel anytime — no lock-in.',
             )
       }
       features={features}

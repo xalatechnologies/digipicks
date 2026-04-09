@@ -10,8 +10,8 @@
  * - Idempotent: safe to run repeatedly without duplicating
  */
 
-import { exec } from "child_process";
-import { promisify } from "util";
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
@@ -19,15 +19,19 @@ const execAsync = promisify(exec);
 // Config
 // ---------------------------------------------------------------------------
 
-const E2E_TENANT_ID = "qd71nzdbvssrm2n3n2018daspx81pftx";
+const E2E_TENANT_ID = 'qd71nzdbvssrm2n3n2018daspx81pftx';
 
+// DigiPicks role model: superadmin (no tenant), admin (tenant), creator (tenant), subscriber (no tenant)
 const E2E_USERS = [
-  { email: "e2e-admin@test.example.com", name: "E2E Admin", role: "admin" },
-  { email: "e2e-counter@test.example.com", name: "E2E Counter", role: "counter" },
-  { email: "e2e-finance@test.example.com", name: "E2E Finance", role: "finance" },
-  { email: "e2e-handler@test.example.com", name: "E2E Saksbehandler", role: "saksbehandler" },
-  { email: "e2e-user@test.example.com", name: "E2E User", role: "user" },
-  { email: "e2e-member@test.example.com", name: "E2E Member", role: "user" },
+  { email: 'superadmin@digipicks.test', name: 'E2E Superadmin', role: 'superadmin' },
+  { email: 'admin@digipicks.test', name: 'E2E Admin', role: 'admin' },
+  { email: 'moderator@digipicks.test', name: 'E2E Moderator', role: 'admin' },
+  { email: 'creator1@digipicks.test', name: 'E2E Creator 1', role: 'creator' },
+  { email: 'creator2@digipicks.test', name: 'E2E Creator 2', role: 'creator' },
+  { email: 'creator3@digipicks.test', name: 'E2E Creator 3', role: 'creator' },
+  { email: 'subscriber1@digipicks.test', name: 'E2E Subscriber 1', role: 'subscriber' },
+  { email: 'subscriber2@digipicks.test', name: 'E2E Subscriber 2', role: 'subscriber' },
+  { email: 'subscriber3@digipicks.test', name: 'E2E Subscriber 3', role: 'subscriber' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -37,15 +41,12 @@ const E2E_USERS = [
 async function convexRun(fn: string, args: Record<string, unknown> = {}): Promise<unknown> {
   const argsJson = JSON.stringify(args);
   try {
-    const { stdout } = await execAsync(
-      `npx convex run '${fn}' '${argsJson}'`,
-      { cwd: process.cwd(), timeout: 30_000 }
-    );
+    const { stdout } = await execAsync(`npx convex run '${fn}' '${argsJson}'`, { cwd: process.cwd(), timeout: 30_000 });
     const trimmed = stdout.trim();
-    if (!trimmed || trimmed === "null") return null;
+    if (!trimmed || trimmed === 'null') return null;
     return JSON.parse(trimmed);
   } catch (error) {
-    console.warn(`  [WARN] convexRun(${fn}) failed:`, (error as Error).message?.split("\n")[0]);
+    console.warn(`  [WARN] convexRun(${fn}) failed:`, (error as Error).message?.split('\n')[0]);
     return null;
   }
 }
@@ -59,10 +60,10 @@ function log(msg: string) {
 // ---------------------------------------------------------------------------
 
 async function verifyTenant(): Promise<boolean> {
-  log("Verifying E2E tenant exists...");
-  const tenant = await convexRun("tenants/index:getBySlug", { slug: "demo-city" });
+  log('Verifying E2E tenant exists...');
+  const tenant = await convexRun('tenants/index:getBySlug', { slug: 'demo-city' });
   if (!tenant) {
-    console.error("ERROR: E2E tenant not found. Run seed:all first.");
+    console.error('ERROR: E2E tenant not found. Run seed:all first.');
     return false;
   }
   log(`  ✓ Tenant found: ${(tenant as any).name}`);
@@ -70,17 +71,17 @@ async function verifyTenant(): Promise<boolean> {
 }
 
 async function seedUsers(): Promise<void> {
-  log("Seeding E2E users...");
+  log('Seeding E2E users...');
   for (const user of E2E_USERS) {
     // Find-or-create user via the users module
-    const existing = await convexRun("users:getByEmail", { email: user.email });
+    const existing = await convexRun('users:getByEmail', { email: user.email });
     if (existing) {
       log(`  ✓ User exists: ${user.email}`);
     } else {
-      await convexRun("users:create", {
+      await convexRun('users:create', {
         email: user.email,
         name: user.name,
-        status: "active",
+        status: 'active',
       });
       log(`  + Created user: ${user.email}`);
     }
@@ -88,15 +89,16 @@ async function seedUsers(): Promise<void> {
 }
 
 async function seedRoles(): Promise<void> {
-  log("Seeding E2E role bindings...");
+  log('Seeding E2E role bindings...');
   for (const user of E2E_USERS) {
-    if (user.role === "user") continue; // Default role, no binding needed
+    // superadmin and subscriber are not tenant-scoped — no binding needed
+    if (user.role === 'superadmin' || user.role === 'subscriber') continue;
 
     // Bind role to user for the E2E tenant
-    const existing = await convexRun("users:getByEmail", { email: user.email });
+    const existing = await convexRun('users:getByEmail', { email: user.email });
     if (existing) {
       // Create tenantUser binding if needed
-      await convexRun("tenants/index:addUser", {
+      await convexRun('tenants/index:addUser', {
         tenantId: E2E_TENANT_ID,
         userId: (existing as any)._id,
         role: user.role,
@@ -107,36 +109,36 @@ async function seedRoles(): Promise<void> {
 }
 
 async function seedPerformances(): Promise<void> {
-  log("Seeding E2E performances...");
+  log('Seeding E2E performances...');
   // Note: Actual performance seeding requires the ticketing component.
   // This step documents what should exist; actual seeding is done via
   // the Convex seed scripts.
-  log("  ℹ Performances are seeded via convex seed scripts");
-  log("  ℹ Run: pnpm seed:all for base data, then pnpm seed:components for components");
+  log('  ℹ Performances are seeded via convex seed scripts');
+  log('  ℹ Run: pnpm seed:all for base data, then pnpm seed:components for components');
 }
 
 async function seedGiftCards(): Promise<void> {
-  log("Seeding E2E gift cards...");
+  log('Seeding E2E gift cards...');
   const cards = [
-    { code: "E2E-GC-001", balance: 500 },
-    { code: "E2E-GC-002", balance: 500 },
-    { code: "E2E-GC-003", balance: 500 },
+    { code: 'E2E-GC-001', balance: 500 },
+    { code: 'E2E-GC-002', balance: 500 },
+    { code: 'E2E-GC-003', balance: 500 },
   ];
 
   for (const card of cards) {
-    const existing = await convexRun("domain/giftcards:getGiftCard", {
+    const existing = await convexRun('domain/giftcards:getGiftCard', {
       tenantId: E2E_TENANT_ID,
       code: card.code,
     });
     if (existing) {
       log(`  ✓ Gift card exists: ${card.code}`);
     } else {
-      await convexRun("domain/giftcards:createGiftCard", {
+      await convexRun('domain/giftcards:createGiftCard', {
         tenantId: E2E_TENANT_ID,
         code: card.code,
         initialBalance: card.balance,
-        type: "digital",
-        createdBy: "e2e-seed",
+        type: 'digital',
+        createdBy: 'e2e-seed',
       });
       log(`  + Created gift card: ${card.code} (${card.balance} NOK)`);
     }
@@ -144,10 +146,10 @@ async function seedGiftCards(): Promise<void> {
 }
 
 async function seedDiscountCodes(): Promise<void> {
-  log("Seeding E2E discount codes...");
+  log('Seeding E2E discount codes...');
   // Discount codes are typically seeded via seed components script
   // This documents the expected E2E discount code
-  log("  ℹ Discount code E2ETEST10 (10% off) seeded via seed components script");
+  log('  ℹ Discount code E2ETEST10 (10% off) seeded via seed components script');
 }
 
 // ---------------------------------------------------------------------------
@@ -155,10 +157,10 @@ async function seedDiscountCodes(): Promise<void> {
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  console.log("═══════════════════════════════════════════");
-  console.log("  A-krav E2E Test Data Seeder");
-  console.log("  Tenant: E2E Demo Venue");
-  console.log("═══════════════════════════════════════════\n");
+  console.log('═══════════════════════════════════════════');
+  console.log('  A-krav E2E Test Data Seeder');
+  console.log('  Tenant: E2E Demo Venue');
+  console.log('═══════════════════════════════════════════\n');
 
   const tenantOk = await verifyTenant();
   if (!tenantOk) {
@@ -171,12 +173,12 @@ async function main(): Promise<void> {
   await seedGiftCards();
   await seedDiscountCodes();
 
-  console.log("\n═══════════════════════════════════════════");
-  console.log("  ✓ E2E seed complete");
-  console.log("═══════════════════════════════════════════\n");
+  console.log('\n═══════════════════════════════════════════');
+  console.log('  ✓ E2E seed complete');
+  console.log('═══════════════════════════════════════════\n');
 }
 
 main().catch((err) => {
-  console.error("Seed failed:", err);
+  console.error('Seed failed:', err);
   process.exit(1);
 });

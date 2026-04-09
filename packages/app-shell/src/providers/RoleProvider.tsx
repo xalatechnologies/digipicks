@@ -1,6 +1,6 @@
 /**
  * RoleProvider — Role selection for dual-role users.
- * Supports superadmin, owner, admin, arranger, case_handler, user.
+ * Supports DigiPicks 4-role model: superadmin, admin, creator, subscriber.
  *
  * @formerly BackofficeRoleProvider (renamed during app consolidation)
  */
@@ -24,13 +24,19 @@ export interface RoleContextValue extends RoleContextState {
   clearEffectiveRole: () => void;
   isSuperadmin: boolean;
   isAdmin: boolean;
-  isOwner?: boolean; // Deprecated — kept for backwards compatibility
-  isArranger?: boolean; // Deprecated
-  isCaseHandler?: boolean; // Deprecated
+  isCreator: boolean;
+  isSubscriber: boolean;
+  /** @deprecated Kept for backwards compatibility. True if admin or creator (has tenant). */
+  isOwner?: boolean;
+  /** @deprecated */
+  isArranger?: boolean;
+  /** @deprecated */
+  isCaseHandler?: boolean;
+  /** @deprecated Use isSubscriber */
   isUser: boolean;
-  /** True when user has role='user' AND has an approved tenantId (is an owner/utleier) */
+  /** True when user has a tenant (admin or creator) */
   hasOwnerTenant: boolean;
-  /** True when user has role='user' AND no tenantId (normal booking user) */
+  /** True when user has no tenant (subscriber) */
   isNormalUser: boolean;
   getHomeRoute: () => string;
 }
@@ -48,7 +54,8 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuthBridge();
   const [effectiveRole, setEffectiveRoleState] = useState<PlatformRole | null>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.EFFECTIVE_ROLE);
-    if (stored === 'superadmin' || stored === 'admin' || stored === 'user') return stored as PlatformRole;
+    if (stored === 'superadmin' || stored === 'admin' || stored === 'creator' || stored === 'subscriber')
+      return stored as PlatformRole;
     return null;
   });
   const [hasSelectedRole, setHasSelectedRole] = useState(false);
@@ -61,10 +68,18 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user || !isAuthenticated) return [];
     if (user.grantedRoles && user.grantedRoles.length > 0) return user.grantedRoles;
     const role = user.role as string;
-    if (role === 'admin') return ['admin'];
     if (role === 'superadmin' || role === 'super_admin') return ['superadmin'];
-    // All tenant-level roles (owner, arranger, bruker, member, etc.) map to 'user'
-    return ['user'];
+    if (
+      role === 'admin' ||
+      role === 'owner' ||
+      role === 'manager' ||
+      role === 'saksbehandler' ||
+      role === 'counter' ||
+      role === 'finance'
+    )
+      return ['admin'];
+    if (role === 'creator' || role === 'arranger') return ['creator'];
+    return ['subscriber'];
   }, [user, isAuthenticated]);
 
   const isDualRole = grantedRoles.length > 1;
@@ -78,7 +93,8 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
     const storedRole = localStorage.getItem(STORAGE_KEYS.EFFECTIVE_ROLE) as PlatformRole | null;
-    const isValidStoredRole = storedRole === 'superadmin' || storedRole === 'admin' || storedRole === 'user';
+    const isValidStoredRole =
+      storedRole === 'superadmin' || storedRole === 'admin' || storedRole === 'creator' || storedRole === 'subscriber';
     const rememberChoice = localStorage.getItem(STORAGE_KEYS.REMEMBER_CHOICE) === 'true';
 
     if (isValidStoredRole && storedRole && grantedRoles.includes(storedRole) && rememberChoice) {
@@ -119,7 +135,7 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (remember) localStorage.setItem(STORAGE_KEYS.REMEMBER_CHOICE, 'true');
       else localStorage.removeItem(STORAGE_KEYS.REMEMBER_CHOICE);
     },
-    [grantedRoles]
+    [grantedRoles],
   );
 
   const clearEffectiveRole = useCallback(() => {
@@ -132,7 +148,8 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getHomeRoute = useCallback(() => {
     if (effectiveRole === 'superadmin') return '/platform';
     if (effectiveRole === 'admin') return '/';
-    if (effectiveRole === 'user') return '/';
+    if (effectiveRole === 'creator') return '/';
+    if (effectiveRole === 'subscriber') return '/';
     return '/';
   }, [effectiveRole]);
 
@@ -147,12 +164,14 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearEffectiveRole,
       isSuperadmin: effectiveRole === 'superadmin',
       isAdmin: effectiveRole === 'admin' || effectiveRole === 'superadmin',
+      isCreator: effectiveRole === 'creator',
+      isSubscriber: effectiveRole === 'subscriber',
       isArranger: false, // Deprecated
       isCaseHandler: false, // Deprecated
-      isUser: effectiveRole === 'user',
-      isOwner: effectiveRole === 'user' || effectiveRole === 'admin', // Kept for backwards compatibility
-      hasOwnerTenant: effectiveRole === 'user' && !!user?.tenantId,
-      isNormalUser: effectiveRole === 'user' && !user?.tenantId,
+      isUser: effectiveRole === 'subscriber',
+      isOwner: effectiveRole === 'admin' || effectiveRole === 'creator',
+      hasOwnerTenant: (effectiveRole === 'admin' || effectiveRole === 'creator') && !!user?.tenantId,
+      isNormalUser: effectiveRole === 'subscriber',
       getHomeRoute,
     }),
     [
@@ -164,14 +183,11 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setEffectiveRole,
       clearEffectiveRole,
       getHomeRoute,
-    ]
+      user,
+    ],
   );
 
-  return (
-    <RoleContext.Provider value={value}>
-      {children}
-    </RoleContext.Provider>
-  );
+  return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;
 };
 
 export function useRoleContext(): RoleContextValue {

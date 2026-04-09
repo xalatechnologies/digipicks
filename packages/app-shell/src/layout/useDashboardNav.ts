@@ -112,14 +112,22 @@ export function useDashboardNavSections({
               !item.roles || item.roles.length === 0 || (navRole != null && item.roles.some((r) => r === navRole));
             if (!roleOk) return false;
             // For user role: filter by mode (leietaker/utleier)
-            if (effectiveRole === 'user' && item.modes && item.modes.length > 0) {
+            if (
+              (effectiveRole === 'creator' || effectiveRole === 'subscriber') &&
+              item.modes &&
+              item.modes.length > 0
+            ) {
               const currentMode = modeCtx?.mode ?? 'leietaker';
               if (!item.modes.includes(currentMode as 'leietaker' | 'utleier')) return false;
             }
             // Hide items for owners (e.g. "Bli utleier" when already owner)
             if (item.hideForOwners && isOwner) return false;
             // For user role in backoffice, also filter by context (personal/organization)
-            if (effectiveRole === 'user' && item.contexts && item.contexts.length > 0) {
+            if (
+              (effectiveRole === 'creator' || effectiveRole === 'subscriber') &&
+              item.contexts &&
+              item.contexts.length > 0
+            ) {
               if (!item.contexts.includes(accountType)) return false;
             }
             return moduleEnabled(item.module);
