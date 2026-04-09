@@ -67,6 +67,7 @@ import { ModulesPage as PlatformModulesPage } from '@/routes/platform/modules';
 import { BillingPage as PlatformBillingPage } from '@/routes/platform/billing';
 import { AuditPage as PlatformAuditPage } from '@/routes/platform/audit';
 import { ModerationPage as PlatformModerationPage } from '@/routes/platform/moderation';
+import { CreatorApplicationsReviewPage } from '@/routes/platform/creator-applications';
 
 // Owner application flow
 
@@ -572,6 +573,14 @@ function AppWithTheme() {
                                     element={
                                       <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
                                         <PlatformModerationPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+                                  <Route
+                                    path="platform/creator-applications"
+                                    element={
+                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
+                                        <CreatorApplicationsReviewPage />
                                       </ProtectedRouteConnected>
                                     }
                                   />

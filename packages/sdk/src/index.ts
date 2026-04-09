@@ -204,3 +204,25 @@ export type {
   LeaderboardEntry,
   UseLeaderboardParams,
 } from './hooks/use-leaderboard';
+
+// ============================================
+// CREATOR APPLICATIONS
+// ============================================
+
+export {
+  useMyCreatorApplication,
+  useCreatorApplicationQueue,
+  useCreatorApplicationCounts,
+  useCreatorApplication,
+  useUpsertCreatorDraft,
+  useSubmitCreatorApplication,
+  useDiscardCreatorDraft,
+  useReviewCreatorApplication,
+} from './hooks/use-creator-applications';
+export type {
+  CreatorApplicationStatus,
+  CreatorApplicationLink,
+  CreatorApplication,
+  CreatorApplicationCounts,
+  DraftInput as CreatorApplicationDraftInput,
+} from './hooks/use-creator-applications';

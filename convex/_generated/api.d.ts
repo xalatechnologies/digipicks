@@ -42,6 +42,7 @@ import type * as domain_billing from "../domain/billing.js";
 import type * as domain_broadcasts from "../domain/broadcasts.js";
 import type * as domain_classification from "../domain/classification.js";
 import type * as domain_compliance from "../domain/compliance.js";
+import type * as domain_creatorApplications from "../domain/creatorApplications.js";
 import type * as domain_discord from "../domain/discord.js";
 import type * as domain_disputes from "../domain/disputes.js";
 import type * as domain_emailCampaigns from "../domain/emailCampaigns.js";
@@ -163,6 +164,7 @@ declare const fullApi: ApiFromModules<{
   "domain/broadcasts": typeof domain_broadcasts;
   "domain/classification": typeof domain_classification;
   "domain/compliance": typeof domain_compliance;
+  "domain/creatorApplications": typeof domain_creatorApplications;
   "domain/discord": typeof domain_discord;
   "domain/disputes": typeof domain_disputes;
   "domain/emailCampaigns": typeof domain_emailCampaigns;
@@ -5732,6 +5734,84 @@ export declare const components: {
           status: string;
         },
         { success: boolean }
+      >;
+    };
+  };
+  creatorApplications: {
+    functions: {
+      countsByStatus: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string },
+        {
+          approved: number;
+          draft: number;
+          in_review: number;
+          needs_more_info: number;
+          rejected: number;
+          submitted: number;
+          total: number;
+        }
+      >;
+      deleteDraft: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      get: FunctionReference<"query", "internal", { id: string }, any>;
+      getForApplicant: FunctionReference<
+        "query",
+        "internal",
+        { applicantUserId: string; tenantId: string },
+        any
+      >;
+      list: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number; tenantId: string },
+        Array<any>
+      >;
+      listByStatus: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number; status: string; tenantId: string },
+        Array<any>
+      >;
+      submit: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
+      updateStatus: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; reviewNote?: string; reviewedBy: string; status: string },
+        { previousStatus: string; success: boolean }
+      >;
+      upsertDraft: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          ageConfirmed: boolean;
+          applicantUserId: string;
+          avatarStorageId?: string;
+          bio: string;
+          country: string;
+          dateOfBirth?: string;
+          displayName: string;
+          externalLinks: Array<{ label: string; url: string }>;
+          fullName: string;
+          handle: string;
+          idDocumentStorageId?: string;
+          nicheTags: Array<string>;
+          primarySports: Array<string>;
+          rulesAccepted: boolean;
+          sampleNotes?: string;
+          tenantId: string;
+        },
+        { id: string }
       >;
     };
   };
