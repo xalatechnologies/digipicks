@@ -38,6 +38,7 @@ export interface DiscoveryCreator {
         interval: string;
     } | null;
     verified: boolean;
+    verifiedAt: number | null;
 }
 
 export interface UseCreatorDiscoveryParams {

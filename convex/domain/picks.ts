@@ -17,6 +17,7 @@ import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
 import type { QueryCtx } from "../_generated/server";
 import { requireActiveUser } from "../lib/auth";
+import { requirePermission } from "../lib/permissions";
 import { rateLimit, rateLimitKeys } from "../lib/rateLimits";
 import { withAudit } from "../lib/auditHelpers";
 import { emitEvent } from "../lib/eventBus";
@@ -279,7 +280,11 @@ export const creatorProfile = query({
             limit: 10,
         });
 
-        // 4. Gate picks based on viewer subscription (per-creator)
+        // 4. Fetch creator verification status
+        const verificationMap = await batchCreatorVerification(ctx, tenantId as string, [creatorId]);
+        const verification = verificationMap.get(creatorId);
+
+        // 5. Gate picks based on viewer subscription (per-creator)
         const hasAccess = await hasSubscriptionAccess(ctx, viewerId, creatorId);
 
         return {
@@ -289,6 +294,8 @@ export const creatorProfile = query({
             email: user.email,
             avatarUrl: user.avatarUrl,
             role: user.role,
+            verified: verification?.verified ?? false,
+            verifiedAt: verification?.verifiedAt ?? null,
             stats,
             recentPicks: (recentPicks as any[]).map((pick: any) => {
                 const enriched = {
@@ -354,6 +361,39 @@ export const leaderboard = query({
 });
 
 // =============================================================================
+// CREATOR VERIFICATION HELPERS
+// =============================================================================
+
+/** Batch-fetch approved creator applications for a list of creator IDs. */
+async function batchCreatorVerification(
+    ctx: QueryCtx,
+    tenantId: string,
+    creatorIds: string[]
+): Promise<Map<string, { verified: boolean; verifiedAt: number | null }>> {
+    const result = new Map<string, { verified: boolean; verifiedAt: number | null }>();
+    if (creatorIds.length === 0) return result;
+
+    const apps = await Promise.all(
+        creatorIds.map((id) =>
+            ctx.runQuery(components.creatorApplication.functions.getByUser, {
+                tenantId,
+                userId: id,
+            }).catch(() => null)
+        )
+    );
+
+    for (let i = 0; i < creatorIds.length; i++) {
+        const app = apps[i] as any;
+        result.set(creatorIds[i], {
+            verified: app?.status === "approved",
+            verifiedAt: app?.status === "approved" ? (app.reviewedAt ?? null) : null,
+        });
+    }
+
+    return result;
+}
+
+// =============================================================================
 // CREATOR DISCOVERY FACADE
 // =============================================================================
 
@@ -409,7 +449,14 @@ export const discoverCreators = query({
             ? (tiers as any[]).reduce((min: any, t: any) => t.price < min.price ? t : min)
             : null;
 
-        // 5. Assemble enriched creator entries
+        // 5. Batch fetch creator verification (from creatorApplication component)
+        const verificationMap = await batchCreatorVerification(
+            ctx,
+            tenantId as string,
+            creatorIds.filter((id: string) => userMap.has(id))
+        );
+
+        // 6. Assemble enriched creator entries
         const results = (entries as any[]).map((entry: any) => {
             const user = userMap.get(entry.creatorId);
             if (!user || user.status !== "active") return null;
@@ -417,6 +464,7 @@ export const discoverCreators = query({
             if (user.status === "suspended" || user.status === "deleted") return null;
 
             const brand = brandMap.get(entry.creatorId);
+            const verification = verificationMap.get(entry.creatorId);
 
             return {
                 creatorId: entry.creatorId,
@@ -440,11 +488,12 @@ export const discoverCreators = query({
                     currency: lowestTier.currency,
                     interval: lowestTier.billingInterval,
                 } : null,
-                verified: (user.emailVerified || user.emailVerifiedAt != null),
+                verified: verification?.verified ?? false,
+                verifiedAt: verification?.verifiedAt ?? null,
             };
         }).filter(Boolean);
 
-        // 6. Apply search filter (client-side on assembled data)
+        // 7. Apply search filter (client-side on assembled data)
         if (search && search.trim().length > 0) {
             const q = search.toLowerCase();
             return results.filter((c: any) =>
@@ -507,13 +556,17 @@ export const feedFollowing = query({
         );
         const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
 
+        // Batch fetch verification status
+        const verificationMap = await batchCreatorVerification(ctx, tenantId as string, creatorIdSet);
+
         return (picks as any[]).map((pick: any) => {
             const user = pick.creatorId ? userMap.get(pick.creatorId) : null;
+            const verification = pick.creatorId ? verificationMap.get(pick.creatorId) : null;
             return {
                 ...pick,
                 isUnlocked: true,
                 creator: user
-                    ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
+                    ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName, verified: verification?.verified ?? false }
                     : null,
             };
         });
@@ -565,11 +618,15 @@ export const feedForYou = query({
         );
         const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
 
+        // Batch fetch verification status
+        const verificationMap = await batchCreatorVerification(ctx, tenantId as string, creatorIdSet);
+
         const results = [];
         for (const pick of picks as any[]) {
             const user = pick.creatorId ? userMap.get(pick.creatorId) : null;
+            const verification = pick.creatorId ? verificationMap.get(pick.creatorId) : null;
             const creator = user
-                ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
+                ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName, verified: verification?.verified ?? false }
                 : null;
 
             // Check per-creator subscription + co-post access
@@ -1268,5 +1325,251 @@ export const validateSplits = query({
     args: { pickId: v.string() },
     handler: async (ctx, { pickId }) => {
         return ctx.runQuery(components.picks.functions.validatePickSplits, { pickId });
+    },
+});
+
+// =============================================================================
+// MODERATION FACADES
+// =============================================================================
+
+/**
+ * Report a pick — any user can report a pick they find problematic.
+ * Creates a report record and may auto-flag the pick at threshold (3 reports).
+ */
+export const reportPick = mutation({
+    args: {
+        tenantId: v.id("tenants"),
+        reporterId: v.id("users"),
+        pickId: v.string(),
+        reason: v.union(
+            v.literal("fraud"),
+            v.literal("misleading"),
+            v.literal("spam"),
+            v.literal("inappropriate"),
+            v.literal("other")
+        ),
+        details: v.optional(v.string()),
+    },
+    handler: async (ctx, { tenantId, reporterId, pickId, reason, details }) => {
+        await requireActiveUser(ctx, reporterId);
+
+        await rateLimit(ctx, {
+            name: "reportPick",
+            key: rateLimitKeys.user(reporterId as string),
+            throws: true,
+        });
+
+        const result = await ctx.runMutation(components.picks.functions.reportPick, {
+            tenantId: tenantId as string,
+            pickId,
+            reporterId: reporterId as string,
+            reason,
+            details,
+        });
+
+        await withAudit(ctx, {
+            tenantId: tenantId as string,
+            userId: reporterId as string,
+            entityType: "pickReport",
+            entityId: result.id,
+            action: "reported",
+            newState: { pickId, reason, autoFlagged: result.autoFlagged },
+            sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.pick.reported", tenantId as string, "picks", {
+            pickId,
+            reporterId: reporterId as string,
+            reason,
+            autoFlagged: result.autoFlagged,
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Moderate a pick — admin sets moderation status (approve, reject, hide, etc.).
+ * Requires `pick:moderate` permission. Triggers notification to creator.
+ */
+export const moderatePick = mutation({
+    args: {
+        id: v.string(),
+        moderatedBy: v.id("users"),
+        moderationStatus: v.union(
+            v.literal("clean"),
+            v.literal("flagged"),
+            v.literal("under_review"),
+            v.literal("approved"),
+            v.literal("rejected"),
+            v.literal("hidden")
+        ),
+        moderationNote: v.optional(v.string()),
+    },
+    handler: async (ctx, { id, moderatedBy, moderationStatus, moderationNote }) => {
+        await requireActiveUser(ctx, moderatedBy);
+
+        // Fetch pick to get tenantId for permission check
+        const pick = await ctx.runQuery(components.picks.functions.get, { id });
+        if (!pick) throw new Error("Pick not found");
+        const tenantId = (pick as any)?.tenantId ?? "";
+
+        await requirePermission(ctx, moderatedBy, tenantId, "pick:moderate");
+
+        await rateLimit(ctx, {
+            name: "moderatePick",
+            key: rateLimitKeys.user(moderatedBy as string),
+            throws: true,
+        });
+
+        const previousStatus = (pick as any)?.moderationStatus ?? "clean";
+
+        const result = await ctx.runMutation(components.picks.functions.moderate, {
+            id,
+            moderationStatus,
+            moderatedBy: moderatedBy as string,
+            moderationNote,
+        });
+
+        await withAudit(ctx, {
+            tenantId,
+            userId: moderatedBy as string,
+            entityType: "pick",
+            entityId: id,
+            action: `moderated_${moderationStatus}`,
+            previousState: { moderationStatus: previousStatus },
+            newState: { moderationStatus, moderationNote },
+            sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.pick.moderated", tenantId, "picks", {
+            pickId: id,
+            moderationStatus,
+            moderatedBy: moderatedBy as string,
+            creatorId: (pick as any)?.creatorId,
+        });
+
+        // Notify the creator about the moderation action
+        const creatorId = (pick as any)?.creatorId;
+        if (creatorId && ["rejected", "hidden", "approved"].includes(moderationStatus)) {
+            const statusLabel = moderationStatus === "approved"
+                ? "approved"
+                : moderationStatus === "rejected"
+                    ? "rejected"
+                    : "hidden";
+            await ctx.runMutation(components.notifications.functions.create, {
+                tenantId,
+                userId: creatorId,
+                type: `pick.moderation.${statusLabel}`,
+                title: `Your pick has been ${statusLabel}`,
+                body: moderationNote
+                    ? `Reason: ${moderationNote}`
+                    : `Your pick "${(pick as any)?.event ?? ""}" has been ${statusLabel} by a moderator.`,
+                link: `/picks/${id}`,
+            });
+        }
+
+        return result;
+    },
+});
+
+/**
+ * List picks in the moderation queue — admin view.
+ * Requires `pick:moderate` permission. Enriches with creator data.
+ */
+export const listModerationQueue = query({
+    args: {
+        tenantId: v.id("tenants"),
+        moderationStatus: v.optional(v.string()),
+        creatorId: v.optional(v.string()),
+        limit: v.optional(v.number()),
+        callerId: v.id("users"),
+    },
+    handler: async (ctx, { tenantId, moderationStatus, creatorId, limit, callerId }) => {
+        await requirePermission(ctx, callerId, tenantId, "pick:moderate");
+
+        const picks = await ctx.runQuery(components.picks.functions.listByModerationStatus, {
+            tenantId: tenantId as string,
+            moderationStatus,
+            creatorId,
+            limit,
+        });
+
+        // Batch enrich with creator data
+        const creatorIds = [...new Set((picks as any[]).map((p: any) => p.creatorId).filter(Boolean))];
+        const users = await Promise.all(
+            creatorIds.map((id: string) => ctx.db.get(id as Id<"users">).catch(() => null))
+        );
+        const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
+
+        return (picks as any[]).map((pick: any) => {
+            const user = pick.creatorId ? userMap.get(pick.creatorId) : null;
+            return {
+                ...pick,
+                creator: user
+                    ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
+                    : null,
+            };
+        });
+    },
+});
+
+/**
+ * Get reports for a specific pick — admin detail view.
+ * Requires `pick:moderate` permission. Enriches with reporter data.
+ */
+export const listPickReports = query({
+    args: {
+        pickId: v.string(),
+        callerId: v.id("users"),
+        status: v.optional(v.string()),
+    },
+    handler: async (ctx, { pickId, callerId, status }) => {
+        // Get pick to check tenant
+        const pick = await ctx.runQuery(components.picks.functions.get, { id: pickId });
+        if (!pick) throw new Error("Pick not found");
+        const tenantId = (pick as any)?.tenantId ?? "";
+
+        await requirePermission(ctx, callerId, tenantId, "pick:moderate");
+
+        const reports = await ctx.runQuery(components.picks.functions.listPickReports, {
+            pickId,
+            status,
+        });
+
+        // Enrich with reporter data
+        const reporterIds = [...new Set((reports as any[]).map((r: any) => r.reporterId).filter(Boolean))];
+        const users = await Promise.all(
+            reporterIds.map((id: string) => ctx.db.get(id as Id<"users">).catch(() => null))
+        );
+        const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
+
+        return (reports as any[]).map((report: any) => {
+            const user = report.reporterId ? userMap.get(report.reporterId) : null;
+            return {
+                ...report,
+                reporter: user
+                    ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
+                    : null,
+            };
+        });
+    },
+});
+
+/**
+ * Moderation stats — counts of picks by moderation status.
+ * Requires `pick:moderate` permission.
+ */
+export const moderationStats = query({
+    args: {
+        tenantId: v.id("tenants"),
+        callerId: v.id("users"),
+    },
+    handler: async (ctx, { tenantId, callerId }) => {
+        await requirePermission(ctx, callerId, tenantId, "pick:moderate");
+
+        return ctx.runQuery(components.picks.functions.moderationStats, {
+            tenantId: tenantId as string,
+        });
     },
 });

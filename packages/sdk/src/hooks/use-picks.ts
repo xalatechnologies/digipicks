@@ -43,7 +43,7 @@ export interface Pick {
     /** True when the viewer lacks an active subscription — premium fields are redacted. */
     isGated: boolean;
     // Enriched from facade
-    creator?: { id: string; name?: string; email?: string; displayName?: string };
+    creator?: { id: string; name?: string; email?: string; displayName?: string; verified?: boolean };
 }
 
 export type PickType = "spread" | "moneyline" | "total" | "prop" | "parlay_leg";
@@ -112,6 +112,8 @@ export interface CreatorProfile {
     email?: string;
     avatarUrl?: string;
     role: string;
+    verified: boolean;
+    verifiedAt: number | null;
     stats: CreatorStats;
     recentPicks: Pick[];
 }
@@ -239,6 +241,8 @@ export function useCreatorProfile(
             email: data.email,
             avatarUrl: data.avatarUrl,
             role: data.role,
+            verified: data.verified ?? false,
+            verifiedAt: data.verifiedAt ?? null,
             stats: data.stats,
             recentPicks: (data.recentPicks ?? []).map(transformPick),
         }

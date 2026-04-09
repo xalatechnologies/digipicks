@@ -18,7 +18,7 @@ import {
 import { useT } from '@digilist-saas/i18n';
 import { useCreatorDiscovery } from '@digilist-saas/sdk';
 import type { DiscoveryCreator } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
+import { env, VerificationBadge } from '@digilist-saas/app-shell';
 import { SportFilter } from '@/components/SportFilter';
 import s from './creator-discovery.module.css';
 
@@ -78,11 +78,11 @@ function CreatorCard({
         <div className={s.creatorInfo}>
           <div className={s.creatorName}>
             {creator.name}
-            {creator.verified && (
-              <span className={s.verifiedBadge} title={t('discovery.verified', 'Verified')}>
-                &#x2713;
-              </span>
-            )}
+            <VerificationBadge
+              verified={creator.verified}
+              verifiedAt={creator.verifiedAt}
+              size="sm"
+            />
           </div>
           {creator.tagline && (
             <div className={s.creatorTagline}>{creator.tagline}</div>

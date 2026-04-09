@@ -82,6 +82,9 @@
   font-weight: 600;
   color: var(--ds-color-neutral-text-default);
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-1);
 }
 
 .pickTimestamp {

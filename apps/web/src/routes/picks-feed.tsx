@@ -23,7 +23,7 @@ import {
 import { useT } from '@digilist-saas/i18n';
 import { usePickFeedFollowing, usePickFeedForYou } from '@digilist-saas/sdk';
 import type { FeedPick } from '@digilist-saas/sdk';
-import { useAuth, env } from '@digilist-saas/app-shell';
+import { useAuth, env, VerificationBadge } from '@digilist-saas/app-shell';
 import { SportFilter } from '@/components/SportFilter';
 import s from './picks-feed.module.css';
 
@@ -96,6 +96,7 @@ function UnlockedPickCard({ pick }: { pick: FeedPick }) {
         <div className={s.creatorInfo}>
           <div className={s.creatorName}>
             {pick.creator?.displayName || pick.creator?.name || 'Unknown'}
+            <VerificationBadge verified={pick.creator?.verified ?? false} size="sm" />
           </div>
           <div className={s.pickTimestamp}>{formatTimeAgo(pick.createdAt)}</div>
         </div>
@@ -157,6 +158,7 @@ function LockedPickCard({ pick, onSubscribe }: { pick: FeedPick; onSubscribe: ()
         <div className={s.creatorInfo}>
           <div className={s.creatorName}>
             {pick.creator?.displayName || pick.creator?.name || 'Unknown'}
+            <VerificationBadge verified={pick.creator?.verified ?? false} size="sm" />
           </div>
           <div className={s.pickTimestamp}>{formatTimeAgo(pick.createdAt)}</div>
         </div>

@@ -88,8 +88,10 @@ export {
   AccountSwitcher,
   AccountSelectionModal,
   RealtimeToast,
+  VerificationBadge,
   type AccountSwitcherProps,
   type AccountSelectionModalProps,
+  type VerificationBadgeProps,
 } from './components';
 
 // Notifications (shared panel + transforms)

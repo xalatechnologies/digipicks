@@ -26,7 +26,7 @@ import {
 } from '@digilist-saas/ds';
 import type { Action, PillTab } from '@digilist-saas/ds';
 import { useT } from '@digilist-saas/i18n';
-import { useAuth, env } from '@digilist-saas/app-shell';
+import { useAuth, env, VerificationBadge } from '@digilist-saas/app-shell';
 import {
     useCreatorApplications,
     useCreatorApplication,
@@ -92,7 +92,14 @@ function ApplicationDetail({
 
     return (
         <Stack direction="vertical" spacing="var(--ds-size-4)">
-            <Heading level={3} data-size="sm">{application.displayName}</Heading>
+            <Heading level={3} data-size="sm">
+                {application.displayName}
+                <VerificationBadge
+                    verified={application.status === 'approved'}
+                    verifiedAt={application.reviewedAt}
+                    size="md"
+                />
+            </Heading>
 
             {application.user && (
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -364,6 +371,7 @@ export function CreatorApplicationsPage() {
                             tags={[
                                 { label: app.niche },
                                 ...(app.specialties?.map((s) => ({ label: s })) ?? []),
+                                ...(app.status === 'approved' ? [{ label: t('creatorApps.verified', 'Verified'), color: 'success' }] : []),
                             ]}
                             onClick={() => setDetailId(app.id)}
                             actions={getActions(app)}

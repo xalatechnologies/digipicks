@@ -1,0 +1,65 @@
+/* =============================================================================
+ * VerificationBadge — Creator verification indicator
+ * Shows a checkmark icon for verified creators with tooltip.
+ * ============================================================================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.badgeSm {
+  width: 16px;
+  height: 16px;
+}
+
+.badgeMd {
+  width: 20px;
+  height: 20px;
+}
+
+.badgeLg {
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ds-color-info-base-default);
+  color: var(--ds-color-info-contrast-default, #fff);
+}
+
+.iconSm {
+  width: 16px;
+  height: 16px;
+}
+
+.iconMd {
+  width: 20px;
+  height: 20px;
+}
+
+.iconLg {
+  width: 24px;
+  height: 24px;
+}
+
+.iconSm svg {
+  width: 10px;
+  height: 10px;
+}
+
+.iconMd svg {
+  width: 12px;
+  height: 12px;
+}
+
+.iconLg svg {
+  width: 14px;
+  height: 14px;
+}

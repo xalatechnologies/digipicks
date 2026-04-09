@@ -8,3 +8,4 @@ export {
   type AccountSelectionModalProps,
 } from './AccountSelectionModal';
 export { RealtimeToast } from './RealtimeToast';
+export { VerificationBadge, type VerificationBadgeProps } from './VerificationBadge';
