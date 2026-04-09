@@ -411,6 +411,15 @@ export const RATE_LIMITS = {
     },
 
     // -------------------------------------------------------------------------
+    // Creator Application operations (per-user)
+    // -------------------------------------------------------------------------
+    submitCreatorApplication: {
+        kind: "fixed window" as const,
+        rate: 3,
+        period: 3_600_000, // 1 hour — max 3 submissions per hour
+    },
+
+    // -------------------------------------------------------------------------
     // Picks operations (per-user)
     // -------------------------------------------------------------------------
     createPick: {

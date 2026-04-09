@@ -322,6 +322,10 @@ export { useCreatorBranding } from './use-creator-branding';
 export { useCreatorFromDomain } from './use-creator-from-domain';
 export type { CreatorFromDomainResult } from './use-creator-from-domain';
 
+// Creator Discovery (marketplace page — aggregated stats, branding, pricing)
+export { useCreatorDiscovery } from './use-creator-discovery';
+export type { DiscoveryCreator, UseCreatorDiscoveryParams } from './use-creator-discovery';
+
 // Integrations (Tier 2 adapter — RCO, Visma, BRREG, Vipps, calendar sync)
 export {
     useTenantSettings,
@@ -925,3 +929,24 @@ export type {
     CreatorInsight,
     SubscriberDashboard,
 } from './use-insights';
+
+// Creator Application (DigiPicks — creator onboarding & verification)
+export {
+    useCreatorApplications,
+    useCreatorApplication,
+    useMyCreatorApplication,
+    useSubmitCreatorApplication,
+    useApproveCreatorApplication,
+    useRejectCreatorApplication,
+    useRequestMoreInfoCreatorApplication,
+    useResubmitCreatorApplication,
+} from './use-creator-application';
+
+export type {
+    CreatorApplication,
+    ApplicationStatus,
+    SocialLinks,
+    SubmitApplicationInput,
+    ReviewApplicationInput,
+    ResubmitApplicationInput,
+} from './use-creator-application';
