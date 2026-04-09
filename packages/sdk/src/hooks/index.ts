@@ -950,3 +950,16 @@ export type {
     ReviewApplicationInput,
     ResubmitApplicationInput,
 } from './use-creator-application';
+
+// Creator Earnings (DigiPicks — revenue dashboard)
+export {
+    useMyEarningsSummary,
+    useMyEarningsHistory,
+    useMyPayouts,
+} from './use-creator-earnings';
+
+export type {
+    EarningsSummary,
+    EarningsPeriod,
+    CreatorPayout,
+} from './use-creator-earnings';

@@ -101,6 +101,9 @@ import { CreatorApplicationsPage } from '@/routes/creator-applications';
 import { BroadcastsPage, BroadcastInboxPage } from '@/routes/broadcasts';
 import { BroadcastComposePage } from '@/routes/broadcast-compose';
 
+// DigiPicks — creator earnings dashboard
+import { CreatorEarningsPage } from '@/routes/creator-earnings';
+
 // DigiPicks — Stripe integration (payouts & subscribers)
 import { PayoutsPage } from '@/routes/payouts';
 import { SubscribersPage } from '@/routes/subscribers';
@@ -317,6 +320,9 @@ function AppWithTheme() {
 
                                 {/* ─── DigiPicks: Creator application review (admin) ─── */}
                                 <Route path="creator-applications" element={<ProtectedRouteConnected requiredRole="admin"><CreatorApplicationsPage /></ProtectedRouteConnected>} />
+
+                                {/* ─── DigiPicks: Creator earnings dashboard ─── */}
+                                <Route path="earnings" element={<CreatorEarningsPage />} />
 
                                 {/* ─── DigiPicks: Stripe integration ─── */}
                                 <Route path="payouts" element={<PayoutsPage />} />
