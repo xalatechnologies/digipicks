@@ -36,6 +36,7 @@ import { BlogArticlePage } from '@/routes/blog-article';
 import { AboutPage } from '@/routes/about';
 import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
+import { PickDetailPage } from '@/routes/pick-detail';
 import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
 import { CreatorDiscoveryPage } from '@/routes/creator-discovery';
@@ -249,6 +250,7 @@ function ThemedApp() {
                       <Route path="/about" element={<AboutPage />} />
                       <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
                       <Route path="/picks" element={<PicksFeedPage />} />
+                      <Route path="/picks/:id" element={<PickDetailPage />} />
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
                       <Route path="/creators" element={<CreatorDiscoveryPage />} />

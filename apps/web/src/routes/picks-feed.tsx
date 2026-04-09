@@ -9,7 +9,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -325,9 +325,13 @@ export function PicksFeedPage() {
         <div className={s.feedList}>
           {picks.map((pick) =>
             pick.isUnlocked ? (
-              <UnlockedPickCard key={pick.id} pick={pick} />
+              <Link key={pick.id} to={`/picks/${pick.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <UnlockedPickCard pick={pick} />
+              </Link>
             ) : (
-              <LockedPickCard key={pick.id} pick={pick} onSubscribe={handleSubscribe} />
+              <Link key={pick.id} to={`/picks/${pick.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <LockedPickCard pick={pick} onSubscribe={handleSubscribe} />
+              </Link>
             )
           )}
         </div>
