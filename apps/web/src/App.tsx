@@ -17,7 +17,7 @@ import { DesignsystemetProvider } from '@digipicks/ds';
 import { DEFAULT_THEME, type ThemeId } from '@digipicks/ds';
 // Static import of the tenant theme CSS to prevent FOUC (Flash of Unstyled Content).
 // Without this, the default DS blue theme renders before the dynamic import in useBundledTheme resolves.
-import '@digipicks/ds/themes/hamar-theme.css';
+import '@digipicks/ds/themes/edgepicks-theme.css';
 import { I18nProvider, useT, useI18nLocale } from '@digipicks/i18n';
 import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTools } from '@digipicks/sdk';
 import { useAuth } from '@digipicks/app-shell';
@@ -201,6 +201,7 @@ const VALID_THEMES: ThemeId[] = [
   'xala-navy',
   'steinkjer',
   'hamar',
+  'edgepicks',
 ];
 
 function resolveThemeId(themeName: string | undefined): ThemeId {
@@ -218,7 +219,8 @@ const INITIAL_THEME: ThemeId = (() => {
   // Fall back to tenant slug (often matches theme name, e.g. 'hamar', 'steinkjer')
   const slug = env.tenantId;
   if (slug && VALID_THEMES.includes(slug as ThemeId)) return slug as ThemeId;
-  return DEFAULT_THEME;
+  // Default: EdgePicks obsidian theme
+  return 'edgepicks';
 })();
 
 // Bridge component to pass theme context to DesignsystemetProvider

@@ -10,6 +10,7 @@ const THEME_IMPORTS: Record<string, () => Promise<{ default: string }>> = {
   'xala-navy': () => import('@digipicks/ds/themes/xala-navy-theme.css?inline').then((m) => m as { default: string }),
   steinkjer: () => import('@digipicks/ds/themes/steinkjer-theme.css?inline').then((m) => m as { default: string }),
   hamar: () => import('@digipicks/ds/themes/hamar-theme.css?inline').then((m) => m as { default: string }),
+  edgepicks: () => import('@digipicks/ds/themes/edgepicks-theme.css?inline').then((m) => m as { default: string }),
   digdir: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
   altinn: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),
   uutilsynet: () => import('@digipicks/ds/themes/digilist-theme.css?inline').then((m) => m as { default: string }),

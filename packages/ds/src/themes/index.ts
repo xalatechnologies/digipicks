@@ -42,7 +42,19 @@ const STEINKJER_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/steinkjer-th
 // Hamar theme: dark-dominant minimal palette
 const HAMAR_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/hamar-theme.css'];
 
-export type ThemeId = 'digdir' | 'altinn' | 'uutilsynet' | 'portal' | 'digilist' | 'xala-navy' | 'steinkjer' | 'hamar';
+// EdgePicks theme: obsidian dark-first — "The Elite Perspective"
+const EDGEPICKS_THEME = [DIGDIR_TOKENS, COMMON_EXTENSIONS, '/themes/edgepicks-theme.css'];
+
+export type ThemeId =
+  | 'digdir'
+  | 'altinn'
+  | 'uutilsynet'
+  | 'portal'
+  | 'digilist'
+  | 'xala-navy'
+  | 'steinkjer'
+  | 'hamar'
+  | 'edgepicks';
 
 /**
  * Theme CSS files. Can be single file (string) or multiple files (array).
@@ -57,6 +69,7 @@ export const THEMES: Record<ThemeId, string | string[]> = {
   'xala-navy': XALA_NAVY_THEME,
   steinkjer: STEINKJER_THEME,
   hamar: HAMAR_THEME,
+  edgepicks: EDGEPICKS_THEME,
 };
 
 /**
