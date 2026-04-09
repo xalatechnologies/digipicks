@@ -6,40 +6,40 @@
 
 The web app follows the thin app pattern per CLAUDE.md:
 
-| Layer | Responsibility | Location |
-|-------|----------------|----------|
-| **Provider composition** | XalaConvexProvider → I18nProvider → BrowserRouter → ThemeProvider → AuthProvider → RealtimeProvider | App.tsx, main.tsx |
-| **Routing** | Route definitions, MainLayout with header | App.tsx |
-| **Pages** | Thin compositions: fetch via SDK, transform, pass to digilist components | routes/ |
-| **Components** | None — all from @digilist-saas/ds, @digilist-saas/app-shell | — |
-| **Hooks** | None — useAuth from app-shell | — |
-| **Business logic** | None — all in Convex (backend) and SDK hooks | — |
-| **Shared infra** | Auth, realtime, RBAC, feature flags from app-shell | @digilist-saas/app-shell |
+| Layer                    | Responsibility                                                                                      | Location             |
+| ------------------------ | --------------------------------------------------------------------------------------------------- | -------------------- |
+| **Provider composition** | XalaConvexProvider → I18nProvider → BrowserRouter → ThemeProvider → AuthProvider → RealtimeProvider | App.tsx, main.tsx    |
+| **Routing**              | Route definitions, MainLayout with header                                                           | App.tsx              |
+| **Pages**                | Thin compositions: fetch via SDK, transform, pass to digilist components                            | routes/              |
+| **Components**           | None — all from @digipicks/ds, @digipicks/app-shell                                                 | —                    |
+| **Hooks**                | None — useAuth from app-shell                                                                       | —                    |
+| **Business logic**       | None — all in Convex (backend) and SDK hooks                                                        | —                    |
+| **Shared infra**         | Auth, realtime, RBAC, feature flags from app-shell                                                  | @digipicks/app-shell |
 
 ### Key Imports
 
-- **Auth**: `useAuth` from `@digilist-saas/app-shell`
-- **Realtime**: `RealtimeToast` from `@digilist-saas/app-shell`; `useRealtimeBooking`, etc. from app-shell
-- **Listing layout**: `ListingDetailsLayout` from `@digilist-saas/digilist/listings` with `variant="web"`
-- **Types**: Import directly from `@digilist-saas/shared` (no features/ folder)
+- **Auth**: `useAuth` from `@digipicks/app-shell`
+- **Realtime**: `RealtimeToast` from `@digipicks/app-shell`; `useRealtimeBooking`, etc. from app-shell
+- **Listing layout**: `ListingDetailsLayout` from `@digipicks/digilist/listings` with `variant="web"`
+- **Types**: Import directly from `@digipicks/shared` (no features/ folder)
 
 ## Verification Checklist
 
-| Check | Status |
-|-------|--------|
-| `pnpm typecheck` | ✅ Pass |
-| `pnpm lint` | ✅ Pass |
-| `pnpm --filter @digilist-saas/web build` | ✅ Pass |
-| `pnpm --filter @digilist-saas/web test` | ✅ Pass (22 tests) |
-| `pnpm sdk:test` | ✅ Pass |
-| `pnpm test:convex` | ✅ Pass |
+| Check                                | Status             |
+| ------------------------------------ | ------------------ |
+| `pnpm typecheck`                     | ✅ Pass            |
+| `pnpm lint`                          | ✅ Pass            |
+| `pnpm --filter @digipicks/web build` | ✅ Pass            |
+| `pnpm --filter @digipicks/web test`  | ✅ Pass (22 tests) |
+| `pnpm sdk:test`                      | ✅ Pass            |
+| `pnpm test:convex`                   | ✅ Pass            |
 
 ## Root Cleanup
 
 - `dist/` — Build output (in .gitignore)
 - `dev-dist/` — PWA dev artifacts (in root .gitignore `**/dev-dist/`)
-- `providers/` — Removed (re-exports; import from @digilist-saas/app-shell)
-- `features/` — Removed (types now from @digilist-saas/shared)
+- `providers/` — Removed (re-exports; import from @digipicks/app-shell)
+- `features/` — Removed (types now from @digipicks/shared)
 
 ## Production Readiness
 

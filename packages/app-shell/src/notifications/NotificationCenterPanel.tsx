@@ -10,18 +10,14 @@
 
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  NotificationCenter,
-  BellIcon,
-  CheckCircleIcon,
-} from '@digilist-saas/ds';
+import { NotificationCenter, BellIcon, CheckCircleIcon } from '@digipicks/ds';
 import {
   useMyNotifications,
   useMarkNotificationRead,
   useMarkAllNotificationsRead,
   useDeleteNotification,
-} from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
+} from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
 import { useAuth } from '../auth/AuthProvider';
 import { useNotificationCenter } from '../providers/NotificationCenterProvider';
 import { transformNotificationsToDS, formatTimeAgo } from './transforms';
@@ -35,7 +31,7 @@ export interface NotificationCenterPanelProps {
 export function NotificationCenterPanel({ onNotificationNavigate }: NotificationCenterPanelProps = {}) {
   const { isOpen, closeNotificationCenter } = useNotificationCenter();
   const { user } = useAuth();
-  const userId = (user?.id ?? '') as Id<"users">;
+  const userId = (user?.id ?? '') as Id<'users'>;
   const navigate = useNavigate();
 
   // Fetch notifications
@@ -47,37 +43,43 @@ export function NotificationCenterPanel({ onNotificationNavigate }: Notification
   const deleteNotification = useDeleteNotification();
 
   // Transform SDK notifications → DS NotificationItemData
-  const notificationItems = useMemo(
-    () => transformNotificationsToDS(notifications ?? []),
-    [notifications],
+  const notificationItems = useMemo(() => transformNotificationsToDS(notifications ?? []), [notifications]);
+
+  const handleNotificationClick = useCallback(
+    (id: string) => {
+      // Mark as read
+      markAsRead.mutate({ id: id as Id<'notifications'> });
+
+      const notification = notificationItems.find((n) => n.id === id);
+      if (onNotificationNavigate) {
+        onNotificationNavigate(id, notification?.metadata);
+        closeNotificationCenter();
+        return;
+      }
+
+      // Default navigation: actionUrl from original notification
+      const original = (notifications ?? []).find((n) => n.id === id);
+      if (original?.actionUrl) {
+        closeNotificationCenter();
+        navigate(original.actionUrl);
+      }
+    },
+    [markAsRead, notificationItems, notifications, closeNotificationCenter, navigate, onNotificationNavigate],
   );
 
-  const handleNotificationClick = useCallback((id: string) => {
-    // Mark as read
-    markAsRead.mutate({ id: id as Id<"notifications"> });
+  const handleMarkAsRead = useCallback(
+    (id: string) => {
+      markAsRead.mutate({ id: id as Id<'notifications'> });
+    },
+    [markAsRead],
+  );
 
-    const notification = notificationItems.find(n => n.id === id);
-    if (onNotificationNavigate) {
-      onNotificationNavigate(id, notification?.metadata);
-      closeNotificationCenter();
-      return;
-    }
-
-    // Default navigation: actionUrl from original notification
-    const original = (notifications ?? []).find(n => n.id === id);
-    if (original?.actionUrl) {
-      closeNotificationCenter();
-      navigate(original.actionUrl);
-    }
-  }, [markAsRead, notificationItems, notifications, closeNotificationCenter, navigate, onNotificationNavigate]);
-
-  const handleMarkAsRead = useCallback((id: string) => {
-    markAsRead.mutate({ id: id as Id<"notifications"> });
-  }, [markAsRead]);
-
-  const handleDelete = useCallback((id: string) => {
-    deleteNotification.mutate({ id: id as Id<"notifications"> });
-  }, [deleteNotification]);
+  const handleDelete = useCallback(
+    (id: string) => {
+      deleteNotification.mutate({ id: id as Id<'notifications'> });
+    },
+    [deleteNotification],
+  );
 
   const handleMarkAllAsRead = useCallback(() => {
     if (userId) {

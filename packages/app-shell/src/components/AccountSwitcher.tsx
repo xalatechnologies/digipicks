@@ -7,7 +7,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Paragraph } from '@digilist-saas/ds';
+import { Button, Paragraph } from '@digipicks/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 
 // =============================================================================
@@ -83,14 +83,8 @@ export function AccountSwitcher({
   const accountContext = useAccountContext();
   if (!accountContext) return null;
 
-  const {
-    accountType,
-    selectedOrganization,
-    organizations,
-    switchToPersonal,
-    switchToOrganization,
-    getActiveAccount,
-  } = accountContext;
+  const { accountType, selectedOrganization, organizations, switchToPersonal, switchToOrganization, getActiveAccount } =
+    accountContext;
 
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -201,10 +195,7 @@ export function AccountSwitcher({
                 alignItems: 'center',
                 gap: 'var(--ds-size-3)',
                 cursor: 'pointer',
-                backgroundColor:
-                  accountType === 'personal'
-                    ? 'var(--ds-color-accent-surface-default)'
-                    : 'transparent',
+                backgroundColor: accountType === 'personal' ? 'var(--ds-color-accent-surface-default)' : 'transparent',
                 transition: 'background-color 0.2s',
               }}
               onMouseEnter={(e) => {
@@ -332,10 +323,7 @@ export function AccountSwitcher({
                       {org.name}
                     </Paragraph>
                     {org.organizationNumber && (
-                      <Paragraph
-                        data-size="xs"
-                        style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
-                      >
+                      <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                         {org.organizationNumber}
                       </Paragraph>
                     )}
@@ -395,10 +383,7 @@ export function AccountSwitcher({
               >
                 <SettingsIcon />
               </div>
-              <Paragraph
-                data-size="sm"
-                style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
-              >
+              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Administrer organisasjoner
               </Paragraph>
             </Button>

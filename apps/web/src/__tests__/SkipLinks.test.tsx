@@ -1,14 +1,14 @@
 /**
  * SkipLinks Integration Tests
  *
- * SkipLinks from @digilist-saas/ds. These tests verify integration and basic accessibility.
+ * SkipLinks from @digipicks/ds. These tests verify integration and basic accessibility.
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { SkipLinks } from '@digilist-saas/ds';
+import { SkipLinks } from '@digipicks/ds';
 
 expect.extend(toHaveNoViolations);
 

@@ -3,7 +3,6 @@
  * Manage tenant settings, integrations, and system configuration
  */
 
-
 import { useState, useRef } from 'react';
 import {
   Card,
@@ -31,8 +30,8 @@ import {
   ErrorState,
   HiddenFileInput,
   useToast,
-} from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
 import {
   useTenantSettings,
   useUpdateTenantSettings,
@@ -42,13 +41,20 @@ import {
   useUpdateCurrentUser,
   useUploadUserAvatar,
   type Address,
-} from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './settings.module.css';
 
 // Extended types for settings page UI (SDK types are stubs)
 type SettingsData = {
-  general?: { name: string; locale: string; timezone: string; currency: string; dateFormat: string; timeFormat: string };
+  general?: {
+    name: string;
+    locale: string;
+    timezone: string;
+    currency: string;
+    dateFormat: string;
+    timeFormat: string;
+  };
   booking?: Record<string, unknown>;
   notifications?: Record<string, unknown>;
   branding?: { logo: string; primaryColor: string; secondaryColor: string; favicon: string };
@@ -71,11 +77,19 @@ export function SettingsPage() {
   const integrations = (integrationsData?.data ?? null) as unknown as IntegrationsMap | null;
 
   const { data: currentUserData, isLoading: isLoadingUser } = useCurrentUser();
-  const currentUser = currentUserData?.data as (Record<string, unknown> & {
-    id: string; name?: string; email?: string;
-    phone?: string; dateOfBirth?: string; nationalId?: string;
-    invoiceAddress?: Address; residenceAddress?: Address; avatar?: string;
-  }) | undefined;
+  const currentUser = currentUserData?.data as
+    | (Record<string, unknown> & {
+        id: string;
+        name?: string;
+        email?: string;
+        phone?: string;
+        dateOfBirth?: string;
+        nationalId?: string;
+        invoiceAddress?: Address;
+        residenceAddress?: Address;
+        avatar?: string;
+      })
+    | undefined;
 
   // Mutations
   const updateSettingsMutation = useUpdateTenantSettings();
@@ -234,7 +248,7 @@ export function SettingsPage() {
   };
 
   const handleCopyResidenceToInvoice = () => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
       invoiceAddress: { ...prev.residenceAddress },
     }));
@@ -301,34 +315,22 @@ export function SettingsPage() {
               </div>
 
               <Stack direction="horizontal" align="center" spacing="var(--ds-size-4)">
-                <Stack
-                  direction="horizontal"
-                  justify="center"
-                  align="center"
-                  className={styles.avatarContainer}
-                >
+                <Stack direction="horizontal" justify="center" align="center" className={styles.avatarContainer}>
                   {avatarPreview ? (
-                    <img
-                      src={avatarPreview}
-                      alt={t('settings.profile.avatarAlt')}
-                      className={styles.avatarImage}
-                    />
+                    <img src={avatarPreview} alt={t('settings.profile.avatarAlt')} className={styles.avatarImage} />
                   ) : (
                     <UserIcon className={styles.avatarIcon} />
                   )}
                 </Stack>
 
                 <Stack spacing={2}>
-                  <HiddenFileInput
-                    ref={fileInputRef}
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                  />
+                  <HiddenFileInput ref={fileInputRef} accept="image/*" onChange={handleAvatarChange} />
                   <Button
                     variant="secondary"
                     data-size="sm"
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploadingAvatar} type="button"
+                    disabled={isUploadingAvatar}
+                    type="button"
                   >
                     <CameraIcon />
                     {isUploadingAvatar ? t('settings.profile.uploading') : t('settings.profile.changePicture')}
@@ -355,40 +357,45 @@ export function SettingsPage() {
 
               <Stack spacing={4}>
                 <FormField label={t('settings.profile.fullName')} required>
-                  <Textfield aria-label={t('settings.profile.fullName')}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                  <Textfield
+                    aria-label={t('settings.profile.fullName')}
+                    onChange={(e) => setProfileData((prev) => ({ ...prev, name: e.target.value }))}
                     placeholder={t('settings.profile.fullNamePlaceholder')}
                   />
                 </FormField>
 
                 <FormField label={t('settings.profile.emailAddress')} required>
-                  <Textfield aria-label={t('settings.profile.emailAddress')}
+                  <Textfield
+                    aria-label={t('settings.profile.emailAddress')}
                     value={profileData.email}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) => setProfileData((prev) => ({ ...prev, email: e.target.value }))}
                     placeholder={t('settings.profile.emailPlaceholder')}
                   />
                 </FormField>
 
                 <FormField label={t('settings.profile.phoneNumber')}>
-                  <Textfield aria-label={t('settings.profile.phoneNumber')}
+                  <Textfield
+                    aria-label={t('settings.profile.phoneNumber')}
                     value={profileData.phone}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                    onChange={(e) => setProfileData((prev) => ({ ...prev, phone: e.target.value }))}
                     placeholder={t('settings.profile.phonePlaceholder')}
                   />
                 </FormField>
 
                 <Grid columns="1fr 1fr" gap="var(--ds-size-3)">
                   <FormField label={t('settings.profile.dateOfBirth')}>
-                    <Textfield aria-label={t('settings.profile.dateOfBirth')}
+                    <Textfield
+                      aria-label={t('settings.profile.dateOfBirth')}
                       type="date"
                       value={profileData.dateOfBirth}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                      onChange={(e) => setProfileData((prev) => ({ ...prev, dateOfBirth: e.target.value }))}
                     />
                   </FormField>
 
                   <FormField label={t('settings.profile.nationalId')}>
-                    <Textfield aria-label={t('settings.profile.nationalId')}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
+                    <Textfield
+                      aria-label={t('settings.profile.nationalId')}
+                      onChange={(e) => setProfileData((prev) => ({ ...prev, nationalId: e.target.value }))}
                       placeholder={t('settings.profile.nationalIdPlaceholder')}
                       maxLength={11}
                     />
@@ -438,32 +445,41 @@ export function SettingsPage() {
 
               <Stack spacing={4}>
                 <FormField label={t('settings.addresses.streetAddress')} required>
-                  <Textfield aria-label={t('settings.addresses.streetAddress')}
-                    onChange={(e) => setProfileData(prev => ({
-                      ...prev,
-                      residenceAddress: { ...prev.residenceAddress, street: e.target.value }
-                    }))}
+                  <Textfield
+                    aria-label={t('settings.addresses.streetAddress')}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        residenceAddress: { ...prev.residenceAddress, street: e.target.value },
+                      }))
+                    }
                     placeholder={t('settings.addresses.streetPlaceholder')}
                   />
                 </FormField>
 
                 <Grid columns="2fr 1fr" gap="var(--ds-size-3)">
                   <FormField label={t('settings.addresses.city')} required>
-                    <Textfield aria-label={t('settings.addresses.city')}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        residenceAddress: { ...prev.residenceAddress, city: e.target.value }
-                      }))}
+                    <Textfield
+                      aria-label={t('settings.addresses.city')}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({
+                          ...prev,
+                          residenceAddress: { ...prev.residenceAddress, city: e.target.value },
+                        }))
+                      }
                       placeholder={t('settings.addresses.cityPlaceholder')}
                     />
                   </FormField>
 
                   <FormField label={t('settings.addresses.postalCode')} required>
-                    <Textfield aria-label={t('settings.addresses.postalCodeResidence')}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
-                      }))}
+                    <Textfield
+                      aria-label={t('settings.addresses.postalCodeResidence')}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({
+                          ...prev,
+                          residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value },
+                        }))
+                      }
                       placeholder={t('settings.addresses.postalCodePlaceholder')}
                       maxLength={4}
                     />
@@ -480,10 +496,12 @@ export function SettingsPage() {
                       { value: 'Finland', label: t('settings.addresses.countryFinland') },
                     ]}
                     value={profileData.residenceAddress.country || 'Norge'}
-                    onChange={(v) => setProfileData(prev => ({
-                      ...prev,
-                      residenceAddress: { ...prev.residenceAddress, country: v }
-                    }))}
+                    onChange={(v) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        residenceAddress: { ...prev.residenceAddress, country: v },
+                      }))
+                    }
                     ariaLabel={t('settings.addresses.country')}
                   />
                 </FormField>
@@ -503,11 +521,7 @@ export function SettingsPage() {
                     {t('settings.addresses.invoiceAddressDesc')}
                   </Paragraph>
                 </div>
-                <Button
-                  variant="tertiary"
-                  data-size="sm"
-                  onClick={handleCopyResidenceToInvoice} type="button"
-                >
+                <Button variant="tertiary" data-size="sm" onClick={handleCopyResidenceToInvoice} type="button">
                   <CopyIcon />
                   {t('settings.addresses.copyFromResidence')}
                 </Button>
@@ -515,32 +529,41 @@ export function SettingsPage() {
 
               <Stack spacing={4}>
                 <FormField label={t('settings.addresses.streetAddress')} required>
-                  <Textfield aria-label={t('settings.addresses.streetAddress')}
-                    onChange={(e) => setProfileData(prev => ({
-                      ...prev,
-                      invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
-                    }))}
+                  <Textfield
+                    aria-label={t('settings.addresses.streetAddress')}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        invoiceAddress: { ...prev.invoiceAddress, street: e.target.value },
+                      }))
+                    }
                     placeholder={t('settings.addresses.streetPlaceholder')}
                   />
                 </FormField>
 
                 <Grid columns="2fr 1fr" gap="var(--ds-size-3)">
                   <FormField label={t('settings.addresses.city')} required>
-                    <Textfield aria-label={t('settings.addresses.city')}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
-                      }))}
+                    <Textfield
+                      aria-label={t('settings.addresses.city')}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({
+                          ...prev,
+                          invoiceAddress: { ...prev.invoiceAddress, city: e.target.value },
+                        }))
+                      }
                       placeholder={t('settings.addresses.cityPlaceholder')}
                     />
                   </FormField>
 
                   <FormField label={t('settings.addresses.postalCode')} required>
-                    <Textfield aria-label={t('settings.addresses.postalCodeInvoice')}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
-                      }))}
+                    <Textfield
+                      aria-label={t('settings.addresses.postalCodeInvoice')}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({
+                          ...prev,
+                          invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value },
+                        }))
+                      }
                       placeholder={t('settings.addresses.postalCodePlaceholder')}
                       maxLength={4}
                     />
@@ -557,10 +580,12 @@ export function SettingsPage() {
                       { value: 'Finland', label: t('settings.addresses.countryFinland') },
                     ]}
                     value={profileData.invoiceAddress.country || 'Norge'}
-                    onChange={(v) => setProfileData(prev => ({
-                      ...prev,
-                      invoiceAddress: { ...prev.invoiceAddress, country: v }
-                    }))}
+                    onChange={(v) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        invoiceAddress: { ...prev.invoiceAddress, country: v },
+                      }))
+                    }
                     ariaLabel={t('settings.addresses.country')}
                   />
                 </FormField>
@@ -610,53 +635,74 @@ export function SettingsPage() {
 
             <Stack spacing={4}>
               <FormField label={t('settings.general.systemName')} description={t('settings.general.systemNameDesc')}>
-                <Textfield aria-label={t('settings.general.systemName')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    general: { ...prev.general, name: e.target.value }
-                  }))}
+                <Textfield
+                  aria-label={t('settings.general.systemName')}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      general: { ...prev.general, name: e.target.value },
+                    }))
+                  }
                   placeholder={t('settings.general.systemNamePlaceholder')}
                 />
               </FormField>
 
               <FormField label={t('tenantSettings.language')}>
                 <PillDropdown
-                  label={[{ value: 'nb', label: t('settings.general.langNb') }, { value: 'nn', label: t('settings.general.langNn') }, { value: 'en', label: t('settings.general.langEn') }].find(o => o.value === formData.general.locale)?.label ?? t('tenantSettings.language')}
+                  label={
+                    [
+                      { value: 'nb', label: t('settings.general.langNb') },
+                      { value: 'nn', label: t('settings.general.langNn') },
+                      { value: 'en', label: t('settings.general.langEn') },
+                    ].find((o) => o.value === formData.general.locale)?.label ?? t('tenantSettings.language')
+                  }
                   options={[
                     { value: 'nb', label: t('settings.general.langNb') },
                     { value: 'nn', label: t('settings.general.langNn') },
                     { value: 'en', label: t('settings.general.langEn') },
                   ]}
                   value={formData.general.locale}
-                  onChange={(v) => setFormData(prev => ({ ...prev, general: { ...prev.general, locale: v } }))}
+                  onChange={(v) => setFormData((prev) => ({ ...prev, general: { ...prev.general, locale: v } }))}
                   ariaLabel={t('tenantSettings.language')}
                 />
               </FormField>
 
               <FormField label={t('tenantSettings.timezone')}>
                 <PillDropdown
-                  label={[{ value: 'Europe/Oslo', label: t('settings.general.tzOslo') }, { value: 'Europe/London', label: t('settings.general.tzLondon') }, { value: 'America/New_York', label: t('settings.general.tzNewYork') }].find(o => o.value === formData.general.timezone)?.label ?? t('tenantSettings.timezone')}
+                  label={
+                    [
+                      { value: 'Europe/Oslo', label: t('settings.general.tzOslo') },
+                      { value: 'Europe/London', label: t('settings.general.tzLondon') },
+                      { value: 'America/New_York', label: t('settings.general.tzNewYork') },
+                    ].find((o) => o.value === formData.general.timezone)?.label ?? t('tenantSettings.timezone')
+                  }
                   options={[
                     { value: 'Europe/Oslo', label: t('settings.general.tzOslo') },
                     { value: 'Europe/London', label: t('settings.general.tzLondon') },
                     { value: 'America/New_York', label: t('settings.general.tzNewYork') },
                   ]}
                   value={formData.general.timezone}
-                  onChange={(v) => setFormData(prev => ({ ...prev, general: { ...prev.general, timezone: v } }))}
+                  onChange={(v) => setFormData((prev) => ({ ...prev, general: { ...prev.general, timezone: v } }))}
                   ariaLabel={t('tenantSettings.timezone')}
                 />
               </FormField>
 
               <FormField label={t('tenantSettings.currency')}>
                 <PillDropdown
-                  label={[{ value: 'NOK', label: t('settings.general.currNok') }, { value: 'EUR', label: t('settings.general.currEur') }, { value: 'USD', label: t('settings.general.currUsd') }].find(o => o.value === formData.general.currency)?.label ?? t('tenantSettings.currency')}
+                  label={
+                    [
+                      { value: 'NOK', label: t('settings.general.currNok') },
+                      { value: 'EUR', label: t('settings.general.currEur') },
+                      { value: 'USD', label: t('settings.general.currUsd') },
+                    ].find((o) => o.value === formData.general.currency)?.label ?? t('tenantSettings.currency')
+                  }
                   options={[
                     { value: 'NOK', label: t('settings.general.currNok') },
                     { value: 'EUR', label: t('settings.general.currEur') },
                     { value: 'USD', label: t('settings.general.currUsd') },
                   ]}
                   value={formData.general.currency}
-                  onChange={(v) => setFormData(prev => ({ ...prev, general: { ...prev.general, currency: v } }))}
+                  onChange={(v) => setFormData((prev) => ({ ...prev, general: { ...prev.general, currency: v } }))}
                   ariaLabel={t('tenantSettings.currency')}
                 />
               </FormField>
@@ -664,27 +710,38 @@ export function SettingsPage() {
               <Grid columns="1fr 1fr" gap="var(--ds-size-3)">
                 <FormField label={t('settings.general.dateFormat')}>
                   <PillDropdown
-                    label={[{ value: 'dd.MM.yyyy', label: '31.12.2024' }, { value: 'yyyy-MM-dd', label: '2024-12-31' }, { value: 'MM/dd/yyyy', label: '12/31/2024' }].find(o => o.value === formData.general.dateFormat)?.label ?? t('settings.general.dateFormat')}
+                    label={
+                      [
+                        { value: 'dd.MM.yyyy', label: '31.12.2024' },
+                        { value: 'yyyy-MM-dd', label: '2024-12-31' },
+                        { value: 'MM/dd/yyyy', label: '12/31/2024' },
+                      ].find((o) => o.value === formData.general.dateFormat)?.label ?? t('settings.general.dateFormat')
+                    }
                     options={[
                       { value: 'dd.MM.yyyy', label: '31.12.2024' },
                       { value: 'yyyy-MM-dd', label: '2024-12-31' },
                       { value: 'MM/dd/yyyy', label: '12/31/2024' },
                     ]}
                     value={formData.general.dateFormat}
-                    onChange={(v) => setFormData(prev => ({ ...prev, general: { ...prev.general, dateFormat: v } }))}
+                    onChange={(v) => setFormData((prev) => ({ ...prev, general: { ...prev.general, dateFormat: v } }))}
                     ariaLabel={t('settings.general.dateFormat')}
                   />
                 </FormField>
 
                 <FormField label={t('settings.general.timeFormat')}>
                   <PillDropdown
-                    label={[{ value: '24h', label: t('settings.general.time24h') }, { value: '12h', label: t('settings.general.time12h') }].find(o => o.value === formData.general.timeFormat)?.label ?? t('settings.general.timeFormat')}
+                    label={
+                      [
+                        { value: '24h', label: t('settings.general.time24h') },
+                        { value: '12h', label: t('settings.general.time12h') },
+                      ].find((o) => o.value === formData.general.timeFormat)?.label ?? t('settings.general.timeFormat')
+                    }
                     options={[
                       { value: '24h', label: t('settings.general.time24h') },
                       { value: '12h', label: t('settings.general.time12h') },
                     ]}
                     value={formData.general.timeFormat}
-                    onChange={(v) => setFormData(prev => ({ ...prev, general: { ...prev.general, timeFormat: v } }))}
+                    onChange={(v) => setFormData((prev) => ({ ...prev, general: { ...prev.general, timeFormat: v } }))}
                     ariaLabel={t('settings.general.timeFormat')}
                   />
                 </FormField>
@@ -719,10 +776,12 @@ export function SettingsPage() {
                 <Switch
                   checked={formData.booking.autoConfirm}
                   aria-label={t('settings.booking.autoConfirmDesc')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    booking: { ...prev.booking, autoConfirm: e.target.checked }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      booking: { ...prev.booking, autoConfirm: e.target.checked },
+                    }))
+                  }
                 >
                   {t('settings.booking.autoConfirmDesc')}
                 </Switch>
@@ -733,10 +792,12 @@ export function SettingsPage() {
                   <Switch
                     checked={formData.booking.requireApproval}
                     aria-label={t('settings.booking.requireApprovalDesc')}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      booking: { ...prev.booking, requireApproval: e.target.checked }
-                    }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        booking: { ...prev.booking, requireApproval: e.target.checked },
+                      }))
+                    }
                   >
                     {t('settings.booking.requireApprovalDesc')}
                   </Switch>
@@ -747,10 +808,12 @@ export function SettingsPage() {
                 <Switch
                   checked={formData.booking.allowCancellation}
                   aria-label={t('settings.booking.allowCancellationDesc')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    booking: { ...prev.booking, allowCancellation: e.target.checked }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      booking: { ...prev.booking, allowCancellation: e.target.checked },
+                    }))
+                  }
                 >
                   {t('settings.booking.allowCancellationDesc')}
                 </Switch>
@@ -761,12 +824,15 @@ export function SettingsPage() {
                   label={t('settings.booking.cancellationDeadline')}
                   description={t('settings.booking.cancellationDeadlineDesc')}
                 >
-                  <Textfield aria-label={t('settings.booking.cancellationDeadline')}
+                  <Textfield
+                    aria-label={t('settings.booking.cancellationDeadline')}
                     value={formData.booking.cancellationDeadlineHours.toString()}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      booking: { ...prev.booking, cancellationDeadlineHours: parseInt(e.target.value) || 0 }
-                    }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        booking: { ...prev.booking, cancellationDeadlineHours: parseInt(e.target.value) || 0 },
+                      }))
+                    }
                     min="0"
                     suffix={t('settings.booking.suffixHours')}
                   />
@@ -777,12 +843,15 @@ export function SettingsPage() {
                 label={t('settings.booking.maxAdvanceBooking')}
                 description={t('settings.booking.maxAdvanceBookingDesc')}
               >
-                <Textfield aria-label={t('settings.booking.maxAdvanceBooking')}
+                <Textfield
+                  aria-label={t('settings.booking.maxAdvanceBooking')}
                   value={formData.booking.maxAdvanceBookingDays.toString()}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    booking: { ...prev.booking, maxAdvanceBookingDays: parseInt(e.target.value) || 0 }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      booking: { ...prev.booking, maxAdvanceBookingDays: parseInt(e.target.value) || 0 },
+                    }))
+                  }
                   min="1"
                   suffix={t('settings.booking.suffixDays')}
                 />
@@ -792,27 +861,30 @@ export function SettingsPage() {
                 label={t('settings.booking.minAdvanceTime')}
                 description={t('settings.booking.minAdvanceTimeDesc')}
               >
-                <Textfield aria-label={t('settings.booking.minAdvanceTime')}
+                <Textfield
+                  aria-label={t('settings.booking.minAdvanceTime')}
                   value={formData.booking.minAdvanceBookingHours.toString()}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    booking: { ...prev.booking, minAdvanceBookingHours: parseInt(e.target.value) || 0 }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      booking: { ...prev.booking, minAdvanceBookingHours: parseInt(e.target.value) || 0 },
+                    }))
+                  }
                   min="0"
                   suffix={t('settings.booking.suffixHours')}
                 />
               </FormField>
 
-              <FormField
-                label={t('settings.booking.bufferTime')}
-                description={t('settings.booking.bufferTimeDesc')}
-              >
-                <Textfield aria-label={t('settings.booking.bufferTime')}
+              <FormField label={t('settings.booking.bufferTime')} description={t('settings.booking.bufferTimeDesc')}>
+                <Textfield
+                  aria-label={t('settings.booking.bufferTime')}
                   value={formData.booking.bufferTimeMinutes.toString()}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    booking: { ...prev.booking, bufferTimeMinutes: parseInt(e.target.value) || 0 }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      booking: { ...prev.booking, bufferTimeMinutes: parseInt(e.target.value) || 0 },
+                    }))
+                  }
                   min="0"
                   suffix={t('settings.booking.suffixMinutes')}
                 />
@@ -847,10 +919,12 @@ export function SettingsPage() {
                 <Switch
                   checked={formData.notifications.emailEnabled}
                   aria-label={t('settings.notifications.emailAlertsDesc')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    notifications: { ...prev.notifications, emailEnabled: e.target.checked }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      notifications: { ...prev.notifications, emailEnabled: e.target.checked },
+                    }))
+                  }
                 >
                   {t('settings.notifications.emailAlertsDesc')}
                 </Switch>
@@ -860,10 +934,12 @@ export function SettingsPage() {
                 <Switch
                   checked={formData.notifications.smsEnabled}
                   aria-label={t('settings.notifications.smsAlertsDesc')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    notifications: { ...prev.notifications, smsEnabled: e.target.checked }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      notifications: { ...prev.notifications, smsEnabled: e.target.checked },
+                    }))
+                  }
                 >
                   {t('settings.notifications.smsAlertsDesc')}
                 </Switch>
@@ -873,10 +949,12 @@ export function SettingsPage() {
                 <Switch
                   checked={formData.notifications.pushEnabled}
                   aria-label={t('settings.notifications.pushAlertsDesc')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    notifications: { ...prev.notifications, pushEnabled: e.target.checked }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      notifications: { ...prev.notifications, pushEnabled: e.target.checked },
+                    }))
+                  }
                 >
                   {t('settings.notifications.pushAlertsDesc')}
                 </Switch>
@@ -892,10 +970,12 @@ export function SettingsPage() {
                     <Switch
                       checked={formData.notifications.bookingConfirmation}
                       aria-label={t('settings.notifications.bookingConfirmationDesc')}
-                      onChange={(e) => setFormData(prev => ({
-                        ...prev,
-                        notifications: { ...prev.notifications, bookingConfirmation: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, bookingConfirmation: e.target.checked },
+                        }))
+                      }
                     >
                       {t('settings.notifications.bookingConfirmationDesc')}
                     </Switch>
@@ -905,10 +985,12 @@ export function SettingsPage() {
                     <Switch
                       checked={formData.notifications.bookingReminder}
                       aria-label={t('settings.notifications.bookingReminderDesc')}
-                      onChange={(e) => setFormData(prev => ({
-                        ...prev,
-                        notifications: { ...prev.notifications, bookingReminder: e.target.checked }
-                      }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, bookingReminder: e.target.checked },
+                        }))
+                      }
                     >
                       {t('settings.notifications.bookingReminderDesc')}
                     </Switch>
@@ -919,12 +1001,18 @@ export function SettingsPage() {
                       label={t('settings.notifications.reminderTiming')}
                       description={t('settings.notifications.reminderTimingDesc')}
                     >
-                      <Textfield aria-label={t('settings.notifications.reminderTiming')}
+                      <Textfield
+                        aria-label={t('settings.notifications.reminderTiming')}
                         value={formData.notifications.reminderHoursBefore.toString()}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          notifications: { ...prev.notifications, reminderHoursBefore: parseInt(e.target.value) || 24 }
-                        }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            notifications: {
+                              ...prev.notifications,
+                              reminderHoursBefore: parseInt(e.target.value) || 24,
+                            },
+                          }))
+                        }
                         min="1"
                         suffix={t('settings.notifications.suffixHoursBefore')}
                       />
@@ -961,7 +1049,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'BankID'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.bankidDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.bankidDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.bankid?.enabled ? (
@@ -980,7 +1070,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'ID-porten'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.idportenDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.idportenDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.idporten?.enabled ? (
@@ -1012,7 +1104,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'Vipps'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.vippsDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.vippsDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.vipps?.enabled ? (
@@ -1044,7 +1138,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'RCO'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.rcoDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.rcoDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.rco?.enabled ? (
@@ -1076,7 +1172,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'Google Calendar'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.googleCalendarDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.googleCalendarDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.googleCalendar?.enabled ? (
@@ -1095,7 +1193,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'Outlook'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.outlookDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.outlookDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.outlook?.enabled ? (
@@ -1127,7 +1227,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{'Visma'}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.vismaDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.vismaDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.visma?.enabled ? (
@@ -1159,7 +1261,9 @@ export function SettingsPage() {
               <Stack direction="horizontal" justify="between" align="center" className={styles.integrationRow}>
                 <div>
                   <div className={styles.integrationName}>{t('settings.integrations.brregName')}</div>
-                  <Paragraph data-size="sm" className={styles.subtleText}>{t('settings.integrations.brregDesc')}</Paragraph>
+                  <Paragraph data-size="sm" className={styles.subtleText}>
+                    {t('settings.integrations.brregDesc')}
+                  </Paragraph>
                 </div>
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-2)">
                   {integrations?.brreg?.enabled ? (
@@ -1193,15 +1297,15 @@ export function SettingsPage() {
             </div>
 
             <Stack spacing={4}>
-              <FormField
-                label={t('settings.branding.logoUrl')}
-                description={t('settings.branding.logoUrlDesc')}
-              >
-                <Textfield aria-label={t('settings.branding.logoUrl')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    branding: { ...prev.branding, logo: e.target.value }
-                  }))}
+              <FormField label={t('settings.branding.logoUrl')} description={t('settings.branding.logoUrlDesc')}>
+                <Textfield
+                  aria-label={t('settings.branding.logoUrl')}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      branding: { ...prev.branding, logo: e.target.value },
+                    }))
+                  }
                   placeholder={t('settings.branding.logoPlaceholder')}
                 />
               </FormField>
@@ -1210,12 +1314,15 @@ export function SettingsPage() {
                 label={t('settings.branding.primaryColor')}
                 description={t('settings.branding.primaryColorDesc')}
               >
-                <Textfield aria-label={t('settings.branding.primaryColor')}
+                <Textfield
+                  aria-label={t('settings.branding.primaryColor')}
                   value={formData.branding.primaryColor || '#1A56DB'}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    branding: { ...prev.branding, primaryColor: e.target.value }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      branding: { ...prev.branding, primaryColor: e.target.value },
+                    }))
+                  }
                 />
               </FormField>
 
@@ -1223,24 +1330,27 @@ export function SettingsPage() {
                 label={t('settings.branding.secondaryColor')}
                 description={t('settings.branding.secondaryColorDesc')}
               >
-                <Textfield aria-label={t('settings.branding.secondaryColor')}
+                <Textfield
+                  aria-label={t('settings.branding.secondaryColor')}
                   value={formData.branding.secondaryColor || '#6B7280'}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    branding: { ...prev.branding, secondaryColor: e.target.value }
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      branding: { ...prev.branding, secondaryColor: e.target.value },
+                    }))
+                  }
                 />
               </FormField>
 
-              <FormField
-                label={t('settings.branding.faviconUrl')}
-                description={t('settings.branding.faviconUrlDesc')}
-              >
-                <Textfield aria-label={t('settings.branding.faviconUrl')}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    branding: { ...prev.branding, favicon: e.target.value }
-                  }))}
+              <FormField label={t('settings.branding.faviconUrl')} description={t('settings.branding.faviconUrlDesc')}>
+                <Textfield
+                  aria-label={t('settings.branding.faviconUrl')}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      branding: { ...prev.branding, favicon: e.target.value },
+                    }))
+                  }
                   placeholder={t('settings.branding.faviconPlaceholder')}
                 />
               </FormField>

@@ -5,7 +5,7 @@
  * Renders logo, optional search, theme toggle, settings. Matches PlatformLayout header slot.
  */
 
-import { HeaderActions, HeaderThemeToggle, HeaderIconButton, SettingsIcon } from '@digilist-saas/ds';
+import { HeaderActions, HeaderThemeToggle, HeaderIconButton, SettingsIcon } from '@digipicks/ds';
 
 export interface PlatformHeaderProps {
   /** Logo / left content */
@@ -54,11 +54,7 @@ export function PlatformHeader({
           gap: 'var(--ds-size-4)',
         }}
       >
-        {logo && (
-          <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-            {logo}
-          </div>
-        )}
+        {logo && <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>{logo}</div>}
 
         {search ? (
           <div
@@ -78,12 +74,7 @@ export function PlatformHeader({
 
         <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
           <HeaderActions spacing="var(--ds-size-3)">
-            {showThemeToggle && onThemeToggle && (
-              <HeaderThemeToggle
-                isDark={isDark}
-                onToggle={onThemeToggle}
-              />
-            )}
+            {showThemeToggle && onThemeToggle && <HeaderThemeToggle isDark={isDark} onToggle={onThemeToggle} />}
             {onSettingsClick && (
               <HeaderIconButton
                 icon={<SettingsIcon size={22} />}

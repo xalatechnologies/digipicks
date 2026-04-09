@@ -7,7 +7,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { LISTING_TYPE_OPTIONS } from '../constants';
-import type { ListingQueryFilters, ListingAdminViewMode } from '@digilist-saas/shared';
+import type { ListingQueryFilters, ListingAdminViewMode } from '@digipicks/shared';
 import type { ListingType } from './use-listings';
 
 export interface UseListingFiltersReturn {
@@ -29,7 +29,7 @@ const DEFAULT_FILTERS: ListingQueryFilters = {
 
 export function useListingFilters(
   initialFilters?: Partial<ListingQueryFilters>,
-  initialViewMode: ListingAdminViewMode = 'table'
+  initialViewMode: ListingAdminViewMode = 'table',
 ): UseListingFiltersReturn {
   const [filters, setFiltersState] = useState<ListingQueryFilters>({
     ...DEFAULT_FILTERS,
@@ -37,10 +37,7 @@ export function useListingFilters(
   });
   const [viewMode, setViewMode] = useState<ListingAdminViewMode>(initialViewMode);
 
-  const setFilter = useCallback(<K extends keyof ListingQueryFilters>(
-    key: K,
-    value: ListingQueryFilters[K]
-  ) => {
+  const setFilter = useCallback(<K extends keyof ListingQueryFilters>(key: K, value: ListingQueryFilters[K]) => {
     setFiltersState((prev: ListingQueryFilters) => ({
       ...prev,
       [key]: value,
@@ -86,7 +83,10 @@ export function useListingFilters(
 }
 
 /** Type tabs configuration — uses SDK LISTING_TYPE_OPTIONS */
-export const TYPE_TABS: Array<{ id: ListingType | 'ALL'; label: string }> = LISTING_TYPE_OPTIONS as Array<{ id: ListingType | 'ALL'; label: string }>;
+export const TYPE_TABS: Array<{ id: ListingType | 'ALL'; label: string }> = LISTING_TYPE_OPTIONS as Array<{
+  id: ListingType | 'ALL';
+  label: string;
+}>;
 
 /** Status filter options (Norwegian) */
 export const STATUS_OPTIONS: Array<{ id: string; label: string }> = [
@@ -97,17 +97,23 @@ export const STATUS_OPTIONS: Array<{ id: string; label: string }> = [
 ];
 
 /** Capacity filter options (Norwegian) */
-export const CAPACITY_OPTIONS: Array<{ id: string; label: string; min: number | undefined; max: number | undefined }> = [
-  { id: 'all', label: 'Alle størrelser', min: undefined, max: undefined },
-  { id: '1-10', label: '1-10 personer', min: 1, max: 10 },
-  { id: '11-25', label: '11-25 personer', min: 11, max: 25 },
-  { id: '26-50', label: '26-50 personer', min: 26, max: 50 },
-  { id: '51-100', label: '51-100 personer', min: 51, max: 100 },
-  { id: '100+', label: 'Over 100 personer', min: 101, max: undefined },
-];
+export const CAPACITY_OPTIONS: Array<{ id: string; label: string; min: number | undefined; max: number | undefined }> =
+  [
+    { id: 'all', label: 'Alle størrelser', min: undefined, max: undefined },
+    { id: '1-10', label: '1-10 personer', min: 1, max: 10 },
+    { id: '11-25', label: '11-25 personer', min: 11, max: 25 },
+    { id: '26-50', label: '26-50 personer', min: 26, max: 50 },
+    { id: '51-100', label: '51-100 personer', min: 51, max: 100 },
+    { id: '100+', label: 'Over 100 personer', min: 101, max: undefined },
+  ];
 
 /** Sort options for listings */
-export const SORT_OPTIONS: Array<{ id: string; label: string; field: ListingQueryFilters['sortBy']; order: ListingQueryFilters['sortOrder'] }> = [
+export const SORT_OPTIONS: Array<{
+  id: string;
+  label: string;
+  field: ListingQueryFilters['sortBy'];
+  order: ListingQueryFilters['sortOrder'];
+}> = [
   { id: 'updated-desc', label: 'Sist oppdatert', field: 'updatedAt', order: 'desc' },
   { id: 'updated-asc', label: 'Eldst oppdatert', field: 'updatedAt', order: 'asc' },
   { id: 'created-desc', label: 'Nyeste først', field: 'createdAt', order: 'desc' },

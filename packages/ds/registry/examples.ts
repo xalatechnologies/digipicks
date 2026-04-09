@@ -1,6 +1,6 @@
 /**
  * Code examples for Designsystemet components and patterns.
- * 
+ *
  * This file contains comprehensive examples showing best practices
  * and common usage patterns for each component.
  */
@@ -28,7 +28,7 @@ export const componentExamples: CodeExample[] = [
     id: 'button-basic',
     title: 'Basic Button',
     description: 'Primary action button with default styling.',
-    code: `import { Button } from '@digilist-saas/ds';
+    code: `import { Button } from '@digipicks/ds';
 
 export function Example() {
   return <Button>Save changes</Button>;
@@ -40,7 +40,7 @@ export function Example() {
     id: 'button-variants',
     title: 'Button Variants',
     description: 'Different button styles for various contexts.',
-    code: `import { Button } from '@digilist-saas/ds';
+    code: `import { Button } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -58,7 +58,7 @@ export function Example() {
     id: 'button-aschild',
     title: 'Button as Link',
     description: 'Render button as an anchor element using asChild.',
-    code: `import { Button } from '@digilist-saas/ds';
+    code: `import { Button } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -74,7 +74,7 @@ export function Example() {
     id: 'button-loading',
     title: 'Loading Button',
     description: 'Button with loading state and spinner.',
-    code: `import { Button, Spinner } from '@digilist-saas/ds';
+    code: `import { Button, Spinner } from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -101,7 +101,7 @@ export function Example() {
     id: 'input-basic',
     title: 'Basic Input',
     description: 'Standard text input with placeholder.',
-    code: `import { Input } from '@digilist-saas/ds';
+    code: `import { Input } from '@digipicks/ds';
 
 export function Example() {
   return <Input placeholder="Enter your name" />;
@@ -113,7 +113,7 @@ export function Example() {
     id: 'input-with-field',
     title: 'Input with Field',
     description: 'Input with label, description, and error handling.',
-    code: `import { Field, Input } from '@digilist-saas/ds';
+    code: `import { Field, Input } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -138,7 +138,7 @@ export function Example() {
     id: 'input-validation',
     title: 'Input Validation',
     description: 'Real-time validation with error states.',
-    code: `import { Field, Input } from '@digilist-saas/ds';
+    code: `import { Field, Input } from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -179,7 +179,7 @@ export function Example() {
     id: 'select-basic',
     title: 'Basic Select',
     description: 'Dropdown selection with options.',
-    code: `import { Select } from '@digilist-saas/ds';
+    code: `import { Select } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -198,7 +198,7 @@ export function Example() {
     id: 'select-with-field',
     title: 'Select with Field',
     description: 'Select with proper labeling and description.',
-    code: `import { Field, Select } from '@digilist-saas/ds';
+    code: `import { Field, Select } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -225,7 +225,7 @@ export function Example() {
     id: 'checkbox-basic',
     title: 'Basic Checkbox',
     description: 'Single checkbox for binary choice.',
-    code: `import { Checkbox } from '@digilist-saas/ds';
+    code: `import { Checkbox } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -241,7 +241,7 @@ export function Example() {
     id: 'checkbox-group',
     title: 'Checkbox Group',
     description: 'Multiple checkboxes for multi-select.',
-    code: `import { Fieldset, Checkbox, Field } from '@digilist-saas/ds';
+    code: `import { Fieldset, Checkbox, Field } from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -300,7 +300,7 @@ export function Example() {
     id: 'radio-group',
     title: 'Radio Group',
     description: 'Radio buttons for single selection.',
-    code: `import { Fieldset, Radio, Field } from '@digilist-saas/ds';
+    code: `import { Fieldset, Radio, Field } from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -351,7 +351,7 @@ export function Example() {
     id: 'alert-variants',
     title: 'Alert Variants',
     description: 'Different alert types for various messages.',
-    code: `import { Alert } from '@digilist-saas/ds';
+    code: `import { Alert } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -380,7 +380,7 @@ export function Example() {
     id: 'card-basic',
     title: 'Basic Card',
     description: 'Simple card with content and actions.',
-    code: `import { Card, Button, Text } from '@digilist-saas/ds';
+    code: `import { Card, Button, Text } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -409,7 +409,7 @@ export function Example() {
     id: 'table-basic',
     title: 'Basic Table',
     description: 'Data table with headers and rows.',
-    code: `import { Table } from '@digilist-saas/ds';
+    code: `import { Table } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -445,7 +445,7 @@ export function Example() {
     id: 'tabs-basic',
     title: 'Basic Tabs',
     description: 'Tabbed interface for content organization.',
-    code: `import { Tabs } from '@digilist-saas/ds';
+    code: `import { Tabs } from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -482,7 +482,7 @@ export function Example() {
     id: 'dialog-basic',
     title: 'Basic Dialog',
     description: 'Modal dialog with title and actions.',
-    code: `import { Dialog, Button } from '@digilist-saas/ds';
+    code: `import { Dialog, Button } from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -521,7 +521,7 @@ export function Example() {
     id: 'avatar-variants',
     title: 'Avatar Variants',
     description: 'Different avatar styles and sizes.',
-    code: `import { Avatar } from '@digilist-saas/ds';
+    code: `import { Avatar } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -546,7 +546,7 @@ export function Example() {
     id: 'badge-variants',
     title: 'Badge Variants',
     description: 'Different badge styles and colors.',
-    code: `import { Badge } from '@digilist-saas/ds';
+    code: `import { Badge } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -567,7 +567,7 @@ export function Example() {
     id: 'skeleton-loading',
     title: 'Skeleton Loading',
     description: 'Loading placeholders for content.',
-    code: `import { Skeleton, Card } from '@digilist-saas/ds';
+    code: `import { Skeleton, Card } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -590,7 +590,7 @@ export function Example() {
     id: 'tooltip-basic',
     title: 'Basic Tooltip',
     description: 'Tooltip with hover text.',
-    code: `import { Tooltip, Button } from '@digilist-saas/ds';
+    code: `import { Tooltip, Button } from '@digipicks/ds';
 
 export function Example() {
   return (
@@ -617,7 +617,7 @@ export const patternExamples: CodeExample[] = [
   Input, 
   ErrorSummary,
   Checkbox 
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import { useState } from 'react';
 
 export function Example() {
@@ -741,7 +741,7 @@ export function Example() {
     id: 'search-autocomplete',
     title: 'Search with Autocomplete',
     description: 'Search input with categorized suggestions.',
-    code: `import { Search, Suggestion, Divider } from '@digilist-saas/ds';
+    code: `import { Search, Suggestion, Divider } from '@digipicks/ds';
 import { useState, useEffect } from 'react';
 
 const mockSuggestions = [
@@ -823,7 +823,7 @@ export function Example() {
   Badge, 
   Pagination,
   Search 
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import { useState } from 'react';
 
 const mockData = [
@@ -908,11 +908,9 @@ export function getAllExamples(): CodeExample[] {
 }
 
 export function getExamplesByComponent(componentId: string): CodeExample[] {
-  return getAllExamples().filter(example => example.component === componentId);
+  return getAllExamples().filter((example) => example.component === componentId);
 }
 
 export function getExamplesByTag(tag: string): CodeExample[] {
-  return getAllExamples().filter(example => 
-    example.tags?.includes(tag)
-  );
+  return getAllExamples().filter((example) => example.tags?.includes(tag));
 }

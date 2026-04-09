@@ -6,10 +6,10 @@
  * using the PushNotificationPrompt from the DS and SDK subscription hooks.
  */
 import { useState, useEffect, useCallback } from 'react';
-import { PushNotificationPrompt } from '@digilist-saas/ds';
-import { usePushPermission, usePushSubscriptionFlow } from '@digilist-saas/sdk';
-import { useAuth } from '@digilist-saas/app-shell';
-import { env } from '@digilist-saas/app-shell';
+import { PushNotificationPrompt } from '@digipicks/ds';
+import { usePushPermission, usePushSubscriptionFlow } from '@digipicks/sdk';
+import { useAuth } from '@digipicks/app-shell';
+import { env } from '@digipicks/app-shell';
 
 const DISMISSED_KEY = 'digipicks_push_prompt_dismissed';
 const PROMPT_DELAY_MS = 5000; // Show after 5 seconds of engagement

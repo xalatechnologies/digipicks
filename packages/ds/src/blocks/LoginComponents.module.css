@@ -62,11 +62,11 @@
 }
 
 .featureItemTitleLight {
-  color: var(--ds-color-accent-base-contrast-default);
+  color: var(--ds-color-accent-base-contrast-default) !important;
 }
 
 .featureItemTitleDark {
-  color: var(--ds-color-neutral-text-default);
+  color: var(--ds-color-neutral-text-default) !important;
 }
 
 .featureItemDescription {
@@ -75,11 +75,11 @@
 }
 
 .featureItemDescriptionLight {
-  color: var(--ds-color-accent-base-contrast-subtle);
+  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 85%, transparent) !important;
 }
 
 .featureItemDescriptionDark {
-  color: var(--ds-color-neutral-text-subtle);
+  color: var(--ds-color-neutral-text-subtle) !important;
 }
 
 .featureItemDescriptionSize {
@@ -121,7 +121,9 @@
   border-radius: var(--digilist-radius-md, 8px);
   background: var(--ds-color-neutral-surface-default);
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
   color: inherit;
 }
 
@@ -400,7 +402,7 @@
 }
 
 .loginPanelEyebrow {
-  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 70%, transparent);
+  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 80%, transparent) !important;
   text-transform: uppercase;
   letter-spacing: var(--ds-letter-spacing-wider, 0.1em);
   font-weight: var(--ds-font-weight-medium);
@@ -408,13 +410,13 @@
 }
 
 .loginPanelTitle {
-  color: var(--ds-color-accent-base-contrast-default);
+  color: var(--ds-color-accent-base-contrast-default) !important;
   margin-bottom: var(--ds-size-3);
   line-height: var(--ds-line-height-condensed);
 }
 
 .loginPanelDescription {
-  color: var(--ds-color-accent-base-contrast-subtle);
+  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 90%, transparent) !important;
   line-height: 1.6;
 }
 
@@ -426,7 +428,7 @@
 }
 
 .loginIntegrationsLabel {
-  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 60%, transparent);
+  color: color-mix(in srgb, var(--ds-color-accent-base-contrast-default) 80%, transparent) !important;
   margin-bottom: var(--ds-size-2);
   text-transform: uppercase;
   letter-spacing: var(--ds-letter-spacing-wide, 0.05em);

@@ -2,7 +2,7 @@
  * Designsystemet Component Registry
  *
  * This registry provides comprehensive documentation, examples, and guidelines
- * for all Designsystemet components available through @digilist-saas/ds.
+ * for all Designsystemet components available through @digipicks/ds.
  *
  * Two access methods are available:
  * 1. TypeScript-based registry (complex, fully typed)
@@ -11,7 +11,7 @@
  * @example
  * ```typescript
  * // Simple JSON registry (recommended)
- * import { components, patterns, examples } from '@digilist-saas/ds/registry';
+ * import { components, patterns, examples } from '@digipicks/ds/registry';
  *
  * // Get component info
  * const buttonInfo = components.button;
@@ -32,13 +32,7 @@ export * as tsGuidelines from './guidelines';
 export * as providers from './providers';
 
 // Gazetteer and gatekeeper — for AI agents and tooling
-export {
-  GAZETTEER_INDEX,
-  resolveNeed,
-  PROHIBITIONS,
-  REQUIREMENTS,
-  DECISION_FLOWS,
-} from './gazetteer';
+export { GAZETTEER_INDEX, resolveNeed, PROHIBITIONS, REQUIREMENTS, DECISION_FLOWS } from './gazetteer';
 
 // Legacy exports for backward compatibility
 export type { CodeExample as RegistryExample } from './examples';

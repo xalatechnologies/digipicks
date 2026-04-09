@@ -13,11 +13,8 @@
  * </FeatureGate>
  */
 
-import {
-  useSessionTenantId,
-  useTenantFeatureFlags,
-} from "@digilist-saas/sdk";
-import { MODULE_IDS, type ModuleId } from "@digilist-saas/sdk";
+import { useSessionTenantId, useTenantFeatureFlags } from '@digipicks/sdk';
+import { MODULE_IDS, type ModuleId } from '@digipicks/sdk';
 
 export type { ModuleId };
 export { MODULE_IDS };
@@ -36,14 +33,9 @@ export interface UseFeatureModuleResult {
  * When tenantId is missing (logged out), returns isEnabled: false.
  * When loading, returns isEnabled: true by default to avoid hiding content prematurely.
  */
-export function useFeatureModule(
-  moduleId: ModuleId | string,
-  options?: { appId?: string }
-): UseFeatureModuleResult {
+export function useFeatureModule(moduleId: ModuleId | string, options?: { appId?: string }): UseFeatureModuleResult {
   const tenantId = useSessionTenantId(options?.appId);
-  const { isModuleEnabled, isLoading, isSkipped } = useTenantFeatureFlags(
-    tenantId ?? undefined
-  );
+  const { isModuleEnabled, isLoading, isSkipped } = useTenantFeatureFlags(tenantId ?? undefined);
 
   return {
     isEnabled: !isSkipped && isModuleEnabled(moduleId),

@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, useContext } from 'react';
-import { useAccessibilityMonitoring, type AccessibilityMonitoringAPI } from '@digilist-saas/sdk';
+import { useAccessibilityMonitoring, type AccessibilityMonitoringAPI } from '@digipicks/sdk';
 
 const AccessibilityMonitoringContext = createContext<AccessibilityMonitoringAPI | null>(null);
 
@@ -32,9 +32,7 @@ export function AccessibilityMonitoringProvider({
   });
 
   return (
-    <AccessibilityMonitoringContext.Provider value={monitoring}>
-      {children}
-    </AccessibilityMonitoringContext.Provider>
+    <AccessibilityMonitoringContext.Provider value={monitoring}>{children}</AccessibilityMonitoringContext.Provider>
   );
 }
 
@@ -45,9 +43,7 @@ export function useAccessibilityMonitoringContext(): AccessibilityMonitoringAPI 
   const context = useContext(AccessibilityMonitoringContext);
 
   if (!context) {
-    throw new Error(
-      'useAccessibilityMonitoringContext must be used within AccessibilityMonitoringProvider'
-    );
+    throw new Error('useAccessibilityMonitoringContext must be used within AccessibilityMonitoringProvider');
   }
 
   return context;

@@ -23,17 +23,17 @@ import {
   DashboardPageHeader,
   PageContentLayout,
   useDialog,
-} from '@digilist-saas/ds';
-import type { NotificationItemData } from '@digilist-saas/ds';
+} from '@digipicks/ds';
+import type { NotificationItemData } from '@digipicks/ds';
 import {
   useMyNotifications,
   useMarkNotificationRead,
   useMarkAllNotificationsRead,
   useDeleteNotification,
-} from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
-import { useAuthBridge, transformNotificationsToDS, formatTimeAgo } from '@digilist-saas/app-shell';
+} from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
+import { useAuthBridge, transformNotificationsToDS, formatTimeAgo } from '@digipicks/app-shell';
 import styles from './notifications.module.css';
 
 type FilterTab = 'all' | 'unread';
@@ -43,7 +43,7 @@ export function NotificationsPage() {
   const navigate = useNavigate();
   const { user } = useAuthBridge();
   const { confirm } = useDialog();
-  const userId = user?.id as Id<"users"> | undefined;
+  const userId = user?.id as Id<'users'> | undefined;
 
   const [filter, setFilter] = useState<FilterTab>('all');
 
@@ -54,36 +54,39 @@ export function NotificationsPage() {
   const deleteNotification = useDeleteNotification();
 
   // Transform to DS format
-  const allItems = useMemo(
-    () => transformNotificationsToDS(notifications),
-    [notifications],
-  );
+  const allItems = useMemo(() => transformNotificationsToDS(notifications), [notifications]);
 
   const filteredItems = useMemo(
-    () => filter === 'unread' ? allItems.filter(n => !n.readAt) : allItems,
+    () => (filter === 'unread' ? allItems.filter((n) => !n.readAt) : allItems),
     [allItems, filter],
   );
 
-  const unreadCount = useMemo(
-    () => allItems.filter(n => !n.readAt).length,
-    [allItems],
+  const unreadCount = useMemo(() => allItems.filter((n) => !n.readAt).length, [allItems]);
+
+  const handleClick = useCallback(
+    (id: string) => {
+      markRead.mutate({ id: id as Id<'notifications'> });
+      const original = notifications.find((n) => n.id === id);
+      if (original?.actionUrl) {
+        navigate(original.actionUrl);
+      }
+    },
+    [markRead, notifications, navigate],
   );
 
-  const handleClick = useCallback((id: string) => {
-    markRead.mutate({ id: id as Id<"notifications"> });
-    const original = notifications.find(n => n.id === id);
-    if (original?.actionUrl) {
-      navigate(original.actionUrl);
-    }
-  }, [markRead, notifications, navigate]);
+  const handleMarkAsRead = useCallback(
+    (id: string) => {
+      markRead.mutate({ id: id as Id<'notifications'> });
+    },
+    [markRead],
+  );
 
-  const handleMarkAsRead = useCallback((id: string) => {
-    markRead.mutate({ id: id as Id<"notifications"> });
-  }, [markRead]);
-
-  const handleDelete = useCallback((id: string) => {
-    deleteNotification.mutate({ id: id as Id<"notifications"> });
-  }, [deleteNotification]);
+  const handleDelete = useCallback(
+    (id: string) => {
+      deleteNotification.mutate({ id: id as Id<'notifications'> });
+    },
+    [deleteNotification],
+  );
 
   const handleMarkAllAsRead = useCallback(() => {
     if (userId) {
@@ -101,7 +104,7 @@ export function NotificationsPage() {
     });
     if (confirmed) {
       for (const n of notifications) {
-        deleteNotification.mutate({ id: n.id as Id<"notifications"> });
+        deleteNotification.mutate({ id: n.id as Id<'notifications'> });
       }
     }
   };
@@ -114,22 +117,12 @@ export function NotificationsPage() {
         actions={
           <Stack direction="horizontal" spacing="var(--ds-size-2)" align="center">
             {unreadCount > 0 && (
-              <Button
-                type="button"
-                variant="tertiary"
-                data-size="sm"
-                onClick={handleMarkAllAsRead}
-              >
+              <Button type="button" variant="tertiary" data-size="sm" onClick={handleMarkAllAsRead}>
                 {t('notifications.markAllRead')}
               </Button>
             )}
             {notifications.length > 0 && (
-              <Button
-                type="button"
-                variant="tertiary"
-                data-size="sm"
-                onClick={handleClearAll}
-              >
+              <Button type="button" variant="tertiary" data-size="sm" onClick={handleClearAll}>
                 {t('notifications.clear')}
               </Button>
             )}

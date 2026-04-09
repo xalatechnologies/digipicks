@@ -5,19 +5,9 @@
  */
 
 import React from 'react';
-import {
-  SearchIcon,
-  CalendarIcon,
-  BuildingIcon,
-  SportIcon,
-  ShoppingCartIcon,
-} from '@digilist-saas/ds';
-import type { SearchResultItem, SearchResultGroup } from '@digilist-saas/ds';
-import type {
-  SearchResponse,
-  CategorySuggestion,
-  IntentSuggestion,
-} from '@digilist-saas/sdk';
+import { SearchIcon, CalendarIcon, BuildingIcon, SportIcon, ShoppingCartIcon } from '@digipicks/ds';
+import type { SearchResultItem, SearchResultGroup } from '@digipicks/ds';
+import type { SearchResponse, CategorySuggestion, IntentSuggestion } from '@digipicks/sdk';
 
 export function getCategoryIcon(categoryKey?: string): React.ReactNode {
   switch (categoryKey) {
@@ -34,10 +24,7 @@ export function getCategoryIcon(categoryKey?: string): React.ReactNode {
   }
 }
 
-export function getCategoryLabel(
-  categoryKey: string,
-  t?: (key: string, fallback?: string) => string
-): string {
+export function getCategoryLabel(categoryKey: string, t?: (key: string, fallback?: string) => string): string {
   const fallbacks: Record<string, string> = {
     LOKALER: 'Lokaler',
     SPORT: 'Sport',
@@ -56,25 +43,19 @@ const LABELS = {
 
 export type TranslateFn = (key: string, fallback?: string) => string;
 
-export function searchResponseToGroups(
-  searchData: SearchResponse | null,
-  t?: TranslateFn
-): SearchResultGroup[] {
+export function searchResponseToGroups(searchData: SearchResponse | null, t?: TranslateFn): SearchResultGroup[] {
   const groups: SearchResultGroup[] = [];
-  const label = (key: string, fallback: string) =>
-    t ? t(key, fallback) : fallback;
+  const label = (key: string, fallback: string) => (t ? t(key, fallback) : fallback);
 
   // Intent suggestions first (e.g., "Find available times")
   if (searchData?.intentSuggestions && searchData.intentSuggestions.length > 0) {
-    const intentItems: SearchResultItem[] = searchData.intentSuggestions.map(
-      (intent: IntentSuggestion) => ({
-        id: `intent:${intent.key}`,
-        label: intent.label,
-        description: intent.description,
-        icon: getCategoryIcon(intent.category),
-        meta: '✨',
-      })
-    );
+    const intentItems: SearchResultItem[] = searchData.intentSuggestions.map((intent: IntentSuggestion) => ({
+      id: `intent:${intent.key}`,
+      label: intent.label,
+      description: intent.description,
+      icon: getCategoryIcon(intent.category),
+      meta: '✨',
+    }));
     groups.push({
       id: 'INTENTS',
       label: label('common.quickActions', LABELS.quickActions),
@@ -84,15 +65,13 @@ export function searchResponseToGroups(
 
   // Popular searches
   if (searchData?.popularSuggestions && searchData.popularSuggestions.length > 0) {
-    const popularItems: SearchResultItem[] = searchData.popularSuggestions.map(
-      (pop: IntentSuggestion) => ({
-        id: `popular:${pop.key}`,
-        label: pop.label,
-        description: pop.description,
-        icon: getCategoryIcon(pop.category),
-        meta: '🔥',
-      })
-    );
+    const popularItems: SearchResultItem[] = searchData.popularSuggestions.map((pop: IntentSuggestion) => ({
+      id: `popular:${pop.key}`,
+      label: pop.label,
+      description: pop.description,
+      icon: getCategoryIcon(pop.category),
+      meta: '🔥',
+    }));
     groups.push({
       id: 'POPULAR',
       label: label('common.popularSearches', LABELS.popularSearches),
@@ -102,15 +81,13 @@ export function searchResponseToGroups(
 
   // Category suggestions
   if (searchData?.categorySuggestions && searchData.categorySuggestions.length > 0) {
-    const categoryItems: SearchResultItem[] = searchData.categorySuggestions.map(
-      (cat: CategorySuggestion) => ({
-        id: `category:${cat.key}`,
-        label: cat.name,
-        description: cat.description,
-        icon: getCategoryIcon(cat.key),
-        meta: cat.resourceCount ? `${cat.resourceCount} annonser` : undefined,
-      })
-    );
+    const categoryItems: SearchResultItem[] = searchData.categorySuggestions.map((cat: CategorySuggestion) => ({
+      id: `category:${cat.key}`,
+      label: cat.name,
+      description: cat.description,
+      icon: getCategoryIcon(cat.key),
+      meta: cat.resourceCount ? `${cat.resourceCount} annonser` : undefined,
+    }));
     groups.push({
       id: 'CATEGORIES',
       label: label('common.categories', LABELS.categories),

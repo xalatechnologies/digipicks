@@ -49,13 +49,27 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         { id: string },
         Name
       >;
+      createCreatorAccount: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          status?: string;
+          stripeAccountId: string;
+          tenantId: string;
+          userId: string;
+        },
+        { id: string },
+        Name
+      >;
       createMembership: FunctionReference<
         "mutation",
         "internal",
         {
           autoRenew?: boolean;
+          creatorId?: string;
           endDate: number;
           enrollmentChannel?: string;
+          lastPaymentDate?: number;
           memberNumber?: string;
           metadata?: any;
           nextBillingDate?: number;
@@ -63,8 +77,12 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           presaleAccessGranted?: boolean;
           startDate: number;
           status?: string;
+          stripeCustomerId?: string;
+          stripeSubscriptionId?: string;
           tenantId: string;
           tierId: string;
+          trialEndDate?: number;
+          trialStartDate?: number;
           userId: string;
         },
         { id: string },
@@ -97,10 +115,26 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           shortDescription?: string;
           slug: string;
           sortOrder?: number;
+          stripePriceId?: string;
+          stripeProductId?: string;
           tenantId: string;
           trialDays?: number;
         },
         { id: string },
+        Name
+      >;
+      getCreatorAccount: FunctionReference<
+        "query",
+        "internal",
+        { userId: string },
+        any,
+        Name
+      >;
+      getCreatorAccountByStripeId: FunctionReference<
+        "query",
+        "internal",
+        { stripeAccountId: string },
+        any,
         Name
       >;
       getMembership: FunctionReference<
@@ -110,10 +144,24 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         any,
         Name
       >;
+      getMembershipByStripeSubscription: FunctionReference<
+        "query",
+        "internal",
+        { stripeSubscriptionId: string },
+        any,
+        Name
+      >;
       getMembershipByUser: FunctionReference<
         "query",
         "internal",
         { userId: string },
+        any,
+        Name
+      >;
+      getMembershipByUserAndCreator: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
         any,
         Name
       >;
@@ -138,6 +186,20 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         any,
         Name
       >;
+      getTrialStatus: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
+        any,
+        Name
+      >;
+      getUserCreatorSubscription: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; userId: string },
+        any,
+        Name
+      >;
       listBenefitUsage: FunctionReference<
         "query",
         "internal",
@@ -145,7 +207,21 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         Array<any>,
         Name
       >;
+      listCreatorSubscribers: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; status?: string },
+        Array<any>,
+        Name
+      >;
       listDueForRenewal: FunctionReference<
+        "query",
+        "internal",
+        { beforeDate: number },
+        Array<any>,
+        Name
+      >;
+      listExpiringTrials: FunctionReference<
         "query",
         "internal",
         { beforeDate: number },
@@ -161,8 +237,16 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           status?: string;
           tenantId: string;
           tierId?: string;
+          userId?: string;
         },
         any,
+        Name
+      >;
+      listMembershipsByCreatorIds: FunctionReference<
+        "query",
+        "internal",
+        { creatorIds: Array<string>; userId: string },
+        Array<any>,
         Name
       >;
       listTiers: FunctionReference<
@@ -172,12 +256,27 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         Array<any>,
         Name
       >;
+      updateCreatorAccount: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          chargesEnabled?: boolean;
+          detailsSubmitted?: boolean;
+          id: string;
+          metadata?: any;
+          payoutsEnabled?: boolean;
+          status?: string;
+        },
+        { success: boolean },
+        Name
+      >;
       updateMembership: FunctionReference<
         "mutation",
         "internal",
         {
           autoRenew?: boolean;
           benefitsUsedThisPeriod?: any;
+          convertedFromTrial?: boolean;
           endDate?: number;
           failedPaymentCount?: number;
           id: string;
@@ -235,6 +334,8 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           shortDescription?: string;
           slug?: string;
           sortOrder?: number;
+          stripePriceId?: string;
+          stripeProductId?: string;
           trialDays?: number;
         },
         { success: boolean },

@@ -1,5 +1,5 @@
 /**
- * @digilist-saas/shared - Types Index
+ * @digipicks/shared - Types Index
  *
  * Central export for all shared types.
  */

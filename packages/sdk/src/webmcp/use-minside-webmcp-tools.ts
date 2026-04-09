@@ -10,7 +10,7 @@
  *
  * @example
  * ```tsx
- * import { useMinsideWebMCPTools } from '@digilist-saas/sdk';
+ * import { useMinsideWebMCPTools } from '@digipicks/sdk';
  *
  * function MinsideLayout() {
  *   useMinsideWebMCPTools();

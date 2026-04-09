@@ -84,11 +84,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@digilist-saas/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
+      '@digipicks/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
     },
   },
   optimizeDeps: {
-    exclude: ['@digilist-saas/sdk'],
+    exclude: ['@digipicks/sdk'],
   },
   build: {
     sourcemap: true, // Generate source maps for production builds

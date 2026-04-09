@@ -15,7 +15,7 @@ import {
   type RealtimeEvent,
   type RealtimeEventType,
   type RealtimeEventHandler,
-} from '@digilist-saas/sdk';
+} from '@digipicks/sdk';
 import { env } from '../env';
 import { RealtimeContextProvider } from './RealtimeContext';
 import type { RealtimeContextValue } from './RealtimeContext';
@@ -96,7 +96,7 @@ export function RealtimeProvider({
     // Track all events for debugging/display
     const unsubAll = realtimeClient.onAll((event: RealtimeEvent) => {
       if (event.type !== 'pong') {
-        setLastEvents(prev => {
+        setLastEvents((prev) => {
           const next = new Map(prev);
           next.set(event.type as RealtimeEventType, event);
           return next;
@@ -113,13 +113,13 @@ export function RealtimeProvider({
       return () => {
         clearTimeout(timer);
         // Cleanup all subscriptions
-        unsubscribesRef.current.forEach(unsub => unsub());
+        unsubscribesRef.current.forEach((unsub) => unsub());
         unsubscribesRef.current = [];
       };
     }
 
     return () => {
-      unsubscribesRef.current.forEach(unsub => unsub());
+      unsubscribesRef.current.forEach((unsub) => unsub());
       unsubscribesRef.current = [];
     };
   }, [autoConnect, connect]);

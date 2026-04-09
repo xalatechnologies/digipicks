@@ -6,9 +6,9 @@
  */
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Stack, Spinner, Button, Heading, Paragraph, Card } from '@digilist-saas/ds';
-import { useMagicLink } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+import { Stack, Spinner, Button, Heading, Paragraph, Card } from '@digipicks/ds';
+import { useMagicLink } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 
 const pageStyle = {
   minHeight: '100vh',
@@ -61,10 +61,12 @@ export function MagicLinkCallbackPage() {
               {t('web.magicLink.invalidLink')}
             </Heading>
             <Stack direction="vertical" spacing="var(--ds-size-6)" align="center">
-              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{error}</Paragraph>
-            <Button variant="primary" asChild>
-              <a href="/login">{t('web.magicLink.backToLogin')}</a>
-            </Button>
+              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                {error}
+              </Paragraph>
+              <Button variant="primary" asChild>
+                <a href="/login">{t('web.magicLink.backToLogin')}</a>
+              </Button>
             </Stack>
           </Stack>
         </Card>
@@ -78,7 +80,9 @@ export function MagicLinkCallbackPage() {
         <Card style={cardStyle}>
           <Stack direction="vertical" align="center" spacing="var(--ds-size-4)">
             <Spinner aria-label={t('web.magicLink.verifying')} />
-            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{t('web.magicLink.verifyingLink')}</Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {t('web.magicLink.verifyingLink')}
+            </Paragraph>
           </Stack>
         </Card>
       </Stack>

@@ -5,15 +5,8 @@
  * Used by web, minside, and other Digilist apps.
  */
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from 'react';
-import { THEME_STORAGE_KEY } from '@digilist-saas/shared/constants';
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { THEME_STORAGE_KEY } from '@digipicks/shared/constants';
 
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
@@ -52,10 +45,7 @@ export interface ThemeProviderProps {
  * </ThemeProvider>
  * ```
  */
-export function ThemeProvider({
-  children,
-  storageKey = THEME_STORAGE_KEY,
-}: ThemeProviderProps): React.ReactElement {
+export function ThemeProvider({ children, storageKey = THEME_STORAGE_KEY }: ThemeProviderProps): React.ReactElement {
   const [colorScheme, setColorSchemeState] = useState<ColorScheme>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(storageKey);
@@ -94,7 +84,7 @@ export function ThemeProvider({
         localStorage.setItem(storageKey, scheme);
       }
     },
-    [storageKey]
+    [storageKey],
   );
 
   const resetToAuto = useCallback(() => {

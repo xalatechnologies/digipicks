@@ -32,14 +32,14 @@ import {
   FilterToolbar,
   DashboardPageHeader,
   PageContentLayout,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useSessionTenantId } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useSessionTenantId } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './${v.cssFileName}.module.css';
 
-// TODO: Import SDK hook (e.g. use${v.pascalPlural} from '@digilist-saas/sdk')
+// TODO: Import SDK hook (e.g. use${v.pascalPlural} from '@digipicks/sdk')
 
 // TODO: Define entity type (or import from SDK)
 interface ${v.pascal} {
@@ -191,9 +191,9 @@ import {
   BackButton,
   PageContentLayout,
   ErrorState,
-} from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useT } from '@digipicks/i18n';
 import styles from './${cssFileName}.module.css';
 
 export function ${pascal}DetailPage() {
@@ -264,10 +264,10 @@ import {
   BackButton,
   PageContentLayout,
   ErrorState,
-} from '@digilist-saas/ds';
-import { useSetPageTitle } from '@digilist-saas/app-shell';
-import { useSessionTenantId } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useSetPageTitle } from '@digipicks/app-shell';
+import { useSessionTenantId } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './${cssFileName}.module.css';
 
 export function ${pascal}FormPage() {

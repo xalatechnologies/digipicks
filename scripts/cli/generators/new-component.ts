@@ -1,7 +1,7 @@
 /**
  * Generator: xala new component <name>
  *
- * Creates a new @digilist-saas/ds design system component.
+ * Creates a new @digipicks/ds design system component.
  */
 
 import { FileWriter, printManualStep, printSuccess, printHeader } from '../lib/fs-helpers';
@@ -26,7 +26,9 @@ export async function newComponent(args: string[], flags: Record<string, string 
   const rootClass = hasStyles ? `className={styles.root}` : '';
 
   // Component file
-  writer.create(`${base}/${pascal}.tsx`, `/**
+  writer.create(
+    `${base}/${pascal}.tsx`,
+    `/**
  * ${pascal}
  *
  * ${description}
@@ -49,24 +51,33 @@ export function ${pascal}({ children, className, ...rest }: ${pascal}Props) {
         </div>
     );
 }
-`);
+`,
+  );
 
   // CSS module
   if (hasStyles) {
-    writer.create(`${base}/${pascal}.module.css`, `.root {
+    writer.create(
+      `${base}/${pascal}.module.css`,
+      `.root {
     /* Use --ds-* design tokens for all values */
 }
-`);
+`,
+    );
   }
 
   // Append to level index.ts
-  writer.append(`${base}/index.ts`, `\nexport { ${pascal} } from './${pascal}';\nexport type { ${pascal}Props } from './${pascal}';\n`);
+  writer.append(
+    `${base}/index.ts`,
+    `\nexport { ${pascal} } from './${pascal}';\nexport type { ${pascal}Props } from './${pascal}';\n`,
+  );
 
   await writer.execute();
   writer.printSummary();
 
-  printManualStep(`Verify the re-export in packages/ds/src/index.ts.`,
-    `The ${level}/index.ts is already re-exported via "export * from './${level}';" in the main index.`);
+  printManualStep(
+    `Verify the re-export in packages/ds/src/index.ts.`,
+    `The ${level}/index.ts is already re-exported via "export * from './${level}';" in the main index.`,
+  );
 
   printSuccess(`DS component "${pascal}" created in ${level}/.`);
 }

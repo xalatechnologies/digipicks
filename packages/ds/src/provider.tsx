@@ -8,7 +8,7 @@
  *
  * @example
  * ```tsx
- * import { DesignsystemetProvider } from '@digilist-saas/ds';
+ * import { DesignsystemetProvider } from '@digipicks/ds';
  *
  * function App() {
  *   return (
@@ -64,11 +64,7 @@ function ThemeTransitionOverlay({ isVisible }: { isVisible: boolean }) {
           to { transform: rotate(360deg); }
         }
       `}</style>
-      <div
-        style={isVisible ? overlayVisibleStyles : overlayStyles}
-        aria-hidden="true"
-        data-theme-transition-overlay
-      >
+      <div style={isVisible ? overlayVisibleStyles : overlayStyles} aria-hidden="true" data-theme-transition-overlay>
         <div style={spinnerStyles} />
       </div>
     </>
@@ -210,11 +206,7 @@ export function DesignsystemetProvider({
   }, [theme, colorScheme, size, typography, skipThemeLoading]);
 
   return (
-    <Root
-      data-color-scheme={colorScheme}
-      data-size={size}
-      data-typography={typography}
-    >
+    <Root data-color-scheme={colorScheme} data-size={size} data-typography={typography}>
       <ThemeTransitionOverlay isVisible={isTransitioning} />
       {children}
     </Root>

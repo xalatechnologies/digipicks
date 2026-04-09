@@ -6,21 +6,21 @@ Backoffice cleanup is phased per `docs/THIN_APPS_CLEANUP_PLAN.md`.
 
 ## Phase A — Completed ✅
 
-| Item | Action |
-|------|--------|
-| **components/SentryTestComponent** | Removed — unused |
-| **components/shared/** | Simplified — FormSection, FormActions, InfoBox re-export from @digilist-saas/ds |
-| **components/shared/StatusBadge** | Removed — unused; consumers use digilist BookingStatusBadge, ListingStatusBadge, PaymentStatusBadge |
+| Item                               | Action                                                                                              |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **components/SentryTestComponent** | Removed — unused                                                                                    |
+| **components/shared/**             | Simplified — FormSection, FormActions, InfoBox re-export from @digipicks/ds                         |
+| **components/shared/StatusBadge**  | Removed — unused; consumers use digilist BookingStatusBadge, ListingStatusBadge, PaymentStatusBadge |
 
 ## Phase B — Providers (Kept)
 
 Backoffice has custom providers for Convex-reactive auth and backoffice roles:
 
-| Provider | Purpose | Action |
-|----------|---------|--------|
-| AuthProvider | Convex auth | Keep — extends app-shell for backoffice |
-| BackofficeRoleProvider | saksbehandler, admin roles | Keep |
-| RealtimeProvider | Convex reactive (not WebSocket) | Keep — different transport than web/minside |
+| Provider               | Purpose                         | Action                                      |
+| ---------------------- | ------------------------------- | ------------------------------------------- |
+| AuthProvider           | Convex auth                     | Keep — extends app-shell for backoffice     |
+| BackofficeRoleProvider | saksbehandler, admin roles      | Keep                                        |
+| RealtimeProvider       | Convex reactive (not WebSocket) | Keep — different transport than web/minside |
 
 ## Phase C — Features (Deferred)
 
@@ -30,9 +30,9 @@ Backoffice has custom providers for Convex-reactive auth and backoffice roles:
 
 ## Layout (No Wrappers) ✅
 
-- **DashboardLayout** from `@digilist-saas/digilist/layout` with `variant="backoffice"`
+- **DashboardLayout** from `@digipicks/digilist/layout` with `variant="backoffice"`
 - **BackofficeLayoutBridge** — minimal 5-line bridge in App.tsx (gets useAuth + useBackofficeRole, passes to DashboardLayout)
-- Nav config in `@digilist-saas/shared` (`DASHBOARD_NAV_CONFIG`)
+- Nav config in `@digipicks/shared` (`DASHBOARD_NAV_CONFIG`)
 
 ## Current Structure
 
@@ -42,7 +42,7 @@ apps/backoffice/src/
 ├── main.tsx
 ├── components/           # App-specific: layout, SearchResults, EditBookingForm, etc.
 │   ├── layout/          # AppLayout, Sidebar, BackofficeHeaderSlots (thin wrappers)
-│   ├── shared/          # Re-exports FormSection, FormActions, InfoBox from @digilist-saas/ds
+│   ├── shared/          # Re-exports FormSection, FormActions, InfoBox from @digipicks/ds
 │   ├── bookings/
 │   ├── organizations/
 │   ├── seasons/
@@ -56,8 +56,8 @@ apps/backoffice/src/
 
 ## Key Imports
 
-| Need | Import From |
-|------|-------------|
-| FormSection, FormActions, InfoBox | @/components/shared or @digilist-saas/ds |
-| BookingStatusBadge, ListingStatusBadge, PaymentStatusBadge | @digilist-saas/digilist/status |
-| Auth, roles | @/providers (custom) |
+| Need                                                       | Import From                          |
+| ---------------------------------------------------------- | ------------------------------------ |
+| FormSection, FormActions, InfoBox                          | @/components/shared or @digipicks/ds |
+| BookingStatusBadge, ListingStatusBadge, PaymentStatusBadge | @digipicks/digilist/status           |
+| Auth, roles                                                | @/providers (custom)                 |

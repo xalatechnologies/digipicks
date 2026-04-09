@@ -11,7 +11,7 @@
 import { createContext, useContext, useMemo, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'convex/react';
-import { api } from '@digilist-saas/sdk';
+import { api } from '@digipicks/sdk';
 import { AuthProvider, useAuth } from '../auth/AuthProvider';
 import { env } from '../env';
 import type { PlatformRole } from '../capabilities';
@@ -29,7 +29,7 @@ export interface AuthUser {
   email: string;
   avatarUrl?: string;
   tenantId?: string;
-  role: 'superadmin' | 'owner' | 'admin' | 'saksbehandler' | 'manager' | 'arranger' | 'user' | 'member';
+  role: 'superadmin' | 'admin' | 'creator' | 'subscriber';
   grantedRoles?: PlatformRole[];
 }
 /** @deprecated Use AuthUser */
@@ -40,11 +40,11 @@ export interface AuthValue {
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
-  isSaksbehandler: boolean;
-  isArranger: boolean;
+  isCreator: boolean;
+  isSubscriber: boolean;
   login: (provider?: string) => void;
   logout: () => Promise<void>;
-  checkRole: (role: 'admin' | 'saksbehandler' | 'user') => boolean;
+  checkRole: (role: 'superadmin' | 'admin' | 'creator' | 'subscriber') => boolean;
 }
 /** @deprecated Use AuthValue */
 export type BackofficeAuthValue = AuthValue;
@@ -68,20 +68,27 @@ const MOCK_USERS: Record<string, AuthUser> = {
     grantedRoles: ['admin'],
     tenantId: MOCK_TENANT_ID,
   },
-  user: {
-    id: 'mock-user-001',
-    name: 'Tenant Owner',
-    email: 'owner@example.com',
-    role: 'user',
-    grantedRoles: ['user'],
+  creator: {
+    id: 'mock-creator-001',
+    name: 'Content Creator',
+    email: 'creator@example.com',
+    role: 'creator',
+    grantedRoles: ['creator'],
     tenantId: MOCK_TENANT_ID,
+  },
+  subscriber: {
+    id: 'mock-subscriber-001',
+    name: 'Subscriber',
+    email: 'subscriber@example.com',
+    role: 'subscriber',
+    grantedRoles: ['subscriber'],
   },
 };
 
 const AuthContext = createContext<AuthValue | null>(null);
 
 function mapAppShellUser(
-  appUser: { id: string; name?: string; email: string; avatarUrl?: string; tenantId?: string; role?: string } | null
+  appUser: { id: string; name?: string; email: string; avatarUrl?: string; tenantId?: string; role?: string } | null,
 ): AuthUser | null {
   if (!appUser) return null;
 
@@ -93,18 +100,34 @@ function mapAppShellUser(
       email: appUser.email,
       avatarUrl: appUser.avatarUrl,
       tenantId: appUser.tenantId,
-      role: 'admin', // legacy role field
+      role: 'superadmin',
       grantedRoles: ['superadmin'],
     };
   }
 
-  const role = appUser.role === 'admin' ? 'admin'
-    : appUser.role === 'owner' ? 'user'
-    : 'user';
-  const grantedRoles: PlatformRole[] =
-    appUser.role === 'admin' ? ['admin']
-    : appUser.role === 'owner' ? ['user']
-    : ['user'];
+  // Map legacy roles → DigiPicks 4-role model.
+  // owner / manager / saksbehandler / counter / finance → admin
+  // arranger → creator
+  // member / user / bruker → subscriber
+  const raw = appUser.role ?? '';
+  let role: AuthUser['role'];
+  if (
+    raw === 'admin' ||
+    raw === 'owner' ||
+    raw === 'manager' ||
+    raw === 'saksbehandler' ||
+    raw === 'counter' ||
+    raw === 'finance' ||
+    raw === 'aktør' ||
+    raw === 'aktor'
+  ) {
+    role = 'admin';
+  } else if (raw === 'creator' || raw === 'arranger') {
+    role = 'creator';
+  } else {
+    role = 'subscriber';
+  }
+  const grantedRoles: PlatformRole[] = [role];
   return {
     id: appUser.id,
     name: appUser.name || appUser.email,
@@ -124,19 +147,16 @@ function AppShellAuthBridge({ children }: { children: React.ReactNode }) {
       user,
       isLoading: auth.isLoading,
       isAuthenticated: auth.isAuthenticated,
-      isAdmin: user?.role === 'admin',
-      isSaksbehandler: user?.role === 'admin' || user?.role === 'saksbehandler',
-      isArranger: user?.role === 'arranger',
+      isAdmin: user?.role === 'admin' || user?.role === 'superadmin',
+      isCreator: user?.role === 'creator',
+      isSubscriber: user?.role === 'subscriber',
       login: (provider = 'idporten') => {
         if (provider.startsWith('dev-')) {
           const roleMap: Record<string, string> = {
             'dev-superadmin': 'superadmin',
-            'dev-owner': 'owner',
             'dev-admin': 'admin',
-            'dev-arranger': 'arranger',
-            'dev-manager': 'manager',
-            'dev-member': 'member',
-            'dev-dual': 'admin',
+            'dev-creator': 'creator',
+            'dev-subscriber': 'subscriber',
           };
           auth.signInAsDemo({ role: roleMap[provider] || 'admin', tenantId: env.tenantId || undefined });
         } else {
@@ -151,11 +171,11 @@ function AppShellAuthBridge({ children }: { children: React.ReactNode }) {
       },
       checkRole: (role) => {
         if (!user) return false;
-        if (role === 'admin') return user.role === 'admin';
-        return user.role === 'admin' || user.role === 'saksbehandler';
+        if (role === 'admin') return user.role === 'admin' || user.role === 'superadmin';
+        return user.role === role;
       },
     }),
-    [auth, user]
+    [auth, user],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
@@ -181,7 +201,11 @@ function setMockSSOCookie(user: AuthUser) {
 function getMockSSOCookie(): AuthUser | null {
   const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${MOCK_SSO_COOKIE}=([^;]*)`));
   if (!match) return null;
-  try { return JSON.parse(decodeURIComponent(match[1])); } catch { return null; }
+  try {
+    return JSON.parse(decodeURIComponent(match[1]));
+  } catch {
+    return null;
+  }
 }
 
 function clearMockSSOCookie() {
@@ -193,8 +217,7 @@ function MockAuthProvider({ children }: { children: React.ReactNode }) {
   const [mockUser, setMockUser] = useState<AuthUser | null>(() => {
     try {
       // Try localStorage first (same origin), then cookie (cross-port SSO)
-      const s = localStorage.getItem('digilist_saas_digilist_user')
-        || localStorage.getItem('backoffice_mock_user');
+      const s = localStorage.getItem('digilist_saas_digilist_user') || localStorage.getItem('backoffice_mock_user');
       if (s) {
         const parsed = JSON.parse(s);
         // Also set cookie so other ports can pick it up
@@ -217,10 +240,7 @@ function MockAuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   // Resolve mock user to real Convex user by email
-  const convexUser = useQuery(
-    api.users.index.getByEmail,
-    mockUser?.email ? { email: mockUser.email } : 'skip',
-  );
+  const convexUser = useQuery(api.users.index.getByEmail, mockUser?.email ? { email: mockUser.email } : 'skip');
 
   // Merge real Convex user ID into the mock user
   const user = useMemo<AuthUser | null>(() => {
@@ -235,31 +255,31 @@ function MockAuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = useCallback((provider: string = 'idporten') => {
-    const mockKeyMap: Record<string, keyof typeof MOCK_USERS> = {
-      'dev-superadmin': 'superadmin',
-      'dev-admin': 'admin',
-      'dev-owner': 'user',      // legacy key → user (tenant owner)
-      'dev-arranger': 'user',   // legacy key → user
-      'dev-manager': 'user',    // legacy key → user
-      'dev-dual': 'user',       // legacy key → user
-      'dev-member': 'user',     // legacy key → user
-    };
-    const mockKey = mockKeyMap[provider];
-    const selected = mockKey ? MOCK_USERS[mockKey] : MOCK_USERS.admin;
-    localStorage.setItem('backoffice_mock_user', JSON.stringify(selected));
-    // Write to shared SSO keys so web app can read the session
-    localStorage.setItem('digilist_saas_digilist_user', JSON.stringify(selected));
-    localStorage.setItem('digilist_saas_digilist_tenant_id', selected.tenantId || '');
-    localStorage.setItem('digilist_saas_digilist_session_token', `mock_${selected.id}`);
-    // Legacy keys (backward compat)
-    localStorage.setItem('digilist_saas_backoffice_tenant_id', selected.tenantId || '');
-    localStorage.setItem('digilist_saas_backoffice_user', JSON.stringify(selected));
-    // Cross-port SSO cookie (shared across localhost ports)
-    setMockSSOCookie(selected);
-    setMockUser(selected);
-    navigate('/');
-  }, [navigate]);
+  const login = useCallback(
+    (provider: string = 'idporten') => {
+      const mockKeyMap: Record<string, keyof typeof MOCK_USERS> = {
+        'dev-superadmin': 'superadmin',
+        'dev-admin': 'admin',
+        'dev-creator': 'creator',
+        'dev-subscriber': 'subscriber',
+      };
+      const mockKey = mockKeyMap[provider];
+      const selected = mockKey ? MOCK_USERS[mockKey] : MOCK_USERS.admin;
+      localStorage.setItem('backoffice_mock_user', JSON.stringify(selected));
+      // Write to shared SSO keys so web app can read the session
+      localStorage.setItem('digilist_saas_digilist_user', JSON.stringify(selected));
+      localStorage.setItem('digilist_saas_digilist_tenant_id', selected.tenantId || '');
+      localStorage.setItem('digilist_saas_digilist_session_token', `mock_${selected.id}`);
+      // Legacy keys (backward compat)
+      localStorage.setItem('digilist_saas_backoffice_tenant_id', selected.tenantId || '');
+      localStorage.setItem('digilist_saas_backoffice_user', JSON.stringify(selected));
+      // Cross-port SSO cookie (shared across localhost ports)
+      setMockSSOCookie(selected);
+      setMockUser(selected);
+      navigate('/');
+    },
+    [navigate],
+  );
 
   const logout = useCallback(async () => {
     localStorage.removeItem('backoffice_mock_user');
@@ -283,9 +303,9 @@ function MockAuthProvider({ children }: { children: React.ReactNode }) {
       user,
       isLoading,
       isAuthenticated: !!user,
-      isAdmin: user?.role === 'admin',
-      isSaksbehandler: user?.role === 'admin', // legacy compat
-      isArranger: false, // legacy compat — no arranger role in 3-role system
+      isAdmin: user?.role === 'admin' || user?.role === 'superadmin',
+      isCreator: user?.role === 'creator',
+      isSubscriber: user?.role === 'subscriber',
       login,
       logout,
       checkRole: (role) => {
@@ -293,7 +313,7 @@ function MockAuthProvider({ children }: { children: React.ReactNode }) {
         return user.role === role;
       },
     }),
-    [user, isLoading, login, logout]
+    [user, isLoading, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -317,11 +337,20 @@ function clearOnLogout(): boolean {
   if (params.get('logout') === 'true' || window.location.pathname === '/login') {
     // Only aggressively clear on explicit logout, not every /login visit
     if (params.get('logout') === 'true') {
-      ['digilist_saas_digilist_session_token', 'digilist_saas_digilist_user', 'digilist_saas_digilist_tenant_id',
-       'backoffice_mock_user', 'digilist_saas_backoffice_user', 'digilist_saas_backoffice_tenant_id',
-       'backoffice_effective_role', 'backoffice_remember_role_choice', 'dashboard_mode',
-       'digilist_saas_user', 'digilist_saas_session_token', 'digilist_saas_tenant_id',
-      ].forEach(k => localStorage.removeItem(k));
+      [
+        'digilist_saas_digilist_session_token',
+        'digilist_saas_digilist_user',
+        'digilist_saas_digilist_tenant_id',
+        'backoffice_mock_user',
+        'digilist_saas_backoffice_user',
+        'digilist_saas_backoffice_tenant_id',
+        'backoffice_effective_role',
+        'backoffice_remember_role_choice',
+        'dashboard_mode',
+        'digilist_saas_user',
+        'digilist_saas_session_token',
+        'digilist_saas_tenant_id',
+      ].forEach((k) => localStorage.removeItem(k));
       clearMockSSOCookie();
       // Clear SDK session cookie
       const host = window.location.hostname;

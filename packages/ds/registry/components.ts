@@ -1,8 +1,8 @@
 /**
  * Component registry for Designsystemet components.
- * 
+ *
  * This registry provides metadata, usage guidelines, and examples for all
- * Designsystemet components available through @digilist-saas/ds.
+ * Designsystemet components available through @digipicks/ds.
  */
 
 export interface ComponentInfo {
@@ -14,7 +14,7 @@ export interface ComponentInfo {
   category: 'feedback' | 'navigation' | 'input' | 'layout' | 'typography' | 'media' | 'utility';
   /** Brief description */
   description: string;
-  /** Import path from @digilist-saas/ds */
+  /** Import path from @digipicks/ds */
   importPath: string;
   /** Whether component supports the asChild pattern */
   supportsAsChild?: boolean;
@@ -375,7 +375,7 @@ export const components: Record<string, ComponentInfo> = {
     related: ['Search', 'Input', 'Select'],
   },
 
-  // === Custom @digilist-saas/ds composed components ===
+  // === Custom @digipicks/ds composed components ===
   contentLayout: {
     id: 'contentLayout',
     name: 'ContentLayout',
@@ -538,7 +538,7 @@ export const components: Record<string, ComponentInfo> = {
     id: 'dashboardLayout',
     name: 'DashboardLayout',
     category: 'layout',
-    description: 'Dashboard shell with sidebar. From @digilist-saas/app-shell. Variants: minside, backoffice.',
+    description: 'Dashboard shell with sidebar. From @digipicks/app-shell. Variants: minside, backoffice.',
     importPath: 'DashboardLayout',
     useCases: ['minside', 'backoffice', 'User dashboards'],
     related: ['PlatformLayout', 'Sidebar', 'DashboardHeader'],
@@ -547,15 +547,62 @@ export const components: Record<string, ComponentInfo> = {
 
 export const componentCategories = {
   feedback: ['alert', 'skeleton', 'spinner', 'starRating'],
-  navigation: ['breadcrumbs', 'link', 'pagination', 'skipLink', 'tabs', 'breadcrumb', 'bottomNavigation', 'pillTabs', 'pillDropdown', 'backButton', 'skipLinks'],
-  input: [
-    'button', 'checkbox', 'dropdown', 'errorSummary', 'field', 'fieldset',
-    'input', 'radio', 'search', 'select', 'switch', 'textarea', 'textfield', 'toggleGroup'
+  navigation: [
+    'breadcrumbs',
+    'link',
+    'pagination',
+    'skipLink',
+    'tabs',
+    'breadcrumb',
+    'bottomNavigation',
+    'pillTabs',
+    'pillDropdown',
+    'backButton',
+    'skipLinks',
   ],
-  layout: ['card', 'details', 'divider', 'list', 'table', 'contentLayout', 'drawer', 'filterDrawer', 'dataTable', 'slotGrid', 'platformLayout', 'dashboardLayout'],
+  input: [
+    'button',
+    'checkbox',
+    'dropdown',
+    'errorSummary',
+    'field',
+    'fieldset',
+    'input',
+    'radio',
+    'search',
+    'select',
+    'switch',
+    'textarea',
+    'textfield',
+    'toggleGroup',
+  ],
+  layout: [
+    'card',
+    'details',
+    'divider',
+    'list',
+    'table',
+    'contentLayout',
+    'drawer',
+    'filterDrawer',
+    'dataTable',
+    'slotGrid',
+    'platformLayout',
+    'dashboardLayout',
+  ],
   typography: ['tag'],
   media: ['avatar'],
-  utility: ['badge', 'chip', 'tooltip', 'dialog', 'popover', 'suggestion', 'confirmDialog', 'alertDialog', 'dialogProvider'],
+  utility: [
+    'badge',
+    'chip',
+    'tooltip',
+    'dialog',
+    'popover',
+    'suggestion',
+    'confirmDialog',
+    'alertDialog',
+    'dialogProvider',
+  ],
 } as const;
 
 export type ComponentCategory = keyof typeof componentCategories;

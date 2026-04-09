@@ -2,7 +2,7 @@
  * Accessibility Components
  *
  * Exports for WCAG-compliant accessibility primitives.
- * Import `@digilist-saas/ds/accessibility` in app entry to enable global a11y styles.
+ * Import `@digipicks/ds/accessibility` in app entry to enable global a11y styles.
  */
 
 // Global WCAG 2.1 AA styles — focus rings, sr-only, reduced motion, etc.

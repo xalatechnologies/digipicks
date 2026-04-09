@@ -6,16 +6,10 @@
  */
 
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Stack,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useDocsGuide } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button, Stack } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useDocsGuide } from '@digipicks/sdk';
+import { env } from '@digipicks/app-shell';
 import s from './blog.module.css';
 
 interface Section {
@@ -36,14 +30,15 @@ export function BlogGuidePage() {
   const { guideSlug } = useParams<{ guideSlug: string }>();
   const tenantId = env.tenantId || '';
 
-  const guide = useDocsGuide(
-    tenantId && guideSlug ? { tenantId, slug: guideSlug } : 'skip'
-  ) as {
-    _id: string;
-    title: string;
-    description?: string;
-    sections?: Section[];
-  } | null | undefined;
+  const guide = useDocsGuide(tenantId && guideSlug ? { tenantId, slug: guideSlug } : 'skip') as
+    | {
+        _id: string;
+        title: string;
+        description?: string;
+        sections?: Section[];
+      }
+    | null
+    | undefined;
 
   const isLoading = tenantId !== '' && guideSlug !== undefined && guide === undefined;
 
@@ -59,9 +54,7 @@ export function BlogGuidePage() {
     return (
       <div className={s.pageContainer}>
         <div className={s.emptyState}>
-          <Paragraph className={s.emptyText}>
-            {t('blog.noArticles')}
-          </Paragraph>
+          <Paragraph className={s.emptyText}>{t('blog.noArticles')}</Paragraph>
           <Button variant="tertiary" onClick={() => navigate('/blog')}>
             {t('blog.backToList')}
           </Button>

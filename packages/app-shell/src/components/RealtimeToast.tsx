@@ -7,9 +7,9 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon } from '@digilist-saas/ds';
+import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon } from '@digipicks/ds';
 import { useRealtimeNotification, useRealtimeStatus } from '../providers/RealtimeContext';
-import type { RealtimeEvent } from '@digilist-saas/sdk';
+import type { RealtimeEvent } from '@digipicks/sdk';
 import styles from './RealtimeToast.module.css';
 
 interface Toast {
@@ -29,7 +29,7 @@ export function RealtimeToast(): React.ReactElement {
     if (toasts.length === 0) return;
 
     const timer = setTimeout(() => {
-      setToasts(prev => prev.slice(1));
+      setToasts((prev) => prev.slice(1));
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -42,25 +42,28 @@ export function RealtimeToast(): React.ReactElement {
       id: crypto.randomUUID(),
       timestamp: new Date(),
     };
-    setToasts(prev => [...prev.slice(-4), newToast]); // Keep max 5 toasts
+    setToasts((prev) => [...prev.slice(-4), newToast]); // Keep max 5 toasts
   }, []);
 
   // Remove toast
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
   // Handle notification events
-  const handleNotificationEvent = useCallback((event: RealtimeEvent) => {
-    const data = event.data as { title?: string; body?: string; type?: string } | undefined;
-    const message = data?.body ?? event.message;
+  const handleNotificationEvent = useCallback(
+    (event: RealtimeEvent) => {
+      const data = event.data as { title?: string; body?: string; type?: string } | undefined;
+      const message = data?.body ?? event.message;
 
-    addToast({
-      type: (data?.type as Toast['type']) || 'info',
-      title: data?.title || 'Varsel',
-      ...(message && { message }),
-    });
-  }, [addToast]);
+      addToast({
+        type: (data?.type as Toast['type']) || 'info',
+        title: data?.title || 'Varsel',
+        ...(message && { message }),
+      });
+    },
+    [addToast],
+  );
 
   // Subscribe to realtime events
   useRealtimeNotification(handleNotificationEvent);
@@ -90,13 +93,7 @@ export function RealtimeToast(): React.ReactElement {
   if (toasts.length === 0) return <></>;
 
   return (
-    <div
-      role="region"
-      aria-label="Varsler"
-      aria-live="polite"
-      aria-atomic="false"
-      className={styles.container}
-    >
+    <div role="region" aria-label="Varsler" aria-live="polite" aria-atomic="false" className={styles.container}>
       {toasts.map((toast) => (
         <div
           key={toast.id}
@@ -105,9 +102,7 @@ export function RealtimeToast(): React.ReactElement {
           className={styles.toast}
           data-type={toast.type}
         >
-          <div className={styles.icon}>
-            {getIcon(toast.type)}
-          </div>
+          <div className={styles.icon}>{getIcon(toast.type)}</div>
           <div className={styles.content}>
             <Paragraph data-size="sm" className={styles.title}>
               {toast.title}

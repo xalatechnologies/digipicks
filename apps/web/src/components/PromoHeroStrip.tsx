@@ -7,9 +7,9 @@
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Paragraph, WalletIcon, TicketIcon, StarIcon, CloseIcon } from '@digilist-saas/ds';
-import { useTenantConfig } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
+import { Button, Paragraph, WalletIcon, TicketIcon, StarIcon, CloseIcon } from '@digipicks/ds';
+import { useTenantConfig } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
 import styles from './PromoHeroStrip.module.css';
 
 interface PromoCard {
@@ -71,9 +71,7 @@ export function PromoHeroStrip({
 
   const hiddenCards = new Set(promoHeroSettings?.hiddenCards ?? []);
 
-  const visibleCards = PROMO_CARDS.filter(
-    (card) => !hiddenCards.has(card.id) && isModuleEnabled(card.moduleId)
-  );
+  const visibleCards = PROMO_CARDS.filter((card) => !hiddenCards.has(card.id) && isModuleEnabled(card.moduleId));
 
   if (visibleCards.length === 0) {
     return (
@@ -117,11 +115,7 @@ export function PromoHeroStrip({
                 <div className={styles.title}>{t(card.titleKey)}</div>
                 <div className={styles.description}>{t(card.descriptionKey)}</div>
               </div>
-              <Button
-                variant="secondary"
-                data-size="sm"
-                onClick={() => navigate(card.route)}
-              >
+              <Button variant="secondary" data-size="sm" onClick={() => navigate(card.route)}>
                 {t(card.ctaKey)}
               </Button>
             </div>

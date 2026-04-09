@@ -16,9 +16,9 @@ import {
   FilterToolbar,
   DashboardPageHeader,
   PageContentLayout,
-} from '@digilist-saas/ds';
-import type { DataTableColumn } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DataTableColumn } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import styles from './audit.module.css';
@@ -102,7 +102,9 @@ export function AuditPage() {
         width: '160px',
         sortable: true,
         render: (row) => (
-          <Paragraph data-size="xs" className={styles.timestamp}>{row.timestamp}</Paragraph>
+          <Paragraph data-size="xs" className={styles.timestamp}>
+            {row.timestamp}
+          </Paragraph>
         ),
       },
       {
@@ -130,13 +132,21 @@ export function AuditPage() {
         id: 'tenant',
         header: t('saasAdmin.audit.columnTenant'),
         width: '120px',
-        render: (row) => <Paragraph data-size="sm" data-color="subtle">{row.tenant}</Paragraph>,
+        render: (row) => (
+          <Paragraph data-size="sm" data-color="subtle">
+            {row.tenant}
+          </Paragraph>
+        ),
       },
       {
         id: 'details',
         header: t('saasAdmin.audit.columnDetails'),
         hideOnMobile: true,
-        render: (row) => <Paragraph data-size="xs" data-color="subtle">{row.details}</Paragraph>,
+        render: (row) => (
+          <Paragraph data-size="xs" data-color="subtle">
+            {row.details}
+          </Paragraph>
+        ),
       },
     ],
     [t],
@@ -144,11 +154,7 @@ export function AuditPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        subtitle={t('saasAdmin.audit.subtitle')}
-        count={filtered.length}
-        sticky
-      >
+      <DashboardPageHeader subtitle={t('saasAdmin.audit.subtitle')} count={filtered.length} sticky>
         <FilterToolbar variant="flat" aria-label={t('saasAdmin.audit.filterToolbar')}>
           <FilterToolbar.Center>
             <HeaderSearch
@@ -173,12 +179,7 @@ export function AuditPage() {
             description={searchQuery ? t('common.noSearchResults') : t('saasAdmin.audit.emptyDesc')}
           />
         ) : (
-          <DataTable<AuditRow>
-            columns={columns}
-            data={filtered}
-            getRowKey={(row) => row.id}
-            size="sm"
-          />
+          <DataTable<AuditRow> columns={columns} data={filtered} getRowKey={(row) => row.id} size="sm" />
         )}
       </div>
     </PageContentLayout>

@@ -1,17 +1,17 @@
 # Web App — Thin App Cleanup: Move to Shared Packages
 
-This document identifies everything in `apps/web` that should move to shared packages (digilist, app-shell, @digilist-saas/ds) to achieve a true thin app.
+This document identifies everything in `apps/web` that should move to shared packages (digilist, app-shell, @digipicks/ds) to achieve a true thin app.
 
 ---
 
 ## Current State (What Web Has Today)
 
-| Folder | Contents | Shared Source | Action |
-|--------|----------|---------------|--------|
-| **components/** | SkipLinks, PaymentStatusBadge, RealtimeToast, SentryTestComponent | @digilist-saas/ds, @digilist-saas/ds, (custom), (dev) | See below |
-| **features/listing-details/** | types.ts, index.ts, components/index.ts | @digilist-saas/shared, (re-exports), digilist | See below |
-| **hooks/** | useAuth.ts | App-shell adapter | See below |
-| **providers/** | AltinnProvider, AccessibilityMonitoringProvider | Re-exports from app-shell | Remove entirely |
+| Folder                        | Contents                                                          | Shared Source                                 | Action          |
+| ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------- | --------------- |
+| **components/**               | SkipLinks, PaymentStatusBadge, RealtimeToast, SentryTestComponent | @digipicks/ds, @digipicks/ds, (custom), (dev) | See below       |
+| **features/listing-details/** | types.ts, index.ts, components/index.ts                           | @digipicks/shared, (re-exports), digilist     | See below       |
+| **hooks/**                    | useAuth.ts                                                        | App-shell adapter                             | See below       |
+| **providers/**                | AltinnProvider, AccessibilityMonitoringProvider                   | Re-exports from app-shell                     | Remove entirely |
 
 ---
 
@@ -19,26 +19,26 @@ This document identifies everything in `apps/web` that should move to shared pac
 
 ### 1.1 SkipLinks — REMOVE (redundant)
 
-- **Web**: `components/SkipLinks.tsx` — re-exports from `@digilist-saas/ds`
-- **App.tsx** already imports SkipLinks from `@digilist-saas/ds` (line 13)
+- **Web**: `components/SkipLinks.tsx` — re-exports from `@digipicks/ds`
+- **App.tsx** already imports SkipLinks from `@digipicks/ds` (line 13)
 - **Tests**: `SkipLinks.test.tsx` imports from `@/components/SkipLinks`
 
-**Action**: Delete `components/SkipLinks.tsx`. Update `SkipLinks.test.tsx` to import from `@digilist-saas/ds`. Remove from `components/index.ts`.
+**Action**: Delete `components/SkipLinks.tsx`. Update `SkipLinks.test.tsx` to import from `@digipicks/ds`. Remove from `components/index.ts`.
 
 ### 1.2 PaymentStatusBadge — REMOVE (redundant)
 
-- **Web**: `components/PaymentStatusBadge.tsx` — re-exports from `@digilist-saas/ds`
-- **Usage**: No file in web imports PaymentStatusBadge from `@/components`; digilist imports from `@digilist-saas/ds`
+- **Web**: `components/PaymentStatusBadge.tsx` — re-exports from `@digipicks/ds`
+- **Usage**: No file in web imports PaymentStatusBadge from `@/components`; digilist imports from `@digipicks/ds`
 
 **Action**: Delete `components/PaymentStatusBadge.tsx`. Remove from `components/index.ts`.
 
 ### 1.3 RealtimeToast — MOVE to app-shell
 
 - **Web**: `components/RealtimeToast.tsx` — custom component
-- **Dependencies**: `useRealtimeBooking`, `useRealtimeNotification`, `useRealtimeStatus` from `@digilist-saas/app-shell`
+- **Dependencies**: `useRealtimeBooking`, `useRealtimeNotification`, `useRealtimeStatus` from `@digipicks/app-shell`
 - **Usage**: App.tsx imports `RealtimeToast` from `@/components`
 
-**Action**: Move to `packages/app-shell/src/components/RealtimeToast.tsx`. Export from app-shell. Web imports from `@digilist-saas/app-shell`.
+**Action**: Move to `packages/app-shell/src/components/RealtimeToast.tsx`. Export from app-shell. Web imports from `@digipicks/app-shell`.
 
 ### 1.4 SentryTestComponent — REMOVE or KEEP (dev only)
 
@@ -54,19 +54,20 @@ This document identifies everything in `apps/web` that should move to shared pac
 
 ### 2.1 features/listing-details/types.ts — FLATTEN
 
-- **Current**: Re-exports from `@digilist-saas/shared` + app-specific types (`ListingDetailsI18n`, `ListingHeaderProps`, `TabsProps`, `SidebarProps`)
+- **Current**: Re-exports from `@digipicks/shared` + app-specific types (`ListingDetailsI18n`, `ListingHeaderProps`, `TabsProps`, `SidebarProps`)
 - **Usage**: `ListingDetailPage.tsx` imports types from `@/features/listing-details`
 
 **Action**:
-1. Add `ListingDetailsI18n`, `ListingHeaderProps`, `TabsProps`, `SidebarProps` to `@digilist-saas/shared` if reusable by minside/backoffice, or keep in digilist if listing-specific.
+
+1. Add `ListingDetailsI18n`, `ListingHeaderProps`, `TabsProps`, `SidebarProps` to `@digipicks/shared` if reusable by minside/backoffice, or keep in digilist if listing-specific.
 2. Update `ListingDetailPage.tsx` to import directly:
-   - From `@digilist-saas/shared`: `Listing`, `ListingType`, `BookingMode`, etc.
-   - From `@digilist-saas/digilist/listings`: `ListingHeaderProps`, etc. (if they belong there)
+   - From `@digipicks/shared`: `Listing`, `ListingType`, `BookingMode`, etc.
+   - From `@digipicks/digilist/listings`: `ListingHeaderProps`, etc. (if they belong there)
 3. Delete `features/listing-details/` folder.
 
 ### 2.2 features/listing-details/components/index.ts — REMOVE (dead)
 
-- **Current**: Re-exports `ListingHeader`, `KeyFactsRow`, etc. from `@digilist-saas/digilist/listings`
+- **Current**: Re-exports `ListingHeader`, `KeyFactsRow`, etc. from `@digipicks/digilist/listings`
 - **Usage**: No imports from `@/features/listing-details/components` anywhere
 
 **Action**: Delete. Already dead code.
@@ -84,24 +85,27 @@ This document identifies everything in `apps/web` that should move to shared pac
 **Options**:
 
 **A) Extend app-shell useAuth** (preferred for thin app):
+
 - Add optional `login` alias for `signInWithOAuth`
 - Add `checkRole(role)` to app-shell (or derive from `useRBAC`)
 - Add `WebUser` / extend `User` type in app-shell with `tenantId`, `role`
-- Web imports `useAuth` from `@digilist-saas/app-shell` directly.
+- Web imports `useAuth` from `@digipicks/app-shell` directly.
 
 **B) Keep adapter** (minimal change):
+
 - Keep `hooks/useAuth.ts` as a thin adapter. Document that it's the only acceptable app-level hook — all others from app-shell/SDK.
 
 ---
 
 ## 4. Providers — REMOVE entirely
 
-- **Web**: `providers/AltinnProvider.tsx`, `providers/AccessibilityMonitoringProvider.tsx` — both re-export from `@digilist-saas/app-shell`
+- **Web**: `providers/AltinnProvider.tsx`, `providers/AccessibilityMonitoringProvider.tsx` — both re-export from `@digipicks/app-shell`
 - **Usage**: No file in web imports from `@/providers`
 
 **Action**:
+
 1. Delete `providers/` folder.
-2. Any future usage: import directly from `@digilist-saas/app-shell`.
+2. Any future usage: import directly from `@digipicks/app-shell`.
 
 ---
 
@@ -118,17 +122,19 @@ apps/web/src/
 ```
 
 **Removed**:
+
 - `components/` (except tests moved or deleted)
 - `features/`
 - `hooks/` (if useAuth moves to app-shell)
 - `providers/`
 
 **Imports after cleanup**:
-- `SkipLinks`, `AppHeader`, etc. → `@digilist-saas/ds`
-- `RealtimeToast` → `@digilist-saas/app-shell`
-- `useAuth` → `@digilist-saas/app-shell` (after extending)
-- Types for ListingDetailPage → `@digilist-saas/shared` + `@digilist-saas/digilist`
-- `AuthProvider`, `RealtimeProvider`, `ThemeProvider`, `env` → `@digilist-saas/app-shell`
+
+- `SkipLinks`, `AppHeader`, etc. → `@digipicks/ds`
+- `RealtimeToast` → `@digipicks/app-shell`
+- `useAuth` → `@digipicks/app-shell` (after extending)
+- Types for ListingDetailPage → `@digipicks/shared` + `@digipicks/digilist`
+- `AuthProvider`, `RealtimeProvider`, `ThemeProvider`, `env` → `@digipicks/app-shell`
 
 ---
 
@@ -145,5 +151,5 @@ apps/web/src/
 ## 7. Compatibility Notes
 
 - **E2E / tests**: Update any imports from `@/components`, `@/hooks`, `@/providers`, `@/features`
-- **Digilist**: Already uses `@digilist-saas/ds` for PaymentStatusBadge, SkipLinks; no changes needed
-- **Minside / Backoffice**: If they import from web's providers, switch to `@digilist-saas/app-shell`
+- **Digilist**: Already uses `@digipicks/ds` for PaymentStatusBadge, SkipLinks; no changes needed
+- **Minside / Backoffice**: If they import from web's providers, switch to `@digipicks/app-shell`

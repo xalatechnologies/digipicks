@@ -1,4 +1,4 @@
-import { apps } from '@digilist-saas/eslint-config';
+import { apps } from '@digipicks/eslint-config';
 
 export default [
   ...apps,

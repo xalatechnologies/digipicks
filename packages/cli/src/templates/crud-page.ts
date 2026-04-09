@@ -24,10 +24,7 @@ export interface CrudPageVars {
 
 export function generateCrudListPage(v: CrudPageVars): string {
   const statusFilterImports = v.hasStatusFilter ? '\n  StatusTag,' : '';
-  const pillImports = [
-    v.hasSortFilter ? 'PillDropdown,' : '',
-    'PillTabs,',
-  ].filter(Boolean).join('\n  ');
+  const pillImports = [v.hasSortFilter ? 'PillDropdown,' : '', 'PillTabs,'].filter(Boolean).join('\n  ');
 
   return `/**
  * ${v.pascalPlural} Page
@@ -60,9 +57,9 @@ import {
   PageContentLayout,
   CrudListItem,${v.hasStats ? '\n  CrudStatGrid,' : ''}
   useIsMobile,
-} from '@digilist-saas/ds';
-import type { DataTableColumn, Action } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { DataTableColumn, Action } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 
 // =============================================================================
 // Types
@@ -391,9 +388,9 @@ import {
   Stack,
   CrudWizard,
   useIsMobile,
-} from '@digilist-saas/ds';
-import type { CrudWizardStep } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import type { CrudWizardStep } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 
 // =============================================================================
 // Types
@@ -595,10 +592,7 @@ export function generateCrudFormCSS(): string {
 `;
 }
 
-export function generateCrudI18nKeys(
-  namespace: string,
-  entityName: string,
-): string {
+export function generateCrudI18nKeys(namespace: string, entityName: string): string {
   const entityPlural = entityName + 's'; // simplified; CLI uses pluralize()
   const lines = [`"${namespace}": {`];
   lines.push(`  "title": "${entityPlural.charAt(0).toUpperCase() + entityPlural.slice(1)}",`);

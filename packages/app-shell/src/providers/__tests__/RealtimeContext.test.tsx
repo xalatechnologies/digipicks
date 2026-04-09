@@ -15,10 +15,10 @@ import {
   useRealtimeListingUpdates,
 } from '../RealtimeContext';
 
-import { useRealtimeConnection } from '@digilist-saas/sdk';
+import { useRealtimeConnection } from '@digipicks/sdk';
 
-vi.mock('@digilist-saas/sdk', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@digilist-saas/sdk')>();
+vi.mock('@digipicks/sdk', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@digipicks/sdk')>();
   return {
     ...actual,
     useRealtimeConnection: vi.fn(() => ({ connected: true, reconnecting: false })),
@@ -48,7 +48,7 @@ describe('ConvexRealtimeProvider', () => {
     const { getByText } = render(
       <ConvexRealtimeProvider>
         <div>Child content</div>
-      </ConvexRealtimeProvider>
+      </ConvexRealtimeProvider>,
     );
     expect(getByText('Child content')).toBeInTheDocument();
   });
@@ -57,7 +57,7 @@ describe('ConvexRealtimeProvider', () => {
     render(
       <ConvexRealtimeProvider>
         <RealtimeConsumer />
-      </ConvexRealtimeProvider>
+      </ConvexRealtimeProvider>,
     );
 
     expect(screen.getByTestId('isConnected')).toHaveTextContent('true');
@@ -73,7 +73,7 @@ describe('ConvexRealtimeProvider', () => {
     render(
       <ConvexRealtimeProvider>
         <RealtimeConsumer />
-      </ConvexRealtimeProvider>
+      </ConvexRealtimeProvider>,
     );
 
     expect(screen.getByTestId('isConnected')).toHaveTextContent('false');
@@ -84,9 +84,7 @@ describe('ConvexRealtimeProvider', () => {
 describe('useRealtimeStatus', () => {
   it('returns isConnected, status, error from context', () => {
     const { result } = renderHook(() => useRealtimeStatus(), {
-      wrapper: ({ children }) => (
-        <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>
-      ),
+      wrapper: ({ children }) => <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>,
     });
 
     expect(result.current.isConnected).toBe(true);
@@ -98,9 +96,7 @@ describe('useRealtimeStatus', () => {
 describe('useRealtime (alias)', () => {
   it('returns same shape as useRealtimeStatus', () => {
     const { result } = renderHook(() => useRealtime(), {
-      wrapper: ({ children }) => (
-        <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>
-      ),
+      wrapper: ({ children }) => <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>,
     });
 
     expect(result.current).toMatchObject({
@@ -116,17 +112,13 @@ describe('useRealtimeContext', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => {
       renderHook(() => useRealtimeContext());
-    }).toThrow(
-      'useRealtimeContext must be used within RealtimeProvider or ConvexRealtimeProvider'
-    );
+    }).toThrow('useRealtimeContext must be used within RealtimeProvider or ConvexRealtimeProvider');
     consoleSpy.mockRestore();
   });
 
   it('returns full context when inside provider', () => {
     const { result } = renderHook(() => useRealtimeContext(), {
-      wrapper: ({ children }) => (
-        <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>
-      ),
+      wrapper: ({ children }) => <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>,
     });
 
     expect(result.current).toMatchObject({
@@ -146,9 +138,7 @@ describe('useRealtimeNotification', () => {
     const handler = vi.fn();
     expect(() => {
       renderHook(() => useRealtimeNotification(handler), {
-        wrapper: ({ children }) => (
-          <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>
-        ),
+        wrapper: ({ children }) => <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>,
       });
     }).not.toThrow();
   });
@@ -156,14 +146,9 @@ describe('useRealtimeNotification', () => {
 
 describe('useRealtimeListingUpdates', () => {
   it('returns isConnected and lastEvent', () => {
-    const { result } = renderHook(
-      () => useRealtimeListingUpdates('listing-1', vi.fn()),
-      {
-        wrapper: ({ children }) => (
-          <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>
-        ),
-      }
-    );
+    const { result } = renderHook(() => useRealtimeListingUpdates('listing-1', vi.fn()), {
+      wrapper: ({ children }) => <ConvexRealtimeProvider>{children}</ConvexRealtimeProvider>,
+    });
 
     expect(result.current.isConnected).toBe(true);
     expect(result.current.lastEvent).toBeNull();

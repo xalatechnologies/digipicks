@@ -7,14 +7,14 @@
 
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Alert } from '@digilist-saas/ds';
-import { useAuth } from '@digilist-saas/app-shell';
-import { useAccountContext } from '@digilist-saas/app-shell';
-import { DashboardHeaderSlots } from '@digilist-saas/app-shell';
-import type { DashboardHeaderUser } from '@digilist-saas/app-shell';
-import type { PlatformRole } from '@digilist-saas/app-shell';
-import { AppDashboardLayout } from '@digilist-saas/ds';
-import { DashboardSidebar, HeaderLogo } from '@digilist-saas/ds';
+import { Alert } from '@digipicks/ds';
+import { useAuth } from '@digipicks/app-shell';
+import { useAccountContext } from '@digipicks/app-shell';
+import { DashboardHeaderSlots } from '@digipicks/app-shell';
+import type { DashboardHeaderUser } from '@digipicks/app-shell';
+import type { PlatformRole } from '@digipicks/app-shell';
+import { AppDashboardLayout } from '@digipicks/ds';
+import { DashboardSidebar, HeaderLogo } from '@digipicks/ds';
 import { PageTitleProvider } from '../providers/PageTitleContext';
 import { useDashboardNavSections } from './useDashboardNav';
 import { useDashboardBottomNav } from './useDashboardNav';
@@ -94,25 +94,37 @@ function DashboardLayoutMinside(): React.ReactElement {
   return (
     <AppDashboardLayout
       header={
-        <DashboardHeaderSlots variant="minside" user={auth.user} onLogout={() => {
-          // Clear local session state without awaiting server deletion (avoids browser "Leave page?" prompt)
-          const group = 'digilist';
-          ['user', 'session_token', 'tenant_id'].forEach(k => { localStorage.removeItem(`digilist_saas_${group}_${k}`); localStorage.removeItem(`digilist_saas_${k}`); });
-          const host = window.location.hostname;
-          const parts = host.split('.');
-          const cookieDomain = parts.length >= 2 ? `.${parts.slice(-2).join('.')}` : '';
-          document.cookie = `digilist_saas_session_${group}=; path=/;${cookieDomain ? ` domain=${cookieDomain};` : ''} max-age=0`;
-          document.cookie = `digilist_saas_session_${group}=; path=/; max-age=0`;
-          window.location.href = String(import.meta.env.VITE_WEB_APP_URL || 'http://localhost:5190');
-        }} />
+        <DashboardHeaderSlots
+          variant="minside"
+          user={auth.user}
+          onLogout={() => {
+            // Clear local session state without awaiting server deletion (avoids browser "Leave page?" prompt)
+            const group = 'digilist';
+            ['user', 'session_token', 'tenant_id'].forEach((k) => {
+              localStorage.removeItem(`digilist_saas_${group}_${k}`);
+              localStorage.removeItem(`digilist_saas_${k}`);
+            });
+            const host = window.location.hostname;
+            const parts = host.split('.');
+            const cookieDomain = parts.length >= 2 ? `.${parts.slice(-2).join('.')}` : '';
+            document.cookie = `digilist_saas_session_${group}=; path=/;${cookieDomain ? ` domain=${cookieDomain};` : ''} max-age=0`;
+            document.cookie = `digilist_saas_session_${group}=; path=/; max-age=0`;
+            window.location.href = String(import.meta.env.VITE_WEB_APP_URL || 'http://localhost:5190');
+          }}
+        />
       }
       sidebar={
         <DashboardSidebar
-          logoTitle={String(import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation")}
-          logoSubtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || "Simple SAAS")}
+          logoTitle={String(import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation')}
+          logoSubtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || 'Simple SAAS')}
           logo={
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex' }}>
-              <HeaderLogo src="/logo.svg" title={String(import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation")} subtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || "Simple SAAS")} height="36px" />
+              <HeaderLogo
+                src="/logo.svg"
+                title={String(import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation')}
+                subtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || 'Simple SAAS')}
+                height="36px"
+              />
             </Link>
           }
           sections={sections}
@@ -141,16 +153,19 @@ function DashboardLayoutAdmin({
 
   return (
     <AppDashboardLayout
-      header={
-        <DashboardHeaderSlots variant="backoffice" user={user} onLogout={onLogout} />
-      }
+      header={<DashboardHeaderSlots variant="backoffice" user={user} onLogout={onLogout} />}
       sidebar={
         <DashboardSidebar
-          logoTitle={String(import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation")}
-          logoSubtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || "Simple SAAS")}
+          logoTitle={String(import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation')}
+          logoSubtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || 'Simple SAAS')}
           logo={
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex' }}>
-              <HeaderLogo src="/logo.svg" title={String(import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation")} subtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || "Simple SAAS")} height="36px" />
+              <HeaderLogo
+                src="/logo.svg"
+                title={String(import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation')}
+                subtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || 'Simple SAAS')}
+                height="36px"
+              />
             </Link>
           }
           sections={sections}
@@ -176,16 +191,19 @@ function DashboardLayoutPlatform({
 
   return (
     <AppDashboardLayout
-      header={
-        <DashboardHeaderSlots variant="backoffice" user={user} onLogout={onLogout} />
-      }
+      header={<DashboardHeaderSlots variant="backoffice" user={user} onLogout={onLogout} />}
       sidebar={
         <DashboardSidebar
-          logoTitle={String(import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation")}
-          logoSubtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || "Simple SAAS")}
+          logoTitle={String(import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation')}
+          logoSubtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || 'Simple SAAS')}
           logo={
             <Link to="/platform" style={{ textDecoration: 'none', color: 'inherit', display: 'flex' }}>
-              <HeaderLogo src="/logo.svg" title={String(import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation")} subtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || "Simple SAAS")} height="36px" />
+              <HeaderLogo
+                src="/logo.svg"
+                title={String(import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation')}
+                subtitle={String(import.meta.env.VITE_PLATFORM_TAGLINE || 'Simple SAAS')}
+                height="36px"
+              />
             </Link>
           }
           sections={sections}
@@ -210,20 +228,13 @@ export function DashboardLayout(props: DashboardLayoutProps): React.ReactElement
   if (props.variant === 'platform') {
     return (
       <PageTitleProvider>
-        <DashboardLayoutPlatform
-          user={props.user}
-          onLogout={props.onLogout}
-        />
+        <DashboardLayoutPlatform user={props.user} onLogout={props.onLogout} />
       </PageTitleProvider>
     );
   }
   return (
     <PageTitleProvider>
-      <DashboardLayoutAdmin
-        user={props.user}
-        onLogout={props.onLogout}
-        effectiveRole={props.effectiveRole}
-      />
+      <DashboardLayoutAdmin user={props.user} onLogout={props.onLogout} effectiveRole={props.effectiveRole} />
     </PageTitleProvider>
   );
 }

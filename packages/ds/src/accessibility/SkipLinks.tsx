@@ -12,7 +12,7 @@
  *
  * @example
  * ```tsx
- * import { SkipLinks } from '@digilist-saas/ds';
+ * import { SkipLinks } from '@digipicks/ds';
  *
  * function App() {
  *   return (
@@ -31,24 +31,24 @@ import styles from './SkipLinks.module.css';
 import { cn } from '../utils';
 
 export interface SkipLink {
-    /** Target element ID (without #) */
-    target: string;
-    /** Link label text */
-    label: string;
+  /** Target element ID (without #) */
+  target: string;
+  /** Link label text */
+  label: string;
 }
 
 export interface SkipLinksProps {
-    /** Custom skip links (defaults to main-content and main-navigation) */
-    links?: SkipLink[];
-    /** Optional CSS class name */
-    className?: string;
-    /** Callback when skip link is used (for accessibility analytics) */
-    onSkipLinkClick?: (target: string) => void;
+  /** Custom skip links (defaults to main-content and main-navigation) */
+  links?: SkipLink[];
+  /** Optional CSS class name */
+  className?: string;
+  /** Callback when skip link is used (for accessibility analytics) */
+  onSkipLinkClick?: (target: string) => void;
 }
 
 const DEFAULT_LINKS: SkipLink[] = [
-    { target: 'main-content', label: 'Hopp til hovedinnhold' },
-    { target: 'main-navigation', label: 'Hopp til navigasjon' },
+  { target: 'main-content', label: 'Hopp til hovedinnhold' },
+  { target: 'main-navigation', label: 'Hopp til navigasjon' },
 ];
 
 /**
@@ -57,28 +57,28 @@ const DEFAULT_LINKS: SkipLink[] = [
  * SSR-safe accessibility component for keyboard navigation
  */
 export function SkipLinks({
-    links = DEFAULT_LINKS,
-    className,
-    onSkipLinkClick,
+  links = DEFAULT_LINKS,
+  className,
+  onSkipLinkClick,
 }: SkipLinksProps = {}): React.ReactElement {
-    const handleClick = (target: string) => {
-        onSkipLinkClick?.(target);
-    };
+  const handleClick = (target: string) => {
+    onSkipLinkClick?.(target);
+  };
 
-    return (
-        <div className={cn(styles.skipLinks, className)}>
-            {links.map((link) => (
-                <a
-                    key={link.target}
-                    href={`#${link.target}`}
-                    className={styles.skipLink}
-                    onClick={() => handleClick(link.target)}
-                >
-                    {link.label}
-                </a>
-            ))}
-        </div>
-    );
+  return (
+    <div className={cn(styles.skipLinks, className)}>
+      {links.map((link) => (
+        <a
+          key={link.target}
+          href={`#${link.target}`}
+          className={styles.skipLink}
+          onClick={() => handleClick(link.target)}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  );
 }
 
 export default SkipLinks;

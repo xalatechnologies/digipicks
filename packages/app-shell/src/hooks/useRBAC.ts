@@ -9,7 +9,7 @@
  * hasPermission('listings.view')  // delegates to CAP_LISTING_READ
  */
 
-import { useAuth as useSdkAuth } from '@digilist-saas/sdk';
+import { useAuth as useSdkAuth } from '@digipicks/sdk';
 import type { Capability } from '../capabilities';
 import { useCapabilities } from './useCapabilities';
 
@@ -33,7 +33,7 @@ const PERMISSION_TO_CAPABILITY: Record<Permission, Capability> = {
   'listings.view': 'CAP_LISTING_READ',
   'listings.create': 'CAP_LISTING_CREATE',
   'listings.edit': 'CAP_LISTING_EDIT',
-  'listings.delete': 'CAP_LISTING_EDIT',        // delete uses same cap as edit
+  'listings.delete': 'CAP_LISTING_EDIT', // delete uses same cap as edit
   'users.view': 'CAP_USER_VIEW',
   'users.manage': 'CAP_USER_ADMIN',
   'settings.view': 'CAP_SETTINGS_VIEW',
@@ -63,18 +63,17 @@ export function useRBAC(options?: UseRBACOptions) {
     // Fallback for apps without RoleProvider (e.g. standalone SDK auth)
     if (!user) return false;
     const role = (user.role ?? '').toLowerCase();
-    if (['superadmin', 'admin', 'owner'].includes(role)) return true;
+    if (['superadmin', 'admin'].includes(role)) return true;
     // Minimal fallback for non-admin roles
     const fallbackPerms: Record<string, Permission[]> = {
-      user: ['listings.view'],
+      creator: ['listings.view', 'listings.create', 'listings.edit'],
+      subscriber: ['listings.view'],
     };
     return (fallbackPerms[role] ?? []).includes(permission);
   };
 
   /** Returns permission result with optional reason for auditability. */
-  const hasPermissionWithReason = (
-    permission: Permission
-  ): { allowed: boolean; reason?: string } => {
+  const hasPermissionWithReason = (permission: Permission): { allowed: boolean; reason?: string } => {
     const allowed = hasPermission(permission);
     if (!user) return { allowed: false, reason: 'Not authenticated' };
     const role = (user.role ?? '').toLowerCase();

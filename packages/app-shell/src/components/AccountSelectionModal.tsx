@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Heading, Paragraph, Card, Spinner, Checkbox } from '@digilist-saas/ds';
+import { Button, Heading, Paragraph, Card, Spinner, Checkbox } from '@digipicks/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 
 // =============================================================================
@@ -326,12 +326,11 @@ export function AccountSelectionModal({
                       display: 'flex',
                       alignItems: 'center',
                       gap: 'var(--ds-size-3)',
-                      border: selectedOrgId === org.id
-                        ? '2px solid var(--ds-color-accent-border-default)'
-                        : '2px solid var(--ds-color-neutral-border-default)',
-                      backgroundColor: selectedOrgId === org.id
-                        ? 'var(--ds-color-accent-surface-default)'
-                        : undefined,
+                      border:
+                        selectedOrgId === org.id
+                          ? '2px solid var(--ds-color-accent-border-default)'
+                          : '2px solid var(--ds-color-neutral-border-default)',
+                      backgroundColor: selectedOrgId === org.id ? 'var(--ds-color-accent-surface-default)' : undefined,
                       transition: 'all 0.2s',
                     }}
                   >
@@ -417,12 +416,7 @@ export function AccountSelectionModal({
             </Button>
           )}
           {step === 'organization' && (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={handleOrganizationConfirm}
-              disabled={!selectedOrgId}
-            >
+            <Button type="button" variant="primary" onClick={handleOrganizationConfirm} disabled={!selectedOrgId}>
               Fortsett
             </Button>
           )}

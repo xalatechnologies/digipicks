@@ -2,11 +2,11 @@
  * PlatformSidebar
  *
  * Reusable sidebar for saas-admin, monitoring, dashboard.
- * Renders nav sections using @digilist-saas/ds. Matches PlatformLayout sidebar slot.
+ * Renders nav sections using @digipicks/ds. Matches PlatformLayout sidebar slot.
  */
 
 import { NavLink, useLocation } from 'react-router-dom';
-import { Paragraph } from '@digilist-saas/ds';
+import { Paragraph } from '@digipicks/ds';
 
 export interface PlatformSidebarNavItem {
   name: string;
@@ -36,10 +36,7 @@ export interface PlatformSidebarProps {
 
 function SidebarNavItem({ item }: { item: PlatformSidebarNavItem }) {
   const location = useLocation();
-  const isActive =
-    item.href === '/'
-      ? location.pathname === '/'
-      : location.pathname.startsWith(item.href);
+  const isActive = item.href === '/' ? location.pathname === '/' : location.pathname.startsWith(item.href);
 
   return (
     <NavLink
@@ -53,12 +50,8 @@ function SidebarNavItem({ item }: { item: PlatformSidebarNavItem }) {
         borderRadius: 'var(--ds-border-radius-lg)',
         textDecoration: 'none',
         position: 'relative',
-        backgroundColor: isActive
-          ? 'var(--ds-color-neutral-surface-hover)'
-          : 'transparent',
-        borderLeft: isActive
-          ? '3px solid var(--ds-color-accent-base-default)'
-          : '3px solid transparent',
+        backgroundColor: isActive ? 'var(--ds-color-neutral-surface-hover)' : 'transparent',
+        borderLeft: isActive ? '3px solid var(--ds-color-accent-base-default)' : '3px solid transparent',
         transition: 'all 0.15s ease',
       }}
     >
@@ -70,9 +63,7 @@ function SidebarNavItem({ item }: { item: PlatformSidebarNavItem }) {
           backgroundColor: isActive
             ? 'var(--ds-color-accent-surface-default)'
             : 'var(--ds-color-neutral-surface-hover)',
-          color: isActive
-            ? 'var(--ds-color-accent-text-default)'
-            : 'var(--ds-color-neutral-text-default)',
+          color: isActive ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-default)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -91,9 +82,7 @@ function SidebarNavItem({ item }: { item: PlatformSidebarNavItem }) {
             fontWeight: isActive
               ? ('var(--ds-font-weight-semibold)' as React.CSSProperties['fontWeight'])
               : ('var(--ds-font-weight-medium)' as React.CSSProperties['fontWeight']),
-            color: isActive
-              ? 'var(--ds-color-accent-text-default)'
-              : 'var(--ds-color-neutral-text-default)',
+            color: isActive ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-default)',
           }}
         >
           {item.name}
@@ -177,10 +166,7 @@ export function PlatformSidebar({
         }}
       >
         {sections.map((section, sectionIndex) => (
-          <div
-            key={sectionIndex}
-            style={{ marginBottom: 'var(--ds-size-6)' }}
-          >
+          <div key={sectionIndex} style={{ marginBottom: 'var(--ds-size-6)' }}>
             {section.title && (
               <Paragraph
                 data-size="xs"

@@ -8,21 +8,17 @@
  */
 
 /**
- * Platform role hierarchy — simplified to 3 roles.
+ * Platform role hierarchy — DigiPicks 4-role model.
  *
- * - superadmin: Platform infrastructure only (tenants, billing, modules, flags, integrations)
- * - admin: Platform admin — sees all tenants cross-tenant (listings, resources, etc.)
- * - user: Tenant-level — acts as both tenant admin (owner) and end-user, scoped to own tenant
+ * - superadmin: Platform infrastructure only (no tenant)
+ * - admin: Tenant admin (has tenant)
+ * - creator: Tenant-scoped content creator (has tenant)
+ * - subscriber: End-user / consumer (no tenant)
  */
-export type PlatformRole =
-  | 'superadmin'    // Platform infra (SaaS admin)
-  | 'admin'         // Platform admin (cross-tenant)
-  | 'user';         // Tenant admin + end-user (own tenant only)
+export type PlatformRole = 'superadmin' | 'admin' | 'creator' | 'subscriber';
 
 /** Roles that grant superadmin access (normalized from various auth sources) */
-export const SUPERADMIN_ROLES = new Set([
-  'superadmin', 'super_admin', 'saasadmin', 'SaaSAdmin', 'SuperAdmin',
-]);
+export const SUPERADMIN_ROLES = new Set(['superadmin', 'super_admin', 'saasadmin', 'SaaSAdmin', 'SuperAdmin']);
 
 /**
  * Capability definitions for feature-level access control.
@@ -92,15 +88,20 @@ const PLATFORM_CAPS: Capability[] = [
 ];
 
 /**
- * Role-to-capability mapping.
- * admin and user share the same feature capabilities — the difference is DATA SCOPE:
- * - admin sees cross-tenant data
- * - user sees only own tenant data (tenant admin + end-user)
+ * Role-to-capability mapping (DigiPicks 4-role model).
  */
 export const ROLE_CAPABILITIES: Record<PlatformRole, Capability[]> = {
   superadmin: [...TENANT_ADMIN_CAPS, ...PLATFORM_CAPS],
   admin: TENANT_ADMIN_CAPS,
-  user: TENANT_ADMIN_CAPS, // same feature caps, but scoped to own tenant
+  creator: [
+    'CAP_LISTING_READ',
+    'CAP_LISTING_CREATE',
+    'CAP_LISTING_EDIT',
+    'CAP_ORG_VIEW',
+    'CAP_SETTINGS_VIEW',
+    'CAP_REPORTS_VIEW',
+  ],
+  subscriber: ['CAP_LISTING_READ'],
 };
 
 export function getCapabilitiesForRole(role: PlatformRole | undefined): Capability[] {
@@ -108,10 +109,7 @@ export function getCapabilitiesForRole(role: PlatformRole | undefined): Capabili
   return ROLE_CAPABILITIES[role] ?? [];
 }
 
-export function roleHasCapability(
-  role: PlatformRole | undefined,
-  capability: Capability
-): boolean {
+export function roleHasCapability(role: PlatformRole | undefined, capability: Capability): boolean {
   return getCapabilitiesForRole(role).includes(capability);
 }
 

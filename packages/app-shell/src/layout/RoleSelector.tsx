@@ -4,15 +4,8 @@
  */
 
 import { useState } from 'react';
-import {
-  Button,
-  Checkbox,
-  Heading,
-  Paragraph,
-  ShieldCheckIcon,
-  ClipboardListIcon,
-} from '@digilist-saas/ds';
-import type { PlatformRole } from '@digilist-saas/app-shell';
+import { Button, Checkbox, Heading, Paragraph, ShieldCheckIcon, ClipboardListIcon } from '@digipicks/ds';
+import type { PlatformRole } from '@digipicks/app-shell';
 
 import styles from './RoleSelector.module.css';
 
@@ -69,8 +62,8 @@ export function RoleSelector({
         <Button
           type="button"
           variant="secondary"
-          onClick={() => handleRoleSelect('user')}
-          disabled={!isRoleAvailable('user')}
+          onClick={() => handleRoleSelect('subscriber')}
+          disabled={!isRoleAvailable('subscriber')}
           className={styles.option}
         >
           <div className={styles.optionIcon}>

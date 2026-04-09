@@ -15,8 +15,8 @@ import {
   DashboardPageHeader,
   PageContentLayout,
   useIsMobile,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+} from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import styles from './modules.module.css';
 
 interface ModuleInfo {
@@ -35,33 +35,121 @@ const MODULES: ModuleInfo[] = [
   { id: 'auth', name: 'Auth', category: 'platform', status: 'active', version: '1.0.0', tables: 4, exports: 18 },
   { id: 'rbac', name: 'RBAC', category: 'platform', status: 'active', version: '1.0.0', tables: 2, exports: 12 },
   { id: 'audit', name: 'Audit', category: 'platform', status: 'active', version: '1.0.0', tables: 1, exports: 8 },
-  { id: 'compliance', name: 'Compliance', category: 'platform', status: 'active', version: '1.0.0', tables: 3, exports: 14 },
-  { id: 'tenant-config', name: 'Tenant Config', category: 'platform', status: 'active', version: '1.0.0', tables: 3, exports: 16 },
-  { id: 'notifications', name: 'Notifications', category: 'platform', status: 'active', version: '1.0.0', tables: 4, exports: 22 },
-  { id: 'user-prefs', name: 'User Prefs', category: 'platform', status: 'active', version: '1.0.0', tables: 2, exports: 8 },
-  { id: 'integrations', name: 'Integrations', category: 'platform', status: 'active', version: '1.0.0', tables: 3, exports: 18 },
+  {
+    id: 'compliance',
+    name: 'Compliance',
+    category: 'platform',
+    status: 'active',
+    version: '1.0.0',
+    tables: 3,
+    exports: 14,
+  },
+  {
+    id: 'tenant-config',
+    name: 'Tenant Config',
+    category: 'platform',
+    status: 'active',
+    version: '1.0.0',
+    tables: 3,
+    exports: 16,
+  },
+  {
+    id: 'notifications',
+    name: 'Notifications',
+    category: 'platform',
+    status: 'active',
+    version: '1.0.0',
+    tables: 4,
+    exports: 22,
+  },
+  {
+    id: 'user-prefs',
+    name: 'User Prefs',
+    category: 'platform',
+    status: 'active',
+    version: '1.0.0',
+    tables: 2,
+    exports: 8,
+  },
+  {
+    id: 'integrations',
+    name: 'Integrations',
+    category: 'platform',
+    status: 'active',
+    version: '1.0.0',
+    tables: 3,
+    exports: 18,
+  },
   { id: 'guides', name: 'Guides', category: 'platform', status: 'active', version: '1.0.0', tables: 4, exports: 16 },
   { id: 'support', name: 'Support', category: 'platform', status: 'active', version: '1.0.0', tables: 2, exports: 12 },
   // Domain Layer
-  { id: 'resources', name: 'Resources', category: 'domain', status: 'active', version: '1.0.0', tables: 1, exports: 24 },
+  {
+    id: 'resources',
+    name: 'Resources',
+    category: 'domain',
+    status: 'active',
+    version: '1.0.0',
+    tables: 1,
+    exports: 24,
+  },
   { id: 'bookings', name: 'Bookings', category: 'domain', status: 'active', version: '1.0.0', tables: 5, exports: 32 },
-  { id: 'ticketing', name: 'Ticketing', category: 'domain', status: 'active', version: '1.0.0', tables: 6, exports: 38 },
+  {
+    id: 'ticketing',
+    name: 'Ticketing',
+    category: 'domain',
+    status: 'active',
+    version: '1.0.0',
+    tables: 6,
+    exports: 38,
+  },
   { id: 'pricing', name: 'Pricing', category: 'domain', status: 'active', version: '1.0.0', tables: 5, exports: 28 },
   { id: 'billing', name: 'Billing', category: 'domain', status: 'active', version: '1.0.0', tables: 4, exports: 22 },
-  { id: 'giftcards', name: 'Gift Cards', category: 'domain', status: 'active', version: '1.0.0', tables: 4, exports: 18 },
-  { id: 'subscriptions', name: 'Subscriptions', category: 'domain', status: 'active', version: '1.0.0', tables: 3, exports: 16 },
+  {
+    id: 'giftcards',
+    name: 'Gift Cards',
+    category: 'domain',
+    status: 'active',
+    version: '1.0.0',
+    tables: 4,
+    exports: 18,
+  },
+  {
+    id: 'subscriptions',
+    name: 'Subscriptions',
+    category: 'domain',
+    status: 'active',
+    version: '1.0.0',
+    tables: 3,
+    exports: 16,
+  },
   { id: 'resale', name: 'Resale', category: 'domain', status: 'active', version: '1.0.0', tables: 4, exports: 20 },
   { id: 'reviews', name: 'Reviews', category: 'domain', status: 'active', version: '1.0.0', tables: 2, exports: 14 },
   { id: 'catalog', name: 'Catalog', category: 'domain', status: 'active', version: '1.0.0', tables: 4, exports: 18 },
   { id: 'seasons', name: 'Seasons', category: 'domain', status: 'active', version: '1.0.0', tables: 4, exports: 22 },
   { id: 'addons', name: 'Addons', category: 'domain', status: 'active', version: '1.0.0', tables: 3, exports: 14 },
-  { id: 'analytics', name: 'Analytics', category: 'domain', status: 'active', version: '1.0.0', tables: 4, exports: 18 },
-  { id: 'messaging', name: 'Messaging', category: 'domain', status: 'active', version: '1.0.0', tables: 3, exports: 16 },
+  {
+    id: 'analytics',
+    name: 'Analytics',
+    category: 'domain',
+    status: 'active',
+    version: '1.0.0',
+    tables: 4,
+    exports: 18,
+  },
+  {
+    id: 'messaging',
+    name: 'Messaging',
+    category: 'domain',
+    status: 'active',
+    version: '1.0.0',
+    tables: 3,
+    exports: 16,
+  },
 ];
 
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@digilist-saas/sdk';
-import { SettingsToggle } from '@digilist-saas/ds/blocks';
+import { api } from '@digipicks/sdk';
+import { SettingsToggle } from '@digipicks/ds/blocks';
 
 export function ModulesPage() {
   const t = useT();
@@ -111,7 +199,8 @@ export function ModulesPage() {
           Platform Defaults (Global Feature Flags)
         </Heading>
         <Paragraph data-size="sm" data-color="subtle">
-          Toggle features on or off globally across all tenants. If a feature is disabled here, it overrides any tenant-specific settings.
+          Toggle features on or off globally across all tenants. If a feature is disabled here, it overrides any
+          tenant-specific settings.
         </Paragraph>
         <Card data-color="neutral">
           <Stack direction="vertical" spacing="0">
@@ -181,10 +270,7 @@ function ModuleCard({ module }: { module: ModuleInfo }) {
           <Heading data-size="xs" style={{ margin: 0 }}>
             {module.name}
           </Heading>
-          <Tag
-            data-size="sm"
-            data-color={module.status === 'active' ? 'success' : 'neutral'}
-          >
+          <Tag data-size="sm" data-color={module.status === 'active' ? 'success' : 'neutral'}>
             {module.status === 'active' ? t('saasAdmin.modules.active') : t('saasAdmin.modules.disabled')}
           </Tag>
         </Stack>

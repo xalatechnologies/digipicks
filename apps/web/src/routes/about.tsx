@@ -5,13 +5,8 @@
  * All content from i18n — no data fetching.
  */
 
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Stack,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+import { Card, Heading, Paragraph, Stack } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 import s from './about.module.css';
 
 export function AboutPage() {

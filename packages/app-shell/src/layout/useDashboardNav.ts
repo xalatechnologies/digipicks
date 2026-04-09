@@ -6,18 +6,18 @@
 
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import type { SidebarNavSection, BottomNavigationItem } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useAccountContext, useFeatureModule, env, useModeOptional, useIsOwner } from '@digilist-saas/app-shell';
-import { useTenantConfig } from '@digilist-saas/sdk';
-import type { PlatformRole } from '@digilist-saas/app-shell';
+import type { SidebarNavSection, BottomNavigationItem } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useAccountContext, useFeatureModule, env, useModeOptional, useIsOwner } from '@digipicks/app-shell';
+import { useTenantConfig } from '@digipicks/sdk';
+import type { PlatformRole } from '@digipicks/app-shell';
 import {
   DASHBOARD_NAV_CONFIG,
   type DashboardVariant,
   type DashboardNavItemConfig,
   type DashboardNavSectionConfig,
-} from '@digilist-saas/shared';
-import { getNavIcon } from '@digilist-saas/ds';
+} from '@digipicks/shared';
+import { getNavIcon } from '@digipicks/ds';
 
 const BOTTOM_NAV_ID_TO_ICON: Record<string, string> = {
   dashboard: 'home',
@@ -41,7 +41,11 @@ const BOTTOM_NAV_ID_TO_HREF: Record<string, Record<DashboardVariant, string>> = 
 };
 
 const BOTTOM_NAV_LABEL_KEYS: Record<string, Record<DashboardVariant, string>> = {
-  dashboard: { minside: 'minside.dashboard', backoffice: 'backoffice.nav.dashboard', platform: 'platform.nav.overview' },
+  dashboard: {
+    minside: 'minside.dashboard',
+    backoffice: 'backoffice.nav.dashboard',
+    platform: 'platform.nav.overview',
+  },
   bookings: { minside: 'minside.myBookings', backoffice: 'backoffice.nav.bookings', platform: 'platform.nav.overview' },
   calendar: { minside: 'minside.myCalendar', backoffice: 'backoffice.nav.calendar', platform: 'platform.nav.overview' },
   messages: { minside: 'minside.messages', backoffice: 'backoffice.nav.messages', platform: 'platform.nav.overview' },
@@ -105,19 +109,25 @@ export function useDashboardNavSections({
               return false;
             }
             const roleOk =
-              !item.roles ||
-              item.roles.length === 0 ||
-              (navRole != null && item.roles.some((r) => r === navRole));
+              !item.roles || item.roles.length === 0 || (navRole != null && item.roles.some((r) => r === navRole));
             if (!roleOk) return false;
             // For user role: filter by mode (leietaker/utleier)
-            if (effectiveRole === 'user' && item.modes && item.modes.length > 0) {
+            if (
+              (effectiveRole === 'creator' || effectiveRole === 'subscriber') &&
+              item.modes &&
+              item.modes.length > 0
+            ) {
               const currentMode = modeCtx?.mode ?? 'leietaker';
               if (!item.modes.includes(currentMode as 'leietaker' | 'utleier')) return false;
             }
             // Hide items for owners (e.g. "Bli utleier" when already owner)
             if (item.hideForOwners && isOwner) return false;
             // For user role in backoffice, also filter by context (personal/organization)
-            if (effectiveRole === 'user' && item.contexts && item.contexts.length > 0) {
+            if (
+              (effectiveRole === 'creator' || effectiveRole === 'subscriber') &&
+              item.contexts &&
+              item.contexts.length > 0
+            ) {
               if (!item.contexts.includes(accountType)) return false;
             }
             return moduleEnabled(item.module);
@@ -131,7 +141,18 @@ export function useDashboardNavSections({
           })),
       }))
       .filter((section) => section.items.length > 0);
-  }, [variant, accountType, effectiveRole, t, messagingEnabled, reviewsEnabled, seasonalLeasesEnabled, hiddenNavItems, modeCtx?.mode, isOwner]);
+  }, [
+    variant,
+    accountType,
+    effectiveRole,
+    t,
+    messagingEnabled,
+    reviewsEnabled,
+    seasonalLeasesEnabled,
+    hiddenNavItems,
+    modeCtx?.mode,
+    isOwner,
+  ]);
 }
 
 export function useDashboardBottomNav(variant: DashboardVariant): BottomNavigationItem[] {
@@ -151,6 +172,6 @@ export function useDashboardBottomNav(variant: DashboardVariant): BottomNavigati
             ? location.pathname === '/'
             : location.pathname.startsWith(BOTTOM_NAV_ID_TO_HREF[id]?.[variant] ?? '/'),
       })),
-    [variant, location.pathname, t]
+    [variant, location.pathname, t],
   );
 }

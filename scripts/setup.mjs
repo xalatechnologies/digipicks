@@ -5,7 +5,7 @@
  *
  * Configures a freshly cloned repo:
  *   1. Collects project name, package scope, and tagline
- *   2. Replaces @digilist-saas/ scope across all source files
+ *   2. Replaces @digipicks/ scope across all source files
  *   3. Updates branding (env, manifests, author)
  *   4. Cleans CI workflow files
  *   5. Initializes Convex backend
@@ -18,14 +18,14 @@
  * Requirements: Node >= 20, no npm packages needed.
  */
 
-import { createInterface } from "node:readline";
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { join, extname, relative } from "node:path";
-import { execSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { createInterface } from 'node:readline';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { join, extname, relative } from 'node:path';
+import { execSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
-const ROOT = join(__filename, "..", "..");
+const ROOT = join(__filename, '..', '..');
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -34,18 +34,18 @@ const ROOT = join(__filename, "..", "..");
 const rl = createInterface({ input: process.stdin, output: process.stdout });
 
 function ask(question, defaultValue) {
-  const suffix = defaultValue ? ` (${defaultValue})` : "";
+  const suffix = defaultValue ? ` (${defaultValue})` : '';
   return new Promise((resolve) => {
     rl.question(`${question}${suffix}: `, (answer) => {
-      resolve(answer.trim() || defaultValue || "");
+      resolve(answer.trim() || defaultValue || '');
     });
   });
 }
 
 function heading(text) {
-  console.log(`\n${"=".repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log(`  ${text}`);
-  console.log(`${"=".repeat(60)}\n`);
+  console.log(`${'='.repeat(60)}\n`);
 }
 
 function info(text) {
@@ -66,18 +66,33 @@ function error(text) {
 
 /** File extensions eligible for scope replacement. */
 const REPLACE_EXTENSIONS = new Set([
-  ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs",
-  ".json",
-  ".yml", ".yaml",
-  ".css", ".html",
-  ".md",
-  ".mts", ".cts",
+  '.ts',
+  '.tsx',
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.json',
+  '.yml',
+  '.yaml',
+  '.css',
+  '.html',
+  '.md',
+  '.mts',
+  '.cts',
 ]);
 
 /** Directory names to skip entirely. */
 const SKIP_DIRS = new Set([
-  "node_modules", ".git", "dist", ".next", ".convex",
-  "_generated", ".turbo", ".cache", "coverage",
+  'node_modules',
+  '.git',
+  'dist',
+  '.next',
+  '.convex',
+  '_generated',
+  '.turbo',
+  '.cache',
+  'coverage',
 ]);
 
 /**
@@ -92,7 +107,7 @@ function collectFiles(dir) {
     return results;
   }
   for (const entry of entries) {
-    if (entry.name.startsWith(".") && entry.name !== ".github" && entry.name !== ".env.example") {
+    if (entry.name.startsWith('.') && entry.name !== '.github' && entry.name !== '.env.example') {
       continue;
     }
     const fullPath = join(dir, entry.name);
@@ -116,13 +131,13 @@ function collectFiles(dir) {
 function replaceInFile(filePath, oldStr, newStr) {
   let content;
   try {
-    content = readFileSync(filePath, "utf-8");
+    content = readFileSync(filePath, 'utf-8');
   } catch {
     return false;
   }
   if (!content.includes(oldStr)) return false;
   const updated = content.replaceAll(oldStr, newStr);
-  writeFileSync(filePath, updated, "utf-8");
+  writeFileSync(filePath, updated, 'utf-8');
   return true;
 }
 
@@ -134,7 +149,7 @@ function run(cmd, opts = {}) {
   try {
     execSync(cmd, {
       cwd: ROOT,
-      stdio: "inherit",
+      stdio: 'inherit',
       ...opts,
     });
     return true;
@@ -149,24 +164,24 @@ function run(cmd, opts = {}) {
 // ---------------------------------------------------------------------------
 
 async function collectInput() {
-  heading("Project Setup");
-  console.log("  This script configures a freshly cloned SaaS template repo.");
-  console.log("  Press Enter to accept defaults shown in parentheses.\n");
+  heading('Project Setup');
+  console.log('  This script configures a freshly cloned SaaS template repo.');
+  console.log('  Press Enter to accept defaults shown in parentheses.\n');
 
-  const projectName = await ask("Project name", "My SaaS Platform");
-  const scopeRaw = await ask("Package scope (e.g. @mycompany)", "@mycompany");
-  const scope = scopeRaw.startsWith("@") ? scopeRaw : `@${scopeRaw}`;
-  const tagline = await ask("Tagline", "Your tagline");
+  const projectName = await ask('Project name', 'My SaaS Platform');
+  const scopeRaw = await ask('Package scope (e.g. @mycompany)', '@mycompany');
+  const scope = scopeRaw.startsWith('@') ? scopeRaw : `@${scopeRaw}`;
+  const tagline = await ask('Tagline', 'Your tagline');
 
-  console.log("");
+  console.log('');
   info(`Project name : ${projectName}`);
   info(`Package scope: ${scope}`);
   info(`Tagline      : ${tagline}`);
-  console.log("");
+  console.log('');
 
-  const confirm = await ask("Proceed? (y/n)", "y");
-  if (confirm.toLowerCase() !== "y") {
-    console.log("Aborted.");
+  const confirm = await ask('Proceed? (y/n)', 'y');
+  if (confirm.toLowerCase() !== 'y') {
+    console.log('Aborted.');
     process.exit(0);
   }
 
@@ -174,13 +189,13 @@ async function collectInput() {
 }
 
 function replaceScope(scope) {
-  heading("Step 1/5 -- Replace package scope");
+  heading('Step 1/5 -- Replace package scope');
 
-  const oldScope = "@digilist-saas/";
+  const oldScope = '@digipicks/';
   const newScope = `${scope}/`;
 
   if (oldScope === newScope) {
-    info("Scope is already @digilist-saas -- skipping.");
+    info('Scope is already @digilist-saas -- skipping.');
     return;
   }
 
@@ -194,62 +209,62 @@ function replaceScope(scope) {
   }
 
   // Also replace the bare name "digilist-saas" in root package.json (the "name" field)
-  const rootPkg = join(ROOT, "package.json");
+  const rootPkg = join(ROOT, 'package.json');
   replaceInFile(rootPkg, '"digilist-saas"', `"${scope.slice(1)}-platform"`);
 
   success(`Replaced "${oldScope}" -> "${newScope}" in ${modified} files.`);
 }
 
 function updateBranding(projectName, scope, tagline) {
-  heading("Step 2/5 -- Update branding");
+  heading('Step 2/5 -- Update branding');
 
   // --- .env.local ---
-  const envPath = join(ROOT, ".env.local");
-  const envExamplePath = join(ROOT, ".env.example");
+  const envPath = join(ROOT, '.env.local');
+  const envExamplePath = join(ROOT, '.env.example');
 
   const envLines = [
-    "# Generated by scripts/setup.mjs",
-    "#",
-    "# Copy additional settings from .env.example as needed.",
-    "",
-    "# App URLs",
-    "VITE_WEB_APP_URL=http://localhost:5190",
-    "VITE_DASHBOARD_URL=http://localhost:5180",
-    "",
-    "# Platform Branding",
+    '# Generated by scripts/setup.mjs',
+    '#',
+    '# Copy additional settings from .env.example as needed.',
+    '',
+    '# App URLs',
+    'VITE_WEB_APP_URL=http://localhost:5190',
+    'VITE_DASHBOARD_URL=http://localhost:5180',
+    '',
+    '# Platform Branding',
     `PLATFORM_NAME=${projectName}`,
     `VITE_PLATFORM_NAME=${projectName}`,
     `VITE_PLATFORM_TAGLINE=${tagline}`,
-    "",
+    '',
   ];
 
   if (existsSync(envPath)) {
     // Append only if the keys are not already present
-    const existing = readFileSync(envPath, "utf-8");
-    if (!existing.includes("VITE_PLATFORM_NAME=")) {
-      writeFileSync(envPath, existing + "\n" + envLines.join("\n"), "utf-8");
-      info("Appended branding vars to existing .env.local");
+    const existing = readFileSync(envPath, 'utf-8');
+    if (!existing.includes('VITE_PLATFORM_NAME=')) {
+      writeFileSync(envPath, existing + '\n' + envLines.join('\n'), 'utf-8');
+      info('Appended branding vars to existing .env.local');
     } else {
-      info(".env.local already has VITE_PLATFORM_NAME -- skipping.");
+      info('.env.local already has VITE_PLATFORM_NAME -- skipping.');
     }
   } else {
-    writeFileSync(envPath, envLines.join("\n"), "utf-8");
-    info("Created .env.local with branding vars.");
+    writeFileSync(envPath, envLines.join('\n'), 'utf-8');
+    info('Created .env.local with branding vars.');
   }
 
   // --- Root package.json author ---
-  const rootPkg = join(ROOT, "package.json");
+  const rootPkg = join(ROOT, 'package.json');
   if (existsSync(rootPkg)) {
     replaceInFile(rootPkg, '"Xala Technologies"', `"${projectName}"`);
-    info("Updated author in root package.json.");
+    info('Updated author in root package.json.');
   }
 
   // --- PWA manifests in vite configs ---
-  for (const app of ["web", "dashboard"]) {
-    const viteConfig = join(ROOT, "apps", app, "vite.config.ts");
+  for (const app of ['web', 'dashboard']) {
+    const viteConfig = join(ROOT, 'apps', app, 'vite.config.ts');
     if (!existsSync(viteConfig)) continue;
 
-    let content = readFileSync(viteConfig, "utf-8");
+    let content = readFileSync(viteConfig, 'utf-8');
     let changed = false;
 
     // Replace manifest name values
@@ -267,44 +282,42 @@ function updateBranding(projectName, scope, tagline) {
     }
 
     if (changed) {
-      writeFileSync(viteConfig, content, "utf-8");
+      writeFileSync(viteConfig, content, 'utf-8');
       info(`Updated PWA manifest in apps/${app}/vite.config.ts`);
     }
   }
 
-  success("Branding updated.");
+  success('Branding updated.');
 }
 
 function cleanCIWorkflows() {
-  heading("Step 3/5 -- Clean CI workflows");
+  heading('Step 3/5 -- Clean CI workflows');
 
-  const workflowDir = join(ROOT, ".github", "workflows");
+  const workflowDir = join(ROOT, '.github', 'workflows');
   if (!existsSync(workflowDir)) {
-    info("No .github/workflows directory found -- skipping.");
+    info('No .github/workflows directory found -- skipping.');
     return;
   }
 
   let modified = 0;
-  const files = readdirSync(workflowDir).filter(
-    (f) => f.endsWith(".yml") || f.endsWith(".yaml")
-  );
+  const files = readdirSync(workflowDir).filter((f) => f.endsWith('.yml') || f.endsWith('.yaml'));
 
   for (const file of files) {
     const filePath = join(workflowDir, file);
-    let content = readFileSync(filePath, "utf-8");
+    let content = readFileSync(filePath, 'utf-8');
     const original = content;
 
     // Remove registry-url lines
-    content = content.replace(/^\s*registry-url:\s*'https:\/\/npm\.pkg\.github\.com'\s*\n/gm, "");
+    content = content.replace(/^\s*registry-url:\s*'https:\/\/npm\.pkg\.github\.com'\s*\n/gm, '');
 
     // Remove scope lines for @xala-technologies
-    content = content.replace(/^\s*scope:\s*'@xala-technologies'\s*\n/gm, "");
+    content = content.replace(/^\s*scope:\s*'@xala-technologies'\s*\n/gm, '');
 
     // Remove NODE_AUTH_TOKEN env lines (tied to GitHub Packages auth)
-    content = content.replace(/^\s*NODE_AUTH_TOKEN:\s*\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}\s*\n/gm, "");
+    content = content.replace(/^\s*NODE_AUTH_TOKEN:\s*\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}\s*\n/gm, '');
 
     if (content !== original) {
-      writeFileSync(filePath, content, "utf-8");
+      writeFileSync(filePath, content, 'utf-8');
       modified++;
       info(`Cleaned ${file}`);
     }
@@ -314,53 +327,53 @@ function cleanCIWorkflows() {
 }
 
 function initializeConvex() {
-  heading("Step 4/5 -- Initialize Convex");
+  heading('Step 4/5 -- Initialize Convex');
 
-  info("Running npx convex dev --once to create a new deployment...");
-  info("(This may prompt you to log in to Convex if not already authenticated.)\n");
+  info('Running npx convex dev --once to create a new deployment...');
+  info('(This may prompt you to log in to Convex if not already authenticated.)\n');
 
-  const ok = run("npx convex dev --once");
+  const ok = run('npx convex dev --once');
   if (ok) {
-    success("Convex initialized.");
+    success('Convex initialized.');
   } else {
-    warn("Convex initialization failed or was skipped.");
+    warn('Convex initialization failed or was skipped.');
     warn("You can run 'npx convex dev' later to set up your backend.");
   }
 }
 
 function installDependencies() {
-  heading("Step 5/5 -- Install dependencies");
+  heading('Step 5/5 -- Install dependencies');
 
-  const ok = run("pnpm install");
+  const ok = run('pnpm install');
   if (ok) {
-    success("Dependencies installed.");
+    success('Dependencies installed.');
   } else {
-    warn("pnpm install failed. You may need to run it manually.");
+    warn('pnpm install failed. You may need to run it manually.');
   }
 }
 
 function printSuccess(projectName, scope) {
-  heading("Setup Complete!");
+  heading('Setup Complete!');
 
   console.log(`  Your project "${projectName}" is ready.`);
-  console.log("");
-  console.log("  Next steps:");
-  console.log("");
-  console.log("    1. Start the dev server:");
-  console.log("       pnpm dev");
-  console.log("");
-  console.log("    2. Seed the database (optional):");
-  console.log("       pnpm seed:all");
-  console.log("");
-  console.log("    3. Open the apps:");
-  console.log("       Dashboard: http://localhost:5180");
-  console.log("       Web:       http://localhost:5190");
-  console.log("");
-  console.log("    4. Configure authentication and payments:");
-  console.log("       See .env.example for all available environment variables.");
-  console.log("");
+  console.log('');
+  console.log('  Next steps:');
+  console.log('');
+  console.log('    1. Start the dev server:');
+  console.log('       pnpm dev');
+  console.log('');
+  console.log('    2. Seed the database (optional):');
+  console.log('       pnpm seed:all');
+  console.log('');
+  console.log('    3. Open the apps:');
+  console.log('       Dashboard: http://localhost:5180');
+  console.log('       Web:       http://localhost:5190');
+  console.log('');
+  console.log('    4. Configure authentication and payments:');
+  console.log('       See .env.example for all available environment variables.');
+  console.log('');
   console.log(`  All packages now use the ${scope}/ scope.`);
-  console.log("  See CLAUDE.md for full architecture docs.\n");
+  console.log('  See CLAUDE.md for full architecture docs.\n');
 }
 
 // ---------------------------------------------------------------------------

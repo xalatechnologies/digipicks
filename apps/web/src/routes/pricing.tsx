@@ -6,16 +6,10 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Stack,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { usePublicTiers } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button, Stack } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { usePublicTiers } from '@digipicks/sdk';
+import { env } from '@digipicks/app-shell';
 import s from './pricing.module.css';
 
 // ---------------------------------------------------------------------------
@@ -79,37 +73,27 @@ export function PricingPage() {
                 {tier.name}
               </Heading>
 
-              <Paragraph className={s.tierDescription}>
-                {tier.shortDescription || tier.description || ''}
-              </Paragraph>
+              <Paragraph className={s.tierDescription}>{tier.shortDescription || tier.description || ''}</Paragraph>
 
               <Paragraph data-size="lg" className={s.tierPrice}>
-                {tier.price === 0
-                  ? t('pricing.free', 'Free')
-                  : `${tier.price} ${tier.currency}`}
-                {tier.price > 0 && (
-                  <span className={s.tierInterval}>
-                    {' '}{formatInterval(tier.billingInterval, t)}
-                  </span>
-                )}
+                {tier.price === 0 ? t('pricing.free', 'Free') : `${tier.price} ${tier.currency}`}
+                {tier.price > 0 && <span className={s.tierInterval}> {formatInterval(tier.billingInterval, t)}</span>}
               </Paragraph>
 
               {tier.benefits.length > 0 && (
                 <ul className={s.benefitsList}>
                   {tier.benefits.map((benefit) => (
                     <li key={benefit.id} className={s.benefitItem}>
-                      <span className={s.benefitCheck} aria-hidden="true">&#10003;</span>
+                      <span className={s.benefitCheck} aria-hidden="true">
+                        &#10003;
+                      </span>
                       {benefit.label}
                     </li>
                   ))}
                 </ul>
               )}
 
-              <Button
-                variant="primary"
-                data-size="md"
-                onClick={() => navigate('/register')}
-              >
+              <Button variant="primary" data-size="md" onClick={() => navigate('/register')}>
                 {t('pricing.getStarted')}
               </Button>
             </Card>
@@ -122,14 +106,8 @@ export function PricingPage() {
         <Heading level={2} data-size="md">
           {t('pricing.ctaTitle')}
         </Heading>
-        <Paragraph className={s.ctaText}>
-          {t('pricing.ctaText')}
-        </Paragraph>
-        <Button
-          variant="primary"
-          data-size="lg"
-          onClick={() => navigate('/register')}
-        >
+        <Paragraph className={s.ctaText}>{t('pricing.ctaText')}</Paragraph>
+        <Button variant="primary" data-size="lg" onClick={() => navigate('/register')}>
           {t('pricing.getStarted')}
         </Button>
       </Stack>

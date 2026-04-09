@@ -8,20 +8,11 @@
 
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Stack,
-  NativeSelect,
-  Textfield,
-  StatusTag,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useMyTailedPicks, useMyTrackerStats, useUntailPick } from '@digilist-saas/sdk';
-import type { TailedPick } from '@digilist-saas/sdk';
-import { useAuth, env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button, Stack, NativeSelect, Textfield, StatusTag } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useMyTailedPicks, useMyTrackerStats, useUntailPick } from '@digipicks/sdk';
+import type { TailedPick } from '@digipicks/sdk';
+import { useAuth, env } from '@digipicks/app-shell';
 import s from './pick-tracker.module.css';
 
 // ---------------------------------------------------------------------------
@@ -37,11 +28,16 @@ const RESULTS = ['All', 'pending', 'won', 'lost', 'push', 'void'];
 
 function resultColor(result: string): 'success' | 'danger' | 'warning' | 'neutral' {
   switch (result) {
-    case 'won': return 'success';
-    case 'lost': return 'danger';
-    case 'push': return 'warning';
-    case 'void': return 'neutral';
-    default: return 'neutral';
+    case 'won':
+      return 'success';
+    case 'lost':
+      return 'danger';
+    case 'push':
+      return 'warning';
+    case 'void':
+      return 'neutral';
+    default:
+      return 'neutral';
   }
 }
 
@@ -100,8 +96,12 @@ function PickRow({ pick, onUntail }: { pick: TailedPick; onUntail: (pickId: stri
           {pick.event}
         </div>
         <div className={s.pickMeta}>
-          <StatusTag color="neutral" data-size="sm">{pick.sport}</StatusTag>
-          <StatusTag color="neutral" data-size="sm">{pick.pickType}</StatusTag>
+          <StatusTag color="neutral" data-size="sm">
+            {pick.sport}
+          </StatusTag>
+          <StatusTag color="neutral" data-size="sm">
+            {pick.pickType}
+          </StatusTag>
           {pick.selection && <span>{pick.selection}</span>}
           {pick.oddsAmerican && <span>{pick.oddsAmerican}</span>}
           {pick.units && <span>{pick.units}u</span>}
@@ -114,7 +114,9 @@ function PickRow({ pick, onUntail }: { pick: TailedPick; onUntail: (pickId: stri
           {pick.result.toUpperCase()}
         </StatusTag>
       ) : (
-        <StatusTag color="neutral" data-size="sm">PENDING</StatusTag>
+        <StatusTag color="neutral" data-size="sm">
+          PENDING
+        </StatusTag>
       )}
 
       <div className={`${s.pickPl} ${plClass}`}>{pl.label}</div>
@@ -149,10 +151,13 @@ export function PickTrackerPage() {
 
   const startingBankroll = bankrollInput ? parseFloat(bankrollInput) : undefined;
 
-  const filterParams = useMemo(() => ({
-    sport: sportFilter !== 'All' ? sportFilter : undefined,
-    result: resultFilter !== 'All' ? resultFilter : undefined,
-  }), [sportFilter, resultFilter]);
+  const filterParams = useMemo(
+    () => ({
+      sport: sportFilter !== 'All' ? sportFilter : undefined,
+      result: resultFilter !== 'All' ? resultFilter : undefined,
+    }),
+    [sportFilter, resultFilter],
+  );
 
   const { picks, isLoading: picksLoading } = useMyTailedPicks(tenantId as any, userId, filterParams);
   const { stats, isLoading: statsLoading } = useMyTrackerStats(tenantId as any, userId, startingBankroll);
@@ -210,10 +215,7 @@ export function PickTrackerPage() {
             label={t('picks.tracker.record', 'Record')}
             value={`${stats.wins}W - ${stats.losses}L - ${stats.pushes}P`}
           />
-          <StatCard
-            label={t('picks.tracker.winRate', 'Win Rate')}
-            value={`${(stats.winRate * 100).toFixed(0)}%`}
-          />
+          <StatCard label={t('picks.tracker.winRate', 'Win Rate')} value={`${(stats.winRate * 100).toFixed(0)}%`} />
           <StatCard
             label={t('picks.tracker.netUnits', 'Net Units')}
             value={`${stats.netUnits >= 0 ? '+' : ''}${stats.netUnits.toFixed(2)}u`}
@@ -224,10 +226,7 @@ export function PickTrackerPage() {
             value={`${stats.roi >= 0 ? '+' : ''}${stats.roi.toFixed(1)}%`}
             colorClass={stats.roi >= 0 ? s.statPositive : s.statNegative}
           />
-          <StatCard
-            label={t('picks.tracker.pending', 'Pending')}
-            value={String(stats.pending)}
-          />
+          <StatCard label={t('picks.tracker.pending', 'Pending')} value={String(stats.pending)} />
         </div>
       )}
 
@@ -260,10 +259,13 @@ export function PickTrackerPage() {
               <Card key={sport.sport} className={s.breakdownCard}>
                 <div className={s.breakdownSport}>{sport.sport}</div>
                 <div className={s.breakdownStats}>
-                  <span>{sport.wins}W-{sport.losses}L</span>
+                  <span>
+                    {sport.wins}W-{sport.losses}L
+                  </span>
                   <span>{(sport.winRate * 100).toFixed(0)}%</span>
                   <span className={sport.netUnits >= 0 ? s.plPositive : s.plNegative}>
-                    {sport.netUnits >= 0 ? '+' : ''}{sport.netUnits.toFixed(2)}u
+                    {sport.netUnits >= 0 ? '+' : ''}
+                    {sport.netUnits.toFixed(2)}u
                   </span>
                 </div>
               </Card>
@@ -312,7 +314,7 @@ export function PickTrackerPage() {
       ) : picks.length === 0 ? (
         <div className={s.emptyState}>
           <Paragraph className={s.emptyText}>
-            {t('picks.tracker.empty', 'You haven\'t tailed any picks yet. Browse the pick feed to get started.')}
+            {t('picks.tracker.empty', "You haven't tailed any picks yet. Browse the pick feed to get started.")}
           </Paragraph>
           <Button data-size="sm" variant="secondary" onClick={() => navigate('/picks')}>
             {t('picks.tracker.browsePicks', 'Browse Picks')}

@@ -100,7 +100,6 @@ async function run(app: string, opts: { files?: string; rules?: string }): Promi
     printCheckResult('ROUTE_GUARD_PRESENT', v);
   }
 
-
   // Summary
   const errors = allViolations.filter((v) => v.severity === 'error');
   const warnings = allViolations.filter((v) => v.severity === 'warning');
@@ -111,7 +110,7 @@ async function run(app: string, opts: { files?: string; rules?: string }): Promi
   } else {
     console.log(
       `${BOLD}Summary:${RESET} ${errors.length} error(s), ${warnings.length} warning(s)` +
-      (errors.length > 0 ? ` ${RED}— FIX REQUIRED${RESET}` : ''),
+        (errors.length > 0 ? ` ${RED}— FIX REQUIRED${RESET}` : ''),
     );
   }
 
@@ -122,7 +121,10 @@ async function run(app: string, opts: { files?: string; rules?: string }): Promi
 
 function collectFiles(dir: string, ext: string, specificFiles?: string): string[] {
   if (specificFiles) {
-    return specificFiles.split(',').map((f) => f.trim()).filter((f) => f.endsWith(ext));
+    return specificFiles
+      .split(',')
+      .map((f) => f.trim())
+      .filter((f) => f.endsWith(ext));
   }
 
   const files: string[] = [];
@@ -173,7 +175,20 @@ function relativePath(fullPath: string): string {
 // Policy check implementations
 // ============================================================================
 
-const RAW_HTML_TAGS = ['<button', '<input', '<select', '<textarea', '<table', '<h1', '<h2', '<h3', '<h4', '<h5', '<h6', '<p>'];
+const RAW_HTML_TAGS = [
+  '<button',
+  '<input',
+  '<select',
+  '<textarea',
+  '<table',
+  '<h1',
+  '<h2',
+  '<h3',
+  '<h4',
+  '<h5',
+  '<h6',
+  '<p>',
+];
 
 function checkNoRawHtml(files: string[]): Violation[] {
   const violations: Violation[] = [];
@@ -204,12 +219,7 @@ function checkI18nRequired(files: string[]): Violation[] {
   const violations: Violation[] = [];
 
   // Match hardcoded string attributes on DS-relevant props
-  const attrPatterns = [
-    /\baria-label="([^"]+)"/,
-    /\bplaceholder="([^"]+)"/,
-    /\btitle="([^"]+)"/,
-    /\balt="([^"]+)"/,
-  ];
+  const attrPatterns = [/\baria-label="([^"]+)"/, /\bplaceholder="([^"]+)"/, /\btitle="([^"]+)"/, /\balt="([^"]+)"/];
 
   for (const file of files) {
     const content = fs.readFileSync(file, 'utf-8');
@@ -228,7 +238,7 @@ function checkI18nRequired(files: string[]): Violation[] {
             ruleId: 'I18N_REQUIRED',
             file,
             line: i + 1,
-            message: `Hardcoded string "${value}" — use t() from @digilist-saas/i18n`,
+            message: `Hardcoded string "${value}" — use t() from @digipicks/i18n`,
             severity: 'warning',
           });
         }
@@ -254,7 +264,7 @@ function checkDsImportsOnly(files: string[]): Violation[] {
             ruleId: 'DS_IMPORTS_ONLY',
             file,
             line: i + 1,
-            message: `Direct import from "${lib}" — use @digilist-saas/ds instead`,
+            message: `Direct import from "${lib}" — use @digipicks/ds instead`,
             severity: 'error',
           });
         }
@@ -376,7 +386,15 @@ function checkRouteGuardPresent(appTsxPath: string): Violation[] {
   const lines = content.split('\n');
 
   // Exempt paths that don't need guards
-  const exemptPaths = new Set(['/login', 'login', '/auth/callback', 'auth/callback', '/role-selection', 'role-selection', '*']);
+  const exemptPaths = new Set([
+    '/login',
+    'login',
+    '/auth/callback',
+    'auth/callback',
+    '/role-selection',
+    'role-selection',
+    '*',
+  ]);
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];

@@ -1,5 +1,5 @@
 /**
- * @digilist-saas/app-shell
+ * @digipicks/app-shell
  *
  * Shared app infrastructure for DigilistSaaS applications.
  * Provides provider composition, auth, tenant context, and route guards.
@@ -22,11 +22,7 @@ export { RequireAuth } from './guards';
 export { FeatureGate, type FeatureGateProps } from './guards/FeatureGate';
 
 // Route guards (requires react-router-dom)
-export {
-  ProtectedRoute,
-  type ProtectedRouteProps,
-  type ProtectedRoutePaths,
-} from './ProtectedRoute';
+export { ProtectedRoute, type ProtectedRouteProps, type ProtectedRoutePaths } from './ProtectedRoute';
 
 // Error handling
 export { createAuditableErrorHandler } from './audit-error-handler';
@@ -43,7 +39,7 @@ export {
 
 // Layout
 export { AppLayout } from './layout/AppLayout';
-export { PlatformLayout, type PlatformLayoutProps } from '@digilist-saas/ds';
+export { PlatformLayout, type PlatformLayoutProps } from '@digipicks/ds';
 export {
   GlobalSearch,
   type GlobalSearchProps,

@@ -6,7 +6,7 @@
  *
  * @example
  * ```tsx
- * import { BadgeRow, UsersIcon, ClockIcon } from '@digilist-saas/ds';
+ * import { BadgeRow, UsersIcon, ClockIcon } from '@digipicks/ds';
  *
  * <BadgeRow
  *   badges={[
@@ -26,25 +26,25 @@ import { cn } from '../utils';
 // =============================================================================
 
 export interface BadgeItem {
-    /** Optional icon element (consumer provides) */
-    icon?: React.ReactNode;
-    /** Badge label text */
-    label: string;
-    /** Optional variant override */
-    variant?: 'neutral' | 'success' | 'info' | 'warning';
+  /** Optional icon element (consumer provides) */
+  icon?: React.ReactNode;
+  /** Badge label text */
+  label: string;
+  /** Optional variant override */
+  variant?: 'neutral' | 'success' | 'info' | 'warning';
 }
 
 export interface BadgeRowProps {
-    /** Array of badges to display */
-    badges: BadgeItem[];
-    /** Allow wrapping to multiple lines */
-    wrap?: boolean;
-    /** Badge size */
-    size?: 'sm' | 'md' | 'lg';
-    /** Spacing between badges (default: var(--ds-size-2)) */
-    spacing?: string | number;
-    /** Custom class name */
-    className?: string;
+  /** Array of badges to display */
+  badges: BadgeItem[];
+  /** Allow wrapping to multiple lines */
+  wrap?: boolean;
+  /** Badge size */
+  size?: 'sm' | 'md' | 'lg';
+  /** Spacing between badges (default: var(--ds-size-2)) */
+  spacing?: string | number;
+  /** Custom class name */
+  className?: string;
 }
 
 // =============================================================================
@@ -52,30 +52,20 @@ export interface BadgeRowProps {
 // =============================================================================
 
 export function BadgeRow({
-    badges,
-    wrap = true,
-    size = 'sm',
-    spacing = 'var(--ds-size-2)',
-    className,
+  badges,
+  wrap = true,
+  size = 'sm',
+  spacing = 'var(--ds-size-2)',
+  className,
 }: BadgeRowProps): React.ReactElement {
-    return (
-        <Stack
-            direction="horizontal"
-            spacing={spacing}
-            wrap={wrap}
-            align="center"
-            className={cn('badge-row', className)}
-        >
-            {badges.map((badge, index) => (
-                <Tag
-                    key={`badge-${index}`}
-                    data-color={badge.variant || 'neutral'}
-                    data-size={size}
-                >
-                    {badge.icon}
-                    {badge.label}
-                </Tag>
-            ))}
-        </Stack>
-    );
+  return (
+    <Stack direction="horizontal" spacing={spacing} wrap={wrap} align="center" className={cn('badge-row', className)}>
+      {badges.map((badge, index) => (
+        <Tag key={`badge-${index}`} data-color={badge.variant || 'neutral'} data-size={size}>
+          {badge.icon}
+          {badge.label}
+        </Tag>
+      ))}
+    </Stack>
+  );
 }

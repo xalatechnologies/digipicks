@@ -8,17 +8,11 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Spinner,
-  NativeSelect,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useLeaderboard } from '@digilist-saas/sdk';
-import type { LeaderboardEntry, LeaderboardSortBy, LeaderboardTimeframe } from '@digilist-saas/sdk';
-import { env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Spinner, NativeSelect } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useLeaderboard } from '@digipicks/sdk';
+import type { LeaderboardEntry, LeaderboardSortBy, LeaderboardTimeframe } from '@digipicks/sdk';
+import { env } from '@digipicks/app-shell';
 import s from './leaderboard.module.css';
 
 // ---------------------------------------------------------------------------
@@ -79,39 +73,31 @@ function LeaderboardRow({ entry, onClick }: { entry: LeaderboardEntry; onClick: 
 
   return (
     <div className={s.leaderboardRow} onClick={onClick} role="button" tabIndex={0}>
-      <div className={`${s.rank} ${rankClass(entry.rank)}`}>
-        {entry.rank}
-      </div>
+      <div className={`${s.rank} ${rankClass(entry.rank)}`}>{entry.rank}</div>
 
       <div className={s.creatorCell}>
         {entry.creator?.avatarUrl ? (
           <img src={entry.creator.avatarUrl} alt={name} className={s.avatar} />
         ) : (
-          <div className={s.avatarPlaceholder}>
-            {getInitials(name)}
-          </div>
+          <div className={s.avatarPlaceholder}>{getInitials(name)}</div>
         )}
         <div>
           <div className={s.creatorName}>{name}</div>
           <div className={s.creatorRecord}>
-            {entry.wins}W - {entry.losses}L
-            {entry.pushes > 0 ? ` - ${entry.pushes}P` : ''}
+            {entry.wins}W - {entry.losses}L{entry.pushes > 0 ? ` - ${entry.pushes}P` : ''}
           </div>
         </div>
       </div>
 
-      <div className={`${s.statCell} ${entry.roi >= 0 ? s.roiPositive : s.roiNegative}`}>
-        {formatRoi(entry.roi)}
-      </div>
+      <div className={`${s.statCell} ${entry.roi >= 0 ? s.roiPositive : s.roiNegative}`}>{formatRoi(entry.roi)}</div>
 
-      <div className={`${s.statCell} ${s.hideOnMobile}`}>
-        {formatWinRate(entry.winRate)}
-      </div>
+      <div className={`${s.statCell} ${s.hideOnMobile}`}>{formatWinRate(entry.winRate)}</div>
 
       <div className={`${s.statCell} ${s.hideOnMobile}`}>
         {entry.currentStreak > 0 ? (
           <span className={`${s.streakBadge} ${entry.streakType === 'W' ? s.streakWin : s.streakLoss}`}>
-            {entry.currentStreak}{entry.streakType}
+            {entry.currentStreak}
+            {entry.streakType}
           </span>
         ) : (
           <span>—</span>
@@ -119,12 +105,11 @@ function LeaderboardRow({ entry, onClick }: { entry: LeaderboardEntry; onClick: 
       </div>
 
       <div className={`${s.statCell} ${s.hideOnMobile}`}>
-        {entry.netUnits >= 0 ? '+' : ''}{entry.netUnits.toFixed(1)}u
+        {entry.netUnits >= 0 ? '+' : ''}
+        {entry.netUnits.toFixed(1)}u
       </div>
 
-      <div className={s.statCell}>
-        {entry.totalPicks}
-      </div>
+      <div className={s.statCell}>{entry.totalPicks}</div>
     </div>
   );
 }
@@ -170,7 +155,9 @@ export default function LeaderboardPage() {
             onChange={(e) => setSport(e.target.value)}
           >
             {SPORTS.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s}>
+                {s}
+              </option>
             ))}
           </NativeSelect>
         </div>
@@ -182,7 +169,9 @@ export default function LeaderboardPage() {
             onChange={(e) => setTimeframe(e.target.value as LeaderboardTimeframe)}
           >
             {TIMEFRAMES.map((tf) => (
-              <option key={tf.value} value={tf.value}>{tf.label}</option>
+              <option key={tf.value} value={tf.value}>
+                {tf.label}
+              </option>
             ))}
           </NativeSelect>
         </div>
@@ -194,7 +183,9 @@ export default function LeaderboardPage() {
             onChange={(e) => setSortBy(e.target.value as LeaderboardSortBy)}
           >
             {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </NativeSelect>
         </div>
@@ -210,9 +201,7 @@ export default function LeaderboardPage() {
       {/* Empty state */}
       {!isLoading && entries.length === 0 && (
         <Card className={s.emptyState}>
-          <Paragraph>
-            {t('leaderboard.empty', 'No creators with graded picks yet. Check back soon!')}
-          </Paragraph>
+          <Paragraph>{t('leaderboard.empty', 'No creators with graded picks yet. Check back soon!')}</Paragraph>
         </Card>
       )}
 

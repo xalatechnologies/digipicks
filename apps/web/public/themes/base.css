@@ -1,6 +1,6 @@
 /**
  * Base document styles for XalaBaaS apps using Designsystemet.
- * Import once in app entry (main.tsx) after @digilist-saas/ds/styles and theme CSS.
+ * Import once in app entry (main.tsx) after @digipicks/ds/styles and theme CSS.
  *
  * IMPORTANT: Do NOT use `padding: 0` on * selector—it breaks
  * Designsystemet component padding (buttons, inputs, etc.).
@@ -23,7 +23,7 @@ html {
   font-family: var(--ds-font-family-base, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
   line-height: 1.5;
   font-weight: 400;
-  font-feature-settings: "cv05" 1;
+  font-feature-settings: 'cv05' 1;
   /* per Designsystemet guidance */
 }
 
@@ -54,7 +54,6 @@ body {
 
 /* Reduced motion (WCAG 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
@@ -84,8 +83,8 @@ body {
 /* Interactive elements */
 a,
 button,
-[role="button"],
-[role="link"] {
+[role='button'],
+[role='link'] {
   cursor: pointer;
 }
 

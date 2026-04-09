@@ -74,6 +74,13 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         { success: boolean },
         Name
       >;
+      removeCreatorBrandAsset: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean },
+        Name
+      >;
       removeThemeOverride: FunctionReference<
         "mutation",
         "internal",
@@ -110,6 +117,27 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         { id: string },
         Name
       >;
+      updateCreatorBranding: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accentColor?: string;
+          borderRadius?: string;
+          creatorId: string;
+          customCSS?: string;
+          customDomain?: string;
+          darkMode?: boolean;
+          displayName?: string;
+          fontFamily?: string;
+          metadata?: any;
+          primaryColor?: string;
+          secondaryColor?: string;
+          tagline?: string;
+          tenantId: string;
+        },
+        { id: string },
+        Name
+      >;
       updateFlag: FunctionReference<
         "mutation",
         "internal",
@@ -130,6 +158,21 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         {
           alt?: string;
           assetType: string;
+          metadata?: any;
+          storageId?: string;
+          tenantId: string;
+          url: string;
+        },
+        { id: string },
+        Name
+      >;
+      uploadCreatorBrandAsset: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          alt?: string;
+          assetType: string;
+          creatorId: string;
           metadata?: any;
           storageId?: string;
           tenantId: string;
@@ -166,6 +209,27 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         any,
         Name
       >;
+      getCreatorBranding: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        any,
+        Name
+      >;
+      getCreatorByCustomDomain: FunctionReference<
+        "query",
+        "internal",
+        { domain: string },
+        any,
+        Name
+      >;
+      getCreatorThemeCSS: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
+        string,
+        Name
+      >;
       getFlag: FunctionReference<
         "query",
         "internal",
@@ -184,6 +248,13 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         "query",
         "internal",
         { limit?: number; tenantId: string },
+        Array<any>,
+        Name
+      >;
+      listCreatorBrandAssets: FunctionReference<
+        "query",
+        "internal",
+        { creatorId: string; tenantId: string },
         Array<any>,
         Name
       >;

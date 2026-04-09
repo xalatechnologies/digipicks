@@ -27,20 +27,15 @@ import {
   PageContentLayout,
   EmptyState,
   UsersIcon,
-} from '@digilist-saas/ds';
-import {
-  useOrganizationMembers,
-  useAddOrgMember,
-  useRemoveOrgMember,
-  useUpdateOrgMemberRole,
-} from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
-import { useAccountContext, useTenantContext } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useOrganizationMembers, useAddOrgMember, useRemoveOrgMember, useUpdateOrgMemberRole } from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
+import { useAccountContext, useTenantContext } from '@digipicks/app-shell';
 import s from './Members.module.css';
 
 const ROLES = ['admin', 'member', 'viewer'] as const;
-type Role = typeof ROLES[number];
+type Role = (typeof ROLES)[number];
 
 export function OrganizationMembersPage() {
   const t = useT();
@@ -48,7 +43,7 @@ export function OrganizationMembersPage() {
   const { showToast } = useToast();
   const isMobile = useIsMobile();
   const accountCtx = useAccountContext();
-  const orgId = accountCtx?.selectedOrganization?.id as Id<"organizations"> | undefined;
+  const orgId = accountCtx?.selectedOrganization?.id as Id<'organizations'> | undefined;
   const { tenantId } = useTenantContext();
 
   const [inviteEmail, setInviteEmail] = useState('');
@@ -90,7 +85,7 @@ export function OrganizationMembersPage() {
 
     if (confirmed) {
       try {
-        await removeMember.mutateAsync({ userId: memberId as Id<"users"> });
+        await removeMember.mutateAsync({ userId: memberId as Id<'users'> });
         showToast({ title: t('org.memberRemoved'), variant: 'success' });
       } catch {
         showToast({ title: t('org.removeFailed', 'Kunne ikke fjerne medlem.'), variant: 'error' });
@@ -101,7 +96,7 @@ export function OrganizationMembersPage() {
   const handleRoleChange = async (memberId: string, newRole: Role) => {
     try {
       await updateMember.mutateAsync({
-        userId: memberId as Id<"users">,
+        userId: memberId as Id<'users'>,
         role: newRole,
       });
       showToast({ title: t('org.roleUpdated'), variant: 'success' });
@@ -118,12 +113,7 @@ export function OrganizationMembersPage() {
         backHref="/org"
         backLabel={t('org.backToDashboard')}
         actions={
-          <Button
-            type="button"
-            variant="primary"
-            data-size="md"
-            onClick={() => setShowInviteForm(!showInviteForm)}
-          >
+          <Button type="button" variant="primary" data-size="md" onClick={() => setShowInviteForm(!showInviteForm)}>
             {t('org.inviteMember')}
           </Button>
         }
@@ -137,9 +127,7 @@ export function OrganizationMembersPage() {
           </Heading>
           <Grid columns={isMobile ? '1fr' : '1fr auto auto'} gap="var(--ds-size-3)" className={s.inviteGrid}>
             <Stack direction="vertical" spacing="var(--ds-size-2)">
-              <Label className={s.fieldLabel}>
-                {t('common.email')}
-              </Label>
+              <Label className={s.fieldLabel}>{t('common.email')}</Label>
               <Input
                 type="email"
                 value={inviteEmail}
@@ -149,12 +137,10 @@ export function OrganizationMembersPage() {
               />
             </Stack>
             <Stack direction="vertical" spacing="var(--ds-size-2)">
-              <Label className={s.fieldLabel}>
-                {t('common.role')}
-              </Label>
+              <Label className={s.fieldLabel}>{t('common.role')}</Label>
               <PillDropdown
                 label={inviteRole}
-                options={ROLES.map(role => ({ value: role, label: role }))}
+                options={ROLES.map((role) => ({ value: role, label: role }))}
                 value={inviteRole}
                 onChange={(v) => setInviteRole(v as Role)}
                 ariaLabel={t('common.role')}
@@ -215,10 +201,7 @@ export function OrganizationMembersPage() {
             <Spinner aria-label={t('common.loading')} data-size="lg" />
           </Stack>
         ) : members.length === 0 ? (
-          <EmptyState
-            icon={<UsersIcon />}
-            title={t('org.noMembers')}
-          />
+          <EmptyState icon={<UsersIcon />} title={t('org.noMembers')} />
         ) : (
           <Stack direction="vertical">
             {members.map((member: any) => (
@@ -231,9 +214,7 @@ export function OrganizationMembersPage() {
                 className={s.memberRow}
               >
                 <Stack direction="horizontal" align="center" spacing="var(--ds-size-3)">
-                  <div className={s.memberAvatar}>
-                    {member.name?.charAt(0) || member.email?.charAt(0) || '?'}
-                  </div>
+                  <div className={s.memberAvatar}>{member.name?.charAt(0) || member.email?.charAt(0) || '?'}</div>
                   <div>
                     <Paragraph data-size="sm" className={s.memberName}>
                       {member.name || member.email}
@@ -244,10 +225,15 @@ export function OrganizationMembersPage() {
                   </div>
                 </Stack>
 
-                <Stack direction="horizontal" align="center" spacing="var(--ds-size-3)" className={isMobile ? s.memberActionsFull : s.memberActionsAuto}>
+                <Stack
+                  direction="horizontal"
+                  align="center"
+                  spacing="var(--ds-size-3)"
+                  className={isMobile ? s.memberActionsFull : s.memberActionsAuto}
+                >
                   <PillDropdown
                     label={member.role || 'member'}
-                    options={ROLES.map(role => ({ value: role, label: role }))}
+                    options={ROLES.map((role) => ({ value: role, label: role }))}
                     value={member.role || 'member'}
                     onChange={(v) => handleRoleChange(member.id, v as Role)}
                     className={s.roleDropdown}

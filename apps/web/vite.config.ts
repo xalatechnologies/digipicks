@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 import { copyBrandAssets } from '../../scripts/vite/copyBrandAssets';
 
-// Theme CSS is bundled via static imports in main.tsx (@digilist-saas/ds-themes/themes/*).
+// Theme CSS is bundled via static imports in main.tsx (@digipicks/ds-themes/themes/*).
 // No copy or symlink needed; Vite resolves from the package.
 
 export default defineConfig({
@@ -141,7 +141,7 @@ export default defineConfig({
           }
 
           // Design system in separate chunk
-          if (id.includes('packages/ds/src') || id.includes('@digilist-saas/ds')) {
+          if (id.includes('packages/ds/src') || id.includes('@digipicks/ds')) {
             return 'vendor-ds';
           }
 
@@ -159,15 +159,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@digilist-saas/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
+      '@digipicks/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
     },
   },
   optimizeDeps: {
-    exclude: ['@digilist-saas/sdk'],
-    include: [
-      'mapbox-gl',
-      'react-map-gl/mapbox',
-    ],
+    exclude: ['@digipicks/sdk'],
+    include: ['mapbox-gl', 'react-map-gl/mapbox'],
     force: true,
     esbuildOptions: {
       // Mapbox GL requires these Node.js polyfills

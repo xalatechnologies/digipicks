@@ -13,11 +13,11 @@ import { AuthProvider, useAuth } from '../AuthProvider';
 
 const mockSignInWithOAuth = vi.fn();
 
-vi.mock('@digilist-saas/sdk', () => ({
+vi.mock('@digipicks/sdk', () => ({
   useAuth: vi.fn(),
 }));
 
-import { useAuth as useSdkAuth } from '@digilist-saas/sdk';
+import { useAuth as useSdkAuth } from '@digipicks/sdk';
 
 describe('SSO invariants', () => {
   beforeEach(() => {
@@ -39,10 +39,7 @@ describe('SSO invariants', () => {
     function Consumer() {
       const auth = useAuth();
       return (
-        <button
-          onClick={() => auth.signInWithOAuth('idporten')}
-          data-testid="oauth-btn"
-        >
+        <button onClick={() => auth.signInWithOAuth('idporten')} data-testid="oauth-btn">
           Sign in
         </button>
       );
@@ -51,7 +48,7 @@ describe('SSO invariants', () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     const btn = screen.getByTestId('oauth-btn');
@@ -81,7 +78,7 @@ describe('SSO invariants', () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getByTestId('authenticated')).toHaveTextContent('true');

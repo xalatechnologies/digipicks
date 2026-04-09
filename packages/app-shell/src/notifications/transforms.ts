@@ -6,8 +6,8 @@
  * and any full-page notification feed.
  */
 
-import type { NotificationItemData, NotificationType, NotificationPriority } from '@digilist-saas/ds';
-import type { Notification } from '@digilist-saas/sdk';
+import type { NotificationItemData, NotificationType, NotificationPriority } from '@digipicks/ds';
+import type { Notification } from '@digipicks/sdk';
 
 function stringFromMetadata(metadata: Record<string, unknown> | undefined, key: string): string | undefined {
   const v = metadata?.[key];

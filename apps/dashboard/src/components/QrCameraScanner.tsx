@@ -6,8 +6,8 @@
  */
 
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { Button, Paragraph, CameraIcon, CloseIcon, Spinner } from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
+import { Button, Paragraph, CameraIcon, CloseIcon, Spinner } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
 
 import styles from './QrCameraScanner.module.css';
 
@@ -60,9 +60,7 @@ export function QrCameraScanner({ onScan, active, onToggle }: QrCameraScannerPro
         await videoRef.current.play();
       }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : t('checkin.cameraError', 'Kunne ikke starte kamera')
-      );
+      setError(err instanceof Error ? err.message : t('checkin.cameraError', 'Kunne ikke starte kamera'));
     } finally {
       setStarting(false);
     }

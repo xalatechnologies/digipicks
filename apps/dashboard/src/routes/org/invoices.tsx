@@ -16,14 +16,14 @@ import {
   DashboardPageHeader,
   PageContentLayout,
   useIsMobile,
-} from '@digilist-saas/ds';
-import type { DataTableColumn, StatusBadgeConfig, BadgeColor } from '@digilist-saas/ds';
-import { useOrgInvoices, useDownloadOrgInvoice, type OrgInvoice } from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { getIntlLocale } from '@digilist-saas/shared/constants';
-import { useAccountContext } from '@digilist-saas/app-shell';
-import type { InvoiceStatus } from '@digilist-saas/shared/types';
+} from '@digipicks/ds';
+import type { DataTableColumn, StatusBadgeConfig, BadgeColor } from '@digipicks/ds';
+import { useOrgInvoices, useDownloadOrgInvoice, type OrgInvoice } from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useT, useLocale } from '@digipicks/i18n';
+import { getIntlLocale } from '@digipicks/shared/constants';
+import { useAccountContext } from '@digipicks/app-shell';
+import type { InvoiceStatus } from '@digipicks/shared/types';
 import s from './Invoices.module.css';
 
 function useInvoiceStatusConfig(): Record<string, StatusBadgeConfig> {
@@ -48,13 +48,11 @@ export function OrganizationInvoicesPage() {
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus | undefined>(undefined);
   const isMobile = useIsMobile();
   const accountCtx = useAccountContext();
-  const orgId = accountCtx?.selectedOrganization?.id as Id<"organizations"> | undefined;
+  const orgId = accountCtx?.selectedOrganization?.id as Id<'organizations'> | undefined;
 
-  const { data: invoicesData, isLoading } = useOrgInvoices(orgId,
-    statusFilter ? { status: statusFilter } : undefined
-  );
+  const { data: invoicesData, isLoading } = useOrgInvoices(orgId, statusFilter ? { status: statusFilter } : undefined);
   const downloadInvoice = useDownloadOrgInvoice();
-  
+
   const invoices = invoicesData?.data ?? [];
 
   const formatCurrency = (amount: number) => {
@@ -94,16 +92,12 @@ export function OrganizationInvoicesPage() {
         ),
       },
     ],
-    [t, locale]
+    [t, locale],
   );
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        title={t('org.invoices')}
-        backHref="/org"
-        backLabel={t('org.backToDashboard')}
-      />
+      <DashboardPageHeader title={t('org.invoices')} backHref="/org" backLabel={t('org.backToDashboard')} />
 
       {/* Filters */}
       <Stack direction="horizontal" spacing="var(--ds-size-2)" className={s.filterScroll}>
@@ -113,7 +107,7 @@ export function OrganizationInvoicesPage() {
             type="button"
             variant={(filter === 'all' && !statusFilter) || statusFilter === filter ? 'primary' : 'tertiary'}
             data-size="sm"
-            onClick={() => setStatusFilter(filter === 'all' ? undefined : filter as InvoiceStatus)}
+            onClick={() => setStatusFilter(filter === 'all' ? undefined : (filter as InvoiceStatus))}
             className={s.filterButton}
           >
             {filter === 'all' ? t('bookings.all') : t(`invoice.${filter}`)}
@@ -129,17 +123,12 @@ export function OrganizationInvoicesPage() {
           </Stack>
         ) : invoices.length === 0 ? (
           <div className={s.emptyState}>
-            <Paragraph className={s.emptyText}>
-              {t('org.noInvoices')}
-            </Paragraph>
+            <Paragraph className={s.emptyText}>{t('org.noInvoices')}</Paragraph>
           </div>
         ) : isMobile ? (
           <Stack direction="vertical">
             {invoices.map((invoice: OrgInvoice) => (
-              <div
-                key={invoice.id}
-                className={s.mobileRow}
-              >
+              <div key={invoice.id} className={s.mobileRow}>
                 <Stack direction="horizontal" justify="between" className={s.mobileRowHeader}>
                   <Paragraph data-size="sm" className={s.mobileRowTitle}>
                     {invoice.invoiceNumber}

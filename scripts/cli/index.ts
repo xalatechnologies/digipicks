@@ -50,7 +50,7 @@ ${BOLD}Usage:${RESET}
 ${BOLD}Generators:${RESET}
   ${CYAN}app${RESET} <name>                  Scaffold a new thin app (provider chain, routing, layout)
   ${CYAN}route${RESET} <app> <path>           Add a route page (list, detail, or form)
-  ${CYAN}component${RESET} <name>             Add a @digilist-saas/ds component (primitives/composed/blocks)
+  ${CYAN}component${RESET} <name>             Add a @digipicks/ds component (primitives/composed/blocks)
   ${CYAN}convex-component${RESET} <name>      Add a Convex component (schema, functions, contract)
   ${CYAN}facade${RESET} <name>                Add a domain facade (delegates to component)
   ${CYAN}hook${RESET} <name>                  Add SDK hooks (query + mutation wrappers)

@@ -25,7 +25,7 @@ import {
   useIsMobile,
   useDialog,
   useToast,
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 
@@ -47,11 +47,17 @@ const STATUS_OPTIONS = [
 ];
 
 const ROLE_COLOR: Record<string, string> = {
-  super_admin: 'danger', owner: 'accent', admin: 'accent', saksbehandler: 'neutral', user: 'neutral',
+  super_admin: 'danger',
+  owner: 'accent',
+  admin: 'accent',
+  saksbehandler: 'neutral',
+  user: 'neutral',
 };
 
 const STATUS_COLOR: Record<string, 'success' | 'neutral' | 'danger'> = {
-  active: 'success', inactive: 'neutral', suspended: 'danger',
+  active: 'success',
+  inactive: 'neutral',
+  suspended: 'danger',
 };
 
 // =============================================================================
@@ -111,18 +117,35 @@ export function UserFormPage() {
       showToast({ title: 'Bruker oppdatert', variant: 'success' });
       navigate('/platform/users');
     } catch (err) {
-      showToast({ title: 'Kunne ikke lagre: ' + (err instanceof Error ? err.message : 'ukjent feil'), variant: 'error' });
-    } finally { setIsSaving(false); }
+      showToast({
+        title: 'Kunne ikke lagre: ' + (err instanceof Error ? err.message : 'ukjent feil'),
+        variant: 'error',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   }, [canSave, userId, form, updateUser, showToast, navigate]);
 
   const roleOpt = ROLE_OPTIONS.find((o) => o.value === form.role);
   const statusOpt = STATUS_OPTIONS.find((o) => o.value === form.status);
 
   if (rawUsers !== undefined && !user) {
-    return <PageContentLayout><Paragraph data-size="md" style={{ padding: 'var(--ds-size-10)', textAlign: 'center' }}>Bruker ikke funnet</Paragraph></PageContentLayout>;
+    return (
+      <PageContentLayout>
+        <Paragraph data-size="md" style={{ padding: 'var(--ds-size-10)', textAlign: 'center' }}>
+          Bruker ikke funnet
+        </Paragraph>
+      </PageContentLayout>
+    );
   }
   if (!formInitialized) {
-    return <PageContentLayout><Stack direction="horizontal" justify="center" style={{ padding: 'var(--ds-size-10)' }}><Spinner aria-label="Laster..." /></Stack></PageContentLayout>;
+    return (
+      <PageContentLayout>
+        <Stack direction="horizontal" justify="center" style={{ padding: 'var(--ds-size-10)' }}>
+          <Spinner aria-label="Laster..." />
+        </Stack>
+      </PageContentLayout>
+    );
   }
 
   return (
@@ -130,36 +153,82 @@ export function UserFormPage() {
       {/* Header with avatar */}
       <DashboardPageHeader>
         <Stack direction="horizontal" spacing="var(--ds-size-4)" align="center">
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--ds-color-accent-surface-default)', color: 'var(--ds-color-accent-base-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: '1.25rem', flexShrink: 0 }}>
-            {form.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              background: 'var(--ds-color-accent-surface-default)',
+              color: 'var(--ds-color-accent-base-default)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 600,
+              fontSize: '1.25rem',
+              flexShrink: 0,
+            }}
+          >
+            {form.name
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase() || '?'}
           </div>
           <Stack direction="vertical" spacing="var(--ds-size-1)">
-            <Heading level={2} data-size="md" style={{ margin: 0 }}>{form.name || 'Rediger bruker'}</Heading>
-            <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>{form.email}</Paragraph>
+            <Heading level={2} data-size="md" style={{ margin: 0 }}>
+              {form.name || 'Rediger bruker'}
+            </Heading>
+            <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              {form.email}
+            </Paragraph>
           </Stack>
         </Stack>
       </DashboardPageHeader>
 
       <Stack direction="vertical" spacing="var(--ds-size-5)">
-
         {/* Status cards */}
         <Grid columns={isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'} gap="var(--ds-size-3)">
           <Card style={{ background: 'var(--ds-color-neutral-surface-default)' }}>
             <Stack direction="vertical" spacing="var(--ds-size-2)" align="center">
-              <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Status</Paragraph>
-              <StatusTag color={STATUS_COLOR[form.status] ?? 'neutral'} size="sm">{statusOpt?.label ?? form.status}</StatusTag>
+              <Paragraph
+                data-size="xs"
+                data-color="subtle"
+                style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+              >
+                Status
+              </Paragraph>
+              <StatusTag color={STATUS_COLOR[form.status] ?? 'neutral'} size="sm">
+                {statusOpt?.label ?? form.status}
+              </StatusTag>
             </Stack>
           </Card>
           <Card style={{ background: 'var(--ds-color-neutral-surface-default)' }}>
             <Stack direction="vertical" spacing="var(--ds-size-2)" align="center">
-              <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Rolle</Paragraph>
-              <Tag data-size="sm" data-color={(ROLE_COLOR[form.role] ?? 'neutral') as any}>{roleOpt?.label ?? form.role}</Tag>
+              <Paragraph
+                data-size="xs"
+                data-color="subtle"
+                style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+              >
+                Rolle
+              </Paragraph>
+              <Tag data-size="sm" data-color={(ROLE_COLOR[form.role] ?? 'neutral') as any}>
+                {roleOpt?.label ?? form.role}
+              </Tag>
             </Stack>
           </Card>
           <Card style={{ background: 'var(--ds-color-neutral-surface-default)' }}>
             <Stack direction="vertical" spacing="var(--ds-size-2)" align="center">
-              <Paragraph data-size="xs" data-color="subtle" style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Utleier</Paragraph>
-              <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>{(user as any)?.tenantName || 'Plattform'}</Paragraph>
+              <Paragraph
+                data-size="xs"
+                data-color="subtle"
+                style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+              >
+                Utleier
+              </Paragraph>
+              <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>
+                {(user as any)?.tenantName || 'Plattform'}
+              </Paragraph>
             </Stack>
           </Card>
         </Grid>
@@ -167,19 +236,52 @@ export function UserFormPage() {
         {/* User info form */}
         <Card>
           <Stack direction="vertical" spacing="var(--ds-size-4)">
-            <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold, 600)', margin: 0 }}>Brukerinformasjon</Paragraph>
+            <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold, 600)', margin: 0 }}>
+              Brukerinformasjon
+            </Paragraph>
             <div>
-              <Textfield label="Navn" value={form.name} onChange={(e) => update('name', e.target.value)} required data-size="sm" />
-              {form.name.length > 0 && form.name.trim().length === 0 && <Paragraph data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', margin: '4px 0 0' }}>Navn kan ikke være tomt</Paragraph>}
+              <Textfield
+                label="Navn"
+                value={form.name}
+                onChange={(e) => update('name', e.target.value)}
+                required
+                data-size="sm"
+              />
+              {form.name.length > 0 && form.name.trim().length === 0 && (
+                <Paragraph data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', margin: '4px 0 0' }}>
+                  Navn kan ikke være tomt
+                </Paragraph>
+              )}
             </div>
             <Grid columns={isMobile ? '1fr' : '1fr 1fr'} gap="var(--ds-size-4)">
               <div>
-                <Textfield label="E-post" type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required data-size="sm" />
-                {form.email.length > 0 && !emailValid && <Paragraph data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', margin: '4px 0 0' }}>Ugyldig e-postadresse</Paragraph>}
+                <Textfield
+                  label="E-post"
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => update('email', e.target.value)}
+                  required
+                  data-size="sm"
+                />
+                {form.email.length > 0 && !emailValid && (
+                  <Paragraph data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', margin: '4px 0 0' }}>
+                    Ugyldig e-postadresse
+                  </Paragraph>
+                )}
               </div>
               <div>
-                <Textfield label="Telefon" type="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} data-size="sm" />
-                {form.phone.length > 0 && !/^[+]?[\d\s()-]{7,}$/.test(form.phone) && <Paragraph data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', margin: '4px 0 0' }}>Ugyldig telefonnummer</Paragraph>}
+                <Textfield
+                  label="Telefon"
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => update('phone', e.target.value)}
+                  data-size="sm"
+                />
+                {form.phone.length > 0 && !/^[+]?[\d\s()-]{7,}$/.test(form.phone) && (
+                  <Paragraph data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', margin: '4px 0 0' }}>
+                    Ugyldig telefonnummer
+                  </Paragraph>
+                )}
               </div>
             </Grid>
           </Stack>
@@ -188,10 +290,14 @@ export function UserFormPage() {
         {/* Role + Status */}
         <Card>
           <Stack direction="vertical" spacing="var(--ds-size-4)">
-            <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold, 600)', margin: 0 }}>Rolle og status</Paragraph>
+            <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold, 600)', margin: 0 }}>
+              Rolle og status
+            </Paragraph>
             <Grid columns={isMobile ? '1fr' : '1fr 1fr'} gap="var(--ds-size-4)">
               <Stack direction="vertical" spacing="var(--ds-size-2)">
-                <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>Rolle</Paragraph>
+                <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>
+                  Rolle
+                </Paragraph>
                 <PillDropdown
                   label={roleOpt?.label ?? 'Velg rolle'}
                   value={form.role}
@@ -202,7 +308,9 @@ export function UserFormPage() {
                 />
               </Stack>
               <Stack direction="vertical" spacing="var(--ds-size-2)">
-                <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>Status</Paragraph>
+                <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium, 500)', margin: 0 }}>
+                  Status
+                </Paragraph>
                 <PillDropdown
                   label={statusOpt?.label ?? 'Velg status'}
                   value={form.status}
@@ -215,34 +323,93 @@ export function UserFormPage() {
             </Grid>
           </Stack>
         </Card>
-
       </Stack>
 
       {/* Footer: danger left, save/cancel right */}
-      <Stack direction="horizontal" justify="between" align="center" style={{ paddingTop: 'var(--ds-size-6)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)', marginTop: 'var(--ds-size-6)', paddingBottom: 'var(--ds-size-8)', flexWrap: 'wrap', gap: 'var(--ds-size-3)' }}>
+      <Stack
+        direction="horizontal"
+        justify="between"
+        align="center"
+        style={{
+          paddingTop: 'var(--ds-size-6)',
+          borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+          marginTop: 'var(--ds-size-6)',
+          paddingBottom: 'var(--ds-size-8)',
+          flexWrap: 'wrap',
+          gap: 'var(--ds-size-3)',
+        }}
+      >
         <Stack direction="horizontal" spacing="var(--ds-size-3)">
           {form.status === 'active' && (
-            <Button type="button" variant="secondary" data-size="md" data-color="danger" onClick={async () => {
-              const ok = await confirm({ title: 'Suspender bruker', description: `Suspender "${form.name}"?`, confirmText: 'Suspender', variant: 'danger' });
-              if (ok && userId) { await updateUser({ userId: userId as any, status: 'suspended' }); update('status', 'suspended'); showToast({ title: 'Bruker suspendert', variant: 'warning' }); }
-            }}>Suspender</Button>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="md"
+              data-color="danger"
+              onClick={async () => {
+                const ok = await confirm({
+                  title: 'Suspender bruker',
+                  description: `Suspender "${form.name}"?`,
+                  confirmText: 'Suspender',
+                  variant: 'danger',
+                });
+                if (ok && userId) {
+                  await updateUser({ userId: userId as any, status: 'suspended' });
+                  update('status', 'suspended');
+                  showToast({ title: 'Bruker suspendert', variant: 'warning' });
+                }
+              }}
+            >
+              Suspender
+            </Button>
           )}
           {(form.status === 'suspended' || form.status === 'inactive') && (
-            <Button type="button" variant="secondary" data-size="md" onClick={async () => { if (userId) { await updateUser({ userId: userId as any, status: 'active' }); update('status', 'active'); showToast({ title: 'Bruker aktivert', variant: 'success' }); } }}>Aktiver</Button>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="md"
+              onClick={async () => {
+                if (userId) {
+                  await updateUser({ userId: userId as any, status: 'active' });
+                  update('status', 'active');
+                  showToast({ title: 'Bruker aktivert', variant: 'success' });
+                }
+              }}
+            >
+              Aktiver
+            </Button>
           )}
-          <Button type="button" variant="secondary" data-size="md" data-color="danger" onClick={async () => {
-            const ok = await confirm({ title: 'Slett bruker', description: `Slett "${form.name}" permanent?`, confirmText: 'Slett permanent', variant: 'danger' });
-            if (ok && userId) { await deleteUserMut({ userId: userId as any }); showToast({ title: 'Bruker slettet', variant: 'error' }); navigate('/platform/users'); }
-          }}><TrashIcon size={14} /> Slett</Button>
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="md"
+            data-color="danger"
+            onClick={async () => {
+              const ok = await confirm({
+                title: 'Slett bruker',
+                description: `Slett "${form.name}" permanent?`,
+                confirmText: 'Slett permanent',
+                variant: 'danger',
+              });
+              if (ok && userId) {
+                await deleteUserMut({ userId: userId as any });
+                showToast({ title: 'Bruker slettet', variant: 'error' });
+                navigate('/platform/users');
+              }
+            }}
+          >
+            <TrashIcon size={14} /> Slett
+          </Button>
         </Stack>
         <Stack direction="horizontal" spacing="var(--ds-size-3)">
-          <Button type="button" variant="secondary" data-size="lg" onClick={() => navigate('/platform/users')}>Avbryt</Button>
+          <Button type="button" variant="secondary" data-size="lg" onClick={() => navigate('/platform/users')}>
+            Avbryt
+          </Button>
           <Button type="button" variant="primary" data-size="lg" disabled={!canSave || isSaving} onClick={handleSave}>
             {isSaving ? 'Lagrer...' : 'Lagre endringer'}
           </Button>
         </Stack>
       </Stack>
-
     </PageContentLayout>
   );
 }

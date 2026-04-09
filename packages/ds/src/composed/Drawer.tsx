@@ -4,7 +4,7 @@
  * A slide-in panel that can open from left, right, top, or bottom.
  * Includes helper components for building panel content.
  *
- * @module @digilist-saas/ds/composed/Drawer
+ * @module @digipicks/ds/composed/Drawer
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -89,7 +89,16 @@ const heightSizeMap: Record<DrawerSize, string> = {
 // ChevronDownIcon kept local (no primitive equivalent)
 function ChevronDownIcon(): React.ReactElement {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="6 9 12 15 18 9" />
     </svg>
   );
@@ -181,8 +190,12 @@ export function Drawer({
 
   // Use appropriate size map based on drawer orientation
   const computedSize = customSize
-    ? typeof customSize === 'number' ? `${customSize}px` : customSize
-    : isVertical ? heightSizeMap[effectiveSize] : widthSizeMap[effectiveSize];
+    ? typeof customSize === 'number'
+      ? `${customSize}px`
+      : customSize
+    : isVertical
+      ? heightSizeMap[effectiveSize]
+      : widthSizeMap[effectiveSize];
 
   // Show handle automatically on mobile bottom drawer
   const effectiveShowHandle = showHandle || (isMobile && effectivePosition === 'bottom');
@@ -211,7 +224,7 @@ export function Drawer({
       // Focus first focusable element
       setTimeout(() => {
         const firstFocusable = drawerRef.current?.querySelector<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         );
         firstFocusable?.focus();
       }, 100);
@@ -233,7 +246,7 @@ export function Drawer({
       if (event.key !== 'Tab' || !drawerRef.current) return;
 
       const focusableElements = drawerRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
 
       if (focusableElements.length === 0) return;
@@ -285,10 +298,14 @@ export function Drawer({
         aria-label={ariaLabel ?? (typeof title === 'string' ? title : undefined)}
         className={cn(
           styles.panel,
-          styles[`panel${effectivePosition.charAt(0).toUpperCase() + effectivePosition.slice(1)}` as keyof typeof styles],
-          styles[`panel${effectivePosition.charAt(0).toUpperCase() + effectivePosition.slice(1)}${isOpen ? 'Open' : 'Closed'}` as keyof typeof styles],
+          styles[
+            `panel${effectivePosition.charAt(0).toUpperCase() + effectivePosition.slice(1)}` as keyof typeof styles
+          ],
+          styles[
+            `panel${effectivePosition.charAt(0).toUpperCase() + effectivePosition.slice(1)}${isOpen ? 'Open' : 'Closed'}` as keyof typeof styles
+          ],
           isOpen ? styles.panelOpen : styles.panelClosed,
-          className
+          className,
         )}
         style={{ '--drawer-size': computedSize, zIndex } as React.CSSProperties}
       >
@@ -302,7 +319,9 @@ export function Drawer({
           <div className={styles.header}>
             <div className={styles.headerTitleRow}>
               {icon && <span className={styles.headerIcon}>{icon}</span>}
-              <Heading data-size="xs" className={styles.headerTitle}>{title}</Heading>
+              <Heading data-size="xs" className={styles.headerTitle}>
+                {title}
+              </Heading>
               {badge !== undefined && badge > 0 && (
                 <span className={styles.headerBadge}>{badge > 99 ? '99+' : badge}</span>
               )}
@@ -373,7 +392,11 @@ export function DrawerSection({
         >
           <div>
             <span className={styles.sectionTitle}>{title}</span>
-            {description && <Paragraph data-size="sm" className={styles.sectionDescription}>{description}</Paragraph>}
+            {description && (
+              <Paragraph data-size="sm" className={styles.sectionDescription}>
+                {description}
+              </Paragraph>
+            )}
           </div>
           {collapsible && (
             <span className={cn(styles.sectionChevron, isCollapsed && styles.sectionChevronCollapsed)}>
@@ -383,9 +406,7 @@ export function DrawerSection({
         </div>
       )}
       {(!collapsible || !isCollapsed) && (
-        <div className={title ? styles.sectionBody : styles.sectionBodyNoTitle}>
-          {children}
-        </div>
+        <div className={title ? styles.sectionBody : styles.sectionBodyNoTitle}>{children}</div>
       )}
     </div>
   );
@@ -431,17 +452,12 @@ export function DrawerItem({
     styles.item,
     isInteractive && styles.itemInteractive,
     selected && styles.itemSelected,
-    disabled && styles.itemDisabled
+    disabled && styles.itemDisabled,
   );
 
   if (isInteractive) {
     return (
-      <button
-        type="button"
-        onClick={onClick}
-        disabled={disabled}
-        className={cn(itemClasses, styles.itemButton)}
-      >
+      <button type="button" onClick={onClick} disabled={disabled} className={cn(itemClasses, styles.itemButton)}>
         {content}
       </button>
     );
@@ -464,17 +480,16 @@ export interface DrawerEmptyStateProps {
 /**
  * DrawerEmptyState - Empty state for drawers
  */
-export function DrawerEmptyState({
-  icon,
-  title,
-  description,
-  action,
-}: DrawerEmptyStateProps): React.ReactElement {
+export function DrawerEmptyState({ icon, title, description, action }: DrawerEmptyStateProps): React.ReactElement {
   return (
     <div className={styles.emptyState}>
       {icon && <div className={styles.emptyStateIcon}>{icon}</div>}
       <span className={styles.emptyStateTitle}>{title}</span>
-      {description && <Paragraph data-size="sm" className={styles.emptyStateDescription}>{description}</Paragraph>}
+      {description && (
+        <Paragraph data-size="sm" className={styles.emptyStateDescription}>
+          {description}
+        </Paragraph>
+      )}
       {action}
     </div>
   );

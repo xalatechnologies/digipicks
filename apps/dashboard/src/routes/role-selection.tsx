@@ -6,26 +6,15 @@
  */
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  LoginLayout,
-  PlatformIcon,
-  ShieldCheckIcon,
-  ClipboardListIcon,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { useAuthBridge, useRole, useNeedsRoleSelection } from '@digilist-saas/app-shell';
-import { RoleSelector } from '@digilist-saas/app-shell';
-import type { PlatformRole } from '@digilist-saas/app-shell';
+import { LoginLayout, PlatformIcon, ShieldCheckIcon, ClipboardListIcon } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { useAuthBridge, useRole, useNeedsRoleSelection } from '@digipicks/app-shell';
+import { RoleSelector } from '@digipicks/app-shell';
+import type { PlatformRole } from '@digipicks/app-shell';
 
 export function RoleSelectionPage(): React.ReactElement {
   const { isAuthenticated, isLoading: authLoading } = useAuthBridge();
-  const {
-    effectiveRole,
-    isInitializing,
-    getHomeRoute,
-    grantedRoles,
-    setEffectiveRole,
-  } = useRole();
+  const { effectiveRole, isInitializing, getHomeRoute, grantedRoles, setEffectiveRole } = useRole();
   const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,7 +81,7 @@ export function RoleSelectionPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName={import.meta.env.VITE_PLATFORM_NAME || "Xala Foundation"}
+      brandName={import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation'}
       brandTagline="ENKEL SAAS"
       title={t('auth.roleSelection.title', 'Velg rolle')}
       subtitle={t('auth.roleSelection.subtitle', 'Du har tilgang til flere roller. Velg hvordan du vil fortsette.')}
@@ -100,17 +89,13 @@ export function RoleSelectionPage(): React.ReactElement {
       panelSubtitle={t('auth.roleSelection.panelTitle', 'Flere roller, en innlogging')}
       panelDescription={t(
         'auth.roleSelection.panelDescription',
-        'Du har tilgang til både administrator- og saksbehandlerroller. Velg hvilken rolle du vil bruke for denne økten.'
+        'Du har tilgang til både administrator- og saksbehandlerroller. Velg hvilken rolle du vil bruke for denne økten.',
       )}
       features={features}
       footerLinks={footerLinks}
       copyright={t('auth.copyright')}
     >
-      <RoleSelector
-        grantedRoles={grantedRoles}
-        setEffectiveRole={setEffectiveRole}
-        onRoleSelect={handleRoleSelect}
-      />
+      <RoleSelector grantedRoles={grantedRoles} setEffectiveRole={setEffectiveRole} onRoleSelect={handleRoleSelect} />
     </LoginLayout>
   );
 }

@@ -24,11 +24,11 @@ import {
   useToast,
   DashboardPageHeader,
   PageContentLayout,
-} from '@digilist-saas/ds';
-import { useOrganization, useUpdateOrganization } from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useT } from '@digilist-saas/i18n';
-import { useAccountContext } from '@digilist-saas/app-shell';
+} from '@digipicks/ds';
+import { useOrganization, useUpdateOrganization } from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useT } from '@digipicks/i18n';
+import { useAccountContext } from '@digipicks/app-shell';
 import s from './Settings.module.css';
 
 export function OrganizationSettingsPage() {
@@ -36,7 +36,7 @@ export function OrganizationSettingsPage() {
   const { showToast } = useToast();
   const isMobile = useIsMobile();
   const accountCtx = useAccountContext();
-  const orgId = accountCtx?.selectedOrganization?.id as Id<"organizations"> | undefined;
+  const orgId = accountCtx?.selectedOrganization?.id as Id<'organizations'> | undefined;
 
   const { data: orgData, isLoading: orgLoading } = useOrganization(orgId);
   const updateOrg = useUpdateOrganization();
@@ -65,7 +65,7 @@ export function OrganizationSettingsPage() {
     if (org) {
       const meta = (org.metadata ?? {}) as Record<string, any>;
       const orgSettings = (org.settings ?? {}) as Record<string, any>;
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
         orgName: org.name ?? '',
         orgNumber: meta.orgNumber ?? '',
@@ -87,7 +87,7 @@ export function OrganizationSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   const updateSetting = (key: string, value: string | boolean) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSave = async () => {
@@ -140,13 +140,7 @@ export function OrganizationSettingsPage() {
         backHref="/org"
         backLabel={t('org.backToDashboard')}
         actions={
-          <Button
-            type="button"
-            variant="primary"
-            data-size="md"
-            onClick={handleSave}
-            disabled={isSaving}
-          >
+          <Button type="button" variant="primary" data-size="md" onClick={handleSave} disabled={isSaving}>
             {isSaving ? t('common.saving') : t('common.save')}
           </Button>
         }
@@ -224,14 +218,20 @@ export function OrganizationSettingsPage() {
         </Heading>
         <Stack direction="vertical" spacing="var(--ds-size-4)">
           {[
-            { key: 'emailBookingConfirm', label: t('org.notifBookingConfirm'), description: t('org.notifBookingConfirmDesc') },
+            {
+              key: 'emailBookingConfirm',
+              label: t('org.notifBookingConfirm'),
+              description: t('org.notifBookingConfirmDesc'),
+            },
             { key: 'emailBookingReminder', label: t('org.notifReminders'), description: t('org.notifRemindersDesc') },
             { key: 'emailInvoice', label: t('org.notifInvoices'), description: t('org.notifInvoicesDesc') },
             { key: 'smsReminder', label: t('org.notifSmsReminders'), description: t('org.notifSmsRemindersDesc') },
-          ].map(item => (
+          ].map((item) => (
             <Stack key={item.key} direction="horizontal" justify="between" align="center" className={s.notificationRow}>
               <Stack direction="vertical" spacing="var(--ds-size-1)">
-                <Paragraph data-size="sm" className={s.notificationLabel}>{item.label}</Paragraph>
+                <Paragraph data-size="sm" className={s.notificationLabel}>
+                  {item.label}
+                </Paragraph>
                 <Paragraph data-size="xs" className={s.notificationDesc}>
                   {item.description}
                 </Paragraph>

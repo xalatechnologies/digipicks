@@ -8,18 +8,9 @@
  */
 
 import { useState, useMemo } from 'react';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Textfield,
-  Stack,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from '@digilist-saas/ds';
-import { useT } from '@digilist-saas/i18n';
-import { env } from '@digilist-saas/app-shell';
+import { Card, Heading, Paragraph, Button, Textfield, Stack, ChevronDownIcon, ChevronUpIcon } from '@digipicks/ds';
+import { useT } from '@digipicks/i18n';
+import { env } from '@digipicks/app-shell';
 import s from './faq.module.css';
 
 // ---------------------------------------------------------------------------
@@ -122,9 +113,7 @@ export function FAQPage() {
         .map((cat) => ({
           ...cat,
           items: cat.items.filter(
-            (item) =>
-              item.question.toLowerCase().includes(q) ||
-              item.answer.toLowerCase().includes(q)
+            (item) => item.question.toLowerCase().includes(q) || item.answer.toLowerCase().includes(q),
           ),
         }))
         .filter((cat) => cat.items.length > 0);
@@ -163,11 +152,7 @@ export function FAQPage() {
       </Card>
 
       {/* Category filter */}
-      <Stack
-        direction="horizontal"
-        spacing="var(--ds-size-2)"
-        className={s.categoryBar}
-      >
+      <Stack direction="horizontal" spacing="var(--ds-size-2)" className={s.categoryBar}>
         <Button
           type="button"
           variant={activeCategory === null ? 'primary' : 'secondary'}
@@ -193,9 +178,7 @@ export function FAQPage() {
       <Stack direction="vertical" spacing="var(--ds-size-4)">
         {filteredCategories.length === 0 ? (
           <div className={s.noResults}>
-            <Paragraph className={s.noResultsText}>
-              {t('faq.noResults')}
-            </Paragraph>
+            <Paragraph className={s.noResultsText}>{t('faq.noResults')}</Paragraph>
           </div>
         ) : (
           filteredCategories.map((category) => (
@@ -212,17 +195,10 @@ export function FAQPage() {
                         type="button"
                         variant="tertiary"
                         onClick={() => toggleFaq(item.id)}
-                        className={
-                          isExpanded ? s.faqButtonExpanded : s.faqButtonCollapsed
-                        }
+                        className={isExpanded ? s.faqButtonExpanded : s.faqButtonCollapsed}
                         aria-expanded={isExpanded}
                       >
-                        <Stack
-                          direction="horizontal"
-                          justify="between"
-                          align="center"
-                          className={s.fullWidth}
-                        >
+                        <Stack direction="horizontal" justify="between" align="center" className={s.fullWidth}>
                           <Paragraph data-size="sm" className={s.faqQuestion}>
                             {item.question}
                           </Paragraph>

@@ -4,7 +4,7 @@
  *
  * The color theme CSS should be loaded separately based on tenant settings.
  *
- * Usage: import '@digilist-saas/ds-themes/themes/platform-base.css';
+ * Usage: import '@digipicks/ds-themes/themes/platform-base.css';
  */
 @import '@digdir/designsystemet-css/theme.css';
 /* Native Digdir tokens (sizes, typography, colors) */

@@ -26,9 +26,9 @@ import {
   DECISION_FLOWS,
   GAZETTEER_INDEX,
   resolveNeed,
-} from '@digilist-saas/ds/registry';
+} from '@digipicks/ds/registry';
 
-// "I need a button" → { component: 'button', source: '@digilist-saas/ds' }
+// "I need a button" → { component: 'button', source: '@digipicks/ds' }
 resolveNeed('button');
 
 // Get component metadata
@@ -47,7 +47,7 @@ getComponent('dataTable');
 **Read first:** `AGENT_GUIDE.md` in this directory.
 
 1. Before adding UI → use `resolveNeed()`, `components`, `getComponent()`
-2. Before auth/realtime → check `PROHIBITIONS`; use `@digilist-saas/app-shell` only
+2. Before auth/realtime → check `PROHIBITIONS`; use `@digipicks/app-shell` only
 3. Before raw HTML → use DS components (see `DS_COMPONENT_DICTIONARY`)
 4. Before styles → use `.module.css` and `--ds-*` tokens
 
@@ -57,20 +57,20 @@ getComponent('dataTable');
 
 1. **Onboarding:** `CLAUDE.md` → `AGENT_GUIDE.md` → this registry
 2. **New app:** `docs/planning/CLI_APP_GENERATOR_PLAN.md` + provider stack
-3. **Component lookup:** `import { components } from '@digilist-saas/ds/registry'`
+3. **Component lookup:** `import { components } from '@digipicks/ds/registry'`
 4. **Standards:** guidelines (`sharedInfrastructure`, `cssModules`)
 
 ---
 
 ## Structure
 
-| File | Purpose |
-|------|---------|
+| File             | Purpose                                       |
+| ---------------- | --------------------------------------------- |
 | `AGENT_GUIDE.md` | Gatekeeper rules, decision flows, guided tour |
-| `registry.json` | Components, patterns, examples, guidelines |
-| `gatekeeper.ts` | PROHIBITIONS, REQUIREMENTS, DECISION_FLOWS |
-| `gazetteer.ts` | GAZETTEER_INDEX, resolveNeed() |
-| `providers.ts` | Provider stack documentation |
+| `registry.json`  | Components, patterns, examples, guidelines    |
+| `gatekeeper.ts`  | PROHIBITIONS, REQUIREMENTS, DECISION_FLOWS    |
+| `gazetteer.ts`   | GAZETTEER_INDEX, resolveNeed()                |
+| `providers.ts`   | Provider stack documentation                  |
 
 ---
 

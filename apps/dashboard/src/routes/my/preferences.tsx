@@ -26,16 +26,16 @@ import {
   DashboardPageHeader,
   PageContentLayout,
   useDialog,
-} from '@digilist-saas/ds';
+} from '@digipicks/ds';
 import {
   useNotificationPreferences,
   useUpdateNotificationPreferences,
   useExportData,
   useDeleteAccount,
-} from '@digilist-saas/sdk';
-import type { Id } from '@digilist-saas/sdk';
-import { useT, useLocale } from '@digilist-saas/i18n';
-import { useAuth, useTenantContext } from '@digilist-saas/app-shell';
+} from '@digipicks/sdk';
+import type { Id } from '@digipicks/sdk';
+import { useT, useLocale } from '@digipicks/i18n';
+import { useAuth, useTenantContext } from '@digipicks/app-shell';
 
 const THEME_OPTIONS = [
   { value: 'system', labelKey: 'preferencesPage.themeSystem' as const },
@@ -65,7 +65,7 @@ export function UserPreferencesPage() {
   const { confirm } = useDialog();
   const isMobile = useIsMobile();
 
-  const userId = user?.id as Id<"users"> | undefined;
+  const userId = user?.id as Id<'users'> | undefined;
   const { tenantId } = useTenantContext();
 
   // Real SDK hooks
@@ -102,20 +102,29 @@ export function UserPreferencesPage() {
 
   const getCategoryLabel = (category: string) => {
     switch (category) {
-      case 'booking': return t('notifications.typeBooking');
-      case 'reminder': return t('notifications.typeReminder');
-      case 'message': return t('notifications.typeMessage');
-      case 'system': return t('notifications.typeSystem');
-      default: return category;
+      case 'booking':
+        return t('notifications.typeBooking');
+      case 'reminder':
+        return t('notifications.typeReminder');
+      case 'message':
+        return t('notifications.typeMessage');
+      case 'system':
+        return t('notifications.typeSystem');
+      default:
+        return category;
     }
   };
 
   const getChannelLabel = (channel: string) => {
     switch (channel) {
-      case 'email': return t('preferencesPage.channelEmail');
-      case 'push': return t('preferencesPage.channelPush');
-      case 'in_app': return t('preferencesPage.channelInApp');
-      default: return channel;
+      case 'email':
+        return t('preferencesPage.channelEmail');
+      case 'push':
+        return t('preferencesPage.channelPush');
+      case 'in_app':
+        return t('preferencesPage.channelInApp');
+      default:
+        return channel;
     }
   };
 
@@ -153,10 +162,7 @@ export function UserPreferencesPage() {
 
   return (
     <PageContentLayout>
-      <DashboardPageHeader
-        title={t('settings.preferences')}
-        subtitle={t('settings.preferencesDesc')}
-      />
+      <DashboardPageHeader title={t('settings.preferences')} subtitle={t('settings.preferencesDesc')} />
 
       {/* Notification Preferences */}
       <Card className={ps.sectionCard}>
@@ -212,8 +218,12 @@ export function UserPreferencesPage() {
         <Grid columns={isMobile ? '1fr' : '1fr 1fr'} gap="var(--ds-size-4)">
           <FormField label={t('preferencesPage.theme')}>
             <PillDropdown
-              label={THEME_OPTIONS.find(o => o.value === theme) ? t(THEME_OPTIONS.find(o => o.value === theme)!.labelKey) : t('preferencesPage.selectTheme')}
-              options={THEME_OPTIONS.map(o => ({ value: o.value, label: t(o.labelKey) }))}
+              label={
+                THEME_OPTIONS.find((o) => o.value === theme)
+                  ? t(THEME_OPTIONS.find((o) => o.value === theme)!.labelKey)
+                  : t('preferencesPage.selectTheme')
+              }
+              options={THEME_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) }))}
               value={theme}
               onChange={setTheme}
               className={ps.fullWidthButton}
@@ -222,8 +232,8 @@ export function UserPreferencesPage() {
           </FormField>
           <FormField label={t('preferencesPage.language')}>
             <PillDropdown
-              label={LANG_OPTIONS.find(o => o.value === locale)?.label ?? t('preferencesPage.selectLanguage')}
-              options={LANG_OPTIONS.map(o => ({ value: o.value, label: o.label }))}
+              label={LANG_OPTIONS.find((o) => o.value === locale)?.label ?? t('preferencesPage.selectLanguage')}
+              options={LANG_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
               value={locale}
               onChange={(v) => setLocale(v as 'nb' | 'en' | 'ar')}
               className={ps.fullWidthButton}
@@ -242,13 +252,7 @@ export function UserPreferencesPage() {
           {t('preferencesPage.dangerZoneDesc')}
         </Paragraph>
         <Stack direction="horizontal" spacing="var(--ds-size-3)" wrap>
-          <Button
-            type="button"
-            variant="secondary"
-            data-size="md"
-            onClick={handleExportData}
-            disabled={isExporting}
-          >
+          <Button type="button" variant="secondary" data-size="md" onClick={handleExportData} disabled={isExporting}>
             {isExporting ? t('settings.exporting') : t('preferencesPage.exportData')}
           </Button>
           <Button

@@ -8,16 +8,9 @@
  * Opt-in: Wrap only when VITE_ALTINN_ENABLED=true. Use LazyAltinnProvider for tree-shaking.
  */
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../auth/AuthProvider';
-import type { AltinnParty, AltinnRole } from '@digilist-saas/shared';
+import type { AltinnParty, AltinnRole } from '@digipicks/shared';
 import { mapAltinnParty } from '../adapters/altinn-adapter';
 import { env } from '../env';
 
@@ -41,8 +34,7 @@ const AltinnContext = createContext<AltinnContextType | null>(null);
 const ALTINN_TOKEN_EXCHANGE_URL =
   env.altinnTokenExchangeUrl || 'https://platform.altinn.no/authentication/api/v1/exchange/id-porten';
 
-const ALTINN_AUTHORIZATION_URL =
-  env.altinnAuthorizationUrl || 'https://platform.altinn.no/authorization/api/v1';
+const ALTINN_AUTHORIZATION_URL = env.altinnAuthorizationUrl || 'https://platform.altinn.no/authorization/api/v1';
 
 export function AltinnProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const { isAuthenticated } = useAuth();
@@ -105,9 +97,7 @@ export function AltinnProvider({ children }: { children: React.ReactNode }): Rea
         if (!response.ok) throw new Error(`Failed to fetch parties: ${response.status}`);
 
         const parties = await response.json();
-        const mapped: AltinnParty[] = parties
-          .filter((p: { orgNumber?: string }) => p.orgNumber)
-          .map(mapAltinnParty);
+        const mapped: AltinnParty[] = parties.filter((p: { orgNumber?: string }) => p.orgNumber).map(mapAltinnParty);
 
         setAuthorizedParties(mapped);
       } catch {
@@ -136,9 +126,7 @@ export function AltinnProvider({ children }: { children: React.ReactNode }): Rea
       if (!response.ok) throw new Error('Refresh failed');
 
       const parties = await response.json();
-      const mapped: AltinnParty[] = parties
-        .filter((p: { orgNumber?: string }) => p.orgNumber)
-        .map(mapAltinnParty);
+      const mapped: AltinnParty[] = parties.filter((p: { orgNumber?: string }) => p.orgNumber).map(mapAltinnParty);
 
       setAuthorizedParties(mapped);
       setError(null);
@@ -154,7 +142,7 @@ export function AltinnProvider({ children }: { children: React.ReactNode }): Rea
       const party = authorizedParties.find((p) => p.partyId === partyId);
       return party?.roles.some((r) => r.roleId === roleId) ?? false;
     },
-    [authorizedParties]
+    [authorizedParties],
   );
 
   const hasPackage = useCallback(
@@ -162,13 +150,12 @@ export function AltinnProvider({ children }: { children: React.ReactNode }): Rea
       const party = authorizedParties.find((p) => p.partyId === partyId);
       return party?.accessPackages?.includes(packageId) ?? false;
     },
-    [authorizedParties]
+    [authorizedParties],
   );
 
   const getPartyByOrgNumber = useCallback(
-    (orgNumber: string): AltinnParty | undefined =>
-      authorizedParties.find((p) => p.orgNumber === orgNumber),
-    [authorizedParties]
+    (orgNumber: string): AltinnParty | undefined => authorizedParties.find((p) => p.orgNumber === orgNumber),
+    [authorizedParties],
   );
 
   const contextValue = useMemo(
@@ -194,7 +181,7 @@ export function AltinnProvider({ children }: { children: React.ReactNode }): Rea
       hasRole,
       hasPackage,
       getPartyByOrgNumber,
-    ]
+    ],
   );
 
   return <AltinnContext.Provider value={contextValue}>{children}</AltinnContext.Provider>;

@@ -55,7 +55,7 @@ async function run(rawAppName: string, opts: RunOpts): Promise<void> {
     `apps/${appName}/package.json`,
     JSON.stringify(
       {
-        name: `@digilist-saas/${appName}`,
+        name: `@digipicks/${appName}`,
         version: '0.0.0',
         private: true,
         type: 'module',
@@ -67,11 +67,11 @@ async function run(rawAppName: string, opts: RunOpts): Promise<void> {
           typecheck: 'tsc --noEmit',
         },
         dependencies: {
-          '@digilist-saas/ds': 'workspace:*',
-          '@digilist-saas/app-shell': 'workspace:*',
-          '@digilist-saas/i18n': 'workspace:*',
-          '@digilist-saas/sdk': 'workspace:*',
-          '@digilist-saas/shared': 'workspace:*',
+          '@digipicks/ds': 'workspace:*',
+          '@digipicks/app-shell': 'workspace:*',
+          '@digipicks/i18n': 'workspace:*',
+          '@digipicks/sdk': 'workspace:*',
+          '@digipicks/shared': 'workspace:*',
           convex: '^1.31.7',
           react: '^18.3.1',
           'react-dom': '^18.3.1',
@@ -125,11 +125,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@digilist-saas/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
+      '@digipicks/sdk': path.resolve(__dirname, '../../packages/sdk/src'),
     },
   },
   optimizeDeps: {
-    exclude: ['@digilist-saas/sdk'],
+    exclude: ['@digipicks/sdk'],
   },
 });
 `,
@@ -164,8 +164,8 @@ export default defineConfig({
           baseUrl: '.',
           paths: {
             '@/*': ['./src/*'],
-            '@digilist-saas/sdk': ['../../packages/sdk/src'],
-            '@digilist-saas/sdk/*': ['../../packages/sdk/src/*'],
+            '@digipicks/sdk': ['../../packages/sdk/src'],
+            '@digipicks/sdk/*': ['../../packages/sdk/src/*'],
           },
         },
         include: ['src'],
@@ -181,10 +181,10 @@ export default defineConfig({
     `apps/${appName}/src/main.tsx`,
     `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { XalaConvexProvider } from '@digilist-saas/sdk';
+import { XalaConvexProvider } from '@digipicks/sdk';
 
-import '@digilist-saas/ds/styles';
-import '@digilist-saas/ds/platform-base';
+import '@digipicks/ds/styles';
+import '@digipicks/ds/platform-base';
 import { App } from '@/App';
 
 createRoot(document.getElementById('root')!).render(
@@ -208,10 +208,10 @@ createRoot(document.getElementById('root')!).render(
   writer.create(
     `apps/${appName}/src/App.tsx`,
     `import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider, Heading } from '@digilist-saas/ds';
-import { DEFAULT_THEME, type ThemeId } from '@digilist-saas/ds';
-import { I18nProvider } from '@digilist-saas/i18n';
-import { useTenantConfig, useTenantBranding } from '@digilist-saas/sdk';
+import { DesignsystemetProvider, DialogProvider, ErrorBoundary, ToastProvider, Heading } from '@digipicks/ds';
+import { DEFAULT_THEME, type ThemeId } from '@digipicks/ds';
+import { I18nProvider } from '@digipicks/i18n';
+import { useTenantConfig, useTenantBranding } from '@digipicks/sdk';
 
 import {
   AuthProvider,
@@ -221,7 +221,7 @@ ${layoutImports}
   useTheme,
   useBundledTheme,
   env,
-} from '@digilist-saas/app-shell';
+} from '@digipicks/app-shell';
 
 export function App() {
   return (
@@ -292,29 +292,19 @@ function AppWithTheme() {
   writer.printSummary();
 
   // Manual steps
-  printManualStep(
-    'Add AppId type:',
-    `Update packages/shared/src/types/common.ts AppId union to include '${appName}'`,
-  );
+  printManualStep('Add AppId type:', `Update packages/shared/src/types/common.ts AppId union to include '${appName}'`);
 
   printManualStep(
     'Add dev script to root package.json:',
-    `"dev:${appName}": "pnpm --filter @digilist-saas/${appName} dev"`,
+    `"dev:${appName}": "pnpm --filter @digipicks/${appName} dev"`,
   );
 
-  printManualStep(
-    'Install dependencies:',
-    'pnpm install',
-  );
+  printManualStep('Install dependencies:', 'pnpm install');
 
   printManualStep(
     'Add navigation config (if needed):',
     `Add ${pascal.toUpperCase()}_NAV_SECTIONS to packages/shared/src/navigation.ts`,
   );
 
-  printSuccess(
-    `App "${appName}" scaffolded at apps/${appName}/.\n` +
-    `  Port: ${port}\n` +
-    `  Layout: ${layout}`,
-  );
+  printSuccess(`App "${appName}" scaffolded at apps/${appName}/.\n` + `  Port: ${port}\n` + `  Layout: ${layout}`);
 }
