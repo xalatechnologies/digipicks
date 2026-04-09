@@ -965,7 +965,7 @@ export {
 } from './use-creator-application';
 
 export type {
-    CreatorApplication,
+    CreatorApplication as CreatorApplicationV1,
     ApplicationStatus,
     SocialLinks,
     SubmitApplicationInput,
