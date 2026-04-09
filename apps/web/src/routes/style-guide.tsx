@@ -3,7 +3,6 @@
  * Public route at /style-guide, rendered inside MainLayout.
  */
 
-import { useEffect, useState } from 'react';
 import { Button, Card, Container, Heading, Paragraph, Stack } from '@digipicks/ds';
 import { useT } from '@digipicks/i18n';
 import s from './style-guide.module.css';
@@ -55,16 +54,15 @@ const SPACING_TOKENS = Array.from({ length: 12 }, (_, i) => `--ds-size-${i + 1}`
 // ---------------------------------------------------------------------------
 
 function useCssVars(tokens: string[]): Record<string, string> {
-  const [values, setValues] = useState<Record<string, string>>({});
-  useEffect(() => {
-    const cs = getComputedStyle(document.documentElement);
-    const next: Record<string, string> = {};
-    for (const t of tokens) {
-      next[t] = cs.getPropertyValue(t).trim();
-    }
-    setValues(next);
-  }, [tokens.join(',')]);
-  return values;
+  // Read on every render so token edits via Vite HMR show up immediately.
+  // Cheap: <50 string lookups per render.
+  if (typeof window === 'undefined') return {};
+  const cs = getComputedStyle(document.documentElement);
+  const out: Record<string, string> = {};
+  for (const t of tokens) {
+    out[t] = cs.getPropertyValue(t).trim();
+  }
+  return out;
 }
 
 // ---------------------------------------------------------------------------
