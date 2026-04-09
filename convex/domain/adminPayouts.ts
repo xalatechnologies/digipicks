@@ -14,7 +14,7 @@ import { mutation, query, internalMutation } from "../_generated/server";
 import { v } from "convex/values";
 import { emitEvent } from "../lib/eventBus";
 import { withAudit } from "../lib/auditHelpers";
-import { requireAdmin } from "../lib/auth";
+import { requireAdmin, requireTenantMember } from "../lib/auth";
 
 // =============================================================================
 // PLATFORM FEE CONFIGURATION — Queries
@@ -26,8 +26,12 @@ import { requireAdmin } from "../lib/auth";
 export const getFeeConfig = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
     },
-    handler: async (ctx, { tenantId }) => {
+    handler: async (ctx, { tenantId, userId }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         const configs = await ctx.db
             .query("platformFeeConfig")
             .withIndex("by_active", (q) => q.eq("tenantId", tenantId).eq("isActive", true))
@@ -43,8 +47,12 @@ export const getFeeConfig = query({
 export const listFeeConfigs = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
     },
-    handler: async (ctx, { tenantId }) => {
+    handler: async (ctx, { tenantId, userId }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         return ctx.db
             .query("platformFeeConfig")
             .withIndex("by_tenant", (q) => q.eq("tenantId", tenantId))
@@ -76,6 +84,16 @@ export const setFeeConfig = mutation({
     },
     handler: async (ctx, args) => {
         await requireAdmin(ctx, args.updatedBy);
+        await requireTenantMember(ctx, args.updatedBy, args.tenantId);
+
+        // Validate fee amounts
+        if (args.percentageFee !== undefined && (args.percentageFee < 0 || args.percentageFee > 100)) {
+            throw new Error("Percentage fee must be between 0 and 100");
+        }
+        if (args.flatFee !== undefined && (args.flatFee < 0 || args.flatFee > 1_000_000)) {
+            throw new Error("Flat fee must be between 0 and 1,000,000");
+        }
+
         const now = Date.now();
 
         // Deactivate existing active configs
@@ -130,11 +148,15 @@ export const setFeeConfig = mutation({
 export const listCreatorEarnings = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
         period: v.optional(v.string()), // e.g. "2026-04"
         creatorId: v.optional(v.id("users")),
         limit: v.optional(v.number()),
     },
-    handler: async (ctx, { tenantId, period, creatorId, limit = 50 }) => {
+    handler: async (ctx, { tenantId, userId, period, creatorId, limit = 50 }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         let earnings;
 
         if (creatorId && period) {
@@ -174,9 +196,13 @@ export const listCreatorEarnings = query({
 export const getCreatorEarningsSummary = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
         creatorId: v.id("users"),
     },
-    handler: async (ctx, { tenantId, creatorId }) => {
+    handler: async (ctx, { tenantId, userId, creatorId }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         const earnings = await ctx.db
             .query("creatorEarnings")
             .withIndex("by_creator", (q) => q.eq("tenantId", tenantId).eq("creatorId", creatorId))
@@ -207,9 +233,13 @@ export const getCreatorEarningsSummary = query({
 export const getDashboardStats = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
         period: v.optional(v.string()),
     },
-    handler: async (ctx, { tenantId, period }) => {
+    handler: async (ctx, { tenantId, userId, period }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         let earnings;
         if (period) {
             earnings = await ctx.db
@@ -329,11 +359,15 @@ export const recordEarnings = internalMutation({
 export const listCreatorPayouts = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
         creatorId: v.optional(v.id("users")),
         status: v.optional(v.string()),
         limit: v.optional(v.number()),
     },
-    handler: async (ctx, { tenantId, creatorId, status, limit = 50 }) => {
+    handler: async (ctx, { tenantId, userId, creatorId, status, limit = 50 }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         let payouts;
 
         if (creatorId) {
@@ -372,10 +406,18 @@ export const listCreatorPayouts = query({
 export const getCreatorPayout = query({
     args: {
         payoutId: v.id("creatorPayouts"),
+        tenantId: v.id("tenants"),
+        userId: v.id("users"),
     },
-    handler: async (ctx, { payoutId }) => {
+    handler: async (ctx, { payoutId, tenantId, userId }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         const payout = await ctx.db.get(payoutId);
         if (!payout) throw new Error("Creator payout not found");
+        if (payout.tenantId !== tenantId) {
+            throw new Error("Payout does not belong to this tenant");
+        }
         return payout;
     },
 });
@@ -402,9 +444,13 @@ export const requestCreatorPayout = mutation({
     },
     handler: async (ctx, args) => {
         await requireAdmin(ctx, args.requestedBy);
+        await requireTenantMember(ctx, args.requestedBy, args.tenantId);
 
         if (args.amount <= 0) {
             throw new Error("Payout amount must be positive");
+        }
+        if (args.amount > 10_000_000) {
+            throw new Error("Payout amount exceeds maximum allowed (10,000,000)");
         }
 
         // Get active fee config
@@ -626,9 +672,13 @@ export const failCreatorPayout = internalMutation({
 export const calculateFee = query({
     args: {
         tenantId: v.id("tenants"),
+        userId: v.id("users"),
         amount: v.number(),
     },
-    handler: async (ctx, { tenantId, amount }) => {
+    handler: async (ctx, { tenantId, userId, amount }) => {
+        await requireAdmin(ctx, userId);
+        await requireTenantMember(ctx, userId, tenantId);
+
         const feeConfig = await ctx.db
             .query("platformFeeConfig")
             .withIndex("by_active", (q) => q.eq("tenantId", tenantId).eq("isActive", true))

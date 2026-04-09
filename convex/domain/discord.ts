@@ -16,6 +16,7 @@ import { internal } from "../_generated/api";
 import { v, ConvexError } from "convex/values";
 import { withAudit } from "../lib/auditHelpers";
 import { emitEvent } from "../lib/eventBus";
+import { requireActiveUser, requireTenantMember } from "../lib/auth";
 
 // =============================================================================
 // QUERY FACADES
@@ -217,6 +218,7 @@ export const configureServer = mutation({
     args: {
         tenantId: v.id("tenants"),
         creatorId: v.id("users"),
+        callerUserId: v.id("users"),
         guildId: v.string(),
         guildName: v.optional(v.string()),
         botToken: v.string(),
@@ -224,6 +226,23 @@ export const configureServer = mutation({
         clientSecret: v.string(),
     },
     handler: async (ctx, args) => {
+        // Validate caller is active and belongs to tenant
+        await requireActiveUser(ctx, args.callerUserId);
+        await requireTenantMember(ctx, args.callerUserId, args.tenantId);
+
+        // Only the creator themselves can configure their own Discord server
+        if (args.callerUserId !== args.creatorId) {
+            // Check if caller is an admin (admins can configure on behalf of creators)
+            const caller = await ctx.db.get(args.callerUserId);
+            const adminRoles = ["admin", "owner", "superadmin", "super_admin"];
+            if (!caller || !adminRoles.includes(caller.role)) {
+                throw new ConvexError("Only the creator or an admin can configure Discord for this creator");
+            }
+        }
+
+        // TODO(security): botToken, clientId, clientSecret are stored as plaintext in the
+        // discord component. Before production, migrate these to Convex environment variables
+        // or an external secrets manager. See convex/components/discord/schema.ts.
         const result = await ctx.runMutation(
             components.discord.functions.upsertServerConfig,
             {
@@ -258,11 +277,22 @@ export const setRoleMapping = mutation({
     args: {
         tenantId: v.id("tenants"),
         creatorId: v.id("users"),
+        callerUserId: v.id("users"),
         tierId: v.string(),
         discordRoleId: v.string(),
         discordRoleName: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        await requireActiveUser(ctx, args.callerUserId);
+        await requireTenantMember(ctx, args.callerUserId, args.tenantId);
+        if (args.callerUserId !== args.creatorId) {
+            const caller = await ctx.db.get(args.callerUserId);
+            const adminRoles = ["admin", "owner", "superadmin", "super_admin"];
+            if (!caller || !adminRoles.includes(caller.role)) {
+                throw new ConvexError("Only the creator or an admin can manage role mappings");
+            }
+        }
+
         const result = await ctx.runMutation(
             components.discord.functions.upsertRoleMapping,
             {

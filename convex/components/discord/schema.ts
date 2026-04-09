@@ -40,9 +40,12 @@ export default defineSchema({
         creatorId: v.string(),
         guildId: v.string(),
         guildName: v.optional(v.string()),
-        botToken: v.string(),
-        clientId: v.string(),
-        clientSecret: v.string(),
+        // TODO(security): These credentials are stored as plaintext. Migrate to
+        // environment variables or a secrets manager (e.g. Convex environment variables
+        // or an external vault) before production launch. Never expose in query results.
+        botToken: v.string(),   // SENSITIVE — Discord bot token
+        clientId: v.string(),   // SENSITIVE — Discord OAuth client ID
+        clientSecret: v.string(), // SENSITIVE — Discord OAuth client secret
         isEnabled: v.boolean(),
         createdAt: v.number(),
         updatedAt: v.number(),
