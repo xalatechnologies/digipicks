@@ -16,7 +16,7 @@ import {
     internalMutation,
     internalQuery,
 } from "../_generated/server";
-import { components } from "../_generated/api";
+import { components, internal } from "../_generated/api";
 
 
 // =============================================================================
@@ -412,6 +412,12 @@ export const processEvents = internalMutation({
                             metadata: { membershipId: payload.membershipId, subscriberUserId: payload.userId },
                         });
                     }
+                    // Discord: assign role for new subscription
+                    await ctx.runMutation(internal.domain.discord.handleSubscriptionEvent, {
+                        tenantId: event.tenantId,
+                        topic: event.topic,
+                        payload,
+                    });
 
                 } else if (event.topic === "subscriptions.membership.cancelled") {
                     if (payload.userId) {
@@ -425,6 +431,12 @@ export const processEvents = internalMutation({
                             metadata: { membershipId: payload.membershipId },
                         });
                     }
+                    // Discord: remove role on cancellation
+                    await ctx.runMutation(internal.domain.discord.handleSubscriptionEvent, {
+                        tenantId: event.tenantId,
+                        topic: event.topic,
+                        payload,
+                    });
 
                 } else if (event.topic === "subscriptions.membership.renewed") {
                     if (payload.userId) {
@@ -451,6 +463,12 @@ export const processEvents = internalMutation({
                             metadata: { membershipId: payload.membershipId },
                         });
                     }
+                    // Discord: remove role on expiry
+                    await ctx.runMutation(internal.domain.discord.handleSubscriptionEvent, {
+                        tenantId: event.tenantId,
+                        topic: event.topic,
+                        payload,
+                    });
 
                 // =============================================================
                 // RESALE EVENTS
