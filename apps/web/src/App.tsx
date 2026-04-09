@@ -41,6 +41,9 @@ import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
 import { CreatorDiscoveryPage } from '@/routes/creator-discovery';
 import { ApplyPage } from '@/routes/apply';
+import { SubscriberPerformancePage } from '@/routes/subscriber-performance';
+import { CheckoutSuccessPage } from '@/routes/checkout-success';
+import { CheckoutCancelledPage } from '@/routes/checkout-cancelled';
 import { PushNotificationOptIn } from '@/components/PushNotificationOptIn';
 
 import {
@@ -142,6 +145,7 @@ function MainLayout() {
               <Link to="/creators" className="header-nav-link">{t('nav.creators', 'Creators')}</Link>
               <Link to="/picks" className="header-nav-link">{t('nav.picks', 'Picks')}</Link>
               {isLoggedIn && <Link to="/tracker" className="header-nav-link">{t('nav.tracker', 'Tracker')}</Link>}
+              {isLoggedIn && <Link to="/subscriber/performance" className="header-nav-link">{t('nav.performance', 'Performance')}</Link>}
               <Link to="/pricing" className="header-nav-link">{t('nav.pricing', 'Pricing')}</Link>
               <Link to="/blog" className="header-nav-link">{t('nav.blog', 'Blog')}</Link>
               <Link to="/about" className="header-nav-link">{t('nav.about', 'About')}</Link>
@@ -254,6 +258,9 @@ function ThemedApp() {
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
                       <Route path="/creators" element={<CreatorDiscoveryPage />} />
+                      <Route path="/subscriber/performance" element={<SubscriberPerformancePage />} />
+                      <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                      <Route path="/checkout/cancelled" element={<CheckoutCancelledPage />} />
                       <Route path="/apply" element={<ApplyPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}

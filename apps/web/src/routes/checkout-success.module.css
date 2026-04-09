@@ -1,0 +1,79 @@
+/* =============================================================================
+ * Checkout Success Page
+ * Confirmation screen after successful Stripe subscription checkout
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--ds-size-10) var(--ds-size-4);
+  text-align: center;
+}
+
+.successIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--ds-color-success-surface-default);
+  color: var(--ds-color-success-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--ds-size-5);
+}
+
+.successIcon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.heading {
+  margin: 0 0 var(--ds-size-2);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0 0 var(--ds-size-6);
+}
+
+.detailsCard {
+  padding: var(--ds-size-5);
+  text-align: left;
+  margin-bottom: var(--ds-size-6);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-size-2) 0;
+}
+
+.detailRow + .detailRow {
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.detailLabel {
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}
+
+.detailValue {
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  gap: var(--ds-size-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: var(--ds-size-4);
+}
