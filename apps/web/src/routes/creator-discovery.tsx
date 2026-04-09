@@ -6,27 +6,21 @@
  * Real-time via Convex subscriptions.
  */
 
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Card,
   Heading,
   Paragraph,
   Spinner,
   Textfield,
-  NativeSelect,
 } from '@digilist-saas/ds';
 import { useT } from '@digilist-saas/i18n';
 import { useCreatorDiscovery } from '@digilist-saas/sdk';
 import type { DiscoveryCreator } from '@digilist-saas/sdk';
 import { env } from '@digilist-saas/app-shell';
+import { SportFilter } from '@/components/SportFilter';
 import s from './creator-discovery.module.css';
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const SPORTS = ['All', 'NBA', 'NFL', 'MLB', 'NHL', 'Soccer', 'UFC', 'Tennis', 'Golf', 'NCAAB', 'NCAAF'];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -158,8 +152,25 @@ export function CreatorDiscoveryPage() {
   const navigate = useNavigate();
   const tenantId = env.tenantId as any;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sportParam = searchParams.get('sport') || 'All';
+
   const [searchInput, setSearchInput] = useState('');
-  const [sport, setSport] = useState('All');
+
+  const handleSportChange = useCallback(
+    (sport: string) => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        if (sport === 'All') {
+          next.delete('sport');
+        } else {
+          next.set('sport', sport);
+        }
+        return next;
+      }, { replace: true });
+    },
+    [setSearchParams],
+  );
 
   // Debounce search to avoid hammering the backend on every keystroke
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -175,7 +186,7 @@ export function CreatorDiscoveryPage() {
 
   const { creators, isLoading } = useCreatorDiscovery(tenantId, {
     search: debouncedSearch || undefined,
-    sport: sport === 'All' ? undefined : sport,
+    sport: sportParam === 'All' ? undefined : sportParam,
   });
 
   return (
@@ -190,7 +201,10 @@ export function CreatorDiscoveryPage() {
         </Paragraph>
       </div>
 
-      {/* Search + Filters */}
+      {/* Sport filter chips */}
+      <SportFilter value={sportParam} onChange={handleSportChange} />
+
+      {/* Search */}
       <div className={s.toolbar}>
         <div className={s.searchField}>
           <Textfield
@@ -199,19 +213,6 @@ export function CreatorDiscoveryPage() {
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder={t('discovery.searchPlaceholder', 'Search by name, sport, or keyword...')}
           />
-        </div>
-        <div className={s.filterItem}>
-          <NativeSelect
-            label={t('discovery.sport', 'Sport')}
-            value={sport}
-            onChange={(e) => setSport(e.target.value)}
-          >
-            {SPORTS.map((sp) => (
-              <option key={sp} value={sp}>
-                {sp === 'All' ? t('discovery.allSports', 'All Sports') : sp}
-              </option>
-            ))}
-          </NativeSelect>
         </div>
       </div>
 

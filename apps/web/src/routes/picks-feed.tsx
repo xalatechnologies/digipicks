@@ -8,8 +8,8 @@
  * Uses real-time Convex subscriptions — new picks appear instantly.
  */
 
-import { useState, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useMemo, useCallback } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -24,13 +24,13 @@ import { useT } from '@digilist-saas/i18n';
 import { usePickFeedFollowing, usePickFeedForYou } from '@digilist-saas/sdk';
 import type { FeedPick } from '@digilist-saas/sdk';
 import { useAuth, env } from '@digilist-saas/app-shell';
+import { SportFilter } from '@/components/SportFilter';
 import s from './picks-feed.module.css';
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const SPORTS = ['All', 'NBA', 'NFL', 'MLB', 'NHL', 'Soccer', 'UFC', 'Tennis', 'Golf', 'NCAAB', 'NCAAF'];
 const RESULTS = ['All', 'pending', 'won', 'lost', 'push', 'void'];
 const PAGE_SIZE = 20;
 
@@ -218,15 +218,32 @@ export function PicksFeedPage() {
   const tenantId = env.tenantId as string | undefined;
   const userId = auth.user?.id;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sportParam = searchParams.get('sport') || 'All';
+
   const [activeTab, setActiveTab] = useState<string>('for-you');
-  const [sportFilter, setSportFilter] = useState('All');
   const [resultFilter, setResultFilter] = useState('All');
 
+  const handleSportChange = useCallback(
+    (sport: string) => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        if (sport === 'All') {
+          next.delete('sport');
+        } else {
+          next.set('sport', sport);
+        }
+        return next;
+      }, { replace: true });
+    },
+    [setSearchParams],
+  );
+
   const feedParams = useMemo(() => ({
-    sport: sportFilter !== 'All' ? sportFilter : undefined,
+    sport: sportParam !== 'All' ? sportParam : undefined,
     result: resultFilter !== 'All' ? resultFilter : undefined,
     limit: PAGE_SIZE,
-  }), [sportFilter, resultFilter]);
+  }), [sportParam, resultFilter]);
 
   const forYou = usePickFeedForYou(tenantId as any, userId, feedParams);
   const following = usePickFeedFollowing(tenantId as any, userId, feedParams);
@@ -274,22 +291,11 @@ export function PicksFeedPage() {
         </div>
       )}
 
-      {/* Filters */}
-      <div className={s.filterRow}>
-        <NativeSelect
-          label={t('picks.feed.filterSport', 'Sport')}
-          value={sportFilter}
-          onChange={(e) => setSportFilter(e.target.value)}
-          className={s.filterSelect}
-          data-size="sm"
-        >
-          {SPORTS.map((sport) => (
-            <option key={sport} value={sport}>
-              {sport === 'All' ? t('common.all', 'All Sports') : sport}
-            </option>
-          ))}
-        </NativeSelect>
+      {/* Sport filter chips */}
+      <SportFilter value={sportParam} onChange={handleSportChange} />
 
+      {/* Result filter */}
+      <div className={s.filterRow}>
         <NativeSelect
           label={t('picks.feed.filterResult', 'Result')}
           value={resultFilter}

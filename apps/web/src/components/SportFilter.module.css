@@ -1,0 +1,76 @@
+/* =============================================================================
+ * SportFilter — Horizontal scrollable sport chip bar
+ * Used on creator discovery and picks feed pages for quick sport filtering.
+ * ============================================================================= */
+
+.sportFilterBar {
+  display: flex;
+  gap: var(--ds-size-2);
+  overflow-x: auto;
+  padding-bottom: var(--ds-size-2);
+  margin-bottom: var(--ds-size-4);
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar on mobile for cleaner look */
+.sportFilterBar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.sportFilterBar::-webkit-scrollbar-thumb {
+  background: var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.sportChip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-size-1);
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border-radius: var(--ds-border-radius-full);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  background: var(--ds-color-neutral-background-default);
+  color: var(--ds-color-neutral-text-default);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.sportChip:hover {
+  background: var(--ds-color-neutral-surface-hover);
+  border-color: var(--ds-color-neutral-border-default);
+}
+
+.sportChip:focus-visible {
+  outline: 2px solid var(--ds-color-accent-border-default);
+  outline-offset: 2px;
+}
+
+.sportChipActive {
+  background: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  border-color: var(--ds-color-accent-border-default);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.sportChipActive:hover {
+  background: var(--ds-color-accent-surface-hover);
+}
+
+.sportChipCount {
+  font-size: var(--ds-font-size-xs);
+  opacity: 0.7;
+}
+
+/* Responsive: smaller chips on mobile */
+@media (max-width: 640px) {
+  .sportChip {
+    padding: var(--ds-size-1) var(--ds-size-3);
+    font-size: var(--ds-font-size-xs);
+  }
+}

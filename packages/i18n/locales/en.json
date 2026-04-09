@@ -720,6 +720,20 @@
     "blog": "Blog",
     "about": "About"
   },
+  "sport": {
+    "filterLabel": "Filter by sport",
+    "all": "All Sports",
+    "nba": "NBA",
+    "nfl": "NFL",
+    "mlb": "MLB",
+    "nhl": "NHL",
+    "soccer": "Soccer",
+    "ufc": "UFC",
+    "tennis": "Tennis",
+    "golf": "Golf",
+    "ncaab": "NCAAB",
+    "ncaaf": "NCAAF"
+  },
   "discovery": {
     "title": "Discover Creators",
     "subtitle": "Find top-performing creators and subscribe to their picks.",

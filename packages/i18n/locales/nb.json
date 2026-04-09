@@ -720,6 +720,20 @@
     "blog": "Blogg",
     "about": "Om oss"
   },
+  "sport": {
+    "filterLabel": "Filtrer etter sport",
+    "all": "Alle sporter",
+    "nba": "NBA",
+    "nfl": "NFL",
+    "mlb": "MLB",
+    "nhl": "NHL",
+    "soccer": "Fotball",
+    "ufc": "UFC",
+    "tennis": "Tennis",
+    "golf": "Golf",
+    "ncaab": "NCAAB",
+    "ncaaf": "NCAAF"
+  },
   "discovery": {
     "title": "Oppdag skapere",
     "subtitle": "Finn de beste skaperne og abonner på deres tips.",
