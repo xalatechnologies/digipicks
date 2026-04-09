@@ -1,8 +1,8 @@
 /**
- * ListingsPage — EdgePicks Landing Page
+ * ListingsPage — DigiPicks Landing Page
  *
  * 9-section conversion funnel:
- *   1. Hero — exclusivity-driven CTA
+ *   1. Hero — trust-first value proposition CTA
  *   2. Today's Events — live/upcoming sports events
  *   3. Why Switch — competitor pain points
  *   4. Tools — creator tool highlights
@@ -10,12 +10,12 @@
  *   6. Command Center — creator dashboard visualization
  *   7. Creator Discovery — browse top creators
  *   8. Testimonials — social proof
- *   9. Final CTA — application push
+ *   9. Final CTA — creator application push
  */
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Paragraph, Button } from '@digilist-saas/ds';
+import { Heading, Paragraph, Button } from '@digilist-saas/ds';
 import { useAuth } from '@digilist-saas/app-shell';
 import { useT } from '@digilist-saas/i18n';
 import s from './listings.module.css';
@@ -187,18 +187,18 @@ function HeroSection() {
           <span className={s.heroLabelDot} />
           {t('landing.hero.label', 'Applications Now Open')}
         </div>
-        <h1 className={s.heroTitle}>
-          {t('landing.hero.titleLine1', 'NOT BUILT FOR')}{' '}
+        <Heading level={1} className={s.heroTitle}>
+          {t('landing.hero.titleLine1', 'PICKS YOU CAN')}{' '}
           <span className={s.heroTitleAccent}>
-            {t('landing.hero.titleAccent', 'EVERYONE')}
+            {t('landing.hero.titleAccent', 'TRUST')}
           </span>
-        </h1>
-        <p className={s.heroSubtitle}>
+        </Heading>
+        <Paragraph className={s.heroSubtitle}>
           {t(
             'landing.hero.subtitle',
-            'EdgePicks is the premium platform where sports betting creators build real businesses \u2014 with verified records, smart pricing, and professional tools.',
+            'DigiPicks is the premium creator-to-subscriber platform for sports betting picks \u2014 with verified records, transparent performance, and professional tools.',
           )}
-        </p>
+        </Paragraph>
         <div className={s.heroCtas}>
           {!isAuthenticated ? (
             <>
@@ -222,22 +222,22 @@ function HeroSection() {
         <div className={s.heroTrust}>
           <span className={s.heroTrustItem}>✓ {t('landing.hero.trustVerified', 'Verified Records')}</span>
           <span className={s.heroTrustDivider} />
-          <span className={s.heroTrustItem}>✓ {t('landing.hero.trustManual', 'Manually Reviewed')}</span>
+          <span className={s.heroTrustItem}>✓ {t('landing.hero.trustTransparent', 'Transparent Performance')}</span>
           <span className={s.heroTrustDivider} />
           <span className={s.heroTrustItem}>✓ {t('landing.hero.trustPro', 'Pro-Grade Tools')}</span>
         </div>
         <div className={s.heroStats}>
           <div className={s.heroStatItem}>
             <div className={s.heroStatValue}>500+</div>
-            <div className={s.heroStatLabel}>{t('landing.hero.statCreators', 'Verified Creators')}</div>
+            <Paragraph className={s.heroStatLabel}>{t('landing.hero.statCreators', 'Verified Creators')}</Paragraph>
           </div>
           <div className={s.heroStatItem}>
             <div className={s.heroStatValue}>50K+</div>
-            <div className={s.heroStatLabel}>{t('landing.hero.statPicks', 'Picks Tracked')}</div>
+            <Paragraph className={s.heroStatLabel}>{t('landing.hero.statPicks', 'Picks Tracked')}</Paragraph>
           </div>
           <div className={s.heroStatItem}>
             <div className={s.heroStatValue}>+12.4%</div>
-            <div className={s.heroStatLabel}>{t('landing.hero.statRoi', 'Avg. Creator ROI')}</div>
+            <Paragraph className={s.heroStatLabel}>{t('landing.hero.statRoi', 'Avg. Creator ROI')}</Paragraph>
           </div>
         </div>
       </div>
@@ -274,22 +274,24 @@ function LiveEventsStrip() {
             )}
           </div>
           <div className={s.eventsSportChips}>
-            <button
-              type="button"
-              className={`${s.sportChip} ${activeSport === null ? s.sportChipActive : ''}`}
+            <Button
+              variant={activeSport === null ? 'primary' : 'secondary'}
+              data-size="sm"
+              className={s.sportChip}
               onClick={() => setActiveSport(null)}
             >
               {t('landing.events.all', 'All')}
-            </button>
+            </Button>
             {sports.map((sp) => (
-              <button
+              <Button
                 key={sp}
-                type="button"
-                className={`${s.sportChip} ${activeSport === sp ? s.sportChipActive : ''}`}
+                variant={activeSport === sp ? 'primary' : 'secondary'}
+                data-size="sm"
+                className={s.sportChip}
                 onClick={() => setActiveSport(sp)}
               >
                 {sp}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -320,17 +322,17 @@ function WhySwitchSection() {
     <section className={s.section}>
       <div className={s.sectionInner}>
         <div className={s.sectionHeader}>
-          <h2 className={s.sectionTitle}>{t('landing.whySwitch.title', 'Why Creators Are Switching')}</h2>
-          <p className={s.sectionSubtitle}>
+          <Heading level={2} className={s.sectionTitle}>{t('landing.whySwitch.title', 'Why Creators Are Switching')}</Heading>
+          <Paragraph className={s.sectionSubtitle}>
             {t('landing.whySwitch.subtitle', 'Other platforms treat picks like tweets. We treat them like a portfolio.')}
-          </p>
+          </Paragraph>
         </div>
         <div className={s.painGrid}>
           {PAIN_POINTS.map((pain) => (
             <div key={pain.id} className={s.painCard}>
               <div className={s.painCardIcon}>{pain.icon}</div>
-              <h3 className={s.painCardTitle}>{t(pain.titleKey, pain.titleDefault)}</h3>
-              <p className={s.painCardBody}>{t(pain.bodyKey, pain.bodyDefault)}</p>
+              <Heading level={3} className={s.painCardTitle}>{t(pain.titleKey, pain.titleDefault)}</Heading>
+              <Paragraph className={s.painCardBody}>{t(pain.bodyKey, pain.bodyDefault)}</Paragraph>
             </div>
           ))}
         </div>
@@ -346,17 +348,17 @@ function ToolsSection() {
     <section className={s.sectionAlt}>
       <div className={s.sectionInner}>
         <div className={s.sectionHeader}>
-          <h2 className={s.sectionTitle}>{t('landing.tools.title', 'Professional Creator Tools')}</h2>
-          <p className={s.sectionSubtitle}>
+          <Heading level={2} className={s.sectionTitle}>{t('landing.tools.title', 'Professional Creator Tools')}</Heading>
+          <Paragraph className={s.sectionSubtitle}>
             {t('landing.tools.subtitle', 'Everything you need to run your picks business, built into one platform.')}
-          </p>
+          </Paragraph>
         </div>
         <div className={s.toolsGrid}>
           {TOOLS.map((tool) => (
             <div key={tool.id} className={s.toolCard}>
               <div className={s.toolIcon}>{tool.icon}</div>
-              <h3 className={s.toolTitle}>{t(tool.titleKey, tool.titleDefault)}</h3>
-              <p className={s.toolDesc}>{t(tool.descKey, tool.descDefault)}</p>
+              <Heading level={3} className={s.toolTitle}>{t(tool.titleKey, tool.titleDefault)}</Heading>
+              <Paragraph className={s.toolDesc}>{t(tool.descKey, tool.descDefault)}</Paragraph>
             </div>
           ))}
         </div>
@@ -372,17 +374,17 @@ function PlatformPreviewSection() {
     <section className={s.section}>
       <div className={s.sectionInner}>
         <div className={s.sectionHeader}>
-          <h2 className={s.sectionTitle}>{t('landing.preview.title', 'See Your Business at a Glance')}</h2>
-          <p className={s.sectionSubtitle}>
+          <Heading level={2} className={s.sectionTitle}>{t('landing.preview.title', 'See Your Business at a Glance')}</Heading>
+          <Paragraph className={s.sectionSubtitle}>
             {t('landing.preview.subtitle', 'Revenue tracking, subscriber analytics, and performance metrics \u2014 all in one dashboard.')}
-          </p>
+          </Paragraph>
         </div>
         <div className={s.previewContainer}>
           <div className={s.previewText}>
-            <h3 className={s.previewTitle}>{t('landing.preview.dashboardTitle', 'Revenue Dashboard')}</h3>
-            <p className={s.previewDesc}>
+            <Heading level={3} className={s.previewTitle}>{t('landing.preview.dashboardTitle', 'Revenue Dashboard')}</Heading>
+            <Paragraph className={s.previewDesc}>
               {t('landing.preview.dashboardDesc', 'Track MRR, subscriber churn, and revenue per pick in real-time. Know exactly how your business is performing.')}
-            </p>
+            </Paragraph>
           </div>
           <div className={s.previewMockup}>
             <div className={s.mockupBar}>
@@ -452,10 +454,10 @@ function CommandCenterSection() {
             </div>
           </div>
           <div className={s.previewText}>
-            <h3 className={s.previewTitle}>{t('landing.commandCenter.title', 'Your Command Center')}</h3>
-            <p className={s.previewDesc}>
+            <Heading level={3} className={s.previewTitle}>{t('landing.commandCenter.title', 'Your Command Center')}</Heading>
+            <Paragraph className={s.previewDesc}>
               {t('landing.commandCenter.desc', 'Manage active picks, monitor results in real-time, broadcast to subscribers, and track your daily P/L \u2014 all from one control room.')}
-            </p>
+            </Paragraph>
           </div>
         </div>
       </div>
@@ -471,10 +473,10 @@ function CreatorDiscoverySection() {
     <section className={s.section}>
       <div className={s.sectionInner}>
         <div className={s.sectionHeader}>
-          <h2 className={s.sectionTitle}>{t('landing.creators.title', 'Discover Top Creators')}</h2>
-          <p className={s.sectionSubtitle}>
+          <Heading level={2} className={s.sectionTitle}>{t('landing.creators.title', 'Discover Top Creators')}</Heading>
+          <Paragraph className={s.sectionSubtitle}>
             {t('landing.creators.subtitle', 'Browse verified creators ranked by real performance. Every stat is tracked and audited.')}
-          </p>
+          </Paragraph>
         </div>
         <div className={s.creatorsGrid}>
           {FEATURED_CREATORS.map((creator) => (
@@ -527,12 +529,12 @@ function TestimonialsSection() {
     <section className={s.sectionAlt}>
       <div className={s.sectionInner}>
         <div className={s.sectionHeader}>
-          <h2 className={s.sectionTitle}>{t('landing.testimonials.title', 'What They Say')}</h2>
+          <Heading level={2} className={s.sectionTitle}>{t('landing.testimonials.title', 'What They Say')}</Heading>
         </div>
         <div className={s.testimonialsGrid}>
           {TESTIMONIALS.map((item) => (
             <div key={item.id} className={s.testimonialCard}>
-              <p className={s.testimonialQuote}>&ldquo;{item.quote}&rdquo;</p>
+              <Paragraph className={s.testimonialQuote}>&ldquo;{item.quote}&rdquo;</Paragraph>
               <div className={s.testimonialAuthor}>
                 <div className={s.testimonialAvatar}>{item.initials}</div>
                 <div>
@@ -556,12 +558,12 @@ function FinalCtaSection() {
   return (
     <section className={s.finalCta}>
       <div className={s.finalCtaInner}>
-        <h2 className={s.finalCtaTitle}>
-          {t('landing.finalCta.title', "IF YOU'RE READY TO BUILD PROPERLY")}
-        </h2>
-        <p className={s.finalCtaSubtitle}>
-          {t('landing.finalCta.subtitle', 'EdgePicks is invite-only. Every application is manually reviewed. We only onboard creators who are serious about their craft.')}
-        </p>
+        <Heading level={2} className={s.finalCtaTitle}>
+          {t('landing.finalCta.title', 'READY TO BUILD YOUR PICKS BUSINESS?')}
+        </Heading>
+        <Paragraph className={s.finalCtaSubtitle}>
+          {t('landing.finalCta.subtitle', 'DigiPicks is invite-only. Every application is manually reviewed. We only onboard creators who are serious about their craft.')}
+        </Paragraph>
         <div className={s.finalCtaActions}>
           {!isAuthenticated ? (
             <>
@@ -582,9 +584,9 @@ function FinalCtaSection() {
             </Button>
           )}
         </div>
-        <p className={s.finalCtaNote}>
+        <Paragraph className={s.finalCtaNote}>
           {t('landing.finalCta.note', 'All applications are reviewed within 48 hours.')}
-        </p>
+        </Paragraph>
       </div>
     </section>
   );
