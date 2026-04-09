@@ -63,6 +63,11 @@ export const CONTRACT = defineContract({
         "bookings.booking.approved",
         "bookings.booking.rejected",
         "messaging.message.sent",
+        "picks.pick.created",
+        "picks.pick.graded",
+        "picks.pick.removed",
+        "picks.tail.created",
+        "picks.copost.created",
     ],
 
     dependencies: {
