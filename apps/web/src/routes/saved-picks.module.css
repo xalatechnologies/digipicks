@@ -1,0 +1,182 @@
+/* Saved Picks Library — saved picks, favorites, followed creators */
+
+.pageContainer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: var(--ds-size-6);
+}
+
+.title {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tab navigation */
+.tabBar {
+  display: flex;
+  gap: var(--ds-size-2);
+  border-bottom: 1px solid var(--ds-color-neutral-border-default);
+  margin-bottom: var(--ds-size-6);
+}
+
+.tab {
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ds-color-neutral-text-subtle);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab:hover {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.tabActive {
+  color: var(--ds-color-accent-text-default);
+  border-bottom-color: var(--ds-color-accent-border-default);
+}
+
+/* Stats summary */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+}
+
+.statCard {
+  padding: var(--ds-size-4);
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-1);
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ds-color-neutral-text-default);
+}
+
+/* Filter row */
+.filterRow {
+  display: flex;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-4);
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  min-width: 140px;
+}
+
+/* Pick card grid */
+.pickGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.pickCard {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.pickMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.pickEvent {
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-default);
+  font-size: 14px;
+}
+
+.pickMeta {
+  display: flex;
+  gap: var(--ds-size-2);
+  flex-wrap: wrap;
+  margin-top: var(--ds-size-1);
+  font-size: 13px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.pickActions {
+  display: flex;
+  gap: var(--ds-size-2);
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* Favorites grid */
+.favoritesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--ds-size-3);
+}
+
+.favoriteCard {
+  padding: var(--ds-size-4);
+}
+
+.favoriteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--ds-size-2);
+}
+
+.favoriteName {
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-default);
+}
+
+.favoriteDate {
+  font-size: 12px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Empty/login states */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-4);
+}
+
+.loginPrompt {
+  text-align: center;
+  padding: var(--ds-size-8) var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.loginPromptText {
+  margin-bottom: var(--ds-size-3);
+  color: var(--ds-color-neutral-text-subtle);
+}
