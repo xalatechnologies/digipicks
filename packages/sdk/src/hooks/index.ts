@@ -893,6 +893,26 @@ export type {
     PersonalTrackerStats,
 } from './use-pick-tracker';
 
+// Pick Moderation (DigiPicks — admin moderation queue, reporting)
+export {
+    useModerationQueue,
+    usePickReports,
+    useModerationStats,
+    useReportPick,
+    useModeratePick,
+} from './use-pick-moderation';
+
+export type {
+    ModerationStatus,
+    ReportReason,
+    ReportStatus,
+    ModerationQueuePick,
+    PickReport,
+    ModerationStats,
+    ReportPickInput,
+    ModeratePickInput,
+} from './use-pick-moderation';
+
 // Broadcasts (DigiPicks — creator-to-subscriber broadcast messaging)
 export {
     useCreatorBroadcasts,

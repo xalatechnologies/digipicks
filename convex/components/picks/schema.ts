@@ -75,6 +75,13 @@ export default defineSchema({
 
         // Metadata
         metadata: v.optional(v.any()),
+
+        // Moderation fields
+        moderationStatus: v.optional(v.string()),  // "clean", "flagged", "under_review", "approved", "rejected", "hidden"
+        moderatedBy: v.optional(v.string()),        // Admin who moderated
+        moderatedAt: v.optional(v.number()),
+        moderationNote: v.optional(v.string()),     // Admin note explaining decision
+        reportCount: v.optional(v.number()),        // Number of user reports
     })
         .index("by_tenant", ["tenantId"])
         .index("by_creator", ["creatorId"])
@@ -83,5 +90,26 @@ export default defineSchema({
         .index("by_tenant_result", ["tenantId", "result"])
         .index("by_creator_status", ["creatorId", "status"])
         .index("by_event_date", ["tenantId", "eventDate"])
-        .index("by_tenant_creator", ["tenantId", "creatorId"]),
+        .index("by_tenant_creator", ["tenantId", "creatorId"])
+        .index("by_tenant_moderationStatus", ["tenantId", "moderationStatus"]),
+
+    /**
+     * User reports on picks — tracks who reported what and why.
+     * One report per user per pick (enforced at mutation time).
+     */
+    pickReports: defineTable({
+        tenantId: v.string(),
+        pickId: v.string(),
+        reporterId: v.string(),       // User who filed the report
+        reason: v.string(),           // "fraud", "misleading", "spam", "inappropriate", "other"
+        details: v.optional(v.string()),
+        status: v.string(),           // "pending", "reviewed", "dismissed"
+        reviewedBy: v.optional(v.string()),
+        reviewedAt: v.optional(v.number()),
+        reportedAt: v.number(),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_pick", ["pickId"])
+        .index("by_reporter_pick", ["reporterId", "pickId"])
+        .index("by_tenant_status", ["tenantId", "status"]),
 });

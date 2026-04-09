@@ -439,6 +439,18 @@ export const RATE_LIMITS = {
         period: 60_000,
         capacity: 60,
     },
+    moderatePick: {
+        kind: "token bucket" as const,
+        rate: 20,
+        period: 60_000,
+        capacity: 50,
+    },
+    reportPick: {
+        kind: "token bucket" as const,
+        rate: 5,
+        period: 60_000,
+        capacity: 10,
+    },
 
     // -------------------------------------------------------------------------
     // Broadcast operations (per-creator)

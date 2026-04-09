@@ -1,0 +1,58 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--ds-size-3);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+  padding: var(--ds-size-3);
+  border-radius: var(--ds-size-1);
+  background: var(--ds-color-surface-default);
+  border: 1px solid var(--ds-color-border-subtle);
+}
+
+.statValue {
+  font-size: var(--ds-font-size-6);
+  font-weight: 600;
+}
+
+.statLabel {
+  font-size: var(--ds-font-size-1);
+  color: var(--ds-color-text-subtle);
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.reportItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+  padding: var(--ds-size-2);
+  border-radius: var(--ds-size-1);
+  background: var(--ds-color-surface-subtle);
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.moderationActions {
+  display: flex;
+  gap: var(--ds-size-2);
+  flex-wrap: wrap;
+}

@@ -23,6 +23,8 @@ export type BackendPermission =
   | "messaging:admin"
   // Review permissions
   | "review:moderate"
+  // Pick moderation permissions
+  | "pick:moderate"
   // User management
   | "user:manage"
   | "user:deactivate"
