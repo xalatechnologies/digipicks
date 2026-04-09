@@ -23,6 +23,7 @@ import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTool
 import { GlobalSearch } from '@digipicks/app-shell';
 import { useAuth } from '@digipicks/app-shell';
 import { ListingsPage } from '@/routes/listings';
+import { HomePage } from '@/routes/home';
 
 import { LoginPage } from '@/routes/login';
 import { RegisterPage } from '@/routes/register';
@@ -38,6 +39,7 @@ import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
 import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
+import { CreatorsPage } from '@/routes/creators';
 import { CreatorApplyPage } from '@/routes/creator-apply';
 import { PushNotificationOptIn } from '@/components/PushNotificationOptIn';
 
@@ -253,7 +255,7 @@ function ThemedApp() {
                         element={
                           <>
                             <CustomDomainRedirect />
-                            <ListingsPage />
+                            <HomePage />
                           </>
                         }
                       />
@@ -267,6 +269,7 @@ function ThemedApp() {
                       <Route path="/picks" element={<PicksFeedPage />} />
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
+                      <Route path="/creators" element={<CreatorsPage />} />
                       <Route path="/creator-apply" element={<CreatorApplyPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}
