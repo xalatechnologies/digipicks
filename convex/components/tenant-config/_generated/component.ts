@@ -258,6 +258,13 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         Array<any>,
         Name
       >;
+      listCreatorBrandConfigs: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string },
+        Array<any>,
+        Name
+      >;
       listFlags: FunctionReference<
         "query",
         "internal",

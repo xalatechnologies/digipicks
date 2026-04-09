@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Heading, Paragraph, Button, Spinner, StatusTag, Tag } from '@digipicks/ds';
+import { Card, Heading, Paragraph, Button, Spinner, StatusTag, Tag, useToast } from '@digipicks/ds';
 import { useT } from '@digipicks/i18n';
 import {
   useCreatorProfile,
@@ -17,7 +17,7 @@ import {
   useCreatorBranding,
   type Pick as PickType,
 } from '@digipicks/sdk';
-import { env, useAuth } from '@digipicks/app-shell';
+import { env, useAuth, VerificationBadge } from '@digipicks/app-shell';
 import { useQuery } from 'convex/react';
 import { api } from '@digipicks/sdk/convex-api';
 import s from './creator-profile.module.css';
@@ -124,6 +124,7 @@ export function CreatorProfilePage() {
   const userId = auth.isAuthenticated ? (auth as any).user?.id : undefined;
   const { isSubscribed } = useIsSubscribed(userId, creatorId);
   const { subscribe, isLoading: subscribing } = useSubscribe();
+  const toast = useToast();
 
   const handleSubscribe = async () => {
     if (!auth.isAuthenticated) {
@@ -149,15 +150,17 @@ export function CreatorProfilePage() {
         userId,
         tierId: tier._id,
         creatorId,
-        returnUrl: `${window.location.origin}/creator/${creatorId}`,
-        cancelUrl: `${window.location.origin}/creator/${creatorId}`,
+        returnUrl: `${window.location.origin}/checkout/success?creatorId=${creatorId}`,
+        cancelUrl: `${window.location.origin}/checkout/cancelled?creatorId=${creatorId}`,
       });
 
       if (result?.url) {
         window.location.href = result.url;
       }
-    } catch {
-      // Error is tracked in the hook
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : t('checkout.error', 'Something went wrong. Please try again.');
+      toast.error(t('checkout.errorTitle', 'Checkout failed'), message);
     }
   };
 
@@ -230,6 +233,7 @@ export function CreatorProfilePage() {
         <div className={s.profileInfo}>
           <Heading level={1} data-size="lg" className={s.profileName}>
             {brandedName}
+            <VerificationBadge verified={profile.verified} verifiedAt={profile.verifiedAt} size="md" />
           </Heading>
           {brandedTagline ? (
             <Paragraph data-size="sm" className={s.profileRole}>

@@ -5,7 +5,7 @@ import { Id } from '../_generated/dataModel';
 import { wrapInEmailLayout } from '../email/baseLayout';
 
 const MAGIC_LINK_EXPIRY_MS = 15 * 60 * 1000; // 15 minutes
-const BACKOFFICE_ADMIN_PERMISSIONS = [
+const BACKOFFICE_OWNER_PERMISSIONS = [
   'resource:view',
   'resource:write',
   'resource:publish',
@@ -214,12 +214,11 @@ export const findOrCreateUser = internalMutation({
       user = await ctx.db.get(userId);
     } else {
       // Ensure backoffice users have creator access; otherwise only update login timestamp.
-      // Existing admin / superadmin users keep their elevated role.
       const patch: Partial<{
         role: string;
         lastLoginAt: number;
       }> = { lastLoginAt: Date.now() };
-      if (appId === 'backoffice' && user.role !== 'creator' && user.role !== 'admin' && user.role !== 'superadmin') {
+      if (appId === 'backoffice' && user.role !== 'creator' && user.role !== 'admin') {
         patch.role = 'creator';
       }
       await ctx.db.patch(user._id, patch);
@@ -259,16 +258,16 @@ export const findOrCreateUser = internalMutation({
         tenantId,
         limit: 200,
       });
-      let adminRole = existingRoles.find((r: any) => r.name === 'Admin');
+      let ownerRole = existingRoles.find((r: any) => r.name === 'Owner');
 
-      if (!adminRole) {
+      if (!ownerRole) {
         const created = await ctx.runMutation(components.rbac.mutations.createRole, {
           tenantId,
-          name: 'Admin',
-          permissions: BACKOFFICE_ADMIN_PERMISSIONS,
+          name: 'Owner',
+          permissions: BACKOFFICE_OWNER_PERMISSIONS,
           isSystem: true,
         });
-        adminRole = { _id: created.id };
+        ownerRole = { _id: created.id };
       }
 
       const userRoles = await ctx.runQuery(components.rbac.queries.listUserRoles, {
@@ -276,15 +275,15 @@ export const findOrCreateUser = internalMutation({
         tenantId,
         limit: 200,
       });
-      const hasAdminRole = userRoles.some((assignment: any) => {
+      const hasOwnerRole = userRoles.some((assignment: any) => {
         const roleId = assignment.role?._id ?? assignment.roleId;
-        return roleId === adminRole._id;
+        return roleId === ownerRole._id;
       });
 
-      if (!hasAdminRole) {
+      if (!hasOwnerRole) {
         await ctx.runMutation(components.rbac.mutations.assignRole, {
           userId,
-          roleId: adminRole._id,
+          roleId: ownerRole._id,
           tenantId,
         });
       }

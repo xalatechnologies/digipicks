@@ -1,4 +1,4 @@
-/* listings.module.css — EdgePicks Landing Page */
+/* listings.module.css — DigiPicks Landing Page */
 
 /* ═══════════════════════════════════════════════════════
    Hero Section — Enhanced
@@ -36,10 +36,14 @@
 }
 
 @keyframes orbFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-18px) scale(1.1); }
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-18px) scale(1.1);
+  }
 }
-
 
 .heroInner {
   max-width: 800px;
@@ -193,8 +197,13 @@
 }
 
 @keyframes livePulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .eventsLabel {
@@ -223,26 +232,7 @@
 }
 
 .sportChip {
-  all: unset;
-  cursor: pointer;
-  font-size: var(--ds-font-size-xs, 0.75rem);
-  font-weight: var(--ds-font-weight-medium, 500);
-  color: var(--ds-color-neutral-text-subtle);
-  padding: 2px 10px;
   border-radius: 9999px;
-  border: 1px solid var(--ds-color-neutral-border-subtle);
-  transition: all 0.15s;
-}
-
-.sportChip:hover {
-  border-color: var(--ds-color-accent-border-default);
-  color: var(--ds-color-accent-text-default);
-}
-
-.sportChipActive {
-  background-color: var(--ds-color-accent-surface-default);
-  color: var(--ds-color-accent-text-default);
-  border-color: var(--ds-color-accent-border-default);
 }
 
 .eventsScroll {
@@ -270,7 +260,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--ds-size-1);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .eventCard:hover {
@@ -280,11 +272,7 @@
 
 .eventCardLive {
   border-color: rgba(239, 68, 68, 0.3);
-  background: linear-gradient(
-    135deg,
-    var(--ds-color-neutral-background-default) 0%,
-    rgba(239, 68, 68, 0.03) 100%
-  );
+  background: linear-gradient(135deg, var(--ds-color-neutral-background-default) 0%, rgba(239, 68, 68, 0.03) 100%);
 }
 
 .eventSport {
@@ -536,7 +524,9 @@
   flex-direction: column;
   gap: var(--ds-size-3);
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .creatorCard:hover {

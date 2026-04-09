@@ -67,7 +67,6 @@ import { ModulesPage as PlatformModulesPage } from '@/routes/platform/modules';
 import { BillingPage as PlatformBillingPage } from '@/routes/platform/billing';
 import { AuditPage as PlatformAuditPage } from '@/routes/platform/audit';
 import { ModerationPage as PlatformModerationPage } from '@/routes/platform/moderation';
-import { CreatorApplicationsReviewPage } from '@/routes/platform/creator-applications';
 
 // Owner application flow
 
@@ -93,9 +92,18 @@ import { PickEditPage } from '@/routes/pick-edit';
 // DigiPicks — creator white-label branding
 import { CreatorBrandingPage } from '@/routes/creator-branding';
 
+// DigiPicks — creator application admin review
+import { CreatorApplicationsPage } from '@/routes/creator-applications';
+
 // DigiPicks — broadcast messaging
 import { BroadcastsPage, BroadcastInboxPage } from '@/routes/broadcasts';
 import { BroadcastComposePage } from '@/routes/broadcast-compose';
+
+// DigiPicks — creator earnings dashboard
+import { CreatorEarningsPage } from '@/routes/creator-earnings';
+
+// DigiPicks — pick moderation queue (admin)
+import PickModerationPage from '@/routes/pick-moderation';
 
 // DigiPicks — Stripe integration (payouts & subscribers)
 import { PayoutsPage } from '@/routes/payouts';
@@ -312,6 +320,29 @@ function AppWithTheme() {
                                   <Route path="broadcasts" element={<BroadcastsPage />} />
                                   <Route path="broadcasts/compose" element={<BroadcastComposePage />} />
                                   <Route path="broadcasts/inbox" element={<BroadcastInboxPage />} />
+
+                                  {/* ─── DigiPicks: Creator application review (admin) ─── */}
+                                  <Route
+                                    path="creator-applications"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <CreatorApplicationsPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+
+                                  {/* ─── DigiPicks: Pick moderation queue (admin) ─── */}
+                                  <Route
+                                    path="admin/moderation/picks"
+                                    element={
+                                      <ProtectedRouteConnected requiredRole="admin">
+                                        <PickModerationPage />
+                                      </ProtectedRouteConnected>
+                                    }
+                                  />
+
+                                  {/* ─── DigiPicks: Creator earnings dashboard ─── */}
+                                  <Route path="earnings" element={<CreatorEarningsPage />} />
 
                                   {/* ─── DigiPicks: Stripe integration ─── */}
                                   <Route path="payouts" element={<PayoutsPage />} />
@@ -573,14 +604,6 @@ function AppWithTheme() {
                                     element={
                                       <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
                                         <PlatformModerationPage />
-                                      </ProtectedRouteConnected>
-                                    }
-                                  />
-                                  <Route
-                                    path="platform/creator-applications"
-                                    element={
-                                      <ProtectedRouteConnected requiredCapability="CAP_PLATFORM_ADMIN">
-                                        <CreatorApplicationsReviewPage />
                                       </ProtectedRouteConnected>
                                     }
                                   />

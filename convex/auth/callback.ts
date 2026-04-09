@@ -2,7 +2,7 @@ import { internalAction, internalMutation } from '../_generated/server';
 import { v } from 'convex/values';
 import { components, internal } from '../_generated/api';
 
-const BACKOFFICE_ADMIN_PERMISSIONS = [
+const BACKOFFICE_OWNER_PERMISSIONS = [
   'resource:view',
   'resource:write',
   'resource:publish',
@@ -150,12 +150,7 @@ export const upsertUser = internalMutation({
       };
       if (nin && !existingUser.nin) patch.nin = nin;
       if (phoneNumber) patch.phoneNumber = phoneNumber;
-      if (
-        shouldProvisionBackoffice &&
-        existingUser.role !== 'creator' &&
-        existingUser.role !== 'admin' &&
-        existingUser.role !== 'superadmin'
-      ) {
+      if (shouldProvisionBackoffice && existingUser.role !== 'creator' && existingUser.role !== 'admin') {
         patch.role = 'creator';
       }
 
@@ -290,15 +285,15 @@ async function ensureBackofficeAccess(ctx: any, userId: string, tenantId: string
     tenantId,
     limit: 200,
   });
-  let adminRole = roles.find((r: any) => r.name === 'Admin');
-  if (!adminRole) {
+  let ownerRole = roles.find((r: any) => r.name === 'Owner');
+  if (!ownerRole) {
     const created = await ctx.runMutation(components.rbac.mutations.createRole, {
       tenantId,
-      name: 'Admin',
-      permissions: BACKOFFICE_ADMIN_PERMISSIONS,
+      name: 'Owner',
+      permissions: BACKOFFICE_OWNER_PERMISSIONS,
       isSystem: true,
     });
-    adminRole = { _id: created.id };
+    ownerRole = { _id: created.id };
   }
 
   const userRoles = await ctx.runQuery(components.rbac.queries.listUserRoles, {
@@ -306,15 +301,15 @@ async function ensureBackofficeAccess(ctx: any, userId: string, tenantId: string
     tenantId,
     limit: 200,
   });
-  const hasAdminRole = userRoles.some((assignment: any) => {
+  const hasOwnerRole = userRoles.some((assignment: any) => {
     const roleId = assignment.role?._id ?? assignment.roleId;
-    return roleId === adminRole._id;
+    return roleId === ownerRole._id;
   });
 
-  if (!hasAdminRole) {
+  if (!hasOwnerRole) {
     await ctx.runMutation(components.rbac.mutations.assignRole, {
       userId,
-      roleId: adminRole._id,
+      roleId: ownerRole._id,
       tenantId,
     });
   }

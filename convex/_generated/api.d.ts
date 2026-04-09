@@ -42,7 +42,9 @@ import type * as domain_billing from "../domain/billing.js";
 import type * as domain_broadcasts from "../domain/broadcasts.js";
 import type * as domain_classification from "../domain/classification.js";
 import type * as domain_compliance from "../domain/compliance.js";
+import type * as domain_creatorApplication from "../domain/creatorApplication.js";
 import type * as domain_creatorApplications from "../domain/creatorApplications.js";
+import type * as domain_creatorEarnings from "../domain/creatorEarnings.js";
 import type * as domain_discord from "../domain/discord.js";
 import type * as domain_disputes from "../domain/disputes.js";
 import type * as domain_emailCampaigns from "../domain/emailCampaigns.js";
@@ -164,7 +166,9 @@ declare const fullApi: ApiFromModules<{
   "domain/broadcasts": typeof domain_broadcasts;
   "domain/classification": typeof domain_classification;
   "domain/compliance": typeof domain_compliance;
+  "domain/creatorApplication": typeof domain_creatorApplication;
   "domain/creatorApplications": typeof domain_creatorApplications;
+  "domain/creatorEarnings": typeof domain_creatorEarnings;
   "domain/discord": typeof domain_discord;
   "domain/disputes": typeof domain_disputes;
   "domain/emailCampaigns": typeof domain_emailCampaigns;
@@ -1621,6 +1625,12 @@ export declare const components: {
         "query",
         "internal",
         { creatorId: string; tenantId: string },
+        Array<any>
+      >;
+      listCreatorBrandConfigs: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string },
         Array<any>
       >;
       listFlags: FunctionReference<
@@ -5034,10 +5044,27 @@ export declare const components: {
         },
         Array<any>
       >;
+      listByModerationStatus: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          limit?: number;
+          moderationStatus?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
       listPickCollaborators: FunctionReference<
         "query",
         "internal",
         { pickId: string },
+        Array<any>
+      >;
+      listPickReports: FunctionReference<
+        "query",
+        "internal",
+        { pickId: string; status?: string },
         Array<any>
       >;
       listPicksByCollaborator: FunctionReference<
@@ -5070,6 +5097,36 @@ export declare const components: {
           userId: string;
         },
         Array<any>
+      >;
+      moderate: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          id: string;
+          moderatedBy: string;
+          moderationNote?: string;
+          moderationStatus:
+            | "clean"
+            | "flagged"
+            | "under_review"
+            | "approved"
+            | "rejected"
+            | "hidden";
+        },
+        { success: boolean }
+      >;
+      moderationStats: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string },
+        {
+          approved: number;
+          flagged: number;
+          hidden: number;
+          pendingReports: number;
+          rejected: number;
+          underReview: number;
+        }
       >;
       performancePredictions: FunctionReference<
         "query",
@@ -5143,6 +5200,18 @@ export declare const components: {
         "internal",
         { creatorId: string; pickId: string },
         { success: boolean }
+      >;
+      reportPick: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          details?: string;
+          pickId: string;
+          reason: string;
+          reporterId: string;
+          tenantId: string;
+        },
+        { autoFlagged: boolean; id: string }
       >;
       setPickCollaborators: FunctionReference<
         "mutation",
@@ -5262,8 +5331,33 @@ export declare const components: {
   };
   broadcasts: {
     functions: {
+      createPost: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accessLevel?: string;
+          body: string;
+          contentFormat?: string;
+          creatorId: string;
+          metadata?: any;
+          tenantId: string;
+          title: string;
+        },
+        { id: string }
+      >;
       get: FunctionReference<"query", "internal", { id: string }, any>;
       listByCreator: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId: string;
+          limit?: number;
+          status?: string;
+          tenantId: string;
+        },
+        Array<any>
+      >;
+      listCreatorPosts: FunctionReference<
         "query",
         "internal",
         {
@@ -5285,11 +5379,28 @@ export declare const components: {
         },
         Array<any>
       >;
+      listPublishedPosts: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          limit?: number;
+          tenantId: string;
+          userId: string;
+        },
+        Array<any>
+      >;
       markAsRead: FunctionReference<
         "mutation",
         "internal",
         { broadcastId: string; userId: string },
         { success: boolean }
+      >;
+      publishPost: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; recipientIds: Array<string> },
+        { id: string; recipientCount: number }
       >;
       remove: FunctionReference<
         "mutation",
@@ -5312,11 +5423,30 @@ export declare const components: {
         },
         { id: string; recipientCount: number }
       >;
+      unpublishPost: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean }
+      >;
       unreadCount: FunctionReference<
         "query",
         "internal",
         { tenantId: string; userId: string },
         { count: number }
+      >;
+      updatePost: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accessLevel?: string;
+          body?: string;
+          contentFormat?: string;
+          id: string;
+          metadata?: any;
+          title?: string;
+        },
+        { success: boolean }
       >;
     };
   };
@@ -5459,6 +5589,87 @@ export declare const components: {
           tenantId: string;
         },
         Array<any>
+      >;
+    };
+  };
+  creatorApplication: {
+    functions: {
+      approve: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; reviewNote?: string; reviewedBy: string },
+        { success: boolean }
+      >;
+      get: FunctionReference<"query", "internal", { id: string }, any>;
+      getByUser: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string; userId: string },
+        any
+      >;
+      list: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number; status?: string; tenantId: string },
+        Array<any>
+      >;
+      reject: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; reviewNote?: string; reviewedBy: string },
+        { success: boolean }
+      >;
+      requestMoreInfo: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; reviewNote: string; reviewedBy: string },
+        { success: boolean }
+      >;
+      resubmit: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          bio?: string;
+          displayName?: string;
+          id: string;
+          metadata?: any;
+          niche?: string;
+          performanceProof?: string;
+          socialLinks?: {
+            discord?: string;
+            instagram?: string;
+            twitter?: string;
+            website?: string;
+            youtube?: string;
+          };
+          specialties?: Array<string>;
+          trackRecordUrl?: string;
+          userId: string;
+        },
+        { success: boolean }
+      >;
+      submit: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          bio: string;
+          displayName: string;
+          metadata?: any;
+          niche: string;
+          performanceProof?: string;
+          socialLinks?: {
+            discord?: string;
+            instagram?: string;
+            twitter?: string;
+            website?: string;
+            youtube?: string;
+          };
+          specialties?: Array<string>;
+          tenantId: string;
+          trackRecordUrl?: string;
+          userId: string;
+        },
+        { id: string }
       >;
     };
   };

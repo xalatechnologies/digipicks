@@ -164,14 +164,12 @@ export const signInAsDemo = mutation({
       return { success: false, error: 'No demo users available' };
     }
 
-    // Role alias mapping: simplified 3-role system → legacy DB roles
+    // Role alias mapping: DigiPicks roles
     const ROLE_ALIASES: Record<string, string[]> = {
-      subscriber: ['subscriber', 'user', 'bruker', 'member'],
-      creator: ['creator', 'arranger'],
-      admin: ['admin', 'owner', 'manager', 'saksbehandler', 'counter', 'finance', 'aktør'],
-      superadmin: ['superadmin', 'super_admin', 'platform_admin'],
-      // Back-compat alias so callers passing "user" still resolve
-      user: ['subscriber', 'user', 'bruker', 'member'],
+      subscriber: ['subscriber'],
+      creator: ['creator'],
+      admin: ['admin'],
+      superadmin: ['superadmin'],
     };
 
     // Pick user by role if specified, otherwise random

@@ -1,0 +1,270 @@
+/* Subscriber Performance — Personal results dashboard */
+
+.pageContainer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: var(--ds-size-6);
+}
+
+.title {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Filters */
+.filterRow {
+  display: flex;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  min-width: 140px;
+}
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+}
+
+.statCard {
+  padding: var(--ds-size-4);
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-1);
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ds-color-neutral-text-default);
+}
+
+.statPositive {
+  color: var(--ds-color-success-text-default);
+}
+
+.statNegative {
+  color: var(--ds-color-danger-text-default);
+}
+
+/* Bankroll section */
+.bankrollSection {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+  flex-wrap: wrap;
+}
+
+.bankrollInput {
+  max-width: 200px;
+}
+
+.bankrollResult {
+  padding: var(--ds-size-3) var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+  font-weight: 600;
+}
+
+/* Section */
+.section {
+  margin-bottom: var(--ds-size-6);
+}
+
+.sectionHeader {
+  margin-bottom: var(--ds-size-3);
+}
+
+/* Sport breakdown */
+.breakdownGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ds-size-3);
+}
+
+.breakdownCard {
+  padding: var(--ds-size-3);
+}
+
+.breakdownSport {
+  font-weight: 600;
+  margin-bottom: var(--ds-size-1);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.breakdownStats {
+  display: flex;
+  gap: var(--ds-size-3);
+  font-size: 13px;
+  color: var(--ds-color-neutral-text-subtle);
+  flex-wrap: wrap;
+}
+
+.plPositive {
+  color: var(--ds-color-success-text-default);
+}
+
+.plNegative {
+  color: var(--ds-color-danger-text-default);
+}
+
+/* Creator breakdown */
+.creatorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--ds-size-3);
+}
+
+.creatorCard {
+  padding: var(--ds-size-4);
+}
+
+.creatorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--ds-size-3);
+}
+
+.creatorName {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ds-color-accent-text-default);
+  text-decoration: none;
+}
+
+.creatorName:hover {
+  text-decoration: underline;
+}
+
+.creatorStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--ds-size-2);
+  margin-bottom: var(--ds-size-3);
+}
+
+.creatorStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.creatorStatLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.creatorStatValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ds-color-neutral-text-default);
+}
+
+.creatorEdges {
+  display: flex;
+  gap: var(--ds-size-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.edgesLabel {
+  font-size: 12px;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Bankroll insights */
+.insightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--ds-size-3);
+}
+
+.insightCard {
+  padding: var(--ds-size-4);
+  text-align: center;
+}
+
+.insightLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-1);
+}
+
+.insightValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ds-color-neutral-text-default);
+}
+
+/* Loading */
+.loadingState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+/* Empty/login states */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}
+
+.emptyTitle {
+  margin-bottom: var(--ds-size-2);
+}
+
+.emptyText {
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-size-4);
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.emptyActions {
+  display: flex;
+  gap: var(--ds-size-3);
+  justify-content: center;
+}
+
+.loginPrompt {
+  text-align: center;
+  padding: var(--ds-size-8) var(--ds-size-4);
+  background: var(--ds-color-neutral-surface-hover);
+  border-radius: var(--ds-border-radius-md);
+}
+
+.loginPromptText {
+  margin-bottom: var(--ds-size-3);
+  color: var(--ds-color-neutral-text-subtle);
+}

@@ -228,22 +228,22 @@
    * ========================================================================== */
 
   [data-color-scheme='dark'] {
-    /* ── Accent (Indigo — dark mode, unified with light) ────── */
+    /* ── Accent (Sienna Brown — warm, not yellow) ───────────── */
     --ds-color-accent-background-default: #0a0a0a;
-    --ds-color-accent-background-tinted: #11132a;
-    --ds-color-accent-surface-default: #11132a;
-    --ds-color-accent-surface-tinted: #1e1b4b;
-    --ds-color-accent-surface-hover: #2e2a6b;
-    --ds-color-accent-surface-active: #3730a3;
-    --ds-color-accent-border-subtle: #312e81;
-    --ds-color-accent-border-default: #6366f1;
-    --ds-color-accent-border-strong: #818cf8;
-    --ds-color-accent-text-subtle: #a5b4fc;
-    --ds-color-accent-text-default: #c7d2fe;
-    --ds-color-accent-base-default: #6366f1;
-    --ds-color-accent-base-hover: #818cf8;
-    --ds-color-accent-base-active: #4f46e5;
-    --ds-color-accent-base-contrast-subtle: #1e1b4b;
+    --ds-color-accent-background-tinted: #1a100b;
+    --ds-color-accent-surface-default: #1a100b;
+    --ds-color-accent-surface-tinted: #2a1a12;
+    --ds-color-accent-surface-hover: #3a241a;
+    --ds-color-accent-surface-active: #4a2e22;
+    --ds-color-accent-border-subtle: #3a241a;
+    --ds-color-accent-border-default: #a0522d;
+    --ds-color-accent-border-strong: #c2683d;
+    --ds-color-accent-text-subtle: #d2a679;
+    --ds-color-accent-text-default: #e6c4a0;
+    --ds-color-accent-base-default: #a0522d;
+    --ds-color-accent-base-hover: #b86238;
+    --ds-color-accent-base-active: #813f1f;
+    --ds-color-accent-base-contrast-subtle: #2a1a12;
     --ds-color-accent-base-contrast-default: #ffffff;
 
     /* ── Neutral (Deep Black — dark mode) ────────────────────── */
@@ -400,21 +400,21 @@
     [data-color-scheme='auto'] {
       /* Auto dark inherits all dark mode tokens */
 
-      /* ── Accent (Indigo — unified) ── */
+      /* ── Accent (Sienna Brown) ── */
       --ds-color-accent-background-default: #0a0a0a;
-      --ds-color-accent-background-tinted: #11132a;
-      --ds-color-accent-surface-default: #11132a;
-      --ds-color-accent-surface-tinted: #1e1b4b;
-      --ds-color-accent-surface-hover: #2e2a6b;
-      --ds-color-accent-surface-active: #3730a3;
-      --ds-color-accent-border-subtle: #312e81;
-      --ds-color-accent-border-default: #6366f1;
-      --ds-color-accent-border-strong: #818cf8;
-      --ds-color-accent-text-subtle: #a5b4fc;
-      --ds-color-accent-text-default: #c7d2fe;
-      --ds-color-accent-base-default: #6366f1;
-      --ds-color-accent-base-hover: #818cf8;
-      --ds-color-accent-base-active: #4f46e5;
+      --ds-color-accent-background-tinted: #1a100b;
+      --ds-color-accent-surface-default: #1a100b;
+      --ds-color-accent-surface-tinted: #2a1a12;
+      --ds-color-accent-surface-hover: #3a241a;
+      --ds-color-accent-surface-active: #4a2e22;
+      --ds-color-accent-border-subtle: #3a241a;
+      --ds-color-accent-border-default: #a0522d;
+      --ds-color-accent-border-strong: #c2683d;
+      --ds-color-accent-text-subtle: #d2a679;
+      --ds-color-accent-text-default: #e6c4a0;
+      --ds-color-accent-base-default: #a0522d;
+      --ds-color-accent-base-hover: #b86238;
+      --ds-color-accent-base-active: #813f1f;
       --ds-color-accent-base-contrast-default: #ffffff;
 
       /* ── Neutral (Deep Black) ── */

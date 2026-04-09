@@ -23,7 +23,6 @@ import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTool
 import { GlobalSearch } from '@digipicks/app-shell';
 import { useAuth } from '@digipicks/app-shell';
 import { ListingsPage } from '@/routes/listings';
-import { HomePage } from '@/routes/home';
 
 import { LoginPage } from '@/routes/login';
 import { RegisterPage } from '@/routes/register';
@@ -37,11 +36,15 @@ import { BlogArticlePage } from '@/routes/blog-article';
 import { AboutPage } from '@/routes/about';
 import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
+import { PickDetailPage } from '@/routes/pick-detail';
 import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
 import { StyleGuidePage } from '@/routes/style-guide';
-import { CreatorsPage } from '@/routes/creators';
-import { CreatorApplyPage } from '@/routes/creator-apply';
+import { CreatorDiscoveryPage } from '@/routes/creator-discovery';
+import { ApplyPage } from '@/routes/apply';
+import { SubscriberPerformancePage } from '@/routes/subscriber-performance';
+import { CheckoutSuccessPage } from '@/routes/checkout-success';
+import { CheckoutCancelledPage } from '@/routes/checkout-cancelled';
 import { PushNotificationOptIn } from '@/components/PushNotificationOptIn';
 
 import {
@@ -237,7 +240,7 @@ function ThemedApp() {
                         element={
                           <>
                             <CustomDomainRedirect />
-                            <HomePage />
+                            <ListingsPage />
                           </>
                         }
                       />
@@ -249,11 +252,15 @@ function ThemedApp() {
                       <Route path="/about" element={<AboutPage />} />
                       <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
                       <Route path="/picks" element={<PicksFeedPage />} />
+                      <Route path="/picks/:id" element={<PickDetailPage />} />
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
                       <Route path="/style-guide" element={<StyleGuidePage />} />
-                      <Route path="/creators" element={<CreatorsPage />} />
-                      <Route path="/creator-apply" element={<CreatorApplyPage />} />
+                      <Route path="/creators" element={<CreatorDiscoveryPage />} />
+                      <Route path="/subscriber/performance" element={<SubscriberPerformancePage />} />
+                      <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                      <Route path="/checkout/cancelled" element={<CheckoutCancelledPage />} />
+                      <Route path="/apply" element={<ApplyPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}
                       <Route path="/min-side" element={<MinsideRedirect />} />

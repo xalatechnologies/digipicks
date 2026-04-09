@@ -378,3 +378,461 @@ describe('broadcasts/mutations — remove', () => {
     await expect(t.mutation(api.functions.remove, { id: 'nonexistent' as any })).rejects.toThrow();
   });
 });
+
+// ===========================================================================
+// POST FUNCTIONS (Rich Content)
+// ===========================================================================
+
+// ---------------------------------------------------------------------------
+// Helpers (posts)
+// ---------------------------------------------------------------------------
+
+async function createPost(
+  t: ReturnType<typeof convexTest>,
+  overrides: Partial<{
+    tenantId: string;
+    creatorId: string;
+    title: string;
+    body: string;
+    contentFormat: string;
+    accessLevel: string;
+  }> = {},
+) {
+  return t.mutation(api.functions.createPost, {
+    tenantId: overrides.tenantId ?? TENANT,
+    creatorId: overrides.creatorId ?? CREATOR,
+    title: overrides.title ?? 'My First Post',
+    body: overrides.body ?? '# Hello World\n\nThis is my first rich text post.',
+    contentFormat: overrides.contentFormat ?? 'markdown',
+    accessLevel: overrides.accessLevel ?? 'free',
+  });
+}
+
+// ---------------------------------------------------------------------------
+// createPost
+// ---------------------------------------------------------------------------
+
+describe('broadcasts/mutations — createPost', () => {
+  it('creates a draft post and returns id', async () => {
+    const t = convexTest(schema, modules);
+    const result = await createPost(t);
+
+    expect(result.id).toBeDefined();
+
+    const post = await t.query(api.functions.get, { id: result.id as any });
+    expect(post.messageType).toBe('post');
+    expect(post.status).toBe('draft');
+    expect(post.contentFormat).toBe('markdown');
+    expect(post.accessLevel).toBe('free');
+    expect(post.recipientCount).toBe(0);
+  });
+
+  it('defaults contentFormat to plain and accessLevel to free', async () => {
+    const t = convexTest(schema, modules);
+    const result = await t.mutation(api.functions.createPost, {
+      tenantId: TENANT,
+      creatorId: CREATOR,
+      title: 'Plain Post',
+      body: 'Just some text',
+    });
+
+    const post = await t.query(api.functions.get, { id: result.id as any });
+    expect(post.contentFormat).toBe('plain');
+    expect(post.accessLevel).toBe('free');
+  });
+
+  it('supports premium access level', async () => {
+    const t = convexTest(schema, modules);
+    const result = await createPost(t, { accessLevel: 'premium' });
+
+    const post = await t.query(api.functions.get, { id: result.id as any });
+    expect(post.accessLevel).toBe('premium');
+  });
+
+  it('rejects empty title', async () => {
+    const t = convexTest(schema, modules);
+
+    await expect(createPost(t, { title: '   ' })).rejects.toThrow(/title cannot be empty/);
+  });
+
+  it('rejects invalid content format', async () => {
+    const t = convexTest(schema, modules);
+
+    await expect(createPost(t, { contentFormat: 'html' })).rejects.toThrow(/Invalid content format/);
+  });
+
+  it('rejects invalid access level', async () => {
+    const t = convexTest(schema, modules);
+
+    await expect(createPost(t, { accessLevel: 'vip' })).rejects.toThrow(/Invalid access level/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// updatePost
+// ---------------------------------------------------------------------------
+
+describe('broadcasts/mutations — updatePost', () => {
+  it('updates a draft post title and body', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await t.mutation(api.functions.updatePost, {
+      id: id as any,
+      title: 'Updated Title',
+      body: 'Updated body content',
+    });
+
+    const post = await t.query(api.functions.get, { id: id as any });
+    expect(post.title).toBe('Updated Title');
+    expect(post.body).toBe('Updated body content');
+  });
+
+  it('updates accessLevel and contentFormat', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t, { contentFormat: 'plain', accessLevel: 'free' });
+
+    await t.mutation(api.functions.updatePost, {
+      id: id as any,
+      contentFormat: 'markdown',
+      accessLevel: 'premium',
+    });
+
+    const post = await t.query(api.functions.get, { id: id as any });
+    expect(post.contentFormat).toBe('markdown');
+    expect(post.accessLevel).toBe('premium');
+  });
+
+  it('sets editedAt when updating a published post', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    // Publish it first
+    await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A],
+    });
+
+    // Now update it
+    await t.mutation(api.functions.updatePost, {
+      id: id as any,
+      body: 'Edited after publish',
+    });
+
+    const post = await t.query(api.functions.get, { id: id as any });
+    expect(post.editedAt).toBeGreaterThan(0);
+    expect(post.body).toBe('Edited after publish');
+  });
+
+  it('does not set editedAt on draft updates', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await t.mutation(api.functions.updatePost, {
+      id: id as any,
+      body: 'Edited draft',
+    });
+
+    const post = await t.query(api.functions.get, { id: id as any });
+    expect(post.editedAt).toBeUndefined();
+  });
+
+  it('rejects update on non-post broadcasts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await sendBroadcast(t);
+
+    await expect(t.mutation(api.functions.updatePost, { id: id as any, title: 'Nope' })).rejects.toThrow(
+      /Only posts can be updated/,
+    );
+  });
+
+  it('rejects empty title', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await expect(t.mutation(api.functions.updatePost, { id: id as any, title: '  ' })).rejects.toThrow(
+      /title cannot be empty/,
+    );
+  });
+
+  it('rejects invalid content format', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await expect(t.mutation(api.functions.updatePost, { id: id as any, contentFormat: 'rtf' })).rejects.toThrow(
+      /Invalid content format/,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// publishPost
+// ---------------------------------------------------------------------------
+
+describe('broadcasts/mutations — publishPost', () => {
+  it('transitions draft to published with receipts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    const result = await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A, SUB_B],
+    });
+
+    expect(result.id).toBe(id);
+    expect(result.recipientCount).toBe(2);
+
+    const post = await t.query(api.functions.get, { id: id as any });
+    expect(post.status).toBe('published');
+    expect(post.publishedAt).toBeGreaterThan(0);
+    expect(post.recipientCount).toBe(2);
+  });
+
+  it('creates receipts for each recipient', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A, SUB_B],
+    });
+
+    const receipts = await t.run(async (ctx) =>
+      ctx.db
+        .query('broadcastReceipts')
+        .withIndex('by_broadcast', (q) => q.eq('broadcastId', id))
+        .collect(),
+    );
+    expect(receipts).toHaveLength(2);
+  });
+
+  it('rejects publishing non-post broadcasts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await sendBroadcast(t);
+
+    await expect(t.mutation(api.functions.publishPost, { id: id as any, recipientIds: [] })).rejects.toThrow(
+      /Only posts can be published/,
+    );
+  });
+
+  it('rejects publishing already published post', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A],
+    });
+
+    await expect(
+      t.mutation(api.functions.publishPost, {
+        id: id as any,
+        recipientIds: [SUB_B],
+      }),
+    ).rejects.toThrow(/already published/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// unpublishPost
+// ---------------------------------------------------------------------------
+
+describe('broadcasts/mutations — unpublishPost', () => {
+  it('reverts published post to draft and removes receipts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A, SUB_B],
+    });
+
+    const result = await t.mutation(api.functions.unpublishPost, { id: id as any });
+    expect(result.success).toBe(true);
+
+    const post = await t.query(api.functions.get, { id: id as any });
+    expect(post.status).toBe('draft');
+    expect(post.recipientCount).toBe(0);
+
+    const receipts = await t.run(async (ctx) =>
+      ctx.db
+        .query('broadcastReceipts')
+        .withIndex('by_broadcast', (q) => q.eq('broadcastId', id))
+        .collect(),
+    );
+    expect(receipts).toHaveLength(0);
+  });
+
+  it('rejects unpublishing non-published posts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+
+    await expect(t.mutation(api.functions.unpublishPost, { id: id as any })).rejects.toThrow(
+      /Only published posts can be unpublished/,
+    );
+  });
+
+  it('rejects unpublishing non-post broadcasts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await sendBroadcast(t);
+
+    await expect(t.mutation(api.functions.unpublishPost, { id: id as any })).rejects.toThrow(
+      /Only posts can be unpublished/,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// listCreatorPosts
+// ---------------------------------------------------------------------------
+
+describe('broadcasts/queries — listCreatorPosts', () => {
+  it('lists only posts (not regular broadcasts)', async () => {
+    const t = convexTest(schema, modules);
+    await createPost(t, { title: 'Post One' });
+    await createPost(t, { title: 'Post Two' });
+    await sendBroadcast(t, { title: 'Regular Broadcast' });
+
+    const list = await t.query(api.functions.listCreatorPosts, {
+      tenantId: TENANT,
+      creatorId: CREATOR,
+    });
+
+    expect(list).toHaveLength(2);
+    expect(list.every((p: any) => p.messageType === 'post')).toBe(true);
+  });
+
+  it('filters by status', async () => {
+    const t = convexTest(schema, modules);
+    await createPost(t, { title: 'Draft Post' });
+    const { id } = await createPost(t, { title: 'Published Post' });
+    await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A],
+    });
+
+    const drafts = await t.query(api.functions.listCreatorPosts, {
+      tenantId: TENANT,
+      creatorId: CREATOR,
+      status: 'draft',
+    });
+    expect(drafts).toHaveLength(1);
+    expect(drafts[0].title).toBe('Draft Post');
+
+    const published = await t.query(api.functions.listCreatorPosts, {
+      tenantId: TENANT,
+      creatorId: CREATOR,
+      status: 'published',
+    });
+    expect(published).toHaveLength(1);
+    expect(published[0].title).toBe('Published Post');
+  });
+
+  it('respects limit', async () => {
+    const t = convexTest(schema, modules);
+    await createPost(t, { title: 'A' });
+    await createPost(t, { title: 'B' });
+    await createPost(t, { title: 'C' });
+
+    const list = await t.query(api.functions.listCreatorPosts, {
+      tenantId: TENANT,
+      creatorId: CREATOR,
+      limit: 2,
+    });
+    expect(list).toHaveLength(2);
+  });
+
+  it('sorts newest first', async () => {
+    const t = convexTest(schema, modules);
+    await createPost(t, { title: 'First' });
+    await createPost(t, { title: 'Second' });
+
+    const list = await t.query(api.functions.listCreatorPosts, {
+      tenantId: TENANT,
+      creatorId: CREATOR,
+    });
+    expect(list[0].title).toBe('Second');
+    expect(list[1].title).toBe('First');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// listPublishedPosts
+// ---------------------------------------------------------------------------
+
+describe('broadcasts/queries — listPublishedPosts', () => {
+  it('lists published posts for subscriber via receipts', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t, { title: 'Published for A' });
+    await t.mutation(api.functions.publishPost, {
+      id: id as any,
+      recipientIds: [SUB_A],
+    });
+
+    const listA = await t.query(api.functions.listPublishedPosts, {
+      tenantId: TENANT,
+      userId: SUB_A,
+    });
+    expect(listA).toHaveLength(1);
+    expect(listA[0].title).toBe('Published for A');
+
+    // SUB_B should see nothing
+    const listB = await t.query(api.functions.listPublishedPosts, {
+      tenantId: TENANT,
+      userId: SUB_B,
+    });
+    expect(listB).toHaveLength(0);
+  });
+
+  it('excludes draft posts from subscriber feed', async () => {
+    const t = convexTest(schema, modules);
+    await createPost(t, { title: 'Still a Draft' });
+
+    const list = await t.query(api.functions.listPublishedPosts, {
+      tenantId: TENANT,
+      userId: SUB_A,
+    });
+    expect(list).toHaveLength(0);
+  });
+
+  it('excludes regular broadcasts from post listing', async () => {
+    const t = convexTest(schema, modules);
+    await sendBroadcast(t, { recipientIds: [SUB_A] });
+
+    const list = await t.query(api.functions.listPublishedPosts, {
+      tenantId: TENANT,
+      userId: SUB_A,
+    });
+    expect(list).toHaveLength(0);
+  });
+
+  it('filters by creatorId', async () => {
+    const t = convexTest(schema, modules);
+    const { id: id1 } = await createPost(t, { creatorId: CREATOR, title: 'Creator A Post' });
+    const { id: id2 } = await createPost(t, { creatorId: 'other-creator', title: 'Other Post' });
+
+    await t.mutation(api.functions.publishPost, { id: id1 as any, recipientIds: [SUB_A] });
+    await t.mutation(api.functions.publishPost, { id: id2 as any, recipientIds: [SUB_A] });
+
+    const filtered = await t.query(api.functions.listPublishedPosts, {
+      tenantId: TENANT,
+      userId: SUB_A,
+      creatorId: CREATOR,
+    });
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0].title).toBe('Creator A Post');
+  });
+
+  it('includes receiptId and readAt fields', async () => {
+    const t = convexTest(schema, modules);
+    const { id } = await createPost(t);
+    await t.mutation(api.functions.publishPost, { id: id as any, recipientIds: [SUB_A] });
+
+    const list = await t.query(api.functions.listPublishedPosts, {
+      tenantId: TENANT,
+      userId: SUB_A,
+    });
+    expect(list[0].receiptId).toBeDefined();
+    expect(list[0].readAt).toBeUndefined();
+  });
+});

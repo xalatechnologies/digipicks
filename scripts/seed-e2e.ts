@@ -21,17 +21,11 @@ const execAsync = promisify(exec);
 
 const E2E_TENANT_ID = 'qd71nzdbvssrm2n3n2018daspx81pftx';
 
-// DigiPicks role model: superadmin (no tenant), admin (tenant), creator (tenant), subscriber (no tenant)
 const E2E_USERS = [
-  { email: 'superadmin@digipicks.test', name: 'E2E Superadmin', role: 'superadmin' },
-  { email: 'admin@digipicks.test', name: 'E2E Admin', role: 'admin' },
-  { email: 'moderator@digipicks.test', name: 'E2E Moderator', role: 'admin' },
-  { email: 'creator1@digipicks.test', name: 'E2E Creator 1', role: 'creator' },
-  { email: 'creator2@digipicks.test', name: 'E2E Creator 2', role: 'creator' },
-  { email: 'creator3@digipicks.test', name: 'E2E Creator 3', role: 'creator' },
-  { email: 'subscriber1@digipicks.test', name: 'E2E Subscriber 1', role: 'subscriber' },
-  { email: 'subscriber2@digipicks.test', name: 'E2E Subscriber 2', role: 'subscriber' },
-  { email: 'subscriber3@digipicks.test', name: 'E2E Subscriber 3', role: 'subscriber' },
+  { email: 'e2e-superadmin@digipicks.test', name: 'E2E Superadmin', role: 'superadmin' },
+  { email: 'e2e-admin@digipicks.test', name: 'E2E Admin', role: 'admin' },
+  { email: 'e2e-creator@digipicks.test', name: 'E2E Creator', role: 'creator' },
+  { email: 'e2e-subscriber@digipicks.test', name: 'E2E Subscriber', role: 'subscriber' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -61,7 +55,7 @@ function log(msg: string) {
 
 async function verifyTenant(): Promise<boolean> {
   log('Verifying E2E tenant exists...');
-  const tenant = await convexRun('tenants/index:getBySlug', { slug: 'demo-city' });
+  const tenant = await convexRun('tenants/index:getBySlug', { slug: 'demo-digipicks' });
   if (!tenant) {
     console.error('ERROR: E2E tenant not found. Run seed:all first.');
     return false;
@@ -91,8 +85,7 @@ async function seedUsers(): Promise<void> {
 async function seedRoles(): Promise<void> {
   log('Seeding E2E role bindings...');
   for (const user of E2E_USERS) {
-    // superadmin and subscriber are not tenant-scoped — no binding needed
-    if (user.role === 'superadmin' || user.role === 'subscriber') continue;
+    if (user.role === 'subscriber') continue; // Subscribers don't get tenant bindings
 
     // Bind role to user for the E2E tenant
     const existing = await convexRun('users:getByEmail', { email: user.email });
@@ -158,8 +151,8 @@ async function seedDiscountCodes(): Promise<void> {
 
 async function main(): Promise<void> {
   console.log('═══════════════════════════════════════════');
-  console.log('  A-krav E2E Test Data Seeder');
-  console.log('  Tenant: E2E Demo Venue');
+  console.log('  DigiPicks E2E Test Data Seeder');
+  console.log('  Tenant: E2E DigiPicks Demo');
   console.log('═══════════════════════════════════════════\n');
 
   const tenantOk = await verifyTenant();

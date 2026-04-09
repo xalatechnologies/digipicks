@@ -188,10 +188,29 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         Array<any>,
         Name
       >;
+      listByModerationStatus: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          limit?: number;
+          moderationStatus?: string;
+          tenantId: string;
+        },
+        Array<any>,
+        Name
+      >;
       listPickCollaborators: FunctionReference<
         "query",
         "internal",
         { pickId: string },
+        Array<any>,
+        Name
+      >;
+      listPickReports: FunctionReference<
+        "query",
+        "internal",
+        { pickId: string; status?: string },
         Array<any>,
         Name
       >;
@@ -227,6 +246,38 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           userId: string;
         },
         Array<any>,
+        Name
+      >;
+      moderate: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          id: string;
+          moderatedBy: string;
+          moderationNote?: string;
+          moderationStatus:
+            | "clean"
+            | "flagged"
+            | "under_review"
+            | "approved"
+            | "rejected"
+            | "hidden";
+        },
+        { success: boolean },
+        Name
+      >;
+      moderationStats: FunctionReference<
+        "query",
+        "internal",
+        { tenantId: string },
+        {
+          approved: number;
+          flagged: number;
+          hidden: number;
+          pendingReports: number;
+          rejected: number;
+          underReview: number;
+        },
         Name
       >;
       performancePredictions: FunctionReference<
@@ -304,6 +355,19 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         "internal",
         { creatorId: string; pickId: string },
         { success: boolean },
+        Name
+      >;
+      reportPick: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          details?: string;
+          pickId: string;
+          reason: string;
+          reporterId: string;
+          tenantId: string;
+        },
+        { autoFlagged: boolean; id: string },
         Name
       >;
       setPickCollaborators: FunctionReference<

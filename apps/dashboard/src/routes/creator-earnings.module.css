@@ -1,0 +1,64 @@
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--ds-size-4);
+}
+
+.cardLabel {
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+  margin-bottom: var(--ds-size-1);
+}
+
+.cardValue {
+  font-weight: 600;
+}
+
+.sectionHeading {
+  margin-top: var(--ds-size-6);
+  margin-bottom: var(--ds-size-3);
+}
+
+.historyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-size-3);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.historyPeriod {
+  font-weight: 500;
+}
+
+.historyAmount {
+  font-weight: 600;
+}
+
+.historyMeta {
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}
+
+.payoutRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-size-3);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.payoutInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+}
+
+.payoutAmount {
+  font-weight: 600;
+}
+
+.payoutDate {
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}

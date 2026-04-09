@@ -5,9 +5,9 @@
  * @see docs/SECURITY_INVARIANTS.md §3 — Permission checks mandatory
  */
 
-import type { MutationCtx, QueryCtx } from "../_generated/server";
-import type { Id } from "../_generated/dataModel";
-import { components } from "../_generated/api";
+import type { MutationCtx, QueryCtx } from '../_generated/server';
+import type { Id } from '../_generated/dataModel';
+import { components } from '../_generated/api';
 
 /** Backend permission strings (colon format, stored in RBAC roles).
  * ⚠️ This is a closed union — add new permissions here explicitly.
@@ -15,25 +15,26 @@ import { components } from "../_generated/api";
  */
 export type BackendPermission =
   // Resource permissions
-  | "resource:view"
-  | "resource:write"
-  | "resource:publish"
-  | "resource:delete"
+  | 'resource:view'
+  | 'resource:write'
+  | 'resource:publish'
+  | 'resource:delete'
   // Messaging permissions
-  | "messaging:admin"
+  | 'messaging:admin'
   // Review permissions
-  | "review:moderate"
+  | 'review:moderate'
+  // Pick moderation permissions
+  | 'pick:moderate'
   // User management
-  | "user:manage"
-  | "user:deactivate"
+  | 'user:manage'
+  | 'user:deactivate'
   // Tenant / organisation
-  | "tenant:configure"
-  | "org:manage"
+  | 'tenant:configure'
+  | 'org:manage'
   // Audit
-  | "audit:view";
+  | 'audit:view';
 
-
-export type PermissionContext = Pick<MutationCtx, "runQuery"> | Pick<QueryCtx, "runQuery">;
+export type PermissionContext = Pick<MutationCtx, 'runQuery'> | Pick<QueryCtx, 'runQuery'>;
 
 /**
  * Require that a user has a specific permission in a tenant.
@@ -47,9 +48,9 @@ export type PermissionContext = Pick<MutationCtx, "runQuery"> | Pick<QueryCtx, "
  */
 export async function requirePermission(
   ctx: PermissionContext,
-  userId: Id<"users"> | string,
-  tenantId: Id<"tenants"> | string,
-  permission: BackendPermission
+  userId: Id<'users'> | string,
+  tenantId: Id<'tenants'> | string,
+  permission: BackendPermission,
 ): Promise<void> {
   const result = await ctx.runQuery(components.rbac.queries.checkPermission, {
     userId: userId as string,
@@ -67,8 +68,8 @@ export async function requirePermission(
       };
     };
     err.problemDetails = {
-      type: "https://tools.ietf.org/html/rfc7807",
-      title: "Permission Denied",
+      type: 'https://tools.ietf.org/html/rfc7807',
+      title: 'Permission Denied',
       status: 403,
       detail: `User lacks permission "${permission}" for this tenant.`,
     };

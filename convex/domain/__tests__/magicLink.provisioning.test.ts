@@ -8,7 +8,7 @@ describe('auth/magicLink provisioning', () => {
     await seedTestTenant(t);
 
     const result = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-      email: 'new.backoffice@test.no',
+      email: 'new.backoffice@digipicks.test',
       appId: 'backoffice',
     });
 
@@ -43,7 +43,7 @@ describe('auth/magicLink provisioning', () => {
 
     const userId = await t.run(async (ctx) => {
       return ctx.db.insert('users', {
-        email: 'public.user@test.no',
+        email: 'public.user@digipicks.test',
         role: 'subscriber',
         status: 'active',
         metadata: {},
@@ -52,7 +52,7 @@ describe('auth/magicLink provisioning', () => {
     });
 
     const result = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-      email: 'public.user@test.no',
+      email: 'public.user@digipicks.test',
       appId: 'backoffice',
     });
 
@@ -82,11 +82,11 @@ describe('auth/magicLink provisioning', () => {
     await seedTestTenant(t);
 
     const userA = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-      email: 'creator.a@test.no',
+      email: 'creator.a@digipicks.test',
       appId: 'backoffice',
     });
     const userB = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-      email: 'creator.b@test.no',
+      email: 'creator.b@digipicks.test',
       appId: 'backoffice',
     });
 
@@ -100,7 +100,7 @@ describe('auth/magicLink provisioning', () => {
     await seedTestTenant(t);
 
     const result = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-      email: 'new.web@test.no',
+      email: 'new.web@digipicks.test',
       appId: 'web',
     });
 

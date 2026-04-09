@@ -1,0 +1,44 @@
+/* =============================================================================
+ * Checkout Cancelled Page
+ * Shown when a Stripe checkout is cancelled or fails
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--ds-size-10) var(--ds-size-4);
+  text-align: center;
+}
+
+.icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--ds-color-warning-surface-default);
+  color: var(--ds-color-warning-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--ds-size-5);
+}
+
+.icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.heading {
+  margin: 0 0 var(--ds-size-2);
+}
+
+.subtitle {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0 0 var(--ds-size-6);
+}
+
+.actions {
+  display: flex;
+  gap: var(--ds-size-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}

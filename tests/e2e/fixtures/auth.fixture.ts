@@ -1,14 +1,8 @@
 /**
- * Auth Fixture — role-based login for DigiPicks e2e tests.
+ * Auth Fixture — role-based login for A-krav tests.
  *
  * Extends the base Playwright test with loginAs() helpers that set
  * auth state via localStorage bypass for deterministic role testing.
- *
- * DigiPicks role model (4 roles):
- *   - superadmin: platform-wide, no tenant
- *   - admin:      tenant-scoped
- *   - creator:    tenant-scoped
- *   - subscriber: no tenant
  */
 
 import { test as base, type Page } from '@playwright/test';
@@ -18,29 +12,29 @@ const BACKOFFICE_URL = process.env.TEST_BACKOFFICE_URL || 'http://localhost:5175
 const MINSIDE_URL = process.env.TEST_MINSIDE_URL || 'http://localhost:5174';
 const DASHBOARD_URL = process.env.TEST_DASHBOARD_URL || 'http://localhost:5180';
 
-/** E2E test users matching seedTestUsers.ts / seed-e2e.ts */
+/** E2E test users matching seed-e2e.ts */
 export const E2E_USERS = {
   superadmin: {
     id: 'e2e-superadmin-user-id',
-    email: 'superadmin@digipicks.test',
+    email: 'e2e-superadmin@digipicks.test',
     name: 'E2E Superadmin',
     role: 'superadmin',
   },
   admin: {
     id: 'e2e-admin-user-id',
-    email: 'admin@digipicks.test',
+    email: 'e2e-admin@digipicks.test',
     name: 'E2E Admin',
     role: 'admin',
   },
   creator: {
     id: 'e2e-creator-user-id',
-    email: 'creator1@digipicks.test',
+    email: 'e2e-creator@digipicks.test',
     name: 'E2E Creator',
     role: 'creator',
   },
   subscriber: {
     id: 'e2e-subscriber-user-id',
-    email: 'subscriber1@digipicks.test',
+    email: 'e2e-subscriber@digipicks.test',
     name: 'E2E Subscriber',
     role: 'subscriber',
   },

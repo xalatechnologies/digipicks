@@ -715,9 +715,41 @@
     }
   },
   "nav": {
+    "creators": "Creators",
     "pricing": "Pricing",
     "blog": "Blog",
     "about": "About"
+  },
+  "sport": {
+    "filterLabel": "Filter by sport",
+    "all": "All Sports",
+    "nba": "NBA",
+    "nfl": "NFL",
+    "mlb": "MLB",
+    "nhl": "NHL",
+    "soccer": "Soccer",
+    "ufc": "UFC",
+    "tennis": "Tennis",
+    "golf": "Golf",
+    "ncaab": "NCAAB",
+    "ncaaf": "NCAAF"
+  },
+  "discovery": {
+    "title": "Discover Creators",
+    "subtitle": "Find top-performing creators and subscribe to their picks.",
+    "search": "Search",
+    "searchPlaceholder": "Search by name, sport, or keyword...",
+    "sport": "Sport",
+    "allSports": "All Sports",
+    "roi": "ROI",
+    "winRate": "Win Rate",
+    "picks": "Picks",
+    "record": "Record",
+    "from": "From",
+    "verified": "Verified",
+    "resultsCount": "{{count}} creators",
+    "noResults": "No creators match your search. Try different keywords.",
+    "empty": "No creators available yet. Check back soon!"
   },
   "performances": {
     "title": "Performances",
@@ -5685,6 +5717,89 @@
       "apiDocs": "API Docs",
       "openapi": "OpenAPI Spec",
       "rights": "All rights reserved."
+    }
+  },
+  "apply": {
+    "title": "Apply to become a creator",
+    "description": "Share your expertise with sports bettors. Fill out the form below and we'll review your application.",
+    "resubmitTitle": "Update your application",
+    "resubmitDescription": "Update the fields below and resubmit your application for review.",
+    "loginRequired": "Sign in to apply",
+    "loginDescription": "You need an account to apply as a creator on DigiPicks.",
+    "submitted": "Application submitted!",
+    "submittedDescription": "We'll review your application and get back to you soon. Check back here for updates.",
+    "backToHome": "Back to home",
+    "existingTitle": "Your application",
+    "submittedOn": "Submitted",
+    "approvedMessage": "Congratulations! You're now a verified creator. Head to your dashboard to start posting picks.",
+    "reviewFeedback": "Reviewer feedback",
+    "section": {
+      "identity": "About you",
+      "expertise": "Your expertise",
+      "performance": "Track record",
+      "social": "Social presence"
+    },
+    "displayName": "Display name",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell subscribers about yourself and your betting approach...",
+    "niche": "Primary sport / niche",
+    "selectNiche": "-- Select --",
+    "specialties": "Specialties",
+    "specialtiesPlaceholder": "e.g. props, parlays, live betting (comma-separated)",
+    "performanceProof": "Performance proof",
+    "performanceProofPlaceholder": "Describe your betting track record, win rates, ROI, etc.",
+    "trackRecordUrl": "Tracker profile URL",
+    "trackRecordUrlPlaceholder": "Link to your verified track record",
+    "youtubeChannel": "Channel URL",
+    "discordServer": "Server invite",
+    "website": "Website",
+    "submit": "Submit application",
+    "resubmit": "Resubmit application",
+    "status": {
+      "pending": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "moreInfo": "More info requested"
+    },
+    "errors": {
+      "nameRequired": "Display name is required",
+      "bioRequired": "Bio is required",
+      "nicheRequired": "Please select a sport/niche",
+      "submitFailed": "Failed to submit application. Please try again.",
+      "resubmitFailed": "Failed to resubmit application. Please try again."
+    }
+  },
+  "creatorApps": {
+    "title": "Creator Applications",
+    "subtitle": "Review and manage creator applications.",
+    "statPending": "Pending review",
+    "statApproved": "Approved creators",
+    "empty": "No applications",
+    "emptyDescription": "There are no creator applications matching this filter.",
+    "approve": "Approve",
+    "reject": "Reject",
+    "requestInfo": "Request info",
+    "rejectTitle": "Reject application",
+    "requestInfoTitle": "Request more information",
+    "noteLabel": "Note to applicant",
+    "rejectPlaceholder": "Explain why the application was rejected...",
+    "infoPlaceholder": "What additional information do you need?",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "moreInfo": "More info requested"
+    },
+    "detail": {
+      "niche": "Niche",
+      "bio": "Bio",
+      "specialties": "Specialties",
+      "performance": "Performance proof",
+      "trackRecord": "Track record URL",
+      "submitted": "Submitted",
+      "resubmitted": "Resubmitted",
+      "social": "Social links",
+      "reviewNote": "Review note"
     }
   }
 }

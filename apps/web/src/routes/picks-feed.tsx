@@ -8,20 +8,20 @@
  * Uses real-time Convex subscriptions — new picks appear instantly.
  */
 
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useCallback } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Card, Heading, Paragraph, Button, Stack, NativeSelect, PillTabs, StatusTag } from '@digipicks/ds';
 import { useT } from '@digipicks/i18n';
 import { usePickFeedFollowing, usePickFeedForYou } from '@digipicks/sdk';
 import type { FeedPick } from '@digipicks/sdk';
-import { useAuth, env } from '@digipicks/app-shell';
+import { useAuth, env, VerificationBadge } from '@digipicks/app-shell';
+import { SportFilter } from '@/components/SportFilter';
 import s from './picks-feed.module.css';
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const SPORTS = ['All', 'NBA', 'NFL', 'MLB', 'NHL', 'Soccer', 'UFC', 'Tennis', 'Golf', 'NCAAB', 'NCAAF'];
 const RESULTS = ['All', 'pending', 'won', 'lost', 'push', 'void'];
 const PAGE_SIZE = 20;
 
@@ -91,7 +91,10 @@ function UnlockedPickCard({ pick }: { pick: FeedPick }) {
       <div className={s.pickCardHeader}>
         <div className={s.creatorAvatar}>{getInitials(pick.creator?.displayName || pick.creator?.name)}</div>
         <div className={s.creatorInfo}>
-          <div className={s.creatorName}>{pick.creator?.displayName || pick.creator?.name || 'Unknown'}</div>
+          <div className={s.creatorName}>
+            {pick.creator?.displayName || pick.creator?.name || 'Unknown'}
+            <VerificationBadge verified={pick.creator?.verified ?? false} size="sm" />
+          </div>
           <div className={s.pickTimestamp}>{formatTimeAgo(pick.createdAt)}</div>
         </div>
         {pick.result !== 'pending' && (
@@ -150,7 +153,10 @@ function LockedPickCard({ pick, onSubscribe }: { pick: FeedPick; onSubscribe: ()
       <div className={s.pickCardHeader}>
         <div className={s.creatorAvatar}>{getInitials(pick.creator?.displayName || pick.creator?.name)}</div>
         <div className={s.creatorInfo}>
-          <div className={s.creatorName}>{pick.creator?.displayName || pick.creator?.name || 'Unknown'}</div>
+          <div className={s.creatorName}>
+            {pick.creator?.displayName || pick.creator?.name || 'Unknown'}
+            <VerificationBadge verified={pick.creator?.verified ?? false} size="sm" />
+          </div>
           <div className={s.pickTimestamp}>{formatTimeAgo(pick.createdAt)}</div>
         </div>
         {pick.result !== 'pending' && (
@@ -215,17 +221,37 @@ export function PicksFeedPage() {
   const tenantId = env.tenantId as string | undefined;
   const userId = auth.user?.id;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sportParam = searchParams.get('sport') || 'All';
+
   const [activeTab, setActiveTab] = useState<string>('for-you');
-  const [sportFilter, setSportFilter] = useState('All');
   const [resultFilter, setResultFilter] = useState('All');
+
+  const handleSportChange = useCallback(
+    (sport: string) => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (sport === 'All') {
+            next.delete('sport');
+          } else {
+            next.set('sport', sport);
+          }
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
   const feedParams = useMemo(
     () => ({
-      sport: sportFilter !== 'All' ? sportFilter : undefined,
+      sport: sportParam !== 'All' ? sportParam : undefined,
       result: resultFilter !== 'All' ? resultFilter : undefined,
       limit: PAGE_SIZE,
     }),
-    [sportFilter, resultFilter],
+    [sportParam, resultFilter],
   );
 
   const forYou = usePickFeedForYou(tenantId as any, userId, feedParams);
@@ -274,22 +300,11 @@ export function PicksFeedPage() {
         </div>
       )}
 
-      {/* Filters */}
-      <div className={s.filterRow}>
-        <NativeSelect
-          label={t('picks.feed.filterSport', 'Sport')}
-          value={sportFilter}
-          onChange={(e) => setSportFilter(e.target.value)}
-          className={s.filterSelect}
-          data-size="sm"
-        >
-          {SPORTS.map((sport) => (
-            <option key={sport} value={sport}>
-              {sport === 'All' ? t('common.all', 'All Sports') : sport}
-            </option>
-          ))}
-        </NativeSelect>
+      {/* Sport filter chips */}
+      <SportFilter value={sportParam} onChange={handleSportChange} />
 
+      {/* Result filter */}
+      <div className={s.filterRow}>
         <NativeSelect
           label={t('picks.feed.filterResult', 'Result')}
           value={resultFilter}
@@ -328,9 +343,13 @@ export function PicksFeedPage() {
         <div className={s.feedList}>
           {picks.map((pick) =>
             pick.isUnlocked ? (
-              <UnlockedPickCard key={pick.id} pick={pick} />
+              <Link key={pick.id} to={`/picks/${pick.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <UnlockedPickCard pick={pick} />
+              </Link>
             ) : (
-              <LockedPickCard key={pick.id} pick={pick} onSubscribe={handleSubscribe} />
+              <Link key={pick.id} to={`/picks/${pick.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <LockedPickCard pick={pick} onSubscribe={handleSubscribe} />
+              </Link>
             ),
           )}
         </div>

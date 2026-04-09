@@ -1718,3 +1718,261 @@ export const bankrollInsights = query({
     };
   },
 });
+
+// =============================================================================
+// MODERATION FUNCTIONS
+// =============================================================================
+
+const VALID_MODERATION_STATUSES = ['clean', 'flagged', 'under_review', 'approved', 'rejected', 'hidden'];
+const VALID_REPORT_REASONS = ['fraud', 'misleading', 'spam', 'inappropriate', 'other'];
+
+/**
+ * Report a pick — user files a complaint about a pick's content.
+ * One report per user per pick. Increments reportCount and auto-flags at threshold.
+ */
+export const reportPick = mutation({
+  args: {
+    tenantId: v.string(),
+    pickId: v.string(),
+    reporterId: v.string(),
+    reason: v.string(),
+    details: v.optional(v.string()),
+  },
+  returns: v.object({ id: v.string(), autoFlagged: v.boolean() }),
+  handler: async (ctx, { tenantId, pickId, reporterId, reason, details }) => {
+    if (!VALID_REPORT_REASONS.includes(reason)) {
+      throw new Error(`Invalid report reason: ${reason}. Must be one of: ${VALID_REPORT_REASONS.join(', ')}`);
+    }
+
+    const pick = await ctx.db.get(pickId as any);
+    if (!pick) {
+      throw new Error('Pick not found');
+    }
+    if (pick.tenantId !== tenantId) {
+      throw new Error('Pick not found');
+    }
+
+    // Prevent self-reporting
+    if (pick.creatorId === reporterId) {
+      throw new Error('Cannot report your own pick');
+    }
+
+    // Check for duplicate report
+    const existing = await ctx.db
+      .query('pickReports')
+      .withIndex('by_reporter_pick', (q) => q.eq('reporterId', reporterId).eq('pickId', pickId))
+      .unique();
+    if (existing) {
+      throw new Error('Already reported this pick');
+    }
+
+    const reportId = await ctx.db.insert('pickReports', {
+      tenantId,
+      pickId,
+      reporterId,
+      reason,
+      details,
+      status: 'pending',
+      reportedAt: Date.now(),
+    });
+
+    // Increment report count on the pick
+    const currentCount = pick.reportCount ?? 0;
+    const newCount = currentCount + 1;
+    const updateFields: Record<string, any> = { reportCount: newCount };
+
+    // Auto-flag at 3 reports if not already moderated
+    const autoFlagged = newCount >= 3 && (!pick.moderationStatus || pick.moderationStatus === 'clean');
+    if (autoFlagged) {
+      updateFields.moderationStatus = 'flagged';
+    }
+
+    await ctx.db.patch(pickId as any, updateFields);
+
+    return { id: reportId as string, autoFlagged };
+  },
+});
+
+/**
+ * Moderate a pick — admin sets moderation status.
+ */
+export const moderate = mutation({
+  args: {
+    id: v.id('picks'),
+    moderationStatus: v.union(
+      v.literal('clean'),
+      v.literal('flagged'),
+      v.literal('under_review'),
+      v.literal('approved'),
+      v.literal('rejected'),
+      v.literal('hidden'),
+    ),
+    moderatedBy: v.string(),
+    moderationNote: v.optional(v.string()),
+  },
+  returns: v.object({ success: v.boolean() }),
+  handler: async (ctx, { id, moderationStatus, moderatedBy, moderationNote }) => {
+    const pick = await ctx.db.get(id);
+    if (!pick) {
+      throw new Error('Pick not found');
+    }
+
+    await ctx.db.patch(id, {
+      moderationStatus,
+      moderatedBy,
+      moderatedAt: Date.now(),
+      moderationNote,
+      // If rejected/hidden, unpublish the pick
+      ...(moderationStatus === 'rejected' || moderationStatus === 'hidden' ? { status: 'archived' } : {}),
+    });
+
+    // Mark pending reports as reviewed if approving/rejecting/hiding
+    if (['approved', 'rejected', 'hidden'].includes(moderationStatus)) {
+      const reports = await ctx.db
+        .query('pickReports')
+        .withIndex('by_pick', (q) => q.eq('pickId', id as string))
+        .collect();
+      for (const report of reports) {
+        if (report.status === 'pending') {
+          await ctx.db.patch(report._id, {
+            status: 'reviewed',
+            reviewedBy: moderatedBy,
+            reviewedAt: Date.now(),
+          });
+        }
+      }
+    }
+
+    return { success: true };
+  },
+});
+
+/**
+ * List picks by moderation status — admin moderation queue.
+ * Returns picks that need attention, sorted by report count (most reported first).
+ */
+export const listByModerationStatus = query({
+  args: {
+    tenantId: v.string(),
+    moderationStatus: v.optional(v.string()),
+    creatorId: v.optional(v.string()),
+    limit: v.optional(v.number()),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, { tenantId, moderationStatus, creatorId, limit }) => {
+    let picks;
+
+    if (moderationStatus) {
+      picks = await ctx.db
+        .query('picks')
+        .withIndex('by_tenant_moderationStatus', (q) =>
+          q.eq('tenantId', tenantId).eq('moderationStatus', moderationStatus),
+        )
+        .collect();
+    } else {
+      // Default: show flagged + under_review picks
+      const flagged = await ctx.db
+        .query('picks')
+        .withIndex('by_tenant_moderationStatus', (q) => q.eq('tenantId', tenantId).eq('moderationStatus', 'flagged'))
+        .collect();
+      const underReview = await ctx.db
+        .query('picks')
+        .withIndex('by_tenant_moderationStatus', (q) =>
+          q.eq('tenantId', tenantId).eq('moderationStatus', 'under_review'),
+        )
+        .collect();
+      picks = [...flagged, ...underReview];
+    }
+
+    if (creatorId) {
+      picks = picks.filter((p) => p.creatorId === creatorId);
+    }
+
+    // Sort by report count descending, then by creation time descending
+    picks.sort((a, b) => {
+      const countDiff = (b.reportCount ?? 0) - (a.reportCount ?? 0);
+      if (countDiff !== 0) return countDiff;
+      return b._creationTime - a._creationTime;
+    });
+
+    return picks.slice(0, limit ?? 50);
+  },
+});
+
+/**
+ * List reports for a specific pick — admin detail view.
+ */
+export const listPickReports = query({
+  args: {
+    pickId: v.string(),
+    status: v.optional(v.string()),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, { pickId, status }) => {
+    const reports = await ctx.db
+      .query('pickReports')
+      .withIndex('by_pick', (q) => q.eq('pickId', pickId))
+      .collect();
+
+    if (status) {
+      return reports.filter((r) => r.status === status);
+    }
+
+    // Sort newest first
+    reports.sort((a, b) => b.reportedAt - a.reportedAt);
+    return reports;
+  },
+});
+
+/**
+ * Get moderation summary stats for the admin dashboard.
+ */
+export const moderationStats = query({
+  args: {
+    tenantId: v.string(),
+  },
+  returns: v.object({
+    flagged: v.number(),
+    underReview: v.number(),
+    rejected: v.number(),
+    hidden: v.number(),
+    approved: v.number(),
+    pendingReports: v.number(),
+  }),
+  handler: async (ctx, { tenantId }) => {
+    const flagged = await ctx.db
+      .query('picks')
+      .withIndex('by_tenant_moderationStatus', (q) => q.eq('tenantId', tenantId).eq('moderationStatus', 'flagged'))
+      .collect();
+    const underReview = await ctx.db
+      .query('picks')
+      .withIndex('by_tenant_moderationStatus', (q) => q.eq('tenantId', tenantId).eq('moderationStatus', 'under_review'))
+      .collect();
+    const rejected = await ctx.db
+      .query('picks')
+      .withIndex('by_tenant_moderationStatus', (q) => q.eq('tenantId', tenantId).eq('moderationStatus', 'rejected'))
+      .collect();
+    const hidden = await ctx.db
+      .query('picks')
+      .withIndex('by_tenant_moderationStatus', (q) => q.eq('tenantId', tenantId).eq('moderationStatus', 'hidden'))
+      .collect();
+    const approved = await ctx.db
+      .query('picks')
+      .withIndex('by_tenant_moderationStatus', (q) => q.eq('tenantId', tenantId).eq('moderationStatus', 'approved'))
+      .collect();
+
+    const pendingReports = await ctx.db
+      .query('pickReports')
+      .withIndex('by_tenant_status', (q) => q.eq('tenantId', tenantId).eq('status', 'pending'))
+      .collect();
+
+    return {
+      flagged: flagged.length,
+      underReview: underReview.length,
+      rejected: rejected.length,
+      hidden: hidden.length,
+      approved: approved.length,
+      pendingReports: pendingReports.length,
+    };
+  },
+});

@@ -2,11 +2,11 @@
  * Tenant Onboarding — Domain Facade
  *
  * Self-service tenant creation flow. When a user creates a tenant,
- * they become the owner (additive role — owner IS a user with extra perms).
+ * they become a creator (additive role — creator IS a user with dashboard perms).
  *
  * Flow:
- *   1. User calls `createTenantForOwner` → creates tenant + tenantUser + assigns owner role
- *   2. Owner manages their tenant via backoffice (same routes as admin, scoped to tenant)
+ *   1. User calls `createTenantForCreator` → creates tenant + tenantUser + assigns creator role
+ *   2. Creator manages their tenant via dashboard (same routes as admin, scoped to tenant)
  *   3. Super admin can list all tenants for platform oversight
  */
 
@@ -15,12 +15,12 @@ import { components } from '../_generated/api';
 import { v } from 'convex/values';
 
 // =============================================================================
-// OWNER: Create Tenant
+// CREATOR: Create Tenant
 // =============================================================================
 
 /**
- * Create a new tenant and assign the calling user as owner.
- * This is the "become an owner" flow — user → owner promotion.
+ * Create a new tenant and assign the calling user as creator.
+ * This is the "become a creator" flow — user → creator promotion.
  */
 export const createTenantForOwner = mutation({
   args: {
@@ -80,9 +80,7 @@ export const createTenantForOwner = mutation({
       joinedAt: Date.now(),
     });
 
-    // Update user to link to their first tenant (if they don't have one).
-    // Self-onboarded users become creators; admin role is reserved for
-    // explicitly invited moderators/staff.
+    // Update user to link to their first tenant (if they don't have one)
     if (!user.tenantId) {
       await ctx.db.patch(args.userId, {
         tenantId,
@@ -115,7 +113,7 @@ export const createTenantForOwner = mutation({
 });
 
 // =============================================================================
-// OWNER: My Tenants
+// CREATOR: My Tenants
 // =============================================================================
 
 /**
@@ -151,7 +149,7 @@ export const listMyTenants = query({
 });
 
 // =============================================================================
-// OWNER: Onboarding Progress
+// CREATOR: Onboarding Progress
 // =============================================================================
 
 /**

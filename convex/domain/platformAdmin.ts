@@ -38,9 +38,8 @@ export const platformStats = query({
     const allUsers = await ctx.db.query('users').collect();
     const activeUsers = allUsers.filter((u: any) => u.status === 'active').length;
 
-    // Count tenant operators: creators (self-onboarded) + admins (invited
-    // moderators) + legacy "owner" role until migration completes.
-    const owners = allUsers.filter((u: any) => u.role === 'creator' || u.role === 'admin' || u.role === 'owner').length;
+    // Count creators
+    const creators = allUsers.filter((u: any) => u.role === 'creator').length;
 
     // Count super admins
     const superAdmins = allUsers.filter((u: any) => u.role === 'super_admin' || u.role === 'superadmin').length;
@@ -54,7 +53,7 @@ export const platformStats = query({
       users: {
         total: allUsers.length,
         active: activeUsers,
-        owners,
+        creators,
         superAdmins,
       },
     };
@@ -102,7 +101,7 @@ export const listAllUsers = query({
       name: u.name || u.email?.split('@')[0] || 'Unnamed',
       email: u.email || '',
       phone: u.phoneNumber || '',
-      role: u.role || 'subscriber',
+      role: u.role || 'user',
       status: u.status || 'active',
       tenantId: u.tenantId || null,
       tenantName: u.tenantId ? tenantMap.get(u.tenantId as string) || 'Unknown' : 'Platform',

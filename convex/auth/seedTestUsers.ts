@@ -11,106 +11,158 @@ import { mutation } from '../_generated/server';
  */
 
 /**
- * DigiPicks test users — 4-role model (superadmin / admin / creator / subscriber).
+ * Test users for Vipps and BankID authentication testing.
  *
- * Tenant assignment rules:
- * - admin + creator: get tenantId (tenant-scoped)
- * - superadmin + subscriber: NO tenantId
+ * Vipps Login: Use phone number to authenticate
+ * BankID Login: Use NIN + password (qwer1234) + OTP (otp)
  *
- * NIN/phone values are reused from the Signicat test set so existing
- * BankID/Vipps test flows keep working until the OAuth swap ships.
+ * DigiPicks role model:
+ * - superadmin: Platform ops, sees all tenants (NO tenantId)
+ * - admin: Tenant-level admin, manages creators/settings (gets tenantId)
+ * - creator: Publishes betting picks, manages subscribers (gets tenantId)
+ * - subscriber: Subscribes to creators, consumes picks (NO tenantId)
  */
-const TEST_USERS: Array<{
-  email: string;
-  nin?: string;
-  phoneNumber?: string;
-  role: 'superadmin' | 'admin' | 'creator' | 'subscriber';
-  description: string;
-  demoToken?: string;
-  needsTenant: boolean;
-}> = [
-  // Superadmin (no tenant)
-  {
-    email: 'superadmin@digipicks.test',
-    nin: '19075716691',
-    phoneNumber: '93279034',
-    role: 'superadmin',
-    description: 'Platform Superadmin',
-    demoToken: 'demo-superadmin',
-    needsTenant: false,
-  },
-  // Admins (tenant-scoped)
-  {
-    email: 'admin@digipicks.test',
-    nin: '25059995475',
-    phoneNumber: '40825303',
-    role: 'admin',
-    description: 'Platform Admin',
-    demoToken: 'demo-admin-001',
-    needsTenant: true,
-  },
-  {
-    email: 'moderator@digipicks.test',
-    nin: '01028731015',
-    phoneNumber: '91138813',
-    role: 'admin',
-    description: 'Platform Moderator',
-    demoToken: 'demo-admin-002',
-    needsTenant: true,
-  },
-  // Creators (tenant-scoped)
-  {
-    email: 'creator1@digipicks.test',
-    nin: '21090295842',
-    phoneNumber: '98393410',
-    role: 'creator',
-    description: 'Verified Creator',
-    demoToken: 'demo-creator-001',
-    needsTenant: true,
-  },
-  {
-    email: 'creator2@digipicks.test',
-    nin: '09013039841',
-    phoneNumber: '47030508',
-    role: 'creator',
-    description: 'Verified Creator',
-    demoToken: 'demo-creator-002',
-    needsTenant: true,
-  },
-  {
-    email: 'creator3@digipicks.test',
-    nin: '15055200413',
-    phoneNumber: '46637228',
-    role: 'creator',
-    description: 'Verified Creator',
-    demoToken: 'demo-creator-003',
-    needsTenant: true,
-  },
-  // Subscribers (no tenant)
+const TEST_USERS = [
+  // ============================================================================
+  // Vipps test users (phone → NIN mapping)
+  // ============================================================================
   {
     email: 'subscriber1@digipicks.test',
     nin: '24014005907',
     phoneNumber: '95303914',
     role: 'subscriber',
-    description: 'Subscriber',
+    description: 'Subscriber (Vipps)',
     demoToken: 'demo-subscriber-001',
-    needsTenant: false,
+    needsTenant: false, // Subscriber - web app only
+  },
+  {
+    email: 'admin@digipicks.test',
+    nin: '19075716691',
+    phoneNumber: '93279034',
+    role: 'admin',
+    description: 'Admin',
+    demoToken: 'demo-admin-001',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'creator1@digipicks.test',
+    nin: '15055200413',
+    phoneNumber: '46637228',
+    role: 'creator',
+    description: 'Creator (Vipps)',
+    demoToken: 'demo-creator-001',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'admin2@digipicks.test',
+    nin: '25059995475',
+    phoneNumber: '40825303',
+    role: 'admin',
+    description: 'Admin 2',
+    demoToken: 'org-admin-001',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'creator2@digipicks.test',
+    nin: '01028731015',
+    phoneNumber: '91138813',
+    role: 'creator',
+    description: 'Creator 2',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'creator3@digipicks.test',
+    nin: '21090295842',
+    phoneNumber: '98393410',
+    role: 'creator',
+    description: 'Creator 3',
+    needsTenant: true, // Dashboard user
   },
   {
     email: 'subscriber2@digipicks.test',
-    nin: '15860771346',
+    nin: '09013039841',
+    phoneNumber: '47030508',
     role: 'subscriber',
-    description: 'Subscriber',
-    demoToken: 'demo-subscriber-002',
-    needsTenant: false,
+    description: 'Subscriber 2 (Vipps)',
+    needsTenant: false, // Subscriber - web app only
   },
+
+  // ============================================================================
+  // BankID-only test users (NIN mapping, password: qwer1234, OTP: otp)
+  // ============================================================================
   {
     email: 'subscriber3@digipicks.test',
-    nin: '06881271913',
+    nin: '15860771346',
     role: 'subscriber',
-    description: 'Subscriber',
-    demoToken: 'demo-subscriber-003',
-    needsTenant: false,
+    description: 'Subscriber (BankID)',
+    needsTenant: false, // Subscriber - web app only
+  },
+  {
+    email: 'bankid-creator@digipicks.test',
+    nin: '06881271913',
+    role: 'creator',
+    description: 'Creator (BankID)',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'bankid-admin@digipicks.test',
+    nin: '30916326773',
+    role: 'admin',
+    description: 'Admin (BankID)',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'bankid-admin2@digipicks.test',
+    nin: '19860324957',
+    role: 'admin',
+    description: 'Admin 2 (BankID)',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'bankid-creator2@digipicks.test',
+    nin: '03852358504',
+    role: 'creator',
+    description: 'Creator 2 (BankID)',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'bankid-creator3@digipicks.test',
+    nin: '13891199915',
+    role: 'creator',
+    description: 'Creator 3 (BankID)',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'bankid-subscriber@digipicks.test',
+    nin: '16837147593',
+    role: 'subscriber',
+    description: 'Subscriber 2 (BankID)',
+    needsTenant: false, // Subscriber - web app only
+  },
+
+  // ============================================================================
+  // Demo/Password login users
+  // ============================================================================
+  {
+    email: 'demo@digipicks.test',
+    role: 'admin',
+    description: 'Platform Demo Admin',
+    demoToken: 'platform-demo-001',
+    needsTenant: true, // Dashboard user
+  },
+  {
+    email: 'monitoring@digipicks.test',
+    role: 'superadmin',
+    description: 'Monitoring User',
+    demoToken: 'monitoring123',
+    needsTenant: false, // Superadmin - sees all tenants
+  },
+  {
+    email: 'saas@digipicks.test',
+    role: 'superadmin',
+    description: 'SaaS Admin',
+    demoToken: 'saas-admin-001',
+    needsTenant: false, // Superadmin - sees all tenants
   },
 ];
 
@@ -151,8 +203,8 @@ export const associateUsersWithTenant = mutation({
  * Run: npx convex run auth/seedTestUsers:seedNinData
  *
  * Tenant assignment:
- * - needsTenant=true: backoffice users (admin, saksbehandler, manager) get tenantId
- * - needsTenant=false: public users (bruker) and superadmins get NO tenantId
+ * - needsTenant=true: dashboard users (admin, creator) get tenantId
+ * - needsTenant=false: subscribers and superadmins get NO tenantId
  */
 export const seedNinData = mutation({
   args: {},
@@ -166,27 +218,16 @@ export const seedNinData = mutation({
       .first();
     const defaultTenantId = tenant?._id;
 
-    // Map any incoming legacy role string to the DigiPicks 4-role model.
+    // Map role strings to database roles
     const mapRole = (role: string): string => {
       switch (role) {
         case 'superadmin':
-        case 'super_admin':
           return 'superadmin';
         case 'admin':
-        case 'owner':
-        case 'manager':
-        case 'saksbehandler':
-        case 'counter':
-        case 'finance':
-        case 'aktør':
           return 'admin';
         case 'creator':
-        case 'arranger':
           return 'creator';
         case 'subscriber':
-        case 'user':
-        case 'bruker':
-        case 'member':
           return 'subscriber';
         default:
           return 'subscriber';

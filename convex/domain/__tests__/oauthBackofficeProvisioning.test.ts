@@ -8,7 +8,7 @@ describe('auth/callback upsertUser backoffice provisioning', () => {
     await seedTestTenant(t);
 
     const result = await t.mutation(internal.auth.callback.upsertUser, {
-      email: 'oauth.backoffice@test.no',
+      email: 'oauth.backoffice@digipicks.test',
       name: 'OAuth Creator',
       provider: 'idporten',
       providerId: 'idp-123',

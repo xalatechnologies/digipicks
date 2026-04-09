@@ -1,0 +1,254 @@
+/* =============================================================================
+ * Creator Discovery / Marketplace Page — Web App
+ * Browseable creator grid with search, filters, and creator cards.
+ * ============================================================================= */
+
+.pageContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.pageHeader {
+  margin-bottom: var(--ds-size-6);
+}
+
+.pageTitle {
+  margin: 0 0 var(--ds-size-2) 0;
+}
+
+.pageSubtitle {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Toolbar: search + filters */
+.toolbar {
+  display: flex;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-6);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.searchField {
+  flex: 1;
+  min-width: 220px;
+}
+
+.filterItem {
+  min-width: 140px;
+}
+
+/* Loading state */
+.loadingState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}
+
+/* Results count */
+.resultsCount {
+  margin-bottom: var(--ds-size-4);
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}
+
+/* Creator card grid */
+.creatorsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--ds-size-4);
+}
+
+/* Individual creator card */
+.creatorCard {
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-md);
+  padding: var(--ds-size-5);
+  cursor: pointer;
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+  background: var(--ds-color-neutral-background-default);
+}
+
+.creatorCard:hover {
+  border-color: var(--ds-color-accent-border-default);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Card header: avatar + name + tagline */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-3);
+  margin-bottom: var(--ds-size-4);
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.avatarPlaceholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.creatorInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.creatorName {
+  font-weight: var(--ds-font-weight-semibold);
+  font-size: var(--ds-font-size-md);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ds-color-info-surface-default);
+  color: var(--ds-color-info-text-default);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.creatorTagline {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Stats row */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--ds-size-2);
+  margin-bottom: var(--ds-size-4);
+  padding: var(--ds-size-3);
+  background: var(--ds-color-neutral-surface-default);
+  border-radius: var(--ds-border-radius-sm);
+}
+
+.stat {
+  text-align: center;
+}
+
+.statValue {
+  font-weight: var(--ds-font-weight-semibold);
+  font-size: var(--ds-font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-top: 2px;
+}
+
+.roiPositive {
+  color: var(--ds-color-success-text-default);
+}
+
+.roiNegative {
+  color: var(--ds-color-danger-text-default);
+}
+
+/* Card footer: price + streak */
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.price {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.priceAmount {
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.streakBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--ds-size-1) var(--ds-size-2);
+  border-radius: var(--ds-border-radius-md);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.streakWin {
+  background: var(--ds-color-success-surface-default);
+  color: var(--ds-color-success-text-default);
+}
+
+.streakLoss {
+  background: var(--ds-color-danger-surface-default);
+  color: var(--ds-color-danger-text-default);
+}
+
+.sportBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--ds-size-1) var(--ds-size-2);
+  border-radius: var(--ds-border-radius-sm);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-medium);
+  background: var(--ds-color-neutral-surface-default);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .creatorsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    flex-direction: column;
+  }
+
+  .searchField {
+    min-width: 100%;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -24,8 +24,35 @@ import type { FunctionReference } from "convex/server";
 export type ComponentApi<Name extends string | undefined = string | undefined> =
   {
     functions: {
+      createPost: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accessLevel?: string;
+          body: string;
+          contentFormat?: string;
+          creatorId: string;
+          metadata?: any;
+          tenantId: string;
+          title: string;
+        },
+        { id: string },
+        Name
+      >;
       get: FunctionReference<"query", "internal", { id: string }, any, Name>;
       listByCreator: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId: string;
+          limit?: number;
+          status?: string;
+          tenantId: string;
+        },
+        Array<any>,
+        Name
+      >;
+      listCreatorPosts: FunctionReference<
         "query",
         "internal",
         {
@@ -49,11 +76,30 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         Array<any>,
         Name
       >;
+      listPublishedPosts: FunctionReference<
+        "query",
+        "internal",
+        {
+          creatorId?: string;
+          limit?: number;
+          tenantId: string;
+          userId: string;
+        },
+        Array<any>,
+        Name
+      >;
       markAsRead: FunctionReference<
         "mutation",
         "internal",
         { broadcastId: string; userId: string },
         { success: boolean },
+        Name
+      >;
+      publishPost: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string; recipientIds: Array<string> },
+        { id: string; recipientCount: number },
         Name
       >;
       remove: FunctionReference<
@@ -79,11 +125,32 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
         { id: string; recipientCount: number },
         Name
       >;
+      unpublishPost: FunctionReference<
+        "mutation",
+        "internal",
+        { id: string },
+        { success: boolean },
+        Name
+      >;
       unreadCount: FunctionReference<
         "query",
         "internal",
         { tenantId: string; userId: string },
         { count: number },
+        Name
+      >;
+      updatePost: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          accessLevel?: string;
+          body?: string;
+          contentFormat?: string;
+          id: string;
+          metadata?: any;
+          title?: string;
+        },
+        { success: boolean },
         Name
       >;
     };
