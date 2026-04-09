@@ -16,184 +16,182 @@
  */
 
 @layer ds.app {
-
-    /* ==========================================================================
+  /* ==========================================================================
    * HAMAR KULTURHUS - LIGHT MODE
    * White body, cream surfaces (Steinkjer-style), Hamar brand greens + gold
    * ========================================================================== */
 
-    :root,
-    [data-color-scheme="light"] {
+  :root,
+  [data-color-scheme='light'] {
+    /* ── Accent (Forest Green #2C622C) ──────────────────── */
+    --ds-color-accent-background-default: #f4f0e5;
+    --ds-color-accent-background-tinted: #ede9dd;
+    --ds-color-accent-surface-default: #eef2ee;
+    --ds-color-accent-surface-tinted: #e0e8e0;
+    --ds-color-accent-surface-hover: #d0ddd0;
+    --ds-color-accent-surface-active: #8bb89b;
+    --ds-color-accent-border-subtle: #8bb89b;
+    --ds-color-accent-border-default: #4a8c4a;
+    --ds-color-accent-border-strong: #2c622c;
+    --ds-color-accent-text-subtle: #3a6a3a;
+    --ds-color-accent-text-default: #2c622c;
+    --ds-color-accent-base-default: #2c622c;
+    --ds-color-accent-base-hover: #357535;
+    --ds-color-accent-base-active: #3e883e;
+    --ds-color-accent-base-contrast-subtle: #e0e8e0;
+    --ds-color-accent-base-contrast-default: #ffffff;
+    --ds-color-accent-contrast-default: #ffffff;
 
-        /* ── Accent (Forest Green #2C622C) ──────────────────── */
-        --ds-color-accent-background-default: #F4F0E5;
-        --ds-color-accent-background-tinted: #EDE9DD;
-        --ds-color-accent-surface-default: #EEF2EE;
-        --ds-color-accent-surface-tinted: #E0E8E0;
-        --ds-color-accent-surface-hover: #D0DDD0;
-        --ds-color-accent-surface-active: #8BB89B;
-        --ds-color-accent-border-subtle: #8BB89B;
-        --ds-color-accent-border-default: #4A8C4A;
-        --ds-color-accent-border-strong: #2C622C;
-        --ds-color-accent-text-subtle: #3A6A3A;
-        --ds-color-accent-text-default: #2C622C;
-        --ds-color-accent-base-default: #2C622C;
-        --ds-color-accent-base-hover: #357535;
-        --ds-color-accent-base-active: #3E883E;
-        --ds-color-accent-base-contrast-subtle: #E0E8E0;
-        --ds-color-accent-base-contrast-default: #ffffff;
-        --ds-color-accent-contrast-default: #ffffff;
+    /* ── Neutral (clean white/grey — no sand tint in form controls) ── */
+    --ds-color-neutral-background-default: #ffffff;
+    --ds-color-neutral-background-tinted: #f7f7f5;
+    --ds-color-neutral-background-subtle: #f2f1ef;
+    --ds-color-neutral-surface-default: #fafaf9;
+    --ds-color-neutral-surface-tinted: #f2f1ef;
+    --ds-color-neutral-surface-subtle: #f7f7f5;
+    --ds-color-neutral-surface-hover: #eeedeb;
+    --ds-color-neutral-surface-active: #e5e4e1;
+    --ds-color-neutral-border-subtle: #e5e3df;
+    --ds-color-neutral-border-default: #ccc9c2;
+    --ds-color-neutral-border-strong: #939f99;
+    --ds-color-neutral-text-subtle: #4a5550;
+    --ds-color-neutral-text-default: #1a2e1a;
+    --ds-color-neutral-text-on-inverted: #ffffff;
+    --ds-color-neutral-base-default: #1a2e1a;
+    --ds-color-neutral-base-hover: #254025;
+    --ds-color-neutral-base-active: #2e5e2e;
+    --ds-color-neutral-base-contrast-subtle: #f4f0e5;
+    --ds-color-neutral-base-contrast-default: #ffffff;
+    --ds-color-neutral-contrast-default: #ffffff;
 
-        /* ── Neutral (clean white/grey — no sand tint in form controls) ── */
-        --ds-color-neutral-background-default: #FFFFFF;
-        --ds-color-neutral-background-tinted: #F7F7F5;
-        --ds-color-neutral-background-subtle: #F2F1EF;
-        --ds-color-neutral-surface-default: #FAFAF9;
-        --ds-color-neutral-surface-tinted: #F2F1EF;
-        --ds-color-neutral-surface-subtle: #F7F7F5;
-        --ds-color-neutral-surface-hover: #EEEDEB;
-        --ds-color-neutral-surface-active: #E5E4E1;
-        --ds-color-neutral-border-subtle: #E5E3DF;
-        --ds-color-neutral-border-default: #CCC9C2;
-        --ds-color-neutral-border-strong: #939F99;
-        --ds-color-neutral-text-subtle: #4A5550;
-        --ds-color-neutral-text-default: #1A2E1A;
-        --ds-color-neutral-text-on-inverted: #FFFFFF;
-        --ds-color-neutral-base-default: #1A2E1A;
-        --ds-color-neutral-base-hover: #254025;
-        --ds-color-neutral-base-active: #2E5E2E;
-        --ds-color-neutral-base-contrast-subtle: #F4F0E5;
-        --ds-color-neutral-base-contrast-default: #ffffff;
-        --ds-color-neutral-contrast-default: #ffffff;
+    /* ── Success (Green #3D7A4A) ─────────────────────── */
+    --ds-color-success-background-default: #eff7f0;
+    --ds-color-success-background-tinted: #e0f0e2;
+    --ds-color-success-surface-default: #e0f0e2;
+    --ds-color-success-surface-tinted: #c1e1c5;
+    --ds-color-success-surface-hover: #a2d3a8;
+    --ds-color-success-surface-active: #83c48b;
+    --ds-color-success-border-subtle: #83c48b;
+    --ds-color-success-border-default: #3d7a4a;
+    --ds-color-success-border-strong: #2d5c37;
+    --ds-color-success-text-subtle: #2d5c37;
+    --ds-color-success-text-default: #1e3e25;
+    --ds-color-success-base-default: #3d7a4a;
+    --ds-color-success-base-hover: #2d5c37;
+    --ds-color-success-base-active: #1e3e25;
+    --ds-color-success-base-contrast-subtle: #e0f0e2;
+    --ds-color-success-base-contrast-default: #ffffff;
 
-        /* ── Success (Green #3D7A4A) ─────────────────────── */
-        --ds-color-success-background-default: #EFF7F0;
-        --ds-color-success-background-tinted: #E0F0E2;
-        --ds-color-success-surface-default: #E0F0E2;
-        --ds-color-success-surface-tinted: #C1E1C5;
-        --ds-color-success-surface-hover: #A2D3A8;
-        --ds-color-success-surface-active: #83C48B;
-        --ds-color-success-border-subtle: #83C48B;
-        --ds-color-success-border-default: #3D7A4A;
-        --ds-color-success-border-strong: #2D5C37;
-        --ds-color-success-text-subtle: #2D5C37;
-        --ds-color-success-text-default: #1E3E25;
-        --ds-color-success-base-default: #3D7A4A;
-        --ds-color-success-base-hover: #2D5C37;
-        --ds-color-success-base-active: #1E3E25;
-        --ds-color-success-base-contrast-subtle: #E0F0E2;
-        --ds-color-success-base-contrast-default: #ffffff;
+    /* ── Warning (Amber/Gold #E5A100) ─────────────────── */
+    --ds-color-warning-background-default: #fff9e6;
+    --ds-color-warning-background-tinted: #fff3cc;
+    --ds-color-warning-surface-default: #fff3cc;
+    --ds-color-warning-surface-tinted: #ffe799;
+    --ds-color-warning-surface-hover: #ffdb66;
+    --ds-color-warning-surface-active: #ffcf33;
+    --ds-color-warning-border-subtle: #ffcf33;
+    --ds-color-warning-border-default: #e5a100;
+    --ds-color-warning-border-strong: #c08800;
+    --ds-color-warning-text-subtle: #8c6400;
+    --ds-color-warning-text-default: #5a4000;
+    --ds-color-warning-base-default: #e5a100;
+    --ds-color-warning-base-hover: #c08800;
+    --ds-color-warning-base-active: #9a6e00;
+    --ds-color-warning-base-contrast-subtle: #fff3cc;
+    --ds-color-warning-base-contrast-default: #1a2e1a;
 
-        /* ── Warning (Amber/Gold #E5A100) ─────────────────── */
-        --ds-color-warning-background-default: #FFF9E6;
-        --ds-color-warning-background-tinted: #FFF3CC;
-        --ds-color-warning-surface-default: #FFF3CC;
-        --ds-color-warning-surface-tinted: #FFE799;
-        --ds-color-warning-surface-hover: #FFDB66;
-        --ds-color-warning-surface-active: #FFCF33;
-        --ds-color-warning-border-subtle: #FFCF33;
-        --ds-color-warning-border-default: #E5A100;
-        --ds-color-warning-border-strong: #C08800;
-        --ds-color-warning-text-subtle: #8C6400;
-        --ds-color-warning-text-default: #5A4000;
-        --ds-color-warning-base-default: #E5A100;
-        --ds-color-warning-base-hover: #C08800;
-        --ds-color-warning-base-active: #9A6E00;
-        --ds-color-warning-base-contrast-subtle: #FFF3CC;
-        --ds-color-warning-base-contrast-default: #1A2E1A;
+    /* ── Danger (Red #C63C3C) ──────────────────────────── */
+    --ds-color-danger-background-default: #fef2f2;
+    --ds-color-danger-background-tinted: #fde8e8;
+    --ds-color-danger-surface-default: #fde8e8;
+    --ds-color-danger-surface-tinted: #f9cccc;
+    --ds-color-danger-surface-hover: #f5b0b0;
+    --ds-color-danger-surface-active: #f19494;
+    --ds-color-danger-border-subtle: #f19494;
+    --ds-color-danger-border-default: #c63c3c;
+    --ds-color-danger-border-strong: #8e2d2d;
+    --ds-color-danger-text-subtle: #8e2d2d;
+    --ds-color-danger-text-default: #5c1d1d;
+    --ds-color-danger-base-default: #c63c3c;
+    --ds-color-danger-base-hover: #a83030;
+    --ds-color-danger-base-active: #8e2d2d;
+    --ds-color-danger-base-contrast-subtle: #fde8e8;
+    --ds-color-danger-base-contrast-default: #ffffff;
 
-        /* ── Danger (Red #C63C3C) ──────────────────────────── */
-        --ds-color-danger-background-default: #FEF2F2;
-        --ds-color-danger-background-tinted: #FDE8E8;
-        --ds-color-danger-surface-default: #FDE8E8;
-        --ds-color-danger-surface-tinted: #F9CCCC;
-        --ds-color-danger-surface-hover: #F5B0B0;
-        --ds-color-danger-surface-active: #F19494;
-        --ds-color-danger-border-subtle: #F19494;
-        --ds-color-danger-border-default: #C63C3C;
-        --ds-color-danger-border-strong: #8E2D2D;
-        --ds-color-danger-text-subtle: #8E2D2D;
-        --ds-color-danger-text-default: #5C1D1D;
-        --ds-color-danger-base-default: #C63C3C;
-        --ds-color-danger-base-hover: #A83030;
-        --ds-color-danger-base-active: #8E2D2D;
-        --ds-color-danger-base-contrast-subtle: #FDE8E8;
-        --ds-color-danger-base-contrast-default: #ffffff;
+    /* ── Info (Blue #3388CC) ────────────────────────────── */
+    --ds-color-info-background-default: #eff6ff;
+    --ds-color-info-background-tinted: #dceeff;
+    --ds-color-info-surface-default: #dceeff;
+    --ds-color-info-surface-tinted: #b8ddff;
+    --ds-color-info-surface-hover: #94cbff;
+    --ds-color-info-surface-active: #70baff;
+    --ds-color-info-border-subtle: #70baff;
+    --ds-color-info-border-default: #3388cc;
+    --ds-color-info-border-strong: #1e5a8f;
+    --ds-color-info-text-subtle: #1e5a8f;
+    --ds-color-info-text-default: #0d3360;
+    --ds-color-info-base-default: #3388cc;
+    --ds-color-info-base-hover: #1e5a8f;
+    --ds-color-info-base-active: #0d3360;
+    --ds-color-info-base-contrast-subtle: #dceeff;
+    --ds-color-info-base-contrast-default: #ffffff;
 
-        /* ── Info (Blue #3388CC) ────────────────────────────── */
-        --ds-color-info-background-default: #EFF6FF;
-        --ds-color-info-background-tinted: #DCEEFF;
-        --ds-color-info-surface-default: #DCEEFF;
-        --ds-color-info-surface-tinted: #B8DDFF;
-        --ds-color-info-surface-hover: #94CBFF;
-        --ds-color-info-surface-active: #70BAFF;
-        --ds-color-info-border-subtle: #70BAFF;
-        --ds-color-info-border-default: #3388CC;
-        --ds-color-info-border-strong: #1E5A8F;
-        --ds-color-info-text-subtle: #1E5A8F;
-        --ds-color-info-text-default: #0D3360;
-        --ds-color-info-base-default: #3388CC;
-        --ds-color-info-base-hover: #1E5A8F;
-        --ds-color-info-base-active: #0D3360;
-        --ds-color-info-base-contrast-subtle: #DCEEFF;
-        --ds-color-info-base-contrast-default: #ffffff;
+    /* ── Brand 1 (Green #2C622C — primary brand) ──────── */
+    --ds-color-brand1-background-default: #f0f5f0;
+    --ds-color-brand1-background-tinted: #e2ebe2;
+    --ds-color-brand1-surface-default: #e2ebe2;
+    --ds-color-brand1-surface-tinted: #c8dac8;
+    --ds-color-brand1-surface-hover: #aec9ae;
+    --ds-color-brand1-surface-active: #94b894;
+    --ds-color-brand1-border-subtle: #94b894;
+    --ds-color-brand1-border-default: #2c622c;
+    --ds-color-brand1-border-strong: #1e441e;
+    --ds-color-brand1-text-subtle: #357535;
+    --ds-color-brand1-text-default: #1e441e;
+    --ds-color-brand1-base-default: #2c622c;
+    --ds-color-brand1-base-hover: #357535;
+    --ds-color-brand1-base-active: #3e883e;
+    --ds-color-brand1-base-contrast-subtle: #e2ebe2;
+    --ds-color-brand1-base-contrast-default: #ffffff;
 
-        /* ── Brand 1 (Green #2C622C — primary brand) ──────── */
-        --ds-color-brand1-background-default: #F0F5F0;
-        --ds-color-brand1-background-tinted: #E2EBE2;
-        --ds-color-brand1-surface-default: #E2EBE2;
-        --ds-color-brand1-surface-tinted: #C8DAC8;
-        --ds-color-brand1-surface-hover: #AEC9AE;
-        --ds-color-brand1-surface-active: #94B894;
-        --ds-color-brand1-border-subtle: #94B894;
-        --ds-color-brand1-border-default: #2C622C;
-        --ds-color-brand1-border-strong: #1E441E;
-        --ds-color-brand1-text-subtle: #357535;
-        --ds-color-brand1-text-default: #1E441E;
-        --ds-color-brand1-base-default: #2C622C;
-        --ds-color-brand1-base-hover: #357535;
-        --ds-color-brand1-base-active: #3E883E;
-        --ds-color-brand1-base-contrast-subtle: #E2EBE2;
-        --ds-color-brand1-base-contrast-default: #ffffff;
+    /* ── Brand 2 (Warm Gold #E5A100 — highlights) ──────── */
+    --ds-color-brand2-background-default: #fffbf0;
+    --ds-color-brand2-background-tinted: #fff6e0;
+    --ds-color-brand2-surface-default: #fff6e0;
+    --ds-color-brand2-surface-tinted: #ffeab8;
+    --ds-color-brand2-surface-hover: #ffde90;
+    --ds-color-brand2-surface-active: #ffd268;
+    --ds-color-brand2-border-subtle: #ffd268;
+    --ds-color-brand2-border-default: #e5a100;
+    --ds-color-brand2-border-strong: #c08800;
+    --ds-color-brand2-text-subtle: #8c6400;
+    --ds-color-brand2-text-default: #5a4000;
+    --ds-color-brand2-base-default: #e5a100;
+    --ds-color-brand2-base-hover: #c08800;
+    --ds-color-brand2-base-active: #9a6e00;
+    --ds-color-brand2-base-contrast-subtle: #fff6e0;
+    --ds-color-brand2-base-contrast-default: #1a2e1a;
 
-        /* ── Brand 2 (Warm Gold #E5A100 — highlights) ──────── */
-        --ds-color-brand2-background-default: #FFFBF0;
-        --ds-color-brand2-background-tinted: #FFF6E0;
-        --ds-color-brand2-surface-default: #FFF6E0;
-        --ds-color-brand2-surface-tinted: #FFEAB8;
-        --ds-color-brand2-surface-hover: #FFDE90;
-        --ds-color-brand2-surface-active: #FFD268;
-        --ds-color-brand2-border-subtle: #FFD268;
-        --ds-color-brand2-border-default: #E5A100;
-        --ds-color-brand2-border-strong: #C08800;
-        --ds-color-brand2-text-subtle: #8C6400;
-        --ds-color-brand2-text-default: #5A4000;
-        --ds-color-brand2-base-default: #E5A100;
-        --ds-color-brand2-base-hover: #C08800;
-        --ds-color-brand2-base-active: #9A6E00;
-        --ds-color-brand2-base-contrast-subtle: #FFF6E0;
-        --ds-color-brand2-base-contrast-default: #1A2E1A;
+    /* ── Brand 3 (Lighter Green #4A8C4A — CTAs) ──────── */
+    --ds-color-brand3-background-default: #edfdf2;
+    --ds-color-brand3-background-tinted: #d3fae0;
+    --ds-color-brand3-surface-default: #d3fae0;
+    --ds-color-brand3-surface-tinted: #a8f0c0;
+    --ds-color-brand3-surface-hover: #86e8a8;
+    --ds-color-brand3-surface-active: #6bbf6b;
+    --ds-color-brand3-border-subtle: #6bbf6b;
+    --ds-color-brand3-border-default: #4a8c4a;
+    --ds-color-brand3-border-strong: #357535;
+    --ds-color-brand3-text-subtle: #357535;
+    --ds-color-brand3-text-default: #1e441e;
+    --ds-color-brand3-base-default: #4a8c4a;
+    --ds-color-brand3-base-hover: #3e883e;
+    --ds-color-brand3-base-active: #357535;
+    --ds-color-brand3-base-contrast-subtle: #d3fae0;
+    --ds-color-brand3-base-contrast-default: #ffffff;
+  }
 
-        /* ── Brand 3 (Lighter Green #4A8C4A — CTAs) ──────── */
-        --ds-color-brand3-background-default: #EDFDF2;
-        --ds-color-brand3-background-tinted: #D3FAE0;
-        --ds-color-brand3-surface-default: #D3FAE0;
-        --ds-color-brand3-surface-tinted: #A8F0C0;
-        --ds-color-brand3-surface-hover: #86E8A8;
-        --ds-color-brand3-surface-active: #6BBF6B;
-        --ds-color-brand3-border-subtle: #6BBF6B;
-        --ds-color-brand3-border-default: #4A8C4A;
-        --ds-color-brand3-border-strong: #357535;
-        --ds-color-brand3-text-subtle: #357535;
-        --ds-color-brand3-text-default: #1E441E;
-        --ds-color-brand3-base-default: #4A8C4A;
-        --ds-color-brand3-base-hover: #3E883E;
-        --ds-color-brand3-base-active: #357535;
-        --ds-color-brand3-base-contrast-subtle: #D3FAE0;
-        --ds-color-brand3-base-contrast-default: #ffffff;
-    }
-
-    /* ==========================================================================
+  /* ==========================================================================
    * HAMAR KULTURHUS - DARK MODE
    * Essentially identical to light mode since Hamar IS dark-first.
    * Slightly adjusted for OS-level dark mode contexts.
@@ -202,347 +200,380 @@
    * Elevated: #1A1D21 (charcoal)
    * ========================================================================== */
 
-    [data-color-scheme="dark"] {
+  [data-color-scheme='dark'] {
+    /* ── Accent (Emerald — premium sports-picks energy) ──────────────────── */
+    --ds-color-accent-background-default: #0a0b14;
+    --ds-color-accent-background-tinted: #0d1a16;
+    --ds-color-accent-surface-default: #0d1a16;
+    --ds-color-accent-surface-tinted: #11241d;
+    --ds-color-accent-surface-hover: #153327;
+    --ds-color-accent-surface-active: #1a4533;
+    --ds-color-accent-border-subtle: #1f5540;
+    --ds-color-accent-border-default: #10b981;
+    --ds-color-accent-border-strong: #34d399;
+    --ds-color-accent-text-subtle: #34d399;
+    --ds-color-accent-text-default: #6ee7b7;
+    --ds-color-accent-base-default: #10b981;
+    --ds-color-accent-base-hover: #059669;
+    --ds-color-accent-base-active: #047857;
+    --ds-color-accent-base-contrast-subtle: #11241d;
+    --ds-color-accent-base-contrast-default: #ffffff;
 
-        /* ── Accent (Forest Green — dark mode) ──────────────────── */
-        --ds-color-accent-background-default: #080A0C;
-        --ds-color-accent-background-tinted: #0D1A0D;
-        --ds-color-accent-surface-default: #0D1A0D;
-        --ds-color-accent-surface-tinted: #132213;
-        --ds-color-accent-surface-hover: #1A3A1A;
-        --ds-color-accent-surface-active: #225222;
-        --ds-color-accent-border-subtle: #1E441E;
-        --ds-color-accent-border-default: #2C622C;
-        --ds-color-accent-border-strong: #4A8C4A;
-        --ds-color-accent-text-subtle: #6BBF6B;
-        --ds-color-accent-text-default: #A8E0A8;
-        --ds-color-accent-base-default: #4A8C4A;
-        --ds-color-accent-base-hover: #5AA35A;
-        --ds-color-accent-base-active: #6BBF6B;
-        --ds-color-accent-base-contrast-subtle: #132213;
-        --ds-color-accent-base-contrast-default: #ffffff;
+    /* ── Neutral (Deep navy-black — premium dark) ────────────────── */
+    --ds-color-neutral-background-default: #0a0b14;
+    --ds-color-neutral-background-tinted: #0e1019;
+    --ds-color-neutral-surface-default: #11131c;
+    --ds-color-neutral-surface-tinted: #1f2335;
+    --ds-color-neutral-surface-subtle: #0e1019;
+    --ds-color-neutral-surface-hover: #1a1d2a;
+    --ds-color-neutral-surface-active: #242840;
+    --ds-color-neutral-border-subtle: #252838;
+    --ds-color-neutral-border-default: #2d3148;
+    --ds-color-neutral-border-strong: #3d4258;
 
-        /* ── Neutral (Near-Black — dark mode) ────────────────── */
-        --ds-color-neutral-background-default: #060809;
-        --ds-color-neutral-background-tinted: #0E1013;
-        --ds-color-neutral-surface-default: #111316;
-        --ds-color-neutral-surface-tinted: #1A1D21;
-        --ds-color-neutral-surface-subtle: #0E1013;
-        --ds-color-neutral-surface-hover: #1E2126;
-        --ds-color-neutral-surface-active: #24272C;
-        --ds-color-neutral-border-subtle: #2A2D31;
-        --ds-color-neutral-border-default: #3A3D41;
-        --ds-color-neutral-border-strong: #4A4D51;
+    /* ── PillTabs / PillDropdown (elevated for dark bg contrast) ── */
+    --ds-color-pilltabs-bg: #1f2335;
+    --ds-color-pilltabs-border: #2d3148;
+    --ds-color-neutral-text-subtle: #8a8d91;
+    --ds-color-neutral-text-default: #ffffff;
+    --ds-color-neutral-base-default: #ffffff;
+    --ds-color-neutral-base-hover: #e8e8e8;
+    --ds-color-neutral-base-active: #d0d0d0;
+    --ds-color-neutral-base-contrast-subtle: #1a1d21;
+    --ds-color-neutral-base-contrast-default: #080a0c;
 
-        /* ── PillTabs / PillDropdown (elevated for dark bg contrast) ── */
-        --ds-color-pilltabs-bg: #1A1D21;
-        --ds-color-pilltabs-border: #3A3D41;
-        --ds-color-neutral-text-subtle: #8A8D91;
-        --ds-color-neutral-text-default: #FFFFFF;
-        --ds-color-neutral-base-default: #FFFFFF;
-        --ds-color-neutral-base-hover: #E8E8E8;
-        --ds-color-neutral-base-active: #D0D0D0;
-        --ds-color-neutral-base-contrast-subtle: #1A1D21;
-        --ds-color-neutral-base-contrast-default: #080A0C;
+    /* ── Success (Green — dark mode) ─────────────────── */
+    --ds-color-success-background-default: #060809;
+    --ds-color-success-background-tinted: #0f2015;
+    --ds-color-success-surface-default: #0f2015;
+    --ds-color-success-surface-tinted: #1a3522;
+    --ds-color-success-surface-hover: #254a2f;
+    --ds-color-success-surface-active: #30603c;
+    --ds-color-success-border-subtle: #3d7a4a;
+    --ds-color-success-border-default: #5a9a68;
+    --ds-color-success-border-strong: #83c48b;
+    --ds-color-success-text-subtle: #a2d3a8;
+    --ds-color-success-text-default: #e0f0e2;
+    --ds-color-success-base-default: #3d7a4a;
+    --ds-color-success-base-hover: #5a9a68;
+    --ds-color-success-base-active: #83c48b;
+    --ds-color-success-base-contrast-subtle: #0f2015;
+    --ds-color-success-base-contrast-default: #ffffff;
 
-        /* ── Success (Green — dark mode) ─────────────────── */
-        --ds-color-success-background-default: #060809;
-        --ds-color-success-background-tinted: #0F2015;
-        --ds-color-success-surface-default: #0F2015;
-        --ds-color-success-surface-tinted: #1A3522;
-        --ds-color-success-surface-hover: #254A2F;
-        --ds-color-success-surface-active: #30603C;
-        --ds-color-success-border-subtle: #3D7A4A;
-        --ds-color-success-border-default: #5A9A68;
-        --ds-color-success-border-strong: #83C48B;
-        --ds-color-success-text-subtle: #A2D3A8;
-        --ds-color-success-text-default: #E0F0E2;
-        --ds-color-success-base-default: #3D7A4A;
-        --ds-color-success-base-hover: #5A9A68;
-        --ds-color-success-base-active: #83C48B;
-        --ds-color-success-base-contrast-subtle: #0F2015;
-        --ds-color-success-base-contrast-default: #ffffff;
+    /* ── Warning (Gold — dark mode) ─────────────────────── */
+    --ds-color-warning-background-default: #060809;
+    --ds-color-warning-background-tinted: #1a1508;
+    --ds-color-warning-surface-default: #1a1508;
+    --ds-color-warning-surface-tinted: #2e240d;
+    --ds-color-warning-surface-hover: #473814;
+    --ds-color-warning-surface-active: #5f4c1b;
+    --ds-color-warning-border-subtle: #8c7000;
+    --ds-color-warning-border-default: #e5a100;
+    --ds-color-warning-border-strong: #ffcc33;
+    --ds-color-warning-text-subtle: #ffd966;
+    --ds-color-warning-text-default: #fff0cc;
+    --ds-color-warning-base-default: #e5a100;
+    --ds-color-warning-base-hover: #ffcc33;
+    --ds-color-warning-base-active: #ffd966;
+    --ds-color-warning-base-contrast-subtle: #1a1508;
+    --ds-color-warning-base-contrast-default: #080a0c;
 
-        /* ── Warning (Gold — dark mode) ─────────────────────── */
-        --ds-color-warning-background-default: #060809;
-        --ds-color-warning-background-tinted: #1A1508;
-        --ds-color-warning-surface-default: #1A1508;
-        --ds-color-warning-surface-tinted: #2E240D;
-        --ds-color-warning-surface-hover: #473814;
-        --ds-color-warning-surface-active: #5F4C1B;
-        --ds-color-warning-border-subtle: #8C7000;
-        --ds-color-warning-border-default: #E5A100;
-        --ds-color-warning-border-strong: #FFCC33;
-        --ds-color-warning-text-subtle: #FFD966;
-        --ds-color-warning-text-default: #FFF0CC;
-        --ds-color-warning-base-default: #E5A100;
-        --ds-color-warning-base-hover: #FFCC33;
-        --ds-color-warning-base-active: #FFD966;
-        --ds-color-warning-base-contrast-subtle: #1A1508;
-        --ds-color-warning-base-contrast-default: #080A0C;
+    /* ── Danger (Red — dark mode) ──────────────────────── */
+    --ds-color-danger-background-default: #060809;
+    --ds-color-danger-background-tinted: #1f0f0f;
+    --ds-color-danger-surface-default: #1f0f0f;
+    --ds-color-danger-surface-tinted: #351818;
+    --ds-color-danger-surface-hover: #4b2222;
+    --ds-color-danger-surface-active: #612c2c;
+    --ds-color-danger-border-subtle: #8e2d2d;
+    --ds-color-danger-border-default: #c63c3c;
+    --ds-color-danger-border-strong: #e86060;
+    --ds-color-danger-text-subtle: #f5b0b0;
+    --ds-color-danger-text-default: #fde8e8;
+    --ds-color-danger-base-default: #c63c3c;
+    --ds-color-danger-base-hover: #d45050;
+    --ds-color-danger-base-active: #e86060;
+    --ds-color-danger-base-contrast-subtle: #1f0f0f;
+    --ds-color-danger-base-contrast-default: #ffffff;
 
-        /* ── Danger (Red — dark mode) ──────────────────────── */
-        --ds-color-danger-background-default: #060809;
-        --ds-color-danger-background-tinted: #1F0F0F;
-        --ds-color-danger-surface-default: #1F0F0F;
-        --ds-color-danger-surface-tinted: #351818;
-        --ds-color-danger-surface-hover: #4B2222;
-        --ds-color-danger-surface-active: #612C2C;
-        --ds-color-danger-border-subtle: #8E2D2D;
-        --ds-color-danger-border-default: #C63C3C;
-        --ds-color-danger-border-strong: #E86060;
-        --ds-color-danger-text-subtle: #F5B0B0;
-        --ds-color-danger-text-default: #FDE8E8;
-        --ds-color-danger-base-default: #C63C3C;
-        --ds-color-danger-base-hover: #D45050;
-        --ds-color-danger-base-active: #E86060;
-        --ds-color-danger-base-contrast-subtle: #1F0F0F;
-        --ds-color-danger-base-contrast-default: #ffffff;
+    /* ── Info (Blue — dark mode) ────────────────────────── */
+    --ds-color-info-background-default: #060809;
+    --ds-color-info-background-tinted: #0d1928;
+    --ds-color-info-surface-default: #0d1928;
+    --ds-color-info-surface-tinted: #152d45;
+    --ds-color-info-surface-hover: #1e4162;
+    --ds-color-info-surface-active: #27557f;
+    --ds-color-info-border-subtle: #1e5a8f;
+    --ds-color-info-border-default: #3388cc;
+    --ds-color-info-border-strong: #5aa3db;
+    --ds-color-info-text-subtle: #94cbff;
+    --ds-color-info-text-default: #dceeff;
+    --ds-color-info-base-default: #3388cc;
+    --ds-color-info-base-hover: #4d9dd6;
+    --ds-color-info-base-active: #5aa3db;
+    --ds-color-info-base-contrast-subtle: #0d1928;
+    --ds-color-info-base-contrast-default: #ffffff;
 
-        /* ── Info (Blue — dark mode) ────────────────────────── */
-        --ds-color-info-background-default: #060809;
-        --ds-color-info-background-tinted: #0D1928;
-        --ds-color-info-surface-default: #0D1928;
-        --ds-color-info-surface-tinted: #152D45;
-        --ds-color-info-surface-hover: #1E4162;
-        --ds-color-info-surface-active: #27557F;
-        --ds-color-info-border-subtle: #1E5A8F;
-        --ds-color-info-border-default: #3388CC;
-        --ds-color-info-border-strong: #5AA3DB;
-        --ds-color-info-text-subtle: #94CBFF;
-        --ds-color-info-text-default: #DCEEFF;
-        --ds-color-info-base-default: #3388CC;
-        --ds-color-info-base-hover: #4D9DD6;
-        --ds-color-info-base-active: #5AA3DB;
-        --ds-color-info-base-contrast-subtle: #0D1928;
-        --ds-color-info-base-contrast-default: #ffffff;
+    /* ── Brand 1 (Green — dark mode) ───────────────────── */
+    --ds-color-brand1-background-default: #060809;
+    --ds-color-brand1-background-tinted: #0d1a0d;
+    --ds-color-brand1-surface-default: #0d1a0d;
+    --ds-color-brand1-surface-tinted: #132213;
+    --ds-color-brand1-surface-hover: #1a3a1a;
+    --ds-color-brand1-surface-active: #225222;
+    --ds-color-brand1-border-subtle: #1e441e;
+    --ds-color-brand1-border-default: #2c622c;
+    --ds-color-brand1-border-strong: #4a8c4a;
+    --ds-color-brand1-text-subtle: #6bbf6b;
+    --ds-color-brand1-text-default: #a8e0a8;
+    --ds-color-brand1-base-default: #4a8c4a;
+    --ds-color-brand1-base-hover: #5aa35a;
+    --ds-color-brand1-base-active: #6bbf6b;
+    --ds-color-brand1-base-contrast-subtle: #0d1a0d;
+    --ds-color-brand1-base-contrast-default: #ffffff;
 
-        /* ── Brand 1 (Green — dark mode) ───────────────────── */
-        --ds-color-brand1-background-default: #060809;
-        --ds-color-brand1-background-tinted: #0D1A0D;
-        --ds-color-brand1-surface-default: #0D1A0D;
-        --ds-color-brand1-surface-tinted: #132213;
-        --ds-color-brand1-surface-hover: #1A3A1A;
-        --ds-color-brand1-surface-active: #225222;
-        --ds-color-brand1-border-subtle: #1E441E;
-        --ds-color-brand1-border-default: #2C622C;
-        --ds-color-brand1-border-strong: #4A8C4A;
-        --ds-color-brand1-text-subtle: #6BBF6B;
-        --ds-color-brand1-text-default: #A8E0A8;
-        --ds-color-brand1-base-default: #4A8C4A;
-        --ds-color-brand1-base-hover: #5AA35A;
-        --ds-color-brand1-base-active: #6BBF6B;
-        --ds-color-brand1-base-contrast-subtle: #0D1A0D;
-        --ds-color-brand1-base-contrast-default: #ffffff;
+    /* ── Brand 2 (Gold — dark mode) ──────────────────────── */
+    --ds-color-brand2-background-default: #060809;
+    --ds-color-brand2-background-tinted: #1a1508;
+    --ds-color-brand2-surface-default: #1a1508;
+    --ds-color-brand2-surface-tinted: #2e240d;
+    --ds-color-brand2-surface-hover: #473814;
+    --ds-color-brand2-surface-active: #5f4c1b;
+    --ds-color-brand2-border-subtle: #8c7000;
+    --ds-color-brand2-border-default: #e5a100;
+    --ds-color-brand2-border-strong: #ffd966;
+    --ds-color-brand2-text-subtle: #ffd966;
+    --ds-color-brand2-text-default: #fff0cc;
+    --ds-color-brand2-base-default: #e5a100;
+    --ds-color-brand2-base-hover: #ffcc33;
+    --ds-color-brand2-base-active: #ffd966;
+    --ds-color-brand2-base-contrast-subtle: #1a1508;
+    --ds-color-brand2-base-contrast-default: #080a0c;
 
-        /* ── Brand 2 (Gold — dark mode) ──────────────────────── */
-        --ds-color-brand2-background-default: #060809;
-        --ds-color-brand2-background-tinted: #1A1508;
-        --ds-color-brand2-surface-default: #1A1508;
-        --ds-color-brand2-surface-tinted: #2E240D;
-        --ds-color-brand2-surface-hover: #473814;
-        --ds-color-brand2-surface-active: #5F4C1B;
-        --ds-color-brand2-border-subtle: #8C7000;
-        --ds-color-brand2-border-default: #E5A100;
-        --ds-color-brand2-border-strong: #FFD966;
-        --ds-color-brand2-text-subtle: #FFD966;
-        --ds-color-brand2-text-default: #FFF0CC;
-        --ds-color-brand2-base-default: #E5A100;
-        --ds-color-brand2-base-hover: #FFCC33;
-        --ds-color-brand2-base-active: #FFD966;
-        --ds-color-brand2-base-contrast-subtle: #1A1508;
-        --ds-color-brand2-base-contrast-default: #080A0C;
+    /* ── Brand 3 (Lighter Green — dark mode) ─────────────── */
+    --ds-color-brand3-background-default: #060809;
+    --ds-color-brand3-background-tinted: #0a1f0a;
+    --ds-color-brand3-surface-default: #0a1f0a;
+    --ds-color-brand3-surface-tinted: #133013;
+    --ds-color-brand3-surface-hover: #1c441c;
+    --ds-color-brand3-surface-active: #265826;
+    --ds-color-brand3-border-subtle: #357035;
+    --ds-color-brand3-border-default: #4a8c4a;
+    --ds-color-brand3-border-strong: #6bbf6b;
+    --ds-color-brand3-text-subtle: #6bbf6b;
+    --ds-color-brand3-text-default: #a8e0a8;
+    --ds-color-brand3-base-default: #5aa35a;
+    --ds-color-brand3-base-hover: #6bbf6b;
+    --ds-color-brand3-base-active: #7dd47d;
+    --ds-color-brand3-base-contrast-subtle: #0a1f0a;
+    --ds-color-brand3-base-contrast-default: #ffffff;
+  }
 
-        /* ── Brand 3 (Lighter Green — dark mode) ─────────────── */
-        --ds-color-brand3-background-default: #060809;
-        --ds-color-brand3-background-tinted: #0A1F0A;
-        --ds-color-brand3-surface-default: #0A1F0A;
-        --ds-color-brand3-surface-tinted: #133013;
-        --ds-color-brand3-surface-hover: #1C441C;
-        --ds-color-brand3-surface-active: #265826;
-        --ds-color-brand3-border-subtle: #357035;
-        --ds-color-brand3-border-default: #4A8C4A;
-        --ds-color-brand3-border-strong: #6BBF6B;
-        --ds-color-brand3-text-subtle: #6BBF6B;
-        --ds-color-brand3-text-default: #A8E0A8;
-        --ds-color-brand3-base-default: #5AA35A;
-        --ds-color-brand3-base-hover: #6BBF6B;
-        --ds-color-brand3-base-active: #7DD47D;
-        --ds-color-brand3-base-contrast-subtle: #0A1F0A;
-        --ds-color-brand3-base-contrast-default: #ffffff;
-    }
-
-    /* ==========================================================================
+  /* ==========================================================================
    * AUTO DARK MODE (prefers-color-scheme)
    * ========================================================================== */
 
-    @media (prefers-color-scheme: dark) {
-        [data-color-scheme="auto"] {
-            /* ── Accent ── */
-            --ds-color-accent-background-default: #080A0C;
-            --ds-color-accent-background-tinted: #0D1A0D;
-            --ds-color-accent-surface-default: #0D1A0D;
-            --ds-color-accent-surface-tinted: #132213;
-            --ds-color-accent-surface-hover: #1A3A1A;
-            --ds-color-accent-surface-active: #225222;
-            --ds-color-accent-border-subtle: #1E441E;
-            --ds-color-accent-border-default: #2C622C;
-            --ds-color-accent-border-strong: #4A8C4A;
-            --ds-color-accent-text-subtle: #6BBF6B;
-            --ds-color-accent-text-default: #A8E0A8;
-            --ds-color-accent-base-default: #4A8C4A;
-            --ds-color-accent-base-hover: #5AA35A;
-            --ds-color-accent-base-active: #6BBF6B;
-            --ds-color-accent-base-contrast-default: #ffffff;
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme='auto'] {
+      /* ── Accent (Emerald) ── */
+      --ds-color-accent-background-default: #0a0b14;
+      --ds-color-accent-background-tinted: #0d1a16;
+      --ds-color-accent-surface-default: #0d1a16;
+      --ds-color-accent-surface-tinted: #11241d;
+      --ds-color-accent-surface-hover: #153327;
+      --ds-color-accent-surface-active: #1a4533;
+      --ds-color-accent-border-subtle: #1f5540;
+      --ds-color-accent-border-default: #10b981;
+      --ds-color-accent-border-strong: #34d399;
+      --ds-color-accent-text-subtle: #34d399;
+      --ds-color-accent-text-default: #6ee7b7;
+      --ds-color-accent-base-default: #10b981;
+      --ds-color-accent-base-hover: #059669;
+      --ds-color-accent-base-active: #047857;
+      --ds-color-accent-base-contrast-default: #ffffff;
 
-            /* ── Neutral ── */
-            --ds-color-neutral-background-default: #060809;
-            --ds-color-neutral-background-tinted: #0E1013;
-            --ds-color-neutral-surface-default: #111316;
-            --ds-color-neutral-surface-tinted: #1A1D21;
-            --ds-color-neutral-surface-subtle: #0E1013;
-            --ds-color-neutral-surface-hover: #1E2126;
-            --ds-color-neutral-surface-active: #24272C;
-            --ds-color-neutral-border-subtle: #2A2D31;
-            --ds-color-neutral-border-default: #3A3D41;
-            --ds-color-neutral-border-strong: #4A4D51;
+      /* ── Neutral (Deep navy-black) ── */
+      --ds-color-neutral-background-default: #0a0b14;
+      --ds-color-neutral-background-tinted: #0e1019;
+      --ds-color-neutral-surface-default: #11131c;
+      --ds-color-neutral-surface-tinted: #1f2335;
+      --ds-color-neutral-surface-subtle: #0e1019;
+      --ds-color-neutral-surface-hover: #1a1d2a;
+      --ds-color-neutral-surface-active: #242840;
+      --ds-color-neutral-border-subtle: #252838;
+      --ds-color-neutral-border-default: #2d3148;
+      --ds-color-neutral-border-strong: #3d4258;
 
-            /* ── PillTabs / PillDropdown ── */
-            --ds-color-pilltabs-bg: #1A1D21;
-            --ds-color-pilltabs-border: #3A3D41;
-            --ds-color-neutral-text-subtle: #8A8D91;
-            --ds-color-neutral-text-default: #FFFFFF;
-            --ds-color-neutral-base-default: #FFFFFF;
-            --ds-color-neutral-base-hover: #E8E8E8;
-            --ds-color-neutral-base-active: #D0D0D0;
+      /* ── PillTabs / PillDropdown ── */
+      --ds-color-pilltabs-bg: #1f2335;
+      --ds-color-pilltabs-border: #2d3148;
+      --ds-color-neutral-text-subtle: #8a8d91;
+      --ds-color-neutral-text-default: #ffffff;
+      --ds-color-neutral-base-default: #ffffff;
+      --ds-color-neutral-base-hover: #e8e8e8;
+      --ds-color-neutral-base-active: #d0d0d0;
 
-            /* ── Success ── */
-            --ds-color-success-background-default: #060809;
-            --ds-color-success-background-tinted: #0F2015;
-            --ds-color-success-surface-default: #0F2015;
-            --ds-color-success-base-default: #3D7A4A;
-            --ds-color-success-text-default: #E0F0E2;
+      /* ── Success ── */
+      --ds-color-success-background-default: #060809;
+      --ds-color-success-background-tinted: #0f2015;
+      --ds-color-success-surface-default: #0f2015;
+      --ds-color-success-base-default: #3d7a4a;
+      --ds-color-success-text-default: #e0f0e2;
 
-            /* ── Warning ── */
-            --ds-color-warning-background-default: #060809;
-            --ds-color-warning-background-tinted: #1A1508;
-            --ds-color-warning-surface-default: #1A1508;
-            --ds-color-warning-base-default: #E5A100;
-            --ds-color-warning-text-default: #FFF0CC;
+      /* ── Warning ── */
+      --ds-color-warning-background-default: #060809;
+      --ds-color-warning-background-tinted: #1a1508;
+      --ds-color-warning-surface-default: #1a1508;
+      --ds-color-warning-base-default: #e5a100;
+      --ds-color-warning-text-default: #fff0cc;
 
-            /* ── Danger ── */
-            --ds-color-danger-background-default: #060809;
-            --ds-color-danger-background-tinted: #1F0F0F;
-            --ds-color-danger-surface-default: #1F0F0F;
-            --ds-color-danger-base-default: #C63C3C;
-            --ds-color-danger-text-default: #FDE8E8;
+      /* ── Danger ── */
+      --ds-color-danger-background-default: #060809;
+      --ds-color-danger-background-tinted: #1f0f0f;
+      --ds-color-danger-surface-default: #1f0f0f;
+      --ds-color-danger-base-default: #c63c3c;
+      --ds-color-danger-text-default: #fde8e8;
 
-            /* ── Info ── */
-            --ds-color-info-background-default: #060809;
-            --ds-color-info-background-tinted: #0D1928;
-            --ds-color-info-surface-default: #0D1928;
-            --ds-color-info-base-default: #3388CC;
-            --ds-color-info-text-default: #DCEEFF;
+      /* ── Info ── */
+      --ds-color-info-background-default: #060809;
+      --ds-color-info-background-tinted: #0d1928;
+      --ds-color-info-surface-default: #0d1928;
+      --ds-color-info-base-default: #3388cc;
+      --ds-color-info-text-default: #dceeff;
 
-            /* ── Brands ── */
-            --ds-color-brand1-base-default: #4A8C4A;
-            --ds-color-brand1-text-default: #A8E0A8;
-            --ds-color-brand2-base-default: #E5A100;
-            --ds-color-brand2-text-default: #FFF0CC;
-            --ds-color-brand3-base-default: #5AA35A;
-            --ds-color-brand3-text-default: #A8E0A8;
-        }
+      /* ── Brands ── */
+      --ds-color-brand1-base-default: #4a8c4a;
+      --ds-color-brand1-text-default: #a8e0a8;
+      --ds-color-brand2-base-default: #e5a100;
+      --ds-color-brand2-text-default: #fff0cc;
+      --ds-color-brand3-base-default: #5aa35a;
+      --ds-color-brand3-text-default: #a8e0a8;
     }
+  }
 
-    /* ==========================================================================
+  /* ==========================================================================
    * SIDEBAR COMPONENT TOKENS (Dark green palette)
    * ========================================================================== */
 
-    :root,
-    [data-color-scheme="light"] {
-        --digilist-sidebar-background: #F4F0E5;
-        --digilist-sidebar-foreground: #4A5550;
-        --digilist-sidebar-primary: #2C622C;
-        --digilist-sidebar-primary-foreground: #ffffff;
-        --digilist-sidebar-accent: #EDE9DD;
-        --digilist-sidebar-accent-foreground: #2C622C;
-        --digilist-sidebar-border: #E6E1D4;
-        --digilist-sidebar-ring: #2C622C;
-    }
+  :root,
+  [data-color-scheme='light'] {
+    --digilist-sidebar-background: #f4f0e5;
+    --digilist-sidebar-foreground: #4a5550;
+    --digilist-sidebar-primary: #2c622c;
+    --digilist-sidebar-primary-foreground: #ffffff;
+    --digilist-sidebar-accent: #ede9dd;
+    --digilist-sidebar-accent-foreground: #2c622c;
+    --digilist-sidebar-border: #e6e1d4;
+    --digilist-sidebar-ring: #2c622c;
+  }
 
-    [data-color-scheme="dark"] {
-        --digilist-sidebar-background: #0E1013;
-        --digilist-sidebar-foreground: #8A8D91;
-        --digilist-sidebar-primary: #357535;
-        --digilist-sidebar-primary-foreground: #ffffff;
-        --digilist-sidebar-accent: #132213;
-        --digilist-sidebar-accent-foreground: #A8E0A8;
-        --digilist-sidebar-border: #1A1D21;
-        --digilist-sidebar-ring: #357535;
-    }
+  [data-color-scheme='dark'] {
+    --digilist-sidebar-background: #0e1013;
+    --digilist-sidebar-foreground: #8a8d91;
+    --digilist-sidebar-primary: #357535;
+    --digilist-sidebar-primary-foreground: #ffffff;
+    --digilist-sidebar-accent: #132213;
+    --digilist-sidebar-accent-foreground: #a8e0a8;
+    --digilist-sidebar-border: #1a1d21;
+    --digilist-sidebar-ring: #357535;
+  }
 
-    @media (prefers-color-scheme: dark) {
-        [data-color-scheme="auto"] {
-            --digilist-sidebar-background: #0E1013;
-            --digilist-sidebar-foreground: #8A8D91;
-            --digilist-sidebar-primary: #357535;
-            --digilist-sidebar-primary-foreground: #ffffff;
-            --digilist-sidebar-accent: #132213;
-            --digilist-sidebar-accent-foreground: #A8E0A8;
-            --digilist-sidebar-border: #1A1D21;
-            --digilist-sidebar-ring: #357535;
-        }
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme='auto'] {
+      --digilist-sidebar-background: #0e1013;
+      --digilist-sidebar-foreground: #8a8d91;
+      --digilist-sidebar-primary: #357535;
+      --digilist-sidebar-primary-foreground: #ffffff;
+      --digilist-sidebar-accent: #132213;
+      --digilist-sidebar-accent-foreground: #a8e0a8;
+      --digilist-sidebar-border: #1a1d21;
+      --digilist-sidebar-ring: #357535;
     }
+  }
 
-    /* ==========================================================================
+  /* ==========================================================================
    * CHART COLORS (Green & Gold palette)
    * ========================================================================== */
 
-    :root,
-    [data-color-scheme="light"] {
-        --digilist-chart-1: #2C622C;
-        /* Forest Green */
-        --digilist-chart-2: #E5A100;
-        /* Warm Gold */
-        --digilist-chart-3: #C63C3C;
-        /* Red (contrast) */
-        --digilist-chart-4: #3388CC;
-        /* Blue */
-        --digilist-chart-5: #4A8C4A;
-        /* Lighter Green */
-    }
+  :root,
+  [data-color-scheme='light'] {
+    --digilist-chart-1: #2c622c;
+    /* Forest Green */
+    --digilist-chart-2: #e5a100;
+    /* Warm Gold */
+    --digilist-chart-3: #c63c3c;
+    /* Red (contrast) */
+    --digilist-chart-4: #3388cc;
+    /* Blue */
+    --digilist-chart-5: #4a8c4a;
+    /* Lighter Green */
+  }
 
-    [data-color-scheme="dark"] {
-        --digilist-chart-1: #357535;
-        --digilist-chart-2: #FFCC33;
-        --digilist-chart-3: #6BBF6B;
-        --digilist-chart-4: #5AA3DB;
-        --digilist-chart-5: #A8E0A8;
-    }
+  [data-color-scheme='dark'] {
+    --digilist-chart-1: #357535;
+    --digilist-chart-2: #ffcc33;
+    --digilist-chart-3: #6bbf6b;
+    --digilist-chart-4: #5aa3db;
+    --digilist-chart-5: #a8e0a8;
+  }
 
-    @media (prefers-color-scheme: dark) {
-        [data-color-scheme="auto"] {
-            --digilist-chart-1: #357535;
-            --digilist-chart-2: #FFCC33;
-            --digilist-chart-3: #6BBF6B;
-            --digilist-chart-4: #5AA3DB;
-            --digilist-chart-5: #A8E0A8;
-        }
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme='auto'] {
+      --digilist-chart-1: #357535;
+      --digilist-chart-2: #ffcc33;
+      --digilist-chart-3: #6bbf6b;
+      --digilist-chart-4: #5aa3db;
+      --digilist-chart-5: #a8e0a8;
     }
+  }
 
-    /* ==========================================================================
+  /* ==========================================================================
    * HAMAR-SPECIFIC: Zero border-radius, flat brutalist aesthetic
    * No rounding on any element — sharp, architectural feel
    * ========================================================================== */
 
-    :root,
-    [data-color-scheme="light"] {
-        /* Zero border radius: sharp geometric edges */
-        --ds-border-radius-sm: 0px;
-        --ds-border-radius-md: 0px;
-        --ds-border-radius-lg: 0px;
-        --ds-border-radius-xl: 0px;
-        /* Keep full for pills/avatars */
-        /* --ds-border-radius-full: 9999px; */
-    }
+  :root,
+  [data-color-scheme='light'] {
+    /* Zero border radius: sharp geometric edges */
+    --ds-border-radius-sm: 0px;
+    --ds-border-radius-md: 0px;
+    --ds-border-radius-lg: 0px;
+    --ds-border-radius-xl: 0px;
+    /* Keep full for pills/avatars */
+    /* --ds-border-radius-full: 9999px; */
+  }
+
+  /* ==========================================================================
+   * DIGIPICKS PREMIUM TOKENS — shadows, gradients, opt-in card radius
+   * Used by the home page and any surface that wants the modern whop-energy look.
+   * These extend the DS; they do not override existing tokens.
+   * ========================================================================== */
+
+  :root {
+    /* Opt-in card radius for modern surfaces (hamar base radii remain 0) */
+    --ds-border-radius-card: 14px;
+
+    /* Elevation shadows — tuned for deep navy-black dark surfaces */
+    --ds-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --ds-shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+    --ds-shadow-lg: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 4px 12px -4px rgba(0, 0, 0, 0.5);
+    --ds-shadow-xl: 0 24px 64px -12px rgba(0, 0, 0, 0.7), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+
+    /* Accent glow — use on hover/focus for premium feel */
+    --ds-shadow-glow-accent: 0 0 32px -8px color-mix(in srgb, var(--ds-color-accent-base-default) 40%, transparent);
+    --ds-shadow-glow-accent-strong: 0 0 48px -8px
+      color-mix(in srgb, var(--ds-color-accent-base-default) 55%, transparent);
+
+    /* Gradient utility tokens for hero + card hover effects */
+    --ds-gradient-hero: radial-gradient(
+      ellipse at top,
+      color-mix(in srgb, var(--ds-color-accent-base-default) 18%, transparent) 0%,
+      transparent 60%
+    );
+    --ds-gradient-card-hover: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--ds-color-accent-base-default) 8%, transparent) 0%,
+      transparent 100%
+    );
+  }
 }

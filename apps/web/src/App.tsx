@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, Outlet, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
@@ -39,6 +39,7 @@ import { CreatorProfilePage } from '@/routes/creator-profile';
 import { PicksFeedPage } from '@/routes/picks-feed';
 import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
+import { StyleGuidePage } from '@/routes/style-guide';
 import { CreatorsPage } from '@/routes/creators';
 import { CreatorApplyPage } from '@/routes/creator-apply';
 import { PushNotificationOptIn } from '@/components/PushNotificationOptIn';
@@ -132,25 +133,6 @@ function MainLayout() {
         }
         actions={
           <HeaderActions spacing="16px">
-            <nav className="header-nav-links">
-              <Link to="/picks" className="header-nav-link">
-                {t('nav.picks', 'Picks')}
-              </Link>
-              {isLoggedIn && (
-                <Link to="/tracker" className="header-nav-link">
-                  {t('nav.tracker', 'Tracker')}
-                </Link>
-              )}
-              <Link to="/pricing" className="header-nav-link">
-                {t('nav.pricing', 'Pricing')}
-              </Link>
-              <Link to="/blog" className="header-nav-link">
-                {t('nav.blog', 'Blog')}
-              </Link>
-              <Link to="/about" className="header-nav-link">
-                {t('nav.about', 'About')}
-              </Link>
-            </nav>
             <HeaderLanguageSwitch
               language={locale}
               onSwitch={(lang) => setLocale(lang as 'nb' | 'en')}
@@ -269,6 +251,7 @@ function ThemedApp() {
                       <Route path="/picks" element={<PicksFeedPage />} />
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
+                      <Route path="/style-guide" element={<StyleGuidePage />} />
                       <Route path="/creators" element={<CreatorsPage />} />
                       <Route path="/creator-apply" element={<CreatorApplyPage />} />
 

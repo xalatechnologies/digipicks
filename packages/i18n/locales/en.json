@@ -605,8 +605,8 @@
       }
     },
     "header": {
-      "brandName": "Xala Foundation",
-      "brandTagline": "SaaS Platform Core"
+      "brandName": "DigiPicks",
+      "brandTagline": "Premium sports picks"
     },
     "magicLink": {
       "invalidToken": "Invalid link - missing token",
