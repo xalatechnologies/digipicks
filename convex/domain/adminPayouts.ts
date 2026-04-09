@@ -75,6 +75,7 @@ export const setFeeConfig = mutation({
         updatedBy: v.id("users"),
     },
     handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.updatedBy);
         const now = Date.now();
 
         // Deactivate existing active configs
