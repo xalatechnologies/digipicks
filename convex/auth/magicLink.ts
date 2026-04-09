@@ -206,7 +206,7 @@ export const findOrCreateUser = internalMutation({
         if (!user) {
             // Create new user
             isNewUser = true;
-            const initialRole = appId === "backoffice" ? "owner" : "member";
+            const initialRole = appId === "backoffice" ? "creator" : "subscriber";
             const userId = await ctx.db.insert("users", {
                 email,
                 role: initialRole,
@@ -216,13 +216,13 @@ export const findOrCreateUser = internalMutation({
             });
             user = await ctx.db.get(userId);
         } else {
-            // Ensure backoffice users have owner access; otherwise only update login timestamp.
+            // Ensure backoffice users have creator access; otherwise only update login timestamp.
             const patch: Partial<{
                 role: string;
                 lastLoginAt: number;
             }> = { lastLoginAt: Date.now() };
-            if (appId === "backoffice" && user.role !== "owner" && user.role !== "admin") {
-                patch.role = "owner";
+            if (appId === "backoffice" && user.role !== "creator" && user.role !== "admin") {
+                patch.role = "creator";
             }
             await ctx.db.patch(user._id, patch);
             user = await ctx.db.get(user._id);

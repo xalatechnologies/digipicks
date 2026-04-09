@@ -44,9 +44,9 @@ export const platformStats = query({
             (u: any) => u.status === "active"
         ).length;
 
-        // Count owners
-        const owners = allUsers.filter(
-            (u: any) => u.role === "owner"
+        // Count creators
+        const creators = allUsers.filter(
+            (u: any) => u.role === "creator"
         ).length;
 
         // Count super admins
@@ -64,7 +64,7 @@ export const platformStats = query({
             users: {
                 total: allUsers.length,
                 active: activeUsers,
-                owners,
+                creators,
                 superAdmins,
             },
         };

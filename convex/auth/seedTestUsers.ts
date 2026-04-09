@@ -12,152 +12,153 @@ import { mutation } from "../_generated/server";
 
 /**
  * Test users for Vipps and BankID authentication testing.
- * 
+ *
  * Vipps Login: Use phone number to authenticate
  * BankID Login: Use NIN + password (qwer1234) + OTP (otp)
- * 
- * Tenant assignment rules:
- * - Backoffice users (admin, saksbehandler, manager, aktør): get tenantId
- * - Public users (bruker): NO tenantId - they use web/minside with public hooks
- * - Superadmin/monitoring: NO tenantId - they see all tenants
+ *
+ * DigiPicks role model:
+ * - superadmin: Platform ops, sees all tenants (NO tenantId)
+ * - admin: Tenant-level admin, manages creators/settings (gets tenantId)
+ * - creator: Publishes betting picks, manages subscribers (gets tenantId)
+ * - subscriber: Subscribes to creators, consumes picks (NO tenantId)
  */
 const TEST_USERS = [
     // ============================================================================
     // Vipps test users (phone → NIN mapping)
     // ============================================================================
     {
-        email: "ola.hansen@kommune.no",
+        email: "subscriber1@digipicks.test",
         nin: "24014005907",
         phoneNumber: "95303914",
-        role: "user",
-        description: "Bruker",
-        demoToken: "demo-citizen-001",
-        needsTenant: false, // Public user - web/minside only
+        role: "subscriber",
+        description: "Subscriber (Vipps)",
+        demoToken: "demo-subscriber-001",
+        needsTenant: false, // Subscriber - web app only
     },
     {
-        email: "admin@demo.kommune.no",
+        email: "admin@digipicks.test",
         nin: "19075716691",
         phoneNumber: "93279034",
         role: "admin",
         description: "Admin",
         demoToken: "demo-admin-001",
-        needsTenant: true, // Backoffice user
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "staff@demo.kommune.no",
+        email: "creator1@digipicks.test",
         nin: "15055200413",
         phoneNumber: "46637228",
-        role: "saksbehandler",
-        description: "Saksbehandler",
-        demoToken: "demo-staff-001",
-        needsTenant: true, // Backoffice user
+        role: "creator",
+        description: "Creator (Vipps)",
+        demoToken: "demo-creator-001",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "leder@test-org.no",
+        email: "admin2@digipicks.test",
         nin: "25059995475",
         phoneNumber: "40825303",
         role: "admin",
-        description: "Organisasjon",
+        description: "Admin 2",
         demoToken: "org-admin-001",
-        needsTenant: true, // Backoffice user
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "aktor-admin@test.saas.no",
+        email: "creator2@digipicks.test",
         nin: "01028731015",
         phoneNumber: "91138813",
-        role: "admin",
-        description: "Aktør Admin",
-        needsTenant: true, // Backoffice user
+        role: "creator",
+        description: "Creator 2",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "aktor-utleier@test.saas.no",
+        email: "creator3@digipicks.test",
         nin: "21090295842",
         phoneNumber: "98393410",
-        role: "manager",
-        description: "Aktør Utleier",
-        needsTenant: true, // Backoffice user
+        role: "creator",
+        description: "Creator 3",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "aktor-saksbehandler@test.saas.no",
+        email: "subscriber2@digipicks.test",
         nin: "09013039841",
         phoneNumber: "47030508",
-        role: "saksbehandler",
-        description: "Aktør Saksbehandler",
-        needsTenant: true, // Backoffice user
+        role: "subscriber",
+        description: "Subscriber 2 (Vipps)",
+        needsTenant: false, // Subscriber - web app only
     },
 
     // ============================================================================
     // BankID-only test users (NIN mapping, password: qwer1234, OTP: otp)
     // ============================================================================
     {
-        email: "bankid-bruker@test.saas.no",
+        email: "subscriber3@digipicks.test",
         nin: "15860771346",
-        role: "user",
-        description: "BankID Bruker",
-        needsTenant: false, // Public user - web/minside only
+        role: "subscriber",
+        description: "Subscriber (BankID)",
+        needsTenant: false, // Subscriber - web app only
     },
     {
-        email: "bankid-saksbehandler@test.saas.no",
+        email: "bankid-creator@digipicks.test",
         nin: "06881271913",
-        role: "saksbehandler",
-        description: "BankID Saksbehandler",
-        needsTenant: true, // Backoffice user
+        role: "creator",
+        description: "Creator (BankID)",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "bankid-admin@test.saas.no",
+        email: "bankid-admin@digipicks.test",
         nin: "30916326773",
         role: "admin",
-        description: "BankID Admin",
-        needsTenant: true, // Backoffice user
+        description: "Admin (BankID)",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "bankid-org@test.saas.no",
+        email: "bankid-admin2@digipicks.test",
         nin: "19860324957",
         role: "admin",
-        description: "BankID Organisasjon",
-        needsTenant: true, // Backoffice user
+        description: "Admin 2 (BankID)",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "bankid-aktor-admin@test.saas.no",
+        email: "bankid-creator2@digipicks.test",
         nin: "03852358504",
-        role: "admin",
-        description: "BankID Aktør Admin",
-        needsTenant: true, // Backoffice user
+        role: "creator",
+        description: "Creator 2 (BankID)",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "bankid-aktor-utleier@test.saas.no",
+        email: "bankid-creator3@digipicks.test",
         nin: "13891199915",
-        role: "manager",
-        description: "BankID Aktør Utleier",
-        needsTenant: true, // Backoffice user
+        role: "creator",
+        description: "Creator 3 (BankID)",
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "bankid-aktor-saksbehandler@test.saas.no",
+        email: "bankid-subscriber@digipicks.test",
         nin: "16837147593",
-        role: "saksbehandler",
-        description: "BankID Aktør Saksbehandler",
-        needsTenant: true, // Backoffice user
+        role: "subscriber",
+        description: "Subscriber 2 (BankID)",
+        needsTenant: false, // Subscriber - web app only
     },
 
     // ============================================================================
     // Demo/Password login users
     // ============================================================================
     {
-        email: "demo@platform.no",
+        email: "demo@digipicks.test",
         role: "admin",
         description: "Platform Demo Admin",
         demoToken: "platform-demo-001",
-        needsTenant: true, // Backoffice user
+        needsTenant: true, // Dashboard user
     },
     {
-        email: "monitoring@platform.no",
+        email: "monitoring@digipicks.test",
         role: "superadmin",
         description: "Monitoring User",
         demoToken: "monitoring123",
         needsTenant: false, // Superadmin - sees all tenants
     },
     {
-        email: "saas@platform.no",
+        email: "saas@digipicks.test",
         role: "superadmin",
         description: "SaaS Admin",
         demoToken: "saas-admin-001",
@@ -199,8 +200,8 @@ export const associateUsersWithTenant = mutation({
  * Run: npx convex run auth/seedTestUsers:seedNinData
  * 
  * Tenant assignment:
- * - needsTenant=true: backoffice users (admin, saksbehandler, manager) get tenantId
- * - needsTenant=false: public users (bruker) and superadmins get NO tenantId
+ * - needsTenant=true: dashboard users (admin, creator) get tenantId
+ * - needsTenant=false: subscribers and superadmins get NO tenantId
  */
 export const seedNinData = mutation({
     args: {},
@@ -216,10 +217,9 @@ export const seedNinData = mutation({
             switch (role) {
                 case "superadmin": return "superadmin";
                 case "admin": return "admin";
-                case "manager": return "manager";
-                case "saksbehandler": return "member"; // case handler
-                case "user": return "member";
-                default: return "member";
+                case "creator": return "creator";
+                case "subscriber": return "subscriber";
+                default: return "subscriber";
             }
         };
 

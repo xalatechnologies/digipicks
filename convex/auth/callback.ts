@@ -158,8 +158,8 @@ export const upsertUser = internalMutation({
             };
             if (nin && !existingUser.nin) patch.nin = nin;
             if (phoneNumber) patch.phoneNumber = phoneNumber;
-            if (shouldProvisionBackoffice && existingUser.role !== "owner" && existingUser.role !== "admin") {
-                patch.role = "owner";
+            if (shouldProvisionBackoffice && existingUser.role !== "creator" && existingUser.role !== "admin") {
+                patch.role = "creator";
             }
 
             await ctx.db.patch(existingUser._id, patch);
@@ -184,7 +184,7 @@ export const upsertUser = internalMutation({
 
         // 3. Create new public user (no tenant — web/minside users see everything;
         //    backoffice tenant membership is managed explicitly via admin tools)
-        const initialRole = shouldProvisionBackoffice ? "owner" : "member";
+        const initialRole = shouldProvisionBackoffice ? "creator" : "subscriber";
         const userId = await ctx.db.insert("users", {
             email,
             name,
