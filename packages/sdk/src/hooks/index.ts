@@ -771,7 +771,15 @@ export { usePickFeedFollowing, usePickFeedForYou } from './use-pick-feed';
 export type { FeedPick, FeedParams } from './use-pick-feed';
 
 // Pick Tracker (DigiPicks — personal P/L dashboard, tail/untail)
-export { useMyTailedPicks, useMyTrackerStats, useIsTailed, useTailPick, useUntailPick } from './use-pick-tracker';
+export {
+    useMyTailedPicks,
+    useMyTrackerStats,
+    useIsTailed,
+    useTailPick,
+    useUntailPick,
+    useTrackPickView,
+    usePickViewCount,
+} from './use-pick-tracker';
 
 export type { TailedPick, SportBreakdown, PersonalTrackerStats } from './use-pick-tracker';
 

@@ -71,10 +71,15 @@ export default defineSchema({
 
     // Scheduling
     eventDate: v.optional(v.number()), // When the event starts
+    scheduledPublishAt: v.optional(v.number()), // Epoch ms — auto-publish draft at this time
+    publishedAt: v.optional(v.number()), // When the pick was actually published
     status: v.string(), // "draft", "published", "archived"
 
     // Metadata
     metadata: v.optional(v.any()),
+
+    // View tracking
+    viewCount: v.optional(v.number()), // Denormalized view count, default 0
 
     // Moderation fields
     moderationStatus: v.optional(v.string()), // "clean", "flagged", "under_review", "approved", "rejected", "hidden"
@@ -112,4 +117,18 @@ export default defineSchema({
     .index('by_pick', ['pickId'])
     .index('by_reporter_pick', ['reporterId', 'pickId'])
     .index('by_tenant_status', ['tenantId', 'status']),
+
+  /**
+   * Pick views — deduplicated view tracking per user per pick.
+   * One view per userId+pickId pair (enforced at mutation time).
+   */
+  pickViews: defineTable({
+    tenantId: v.string(),
+    pickId: v.string(),
+    userId: v.string(), // User who viewed the pick
+    viewedAt: v.number(),
+  })
+    .index('by_user_pick', ['userId', 'pickId'])
+    .index('by_pick', ['pickId'])
+    .index('by_tenant', ['tenantId']),
 });

@@ -187,3 +187,45 @@ export function useUntailPick() {
         error: null,
     };
 }
+
+// ============================================================================
+// View Tracking
+// ============================================================================
+
+/**
+ * Track a view on a pick. Deduplicates per user — safe to call on every page view.
+ * Connected to: api.domain.picks.trackView
+ */
+export function useTrackPickView() {
+    const mutation = useMutation(api.domain.picks.trackView);
+
+    return {
+        mutate: (input: {
+            tenantId: Id<"tenants">;
+            userId: Id<"users">;
+            pickId: string;
+        }) => mutation(input),
+        mutateAsync: async (input: {
+            tenantId: Id<"tenants">;
+            userId: Id<"users">;
+            pickId: string;
+        }) => mutation(input),
+        isLoading: false,
+        error: null,
+    };
+}
+
+/**
+ * Get the view count for a specific pick.
+ * Connected to: api.domain.picks.getViewCount
+ */
+export function usePickViewCount(pickId: string | undefined) {
+    const data = useQuery(
+        api.domain.picks.getViewCount,
+        pickId ? { pickId } : "skip"
+    );
+
+    const isLoading = pickId !== undefined && data === undefined;
+
+    return { viewCount: data ?? 0, isLoading, error: null };
+}
