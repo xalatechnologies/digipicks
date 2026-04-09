@@ -40,8 +40,9 @@ import { PickTrackerPage } from '@/routes/pick-tracker';
 import LeaderboardPage from '@/routes/leaderboard';
 import { StyleGuidePage } from '@/routes/style-guide';
 import { CreatorDiscoveryPage } from '@/routes/creator-discovery';
-import { ApplyPage } from '@/routes/apply';
+import { CreatorApplyPage } from '@/routes/creator-apply';
 import { SubscriberPerformancePage } from '@/routes/subscriber-performance';
+import { SavedPicksPage } from '@/routes/saved-picks';
 import { CheckoutSuccessPage } from '@/routes/checkout-success';
 import { CheckoutCancelledPage } from '@/routes/checkout-cancelled';
 import { PushNotificationOptIn } from '@/components/PushNotificationOptIn';
@@ -148,6 +149,16 @@ function MainLayout() {
         }
         actions={
           <HeaderActions spacing="16px">
+            <nav className="header-nav-links">
+              <Link to="/creators" className="header-nav-link">{t('nav.creators', 'Creators')}</Link>
+              <Link to="/picks" className="header-nav-link">{t('nav.picks', 'Picks')}</Link>
+              {isLoggedIn && <Link to="/saved" className="header-nav-link">{t('nav.saved', 'Saved')}</Link>}
+              {isLoggedIn && <Link to="/tracker" className="header-nav-link">{t('nav.tracker', 'Tracker')}</Link>}
+              {isLoggedIn && <Link to="/subscriber/performance" className="header-nav-link">{t('nav.performance', 'Performance')}</Link>}
+              <Link to="/pricing" className="header-nav-link">{t('nav.pricing', 'Pricing')}</Link>
+              <Link to="/blog" className="header-nav-link">{t('nav.blog', 'Blog')}</Link>
+              <Link to="/about" className="header-nav-link">{t('nav.about', 'About')}</Link>
+            </nav>
             <HeaderLanguageSwitch
               language={locale}
               onSwitch={(lang) => setLocale(lang as 'nb' | 'en')}
@@ -265,6 +276,7 @@ function ThemedApp() {
                       <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
                       <Route path="/picks" element={<PicksFeedPage />} />
                       <Route path="/picks/:id" element={<PickDetailPage />} />
+                      <Route path="/saved" element={<SavedPicksPage />} />
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
                       <Route path="/style-guide" element={<StyleGuidePage />} />
@@ -272,7 +284,8 @@ function ThemedApp() {
                       <Route path="/subscriber/performance" element={<SubscriberPerformancePage />} />
                       <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                       <Route path="/checkout/cancelled" element={<CheckoutCancelledPage />} />
-                      <Route path="/apply" element={<ApplyPage />} />
+                      <Route path="/apply" element={<CreatorApplyPage />} />
+                      <Route path="/creator-apply" element={<CreatorApplyPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}
                       <Route path="/min-side" element={<MinsideRedirect />} />
