@@ -367,7 +367,7 @@ export function LoginPage(): React.ReactElement {
     },
   ];
 
-  const integrations = ['BankID', 'Vipps', 'Visma', 'RCO', 'ISO 27001 / 27701'];
+  const integrations = ['Stripe', 'Discord', 'Google', 'PCI DSS'];
 
   const privacyUrl = import.meta.env.VITE_PRIVACY_URL || '/privacy';
   const termsUrl = import.meta.env.VITE_TERMS_URL || '/terms';
@@ -384,8 +384,8 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName={import.meta.env.VITE_PLATFORM_NAME || 'Xala Foundation'}
-      brandTagline="ENKEL SAAS"
+      brandName={import.meta.env.VITE_PLATFORM_NAME || 'DigiPicks'}
+      brandTagline={import.meta.env.VITE_PLATFORM_TAGLINE || 'PREMIUM SPORTS PICKS'}
       logoHref="/"
       title={t('web.login.title')}
       panelTitle={t('web.login.panelTitle')}
