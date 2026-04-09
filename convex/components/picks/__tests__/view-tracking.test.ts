@@ -121,6 +121,24 @@ describe('picks component — trackView', () => {
       }),
     ).rejects.toThrow('Pick not found');
   });
+
+  it('throws when tracking a view with a mismatched tenantId (cross-tenant isolation)', async () => {
+    const t = setup();
+    const { id: pickId } = await createPick(t);
+
+    // Attempt to track a view using a different tenant's ID
+    await expect(
+      t.mutation(api.functions.trackView, {
+        tenantId: 'other-tenant-999',
+        pickId,
+        userId: USER_A,
+      }),
+    ).rejects.toThrow('Pick not found');
+
+    // Verify viewCount was NOT incremented
+    const viewCount = await t.query(api.functions.getViewCount, { pickId });
+    expect(viewCount).toBe(0);
+  });
 });
 
 // ---------------------------------------------------------------------------

@@ -125,28 +125,46 @@ export const processScheduledPickPublishing = internalMutation({
 
         let published = 0;
         for (const pick of scheduledPicks) {
-            await ctx.runMutation(
-                components.picks.functions.update,
-                {
-                    id: pick._id,
-                    status: "published",
-                    publishedAt: now,
-                    scheduledPublishAt: undefined,
-                }
-            );
-            published++;
+            try {
+                await ctx.runMutation(
+                    components.picks.functions.update,
+                    {
+                        id: pick._id,
+                        status: "published",
+                        publishedAt: now,
+                        scheduledPublishAt: undefined,
+                    }
+                );
+                published++;
 
-            // Emit event so subscriber notifications fire
-            await emitEvent(ctx, "picks.pick.created", pick.tenantId, "picks", {
-                pickId: pick._id as string,
-                creatorId: pick.creatorId,
-                event: pick.event,
-                sport: pick.sport,
-                selection: pick.selection,
-                scheduledPublish: true,
-            });
+                // Audit trail for auto-published picks
+                await ctx.runMutation(
+                    components.audit.functions.create,
+                    {
+                        tenantId: pick.tenantId,
+                        action: "auto_published",
+                        entityType: "pick",
+                        entityId: pick._id as string,
+                        userId: "system",
+                        sourceComponent: "picks",
+                        metadata: { source: "cron", scheduledPublishAt: pick.scheduledPublishAt },
+                    }
+                );
 
-            console.log(`Cron: auto-published scheduled pick "${pick.event}" (${pick._id})`);
+                // Emit event so subscriber notifications fire
+                await emitEvent(ctx, "picks.pick.created", pick.tenantId, "picks", {
+                    pickId: pick._id as string,
+                    creatorId: pick.creatorId,
+                    event: pick.event,
+                    sport: pick.sport,
+                    selection: pick.selection,
+                    scheduledPublish: true,
+                });
+
+                console.log(`Cron: auto-published scheduled pick "${pick.event}" (${pick._id})`);
+            } catch (error) {
+                console.error(`Cron: failed to auto-publish pick ${pick._id}:`, error);
+            }
         }
 
         if (published > 0) {

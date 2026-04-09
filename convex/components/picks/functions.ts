@@ -2036,9 +2036,12 @@ export const trackView = mutation({
   },
   returns: v.object({ alreadyViewed: v.boolean() }),
   handler: async (ctx, { tenantId, pickId, userId }) => {
-    // Verify the pick exists
+    // Verify the pick exists and belongs to this tenant
     const pick = await ctx.db.get(pickId as any);
     if (!pick) {
+      throw new Error('Pick not found');
+    }
+    if ((pick as any).tenantId !== tenantId) {
       throw new Error('Pick not found');
     }
 
