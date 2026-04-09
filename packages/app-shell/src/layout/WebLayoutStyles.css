@@ -22,7 +22,7 @@
 }
 
 /* Fluid containers bypass the max-width constraint */
-.ds-container[data-fluid="true"] {
+.ds-container[data-fluid='true'] {
   max-width: none !important;
 }
 
@@ -67,7 +67,10 @@
 .themed-app-root *,
 .themed-app-root *::before,
 .themed-app-root *::after {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease;
 }
 
 /* Listing stagger animation (from web listings) */
@@ -112,11 +115,11 @@
   }
 }
 
-.listing-details-layout>div {
+.listing-details-layout > div {
   animation: fadeInUp 0.5s ease-out forwards;
 }
 
-[role="tabpanel"]>div {
+[role='tabpanel'] > div {
   animation: fadeInUp 0.3s ease-out;
 }
 
@@ -124,7 +127,9 @@
 .map-widget,
 .opening-hours-widget,
 .booking-widget-placement {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .contact-widget:hover,
@@ -162,7 +167,7 @@
     display: none !important;
   }
 
-  .ds-tabs [role="tab"] {
+  .ds-tabs [role='tab'] {
     padding: var(--ds-size-3) var(--ds-size-2) !important;
     font-size: var(--ds-font-size-xs) !important;
   }
@@ -176,19 +181,29 @@
 }
 
 .header-nav-link {
-  color: var(--ds-color-neutral-text-subtle, #666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ds-color-neutral-text-default);
   text-decoration: none;
-  font-size: var(--ds-font-size-sm, 14px);
-  font-weight: var(--ds-font-weight-medium, 500);
-  padding: var(--ds-size-2, 8px) var(--ds-size-3, 12px);
-  border-radius: var(--ds-border-radius-md, 8px);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border-radius: var(--digilist-radius-md, 8px);
+  background-color: var(--ds-color-neutral-surface-default);
+  box-shadow: var(--ds-shadow-sm);
+  transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .header-nav-link:hover {
-  color: var(--ds-color-neutral-text-default, #333);
-  background-color: var(--ds-color-neutral-surface-hover, #f5f5f5);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.header-nav-link.active,
+.header-nav-link[aria-current='page'] {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
 }
 
 @media (max-width: 767px) {

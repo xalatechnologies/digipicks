@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, Outlet, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Outlet, Navigate, NavLink } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
@@ -131,19 +131,19 @@ function MainLayout() {
         }
         search={
           <nav className="header-nav-links" aria-label={t('nav.mainNav', 'Main navigation')}>
-            <Link className="header-nav-link" to="/">
+            <NavLink className="header-nav-link" to="/" end>
               {t('nav.home', 'Home')}
-            </Link>
-            <Link className="header-nav-link" to="/creators">
+            </NavLink>
+            <NavLink className="header-nav-link" to="/creators">
               {t('nav.creators', 'Creators')}
-            </Link>
-            <Link className="header-nav-link" to="/events">
+            </NavLink>
+            <NavLink className="header-nav-link" to="/events">
               {t('nav.events', 'Events')}
-            </Link>
+            </NavLink>
             {isLoggedIn && (
-              <Link className="header-nav-link" to="/picks">
+              <NavLink className="header-nav-link" to="/picks">
                 {t('nav.feeds', 'Feeds')}
-              </Link>
+              </NavLink>
             )}
           </nav>
         }

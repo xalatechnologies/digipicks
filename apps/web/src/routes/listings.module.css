@@ -6,11 +6,16 @@
 
 .hero {
   position: relative;
-  padding: clamp(0.5rem, calc(9.7vh - 60px), 3rem) var(--ds-size-4) var(--ds-size-14);
+  padding: calc(clamp(0.5rem, calc(9.7vh - 60px), 3rem) + 40px) var(--ds-size-4) var(--ds-size-14);
   text-align: center;
   background:
     var(--ds-gradient-hero),
-    linear-gradient(180deg, var(--ds-color-neutral-background-default) 0%, var(--ds-color-neutral-surface-default) 100%);
+    radial-gradient(
+      ellipse at bottom center,
+      color-mix(in srgb, var(--ds-color-brand2-base-default) 18%, transparent) 0%,
+      transparent 55%
+    ),
+    var(--ds-color-neutral-background-default);
   overflow: hidden;
   scroll-margin-top: var(--ds-size-8);
 }
@@ -36,11 +41,11 @@
 }
 
 .heroGlow2 {
-  bottom: -220px;
-  right: -160px;
+  bottom: -80px;
+  right: -120px;
   background: radial-gradient(circle, var(--ds-color-brand2-base-default) 0%, transparent 70%);
   animation: glowDrift 18s ease-in-out infinite reverse;
-  opacity: 0.35;
+  opacity: 0.5;
 }
 
 @keyframes glowDrift {

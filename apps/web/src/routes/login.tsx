@@ -18,9 +18,8 @@ import {
   LoginOption,
   LoginDivider,
   DemoLoginGrid,
-  IdPortenIcon,
-  MicrosoftIcon,
-  VippsIcon,
+  GoogleIcon,
+  FacebookIcon,
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
@@ -33,6 +32,17 @@ import {
   Card,
   Stack,
 } from '@digipicks/ds';
+
+function DiscordIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-label="Discord" role="img">
+      <path
+        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.044.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"
+        fill="#5865F2"
+      />
+    </svg>
+  );
+}
 import type { DemoUser } from '@digipicks/ds';
 import { useAuth } from '@digipicks/app-shell';
 import { useEmailCode } from '@digipicks/sdk';
@@ -317,7 +327,7 @@ export function LoginPage(): React.ReactElement {
     try {
       await requestCode();
     } catch (err) {
-      setLoginError(err instanceof Error ? err.message : 'Kunne ikke sende kode');
+      setLoginError(err instanceof Error ? err.message : 'Could not send code');
     }
   };
 
@@ -336,7 +346,7 @@ export function LoginPage(): React.ReactElement {
     try {
       await resendCode();
     } catch (err) {
-      setLoginError(err instanceof Error ? err.message : 'Kunne ikke sende ny kode');
+      setLoginError(err instanceof Error ? err.message : 'Could not resend code');
     }
   };
 
@@ -345,7 +355,7 @@ export function LoginPage(): React.ReactElement {
     try {
       await signInAsDemo({ role: roleKey, tenantId: env.tenantId || undefined });
     } catch (err) {
-      setLoginError(err instanceof Error ? err.message : 'Demo-innlogging feilet');
+      setLoginError(err instanceof Error ? err.message : 'Demo login failed');
     }
   };
 
@@ -413,7 +423,7 @@ export function LoginPage(): React.ReactElement {
                   fontWeight: 500,
                 }}
               >
-                Tidligere brukte e-poster
+                {t('web.login.recentEmails', 'Recent emails')}
               </Paragraph>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {rememberedEmails.map((savedEmail) => (
@@ -480,30 +490,30 @@ export function LoginPage(): React.ReactElement {
 
           {/* OAuth Options — primary login methods */}
           <LoginOption
-            icon={<VippsIcon />}
-            title={t('web.login.vippsTitle')}
-            description={t('web.login.vippsDesc')}
-            onClick={() => signInWithOAuth('vipps')}
+            icon={<GoogleIcon />}
+            title={t('web.login.googleTitle', 'Continue with Google')}
+            description={t('web.login.googleDesc', 'Sign in with your Google account')}
+            onClick={() => signInWithOAuth('google')}
           />
           <LoginOption
-            icon={<IdPortenIcon />}
-            title={t('auth.idporten')}
-            description={t('auth.idportenDesc')}
-            onClick={() => signInWithOAuth('idporten')}
+            icon={<FacebookIcon />}
+            title={t('web.login.facebookTitle', 'Continue with Facebook')}
+            description={t('web.login.facebookDesc', 'Sign in with your Facebook account')}
+            onClick={() => signInWithOAuth('facebook')}
           />
           <LoginOption
-            icon={<MicrosoftIcon />}
-            title={t('auth.microsoft')}
-            description={t('auth.microsoftDesc')}
-            onClick={() => signInWithOAuth('microsoft')}
+            icon={<DiscordIcon />}
+            title={t('web.login.discordTitle', 'Continue with Discord')}
+            description={t('web.login.discordDesc', 'Sign in with your Discord account')}
+            onClick={() => signInWithOAuth('discord')}
           />
 
           {/* Email login option — opens the email form */}
-          <LoginDivider text="eller" />
+          <LoginDivider text={t('common.or', 'or')} />
           <LoginOption
             icon={<MailIcon size={20} />}
-            title="Logg inn med e-post"
-            description="Vi sender en engangskode til e-postadressen din"
+            title={t('web.login.emailTitle', 'Sign in with email')}
+            description={t('web.login.emailDesc', 'We send a one-time code to your email address')}
             onClick={() => setShowEmailForm(true)}
           />
         </>
@@ -516,20 +526,20 @@ export function LoginPage(): React.ReactElement {
         <>
           <Card style={{ padding: 'var(--ds-size-5)' }}>
             <Heading level={3} data-size="xs" style={{ margin: '0 0 var(--ds-size-1)' }}>
-              Logg inn med e-post
+              {t('web.login.emailFormTitle', 'Sign in with email')}
             </Heading>
             <Paragraph
               data-size="sm"
               style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: '0 0 var(--ds-size-4)' }}
             >
-              Vi sender en innloggingskode til e-postadressen din.
+              {t('web.login.emailFormDesc', 'We send a one-time code to your email address.')}
             </Paragraph>
             <form onSubmit={handleEmailSubmit}>
               <Stack direction="vertical" spacing="var(--ds-size-4)">
                 <Textfield
                   type="email"
-                  label="E-postadresse"
-                  placeholder="Skriv inn e-postadressen din"
+                  label={t('web.login.emailLabel', 'Email address')}
+                  placeholder={t('web.login.emailPlaceholder', 'Enter your email address')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -543,35 +553,19 @@ export function LoginPage(): React.ReactElement {
                   loading={isRequesting}
                   style={{ width: '100%' }}
                 >
-                  {isRequesting ? 'Sender kode...' : 'Fortsett'}
+                  {isRequesting ? t('web.login.sendingCode', 'Sending code...') : t('web.login.continue', 'Continue')}
                 </Button>
               </Stack>
             </form>
           </Card>
-          <button
-            type="button"
+          <Button
+            variant="tertiary"
+            data-size="sm"
             onClick={() => setShowEmailForm(false)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--ds-color-neutral-text-default)',
-              fontWeight: 600,
-              fontSize: '14px',
-              padding: '12px 0',
-              textDecoration: 'none',
-              display: 'block',
-              margin: '0 auto',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.textDecoration = 'underline';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.textDecoration = 'none';
-            }}
+            style={{ display: 'block', margin: '0 auto' }}
           >
-            ← Tilbake til alle innloggingsmetoder
-          </button>
+            ← {t('web.login.backToOptions', 'Back to all sign-in options')}
+          </Button>
         </>
       )}
 
@@ -614,7 +608,7 @@ export function LoginPage(): React.ReactElement {
               letterSpacing: '-0.01em',
             }}
           >
-            Innloggingskode sendt
+            {t('web.login.codeSent', 'Check your email')}
           </Heading>
 
           {/* Subtitle */}
@@ -626,7 +620,7 @@ export function LoginPage(): React.ReactElement {
               textAlign: 'center',
             }}
           >
-            Skriv inn koden vi sendte til{' '}
+            {t('web.login.codeInstructions', 'Enter the code we sent to')}{' '}
             <strong style={{ color: 'var(--ds-color-neutral-text-default)', fontWeight: 600 }}>{email}</strong>
           </Paragraph>
 
@@ -651,7 +645,7 @@ export function LoginPage(): React.ReactElement {
                 fontWeight: 500,
               }}
             >
-              Verifiserer...
+              {t('web.login.verifying', 'Verifying...')}
             </Paragraph>
           )}
 
@@ -671,7 +665,7 @@ export function LoginPage(): React.ReactElement {
                 fontWeight: 600,
               }}
             >
-              Ikke fått kode?
+              {t('web.login.noCode', "Didn't get a code?")}
             </Paragraph>
             <Paragraph
               data-size="sm"
@@ -681,9 +675,8 @@ export function LoginPage(): React.ReactElement {
                 lineHeight: '1.5',
               }}
             >
-              Du bør ha fått den innen 20 sekunder. Sjekk søppelpostmappen din.
+              {t('web.login.noCodeHelp', 'It should arrive within 20 seconds. Check your spam folder.')}
             </Paragraph>
-            {/* Actions row — Send ny kode + Tilbake on same line */}
             <div
               style={{
                 display: 'flex',
@@ -702,35 +695,20 @@ export function LoginPage(): React.ReactElement {
                   padding: '6px 20px',
                 }}
               >
-                Send ny kode
+                {t('web.login.resendCode', 'Resend code')}
               </Button>
-              <button
-                type="button"
+              <Button
+                variant="tertiary"
+                data-size="sm"
                 onClick={() => {
                   goBack();
                   clearError();
                   setLoginError(null);
                   setShowEmailForm(false);
                 }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--ds-color-neutral-text-default)',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '8px 0',
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.textDecoration = 'underline';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.textDecoration = 'none';
-                }}
               >
-                Tilbake til innlogging
-              </button>
+                {t('web.login.backToLogin', 'Back to sign in')}
+              </Button>
             </div>
           </div>
         </Card>
@@ -739,7 +717,7 @@ export function LoginPage(): React.ReactElement {
       {/* DEV: Demo Login */}
       {DEV_AUTH && step === 'email' && (
         <>
-          <LoginDivider text="Demo-innlogging" />
+          <LoginDivider text={t('web.login.demoLogin', 'Demo login')} />
           <DemoLoginGrid users={DEMO_USERS} onSelect={handleDemoSelect} />
         </>
       )}

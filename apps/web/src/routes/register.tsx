@@ -22,11 +22,21 @@ import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
-  IdPortenIcon,
-  VippsIcon,
-  PhoneIcon,
+  GoogleIcon,
+  FacebookIcon,
   MailIcon,
 } from '@digipicks/ds';
+
+function DiscordIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-label="Discord" role="img">
+      <path
+        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.044.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"
+        fill="#5865F2"
+      />
+    </svg>
+  );
+}
 import { useAuth } from '@digipicks/app-shell';
 import { useMagicLink } from '@digipicks/sdk';
 import { useT } from '@digipicks/i18n';
@@ -50,7 +60,7 @@ function getPasswordStrength(password: string): {
   if (/[0-9]/.test(password)) score++;
   if (/[^A-Za-z0-9]/.test(password)) score++;
 
-  const labels = ['Svakt', 'Svakt', 'OK', 'Sterkt', 'Veldig sterkt', 'Utmerket'];
+  const labels = ['Weak', 'Weak', 'OK', 'Strong', 'Very strong', 'Excellent'];
   const colors = [
     'var(--ds-color-danger-base-default)',
     'var(--ds-color-danger-base-default)',
@@ -79,15 +89,10 @@ export function RegisterPage(): React.ReactElement {
 
   // Expanded inline forms
   const [showMagicLink, setShowMagicLink] = useState(false);
-  const [showPhone, setShowPhone] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
 
   // Magic link state
   const [magicLinkEmail, setMagicLinkEmail] = useState('');
-
-  // Phone state
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [phoneSent, setPhoneSent] = useState(false);
 
   // Email/password form state
   const [name, setName] = useState('');
@@ -134,15 +139,8 @@ export function RegisterPage(): React.ReactElement {
     try {
       await requestMagicLink(magicLinkEmail);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Kunne ikke sende lenke. Prøv igjen.');
+      setError(err instanceof Error ? err.message : 'Could not send link. Please try again.');
     }
-  };
-
-  const handlePhoneSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    // Stub — SMS auth not yet implemented on backend
-    setPhoneSent(true);
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -150,23 +148,23 @@ export function RegisterPage(): React.ReactElement {
     setError(null);
 
     if (!name.trim()) {
-      setError('Navn er påkrevd');
+      setError('Name is required');
       return;
     }
     if (!email.includes('@')) {
-      setError('Ugyldig e-postadresse');
+      setError('Invalid email address');
       return;
     }
     if (password.length < 8) {
-      setError('Passordet må være minst 8 tegn');
+      setError('Password must be at least 8 characters');
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passordene stemmer ikke overens');
+      setError('Passwords do not match');
       return;
     }
     if (emailCheck && !emailCheck.available) {
-      setError('Denne e-postadressen er allerede registrert');
+      setError('This email is already registered');
       return;
     }
 
@@ -196,10 +194,10 @@ export function RegisterPage(): React.ReactElement {
           window.location.href = isOwnerIntent ? '/apply-owner' : '/';
         }, 500);
       } else {
-        setError(result.error || 'Registrering feilet. Prøv igjen.');
+        setError(result.error || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Noe gikk galt. Prøv igjen.');
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -246,7 +244,7 @@ export function RegisterPage(): React.ReactElement {
       brandName={import.meta.env.VITE_PLATFORM_NAME || 'DigiPicks'}
       brandTagline="CREATE ACCOUNT"
       logoHref="/"
-      title={t('web.register.title', 'Create your account')}
+      title=""
       panelTitle={
         isOwnerIntent
           ? t('web.register.ownerPanelTitle', 'Become a DigiPicks creator')
@@ -336,97 +334,32 @@ export function RegisterPage(): React.ReactElement {
         <>
           {/* ── Primary Auth Options ── */}
           <LoginOption
-            icon={<IdPortenIcon />}
-            title={t('web.register.bankidTitle', 'Registrer med BankID')}
-            description={t('web.register.bankidDesc', 'Verifiser deg med norsk eID — trygt og raskt')}
-            onClick={() => signInWithOAuth('idporten')}
+            icon={<GoogleIcon />}
+            title={t('web.register.googleTitle', 'Continue with Google')}
+            description={t('web.register.googleDesc', 'Sign up instantly with your Google account')}
+            onClick={() => signInWithOAuth('google')}
           />
           <LoginOption
-            icon={<VippsIcon />}
-            title={t('web.register.vippsTitle', 'Registrer med Vipps')}
-            description={t('web.register.vippsDesc', 'Bruk Vipps-kontoen din for rask opprettelse')}
-            onClick={() => signInWithOAuth('vipps')}
+            icon={<FacebookIcon />}
+            title={t('web.register.facebookTitle', 'Continue with Facebook')}
+            description={t('web.register.facebookDesc', 'Sign up with your Facebook account')}
+            onClick={() => signInWithOAuth('facebook')}
           />
           <LoginOption
-            icon={<PhoneIcon />}
-            title={t('web.register.phoneTitle', 'Registrer med telefon')}
-            description={t('web.register.phoneDesc', 'Motta en engangskode på SMS')}
-            onClick={() => {
-              setShowPhone(true);
-              setShowMagicLink(false);
-            }}
+            icon={<DiscordIcon />}
+            title={t('web.register.discordTitle', 'Continue with Discord')}
+            description={t('web.register.discordDesc', 'Sign up with your Discord account')}
+            onClick={() => signInWithOAuth('discord')}
           />
           <LoginOption
             icon={<MailIcon />}
-            title={t('web.register.magicLinkTitle', 'Magic link (e-post)')}
-            description={t('web.register.magicLinkDesc', 'Få en innloggingslenke rett i innboksen — uten passord')}
+            title={t('web.register.magicLinkTitle', 'Magic link (email)')}
+            description={t('web.register.magicLinkDesc', 'Get a login link sent to your inbox — no password needed')}
             onClick={() => {
               setShowMagicLink(true);
               setShowPhone(false);
             }}
           />
-
-          {/* ── Phone Inline Form ── */}
-          {showPhone && !phoneSent && (
-            <Card className={regStyles.inlineFormCard}>
-              <Heading level={3} data-size="xs">
-                {t('web.register.phoneFormTitle', 'Skriv inn telefonnummer')}
-              </Heading>
-              <Paragraph data-size="sm" className={regStyles.formParagraphSubtle}>
-                {t('web.register.phoneFormDesc', 'Vi sender en engangskode via SMS for å bekrefte nummeret ditt.')}
-              </Paragraph>
-              <form onSubmit={handlePhoneSubmit}>
-                <Stack direction="vertical" spacing="0.75rem">
-                  <Textfield
-                    type="tel"
-                    placeholder={t('web.register.phonePlaceholder', '+47 000 00 000')}
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    required
-                    autoFocus
-                    aria-label={t('web.register.phoneAriaLabel', 'Telefonnummer')}
-                  />
-                  <Stack direction="horizontal" spacing="0.5rem">
-                    <Button
-                      variant="secondary"
-                      type="button"
-                      className={regStyles.flexButton1}
-                      onClick={() => setShowPhone(false)}
-                    >
-                      {t('common.cancel', 'Avbryt')}
-                    </Button>
-                    <Button variant="primary" type="submit" className={regStyles.flexButton2}>
-                      {t('web.register.sendCode', 'Send kode')}
-                    </Button>
-                  </Stack>
-                </Stack>
-              </form>
-            </Card>
-          )}
-
-          {phoneSent && (
-            <Alert data-color="info" className={regStyles.inlineAlert}>
-              <Heading level={3} data-size="xs">
-                {t('web.register.phoneSentTitle', 'Kommer snart')}
-              </Heading>
-              <Paragraph data-size="sm">
-                {t(
-                  'web.register.phoneSentDesc',
-                  'SMS-registrering er under utvikling. Bruk en av de andre metodene for å komme i gang.',
-                )}
-              </Paragraph>
-              <Button
-                variant="secondary"
-                data-size="sm"
-                onClick={() => {
-                  setShowPhone(false);
-                  setPhoneSent(false);
-                }}
-              >
-                {t('common.back', 'Tilbake')}
-              </Button>
-            </Alert>
-          )}
 
           {/* ── Magic Link Inline Form ── */}
           {showMagicLink && !requestSuccess && (
