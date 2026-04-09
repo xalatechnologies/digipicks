@@ -92,8 +92,8 @@ import { PickEditPage } from '@/routes/pick-edit';
 // DigiPicks — creator white-label branding
 import { CreatorBrandingPage } from '@/routes/creator-branding';
 
-// DigiPicks — creator application admin review
-import { CreatorApplicationsPage } from '@/routes/creator-applications';
+// DigiPicks — creator application admin review (v2)
+import { CreatorApplicationsReviewPage as CreatorApplicationsPage } from '@/routes/platform/creator-applications';
 
 // DigiPicks — broadcast messaging
 import { BroadcastsPage, BroadcastInboxPage } from '@/routes/broadcasts';

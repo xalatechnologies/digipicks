@@ -209,13 +209,11 @@ export type {
 // CREATOR APPLICATIONS
 // ============================================
 
+// V2-only hooks (v1 compat hooks come via ./hooks barrel)
 export {
-  useMyCreatorApplication,
   useCreatorApplicationQueue,
   useCreatorApplicationCounts,
-  useCreatorApplication,
   useUpsertCreatorDraft,
-  useSubmitCreatorApplication,
   useDiscardCreatorDraft,
   useReviewCreatorApplication,
 } from './hooks/use-creator-applications';
@@ -226,3 +224,5 @@ export type {
   CreatorApplicationCounts,
   DraftInput as CreatorApplicationDraftInput,
 } from './hooks/use-creator-applications';
+// Note: useMyCreatorApplication, useCreatorApplication, useSubmitCreatorApplication,
+// and CreatorApplication are exported via ./hooks (v1 compat that delegates to v2).
