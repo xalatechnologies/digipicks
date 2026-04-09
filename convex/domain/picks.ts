@@ -354,6 +354,111 @@ export const leaderboard = query({
 });
 
 // =============================================================================
+// CREATOR DISCOVERY FACADE
+// =============================================================================
+
+/**
+ * Creator discovery — browseable grid of creators with stats, branding, and pricing.
+ * Aggregates: leaderboard stats + user data + brand configs + subscription tiers.
+ * Used by the /creators marketplace page. Public, no auth required.
+ */
+export const discoverCreators = query({
+    args: {
+        tenantId: v.id("tenants"),
+        search: v.optional(v.string()),
+        sport: v.optional(v.string()),
+    },
+    handler: async (ctx, { tenantId, search, sport }) => {
+        // 1. Fetch all creators via leaderboard (all-time, sorted by ROI, high limit)
+        const entries = await ctx.runQuery(components.picks.functions.leaderboard, {
+            tenantId: tenantId as string,
+            sport,
+            timeframe: "all",
+            sortBy: "roi",
+            limit: 200,
+        });
+
+        if ((entries as any[]).length === 0) return [];
+
+        // 2. Batch fetch user data
+        const creatorIds = (entries as any[]).map((e: any) => e.creatorId);
+        const users = await Promise.all(
+            creatorIds.map((id: string) => ctx.db.get(id as Id<"users">).catch(() => null))
+        );
+        const userMap = new Map(
+            users.filter(Boolean).map((u: any) => [u!._id as string, u])
+        );
+
+        // 3. Batch fetch brand configs
+        const brandConfigs = await ctx.runQuery(
+            components.tenantConfig.queries.listCreatorBrandConfigs,
+            { tenantId: tenantId as string }
+        );
+        const brandMap = new Map(
+            (brandConfigs as any[]).map((b: any) => [b.creatorId, b])
+        );
+
+        // 4. Fetch subscription tiers for pricing info
+        const tiers = await ctx.runQuery(components.subscriptions.functions.listTiers, {
+            tenantId: tenantId as string,
+            publicOnly: true,
+            activeOnly: true,
+        });
+        // Use lowest-price tier as the "starting at" price
+        const lowestTier = (tiers as any[]).length > 0
+            ? (tiers as any[]).reduce((min: any, t: any) => t.price < min.price ? t : min)
+            : null;
+
+        // 5. Assemble enriched creator entries
+        const results = (entries as any[]).map((entry: any) => {
+            const user = userMap.get(entry.creatorId);
+            if (!user || user.status !== "active") return null;
+            // Exclude suspended/hidden users
+            if (user.status === "suspended" || user.status === "deleted") return null;
+
+            const brand = brandMap.get(entry.creatorId);
+
+            return {
+                creatorId: entry.creatorId,
+                name: user.displayName || user.name || "Unknown",
+                avatarUrl: user.avatarUrl || null,
+                tagline: brand?.tagline || null,
+                sport: entry.sport || null,
+                stats: {
+                    totalPicks: entry.totalPicks,
+                    wins: entry.wins,
+                    losses: entry.losses,
+                    pushes: entry.pushes,
+                    winRate: entry.winRate,
+                    roi: entry.roi,
+                    netUnits: entry.netUnits,
+                    currentStreak: entry.currentStreak,
+                    streakType: entry.streakType,
+                },
+                startingPrice: lowestTier ? {
+                    amount: lowestTier.price,
+                    currency: lowestTier.currency,
+                    interval: lowestTier.billingInterval,
+                } : null,
+                verified: (user.emailVerified || user.emailVerifiedAt != null),
+            };
+        }).filter(Boolean);
+
+        // 6. Apply search filter (client-side on assembled data)
+        if (search && search.trim().length > 0) {
+            const q = search.toLowerCase();
+            return results.filter((c: any) =>
+                c.name.toLowerCase().includes(q) ||
+                (c.tagline && c.tagline.toLowerCase().includes(q)) ||
+                (c.sport && c.sport.toLowerCase().includes(q))
+            );
+        }
+
+        return results;
+    },
+});
+
+// =============================================================================
 // FEED FACADES
 // =============================================================================
 

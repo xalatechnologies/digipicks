@@ -715,9 +715,27 @@
     }
   },
   "nav": {
+    "creators": "Skapere",
     "pricing": "Priser",
     "blog": "Blogg",
     "about": "Om oss"
+  },
+  "discovery": {
+    "title": "Oppdag skapere",
+    "subtitle": "Finn de beste skaperne og abonner på deres tips.",
+    "search": "Søk",
+    "searchPlaceholder": "Søk etter navn, sport eller nøkkelord...",
+    "sport": "Sport",
+    "allSports": "Alle sporter",
+    "roi": "ROI",
+    "winRate": "Treffrate",
+    "picks": "Tips",
+    "record": "Resultat",
+    "from": "Fra",
+    "verified": "Verifisert",
+    "resultsCount": "{{count}} skapere",
+    "noResults": "Ingen skapere matcher søket ditt. Prøv andre søkeord.",
+    "empty": "Ingen skapere tilgjengelig ennå. Kom tilbake snart!"
   },
   "performances": {
     "title": "Forestillinger",
@@ -5694,6 +5712,89 @@
       "apiDocs": "API-dokumentasjon",
       "openapi": "OpenAPI-spesifikasjon",
       "rights": "Alle rettigheter forbeholdt."
+    }
+  },
+  "apply": {
+    "title": "Sok om a bli creator",
+    "description": "Del din ekspertise med sportsbettere. Fyll ut skjemaet nedenfor, sa vurderer vi soknaden din.",
+    "resubmitTitle": "Oppdater soknaden din",
+    "resubmitDescription": "Oppdater feltene nedenfor og send inn soknaden pa nytt.",
+    "loginRequired": "Logg inn for a soke",
+    "loginDescription": "Du trenger en konto for a soke som creator pa DigiPicks.",
+    "submitted": "Soknad sendt!",
+    "submittedDescription": "Vi vurderer soknaden din og gir deg svar snart. Sjekk tilbake her for oppdateringer.",
+    "backToHome": "Tilbake til forsiden",
+    "existingTitle": "Din soknad",
+    "submittedOn": "Sendt inn",
+    "approvedMessage": "Gratulerer! Du er na en verifisert creator. Ga til dashboardet for a begynne a legge ut picks.",
+    "reviewFeedback": "Tilbakemelding fra vurderer",
+    "section": {
+      "identity": "Om deg",
+      "expertise": "Din ekspertise",
+      "performance": "Track record",
+      "social": "Sosiale medier"
+    },
+    "displayName": "Visningsnavn",
+    "bio": "Bio",
+    "bioPlaceholder": "Fortell abonnentene om deg selv og din tilnarming til betting...",
+    "niche": "Hovdsport / nisje",
+    "selectNiche": "-- Velg --",
+    "specialties": "Spesialiteter",
+    "specialtiesPlaceholder": "f.eks. props, parlays, live betting (kommaseparert)",
+    "performanceProof": "Bevis pa resultater",
+    "performanceProofPlaceholder": "Beskriv din bettinghistorikk, treffprosent, ROI, osv.",
+    "trackRecordUrl": "Tracker-profil URL",
+    "trackRecordUrlPlaceholder": "Lenke til din verifiserte track record",
+    "youtubeChannel": "Kanal-URL",
+    "discordServer": "Server-invitasjon",
+    "website": "Nettside",
+    "submit": "Send soknad",
+    "resubmit": "Send soknad pa nytt",
+    "status": {
+      "pending": "Under vurdering",
+      "approved": "Godkjent",
+      "rejected": "Avvist",
+      "moreInfo": "Mer info etterspurt"
+    },
+    "errors": {
+      "nameRequired": "Visningsnavn er pakrevd",
+      "bioRequired": "Bio er pakrevd",
+      "nicheRequired": "Vennligst velg en sport/nisje",
+      "submitFailed": "Klarte ikke sende soknad. Prov igjen.",
+      "resubmitFailed": "Klarte ikke sende soknad pa nytt. Prov igjen."
+    }
+  },
+  "creatorApps": {
+    "title": "Creator-soknader",
+    "subtitle": "Vurder og handter creator-soknader.",
+    "statPending": "Venter pa vurdering",
+    "statApproved": "Godkjente creatorer",
+    "empty": "Ingen soknader",
+    "emptyDescription": "Det er ingen creator-soknader som matcher dette filteret.",
+    "approve": "Godkjenn",
+    "reject": "Avvis",
+    "requestInfo": "Be om info",
+    "rejectTitle": "Avvis soknad",
+    "requestInfoTitle": "Be om mer informasjon",
+    "noteLabel": "Melding til sokeren",
+    "rejectPlaceholder": "Forklar hvorfor soknaden ble avvist...",
+    "infoPlaceholder": "Hvilken tilleggsinformasjon trenger du?",
+    "status": {
+      "pending": "Ventende",
+      "approved": "Godkjent",
+      "rejected": "Avvist",
+      "moreInfo": "Mer info etterspurt"
+    },
+    "detail": {
+      "niche": "Nisje",
+      "bio": "Bio",
+      "specialties": "Spesialiteter",
+      "performance": "Bevis pa resultater",
+      "trackRecord": "Track record URL",
+      "submitted": "Sendt inn",
+      "resubmitted": "Sendt pa nytt",
+      "social": "Sosiale lenker",
+      "reviewNote": "Vurderingsnotat"
     }
   }
 }

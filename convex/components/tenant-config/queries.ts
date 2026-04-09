@@ -164,6 +164,21 @@ export const listThemeOverrides = query({
 // CREATOR BRAND QUERIES
 // =============================================================================
 
+/**
+ * List all creator brand configs for a tenant.
+ * Used by the discovery page to batch-fetch branding for all creators.
+ */
+export const listCreatorBrandConfigs = query({
+    args: { tenantId: v.string() },
+    returns: v.array(v.any()),
+    handler: async (ctx, { tenantId }) => {
+        return ctx.db
+            .query("creatorBrandConfigs")
+            .withIndex("by_tenant", (q) => q.eq("tenantId", tenantId))
+            .collect();
+    },
+});
+
 export const getCreatorBranding = query({
     args: { tenantId: v.string(), creatorId: v.string() },
     returns: v.any(),
