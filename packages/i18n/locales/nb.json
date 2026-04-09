@@ -715,7 +715,13 @@
     }
   },
   "nav": {
+    "home": "Hjem",
     "creators": "Skapere",
+    "events": "Arrangementer",
+    "feeds": "Feed",
+    "mainNav": "Hovednavigasjon",
+    "dashboard": "Dashboard",
+    "faq": "FAQ",
     "pricing": "Priser",
     "blog": "Blogg",
     "about": "Om oss"
@@ -5614,8 +5620,19 @@
       "bullet4": "AI-klar og fullt utvidbar",
       "cta": "Kom i gang",
       "ctaSecondary": "Se demo",
-      "ctaDashboard": "Gå til dashboardet",
-      "badge": "SaaS-plattformkjerne"
+      "ctaDashboard": "Gå til dashbord",
+      "badge": "SaaS-plattformkjerne",
+      "label": "SØKNADER ÅPNE",
+      "titleLine1": "SPORTSTIPS DU FAKTISK",
+      "titleAccent": "KAN STOLE PÅ",
+      "ctaBrowse": "Se tipsere",
+      "trustVerified": "Verifiserte resultater",
+      "trustTransparent": "Åpen historikk",
+      "trustPro": "Profesjonelle verktøy",
+      "statCreators": "Verifiserte tipsere",
+      "statPicks": "Tips sporet",
+      "statRoi": "Snitt-ROI",
+      "statSubs": "Aktive abonnenter"
     },
     "problem": {
       "title": "Å bygge SaaS handler ikke om funksjoner",
@@ -5706,7 +5723,7 @@
       "sentry": "Feilsporing og ytelsesovervaking"
     },
     "faq": {
-      "title": "Ofte stilte sporsmal",
+      "title": "Ofte stilte spørsmål",
       "q1": "Kan jeg bruke dette til kommersielle prosjekter?",
       "a1": "Ja. Startkitet er designet for produksjonsbruk. Du eier koden og kan tilpasse den fritt.",
       "q2": "Er det skalerbart?",
@@ -5716,7 +5733,8 @@
       "q4": "Stotter det multi-tenancy?",
       "a4": "Ja, fra dag en. Tenant-isolasjon handheves pa hvert lag: database, funksjoner, SDK og UI.",
       "q5": "Er AI inkludert?",
-      "a5": "Ja. WebMCP-verktoy eksponerer SaaS-funksjonene dine for AI-agenter. Arkitekturen er klar for LLM-integrasjon, RAG og AI-arbeidsflyter."
+      "a5": "Ja. WebMCP-verktoy eksponerer SaaS-funksjonene dine for AI-agenter. Arkitekturen er klar for LLM-integrasjon, RAG og AI-arbeidsflyter.",
+      "subtitle": "Alt du må vite før du starter."
     },
     "footer": {
       "tagline": "Det moderne SaaS-fundamentet.",
@@ -5726,6 +5744,71 @@
       "apiDocs": "API-dokumentasjon",
       "openapi": "OpenAPI-spesifikasjon",
       "rights": "Alle rettigheter forbeholdt."
+    },
+    "events": {
+      "live": "LIVE",
+      "all": "Alle"
+    },
+    "whySwitch": {
+      "title": "Hvorfor tipsere bytter til DigiPicks"
+    },
+    "tools": {
+      "title": "Profesjonelle tipser-verktøy",
+      "subtitle": "Alt du trenger for å drive tips-virksomheten din, bygd inn på én plattform."
+    },
+    "preview": {
+      "title": "Se virksomheten din i ett blikk",
+      "dashboardTitle": "Inntektsdashbord"
+    },
+    "commandCenter": {
+      "title": "Ditt kommandosenter"
+    },
+    "creators": {
+      "title": "Oppdag toppstipsere",
+      "winRate": "Vinnerprosent",
+      "picks": "Tips",
+      "viewAll": "Se hele tavlen"
+    },
+    "how": {
+      "discover": {
+        "title": "Oppdag"
+      },
+      "subscribe": {
+        "title": "Abonner"
+      },
+      "track": {
+        "title": "Følg resultater",
+        "body": "Hvert tips graderes automatisk. Følg ditt edge i sanntid og mål din ROI."
+      },
+      "title": "Slik fungerer det",
+      "subtitle": "Tre steg for å begynne å følge profesjonelle tipsere."
+    },
+    "testimonials": {
+      "title": "Det sier brukerne våre"
+    },
+    "pricing": {
+      "title": "Velg ditt plan",
+      "subtitle": "Start gratis. Oppgrader når du er klar.",
+      "popular": "MEST POPULÆR"
+    },
+    "discord": {
+      "title": "Bli med i fellesskapet",
+      "desc": "Bli med 12 000+ abonnenter i vår Discord. Live-tips-varsler, fellesskapsdiskusjoner og mer.",
+      "cta": "Bli med i Discord"
+    },
+    "finalCta": {
+      "title": "KLAR TIL Å FINNE DITT EDGE?",
+      "cta": "Kom i gang gratis",
+      "ctaPricing": "Se priser",
+      "ctaDashboard": "Gå til dashbord",
+      "note": "Ingen binding. Avslutt med ett klikk.",
+      "badge": "BLI MED 12 000+ SKARPE BETTERE",
+      "titleLine1": "KLAR TIL Å FINNE",
+      "titleAccent": "DITT EDGE?",
+      "subtitle": "Bli med tusenvis av abonnenter som følger verifiserte sportstipsere på DigiPicks.",
+      "pillVerified": "Verifiserte resultater",
+      "pillGraded": "Auto-gradert",
+      "pillCancel": "Avslutt når som helst"
     }
   },
   "apply": {

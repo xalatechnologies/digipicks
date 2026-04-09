@@ -849,24 +849,50 @@ function FinalCtaSection() {
   return (
     <section className={s.finalCta}>
       <div className={s.finalCtaGlow} aria-hidden="true" />
+      <div className={s.finalCtaOrb1} aria-hidden="true" />
+      <div className={s.finalCtaOrb2} aria-hidden="true" />
       <div className={s.finalCtaInner}>
+        <div className={s.finalCtaBadge}>
+          <span className={s.finalCtaBadgeDot} aria-hidden="true" />
+          {t('landing.finalCta.badge', 'JOIN 12,000+ SHARP BETTORS')}
+        </div>
         <Heading level={2} className={s.finalCtaTitle}>
-          {t('landing.finalCta.title', 'READY TO FIND YOUR EDGE?')}
+          {t('landing.finalCta.titleLine1', 'READY TO FIND')}
+          <span className={s.finalCtaTitleAccent}>{t('landing.finalCta.titleAccent', 'YOUR EDGE?')}</span>
         </Heading>
         <Paragraph className={s.finalCtaSubtitle}>
           {t(
             'landing.finalCta.subtitle',
-            'DigiPicks is invite-only. Every application is manually reviewed. We only onboard creators who are serious about their craft.',
+            'Join thousands of subscribers following verified sports-picks creators on DigiPicks.',
           )}
         </Paragraph>
+        <div className={s.finalCtaPills} aria-hidden="true">
+          <span className={s.finalCtaPill}>
+            <span className={s.finalCtaPillCheck}>✓</span>
+            {t('landing.finalCta.pillVerified', 'Verified records')}
+          </span>
+          <span className={s.finalCtaPill}>
+            <span className={s.finalCtaPillCheck}>✓</span>
+            {t('landing.finalCta.pillGraded', 'Auto-graded results')}
+          </span>
+          <span className={s.finalCtaPill}>
+            <span className={s.finalCtaPillCheck}>✓</span>
+            {t('landing.finalCta.pillCancel', 'Cancel anytime')}
+          </span>
+        </div>
         <div className={s.finalCtaActions}>
           {!isAuthenticated ? (
             <>
-              <Button onClick={() => navigate('/register')} data-size="lg" color="accent">
-                {t('landing.finalCta.cta', 'Apply for Access')}
+              <Button
+                onClick={() => navigate('/register')}
+                data-size="lg"
+                color="accent"
+                className={s.finalCtaPrimaryBtn}
+              >
+                {t('landing.finalCta.cta', 'Get started free')}
               </Button>
               <Button onClick={() => navigate('/pricing')} data-size="lg" variant="secondary">
-                {t('landing.finalCta.ctaPricing', 'View Plans')}
+                {t('landing.finalCta.ctaPricing', 'View plans')}
               </Button>
             </>
           ) : (
@@ -876,13 +902,14 @@ function FinalCtaSection() {
               }}
               data-size="lg"
               color="accent"
+              className={s.finalCtaPrimaryBtn}
             >
               {t('landing.finalCta.ctaDashboard', 'Go to Dashboard')}
             </Button>
           )}
         </div>
         <Paragraph className={s.finalCtaNote}>
-          {t('landing.finalCta.note', 'All applications are reviewed within 48 hours.')}
+          {t('landing.finalCta.note', 'No lock-in. Cancel any subscription in one click.')}
         </Paragraph>
       </div>
     </section>

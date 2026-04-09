@@ -6,7 +6,7 @@
 
 .hero {
   position: relative;
-  padding: clamp(var(--ds-size-11, 2.75rem), 10.8vh, 7.2rem) var(--ds-size-4) var(--ds-size-14);
+  padding: clamp(0.5rem, calc(9.7vh - 60px), 3rem) var(--ds-size-4) var(--ds-size-14);
   text-align: center;
   background:
     var(--ds-gradient-hero),
@@ -1125,17 +1125,18 @@
 
 .finalCta {
   position: relative;
-  padding: var(--ds-size-16) var(--ds-size-4);
+  padding: clamp(5rem, 16vh, 9rem) var(--ds-size-6);
   text-align: center;
   background-color: var(--ds-color-neutral-background-default);
   overflow: hidden;
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
 }
 
 .finalCtaGlow {
   position: absolute;
   inset: 0;
   background: var(--ds-gradient-primary);
-  opacity: 0.12;
+  opacity: 0.08;
   pointer-events: none;
 }
 
@@ -1144,41 +1145,158 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 800px;
-  height: 400px;
+  width: 1100px;
+  height: 520px;
   border-radius: 50%;
   background: radial-gradient(ellipse, var(--ds-color-accent-base-default) 0%, transparent 60%);
-  filter: blur(100px);
+  filter: blur(140px);
   transform: translate(-50%, -50%);
-  opacity: 0.4;
+  opacity: 0.35;
   pointer-events: none;
+}
+
+/* Two extra blurred orbs for depth */
+.finalCtaOrb1,
+.finalCtaOrb2 {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.finalCtaOrb1 {
+  top: -10%;
+  left: -8%;
+  background: radial-gradient(circle, var(--ds-color-accent-base-default) 0%, transparent 70%);
+  opacity: 0.4;
+}
+
+.finalCtaOrb2 {
+  bottom: -12%;
+  right: -8%;
+  background: radial-gradient(
+    circle,
+    var(--ds-color-brand2-base-default, var(--ds-color-accent-base-default)) 0%,
+    transparent 70%
+  );
+  opacity: 0.35;
 }
 
 .finalCtaInner {
   position: relative;
   z-index: 1;
-  max-width: 820px;
+  max-width: 880px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Pulsing badge */
+.finalCtaBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, var(--ds-color-accent-base-default) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ds-color-accent-base-default) 35%, transparent);
+  color: var(--ds-color-accent-text-default);
+  font-family: var(--ds-font-family-mono);
+  font-size: var(--ds-font-size-xs, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--ds-size-6);
+  box-shadow: var(--ds-shadow-glow-accent);
+}
+
+.finalCtaBadgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--ds-color-accent-base-default);
+  box-shadow: 0 0 12px var(--ds-color-accent-base-default);
+  animation: ctaPulse 2s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.35);
+  }
 }
 
 .finalCtaTitle {
-  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-size: clamp(2.5rem, 7vw, 5.25rem);
   font-weight: 800;
   color: var(--ds-color-neutral-text-default);
-  margin: 0 0 var(--ds-size-4);
-  letter-spacing: -0.03em;
-  line-height: 1;
+  margin: 0 0 var(--ds-size-5);
+  letter-spacing: -0.035em;
+  line-height: 0.95;
   text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+}
+
+.finalCtaTitleAccent {
+  background: var(--ds-gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
 }
 
 .finalCtaSubtitle {
   font-size: var(--ds-font-size-lg, 1.125rem);
   color: var(--ds-color-neutral-text-subtle);
-  margin: 0 0 var(--ds-size-8);
+  margin: 0 auto var(--ds-size-6);
   line-height: 1.6;
-  max-width: 620px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 640px;
+}
+
+.finalCtaPills {
+  display: flex;
+  gap: var(--ds-size-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--ds-size-8);
+}
+
+.finalCtaPill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border-radius: 9999px;
+  background-color: var(--ds-color-neutral-surface-tinted);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  color: var(--ds-color-neutral-text-default);
+  font-size: var(--ds-font-size-sm, 0.875rem);
+  font-weight: 500;
+}
+
+.finalCtaPillCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--ds-color-success-base-default) 25%, transparent);
+  color: var(--ds-color-success-base-default);
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
 .finalCtaActions {
@@ -1186,6 +1304,10 @@
   gap: var(--ds-size-3);
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.finalCtaPrimaryBtn {
+  box-shadow: var(--ds-shadow-glow-accent-strong);
 }
 
 .finalCtaNote {

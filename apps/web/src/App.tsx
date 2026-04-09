@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, Outlet, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Outlet, Navigate, Link } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
@@ -20,7 +20,6 @@ import { DEFAULT_THEME, type ThemeId } from '@digipicks/ds';
 import '@digipicks/ds/themes/hamar-theme.css';
 import { I18nProvider, useT, useI18nLocale } from '@digipicks/i18n';
 import { useTenantConfig, useTenantBranding, useCreatorFromDomain, useWebMCPTools } from '@digipicks/sdk';
-import { GlobalSearch } from '@digipicks/app-shell';
 import { useAuth } from '@digipicks/app-shell';
 import { ListingsPage } from '@/routes/listings';
 
@@ -130,9 +129,22 @@ function MainLayout() {
           />
         }
         search={
-          <div className="header-search-desktop">
-            <GlobalSearch context="web" placeholder={t('common.search')} showShortcut enableGlobalShortcut />
-          </div>
+          <nav className="header-nav-links" aria-label={t('nav.mainNav', 'Main navigation')}>
+            <Link className="header-nav-link" to="/">
+              {t('nav.home', 'Home')}
+            </Link>
+            <Link className="header-nav-link" to="/creators">
+              {t('nav.creators', 'Creators')}
+            </Link>
+            <Link className="header-nav-link" to="/events">
+              {t('nav.events', 'Events')}
+            </Link>
+            {isLoggedIn && (
+              <Link className="header-nav-link" to="/picks">
+                {t('nav.feeds', 'Feeds')}
+              </Link>
+            )}
+          </nav>
         }
         actions={
           <HeaderActions spacing="16px">

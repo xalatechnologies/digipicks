@@ -715,7 +715,13 @@
     }
   },
   "nav": {
+    "home": "Home",
     "creators": "Creators",
+    "events": "Events",
+    "feeds": "Feeds",
+    "mainNav": "Main navigation",
+    "dashboard": "Dashboard",
+    "faq": "FAQ",
     "pricing": "Pricing",
     "blog": "Blog",
     "about": "About"
@@ -5603,10 +5609,21 @@
       "bullet2": "Realtime backend with zero API boilerplate",
       "bullet3": "Built-in billing, auth, and permissions",
       "bullet4": "AI-ready & fully extensible",
-      "cta": "Get Started",
+      "cta": "Apply for Access",
       "ctaSecondary": "View Demo",
       "ctaDashboard": "Go to Dashboard",
-      "badge": "SaaS Platform Core"
+      "badge": "SaaS Platform Core",
+      "label": "Applications Now Open",
+      "titleLine1": "PICKS YOU CAN",
+      "titleAccent": "ACTUALLY TRUST",
+      "ctaBrowse": "Browse Picks",
+      "trustVerified": "Verified Records",
+      "trustTransparent": "Transparent Performance",
+      "trustPro": "Pro-Grade Tools",
+      "statCreators": "Verified Creators",
+      "statPicks": "Picks Tracked",
+      "statRoi": "Avg. Creator ROI",
+      "statSubs": "Active Subscribers"
     },
     "problem": {
       "title": "Building SaaS is not about features",
@@ -5707,7 +5724,8 @@
       "q4": "Does it support multi-tenancy?",
       "a4": "Yes, from day one. Tenant isolation is enforced at every layer: database, functions, SDK, and UI.",
       "q5": "Is AI included?",
-      "a5": "Yes. WebMCP tools expose your SaaS functions to AI agents. The architecture is ready for LLM integration, RAG, and AI workflows."
+      "a5": "Yes. WebMCP tools expose your SaaS functions to AI agents. The architecture is ready for LLM integration, RAG, and AI workflows.",
+      "subtitle": "Everything you need to know before you join."
     },
     "footer": {
       "tagline": "The modern SaaS foundation.",
@@ -5717,6 +5735,71 @@
       "apiDocs": "API Docs",
       "openapi": "OpenAPI Spec",
       "rights": "All rights reserved."
+    },
+    "events": {
+      "live": "LIVE NOW",
+      "all": "All"
+    },
+    "whySwitch": {
+      "title": "Why Creators Are Switching"
+    },
+    "tools": {
+      "title": "Professional Creator Tools",
+      "subtitle": "Everything you need to run your picks business, built into one platform."
+    },
+    "preview": {
+      "title": "See Your Business at a Glance",
+      "dashboardTitle": "Revenue Dashboard"
+    },
+    "commandCenter": {
+      "title": "Your Command Center"
+    },
+    "creators": {
+      "title": "Discover Top Creators",
+      "winRate": "Win Rate",
+      "picks": "Picks",
+      "viewAll": "View Full Leaderboard"
+    },
+    "how": {
+      "discover": {
+        "title": "Discover"
+      },
+      "subscribe": {
+        "title": "Subscribe"
+      },
+      "track": {
+        "title": "Track results",
+        "body": "Every pick auto-graded. Follow your edge in real time and measure your ROI."
+      },
+      "title": "How it works",
+      "subtitle": "Three steps to start following the sharps."
+    },
+    "testimonials": {
+      "title": "What They Say"
+    },
+    "pricing": {
+      "title": "Pick Your Edge",
+      "subtitle": "Start free. Upgrade when you are ready to win.",
+      "popular": "Most Popular"
+    },
+    "discord": {
+      "title": "Join 12,000+ sharp bettors in our Discord",
+      "desc": "Live pick alerts, creator Q&A, lineup reactions, and community edges — 24/7.",
+      "cta": "Join Discord"
+    },
+    "finalCta": {
+      "title": "READY TO FIND YOUR EDGE?",
+      "cta": "Get started free",
+      "ctaPricing": "View plans",
+      "ctaDashboard": "Go to Dashboard",
+      "note": "No lock-in. Cancel any subscription in one click.",
+      "badge": "JOIN 12,000+ SHARP BETTORS",
+      "titleLine1": "READY TO FIND",
+      "titleAccent": "YOUR EDGE?",
+      "subtitle": "Join thousands of subscribers following verified sports-picks creators on DigiPicks.",
+      "pillVerified": "Verified records",
+      "pillGraded": "Auto-graded results",
+      "pillCancel": "Cancel anytime"
     }
   },
   "apply": {
