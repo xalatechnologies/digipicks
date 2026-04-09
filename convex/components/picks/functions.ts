@@ -2071,3 +2071,72 @@ export const getViewCount = query({
     return (pick as any).viewCount ?? 0;
   },
 });
+
+// =============================================================================
+// VIEW TRACKING
+// =============================================================================
+
+/**
+ * Track a view on a pick. Deduplicates by userId+pickId — each user
+ * can only count as one view per pick. Increments denormalized viewCount
+ * on the pick document.
+ */
+export const trackView = mutation({
+  args: {
+    tenantId: v.string(),
+    pickId: v.string(),
+    userId: v.string(),
+  },
+  returns: v.object({ alreadyViewed: v.boolean() }),
+  handler: async (ctx, { tenantId, pickId, userId }) => {
+    // Verify the pick exists and belongs to this tenant
+    const pick = await ctx.db.get(pickId as any);
+    if (!pick) {
+      throw new Error('Pick not found');
+    }
+    if ((pick as any).tenantId !== tenantId) {
+      throw new Error('Pick not found');
+    }
+
+    // Deduplicate: check if user already viewed this pick
+    const existing = await ctx.db
+      .query('pickViews')
+      .withIndex('by_user_pick', (q) => q.eq('userId', userId).eq('pickId', pickId))
+      .unique();
+
+    if (existing) {
+      return { alreadyViewed: true };
+    }
+
+    // Insert the view record
+    await ctx.db.insert('pickViews', {
+      tenantId,
+      pickId,
+      userId,
+      viewedAt: Date.now(),
+    });
+
+    // Increment denormalized viewCount on the pick
+    const currentCount = (pick as any).viewCount ?? 0;
+    await ctx.db.patch(pick._id, { viewCount: currentCount + 1 });
+
+    return { alreadyViewed: false };
+  },
+});
+
+/**
+ * Get the view count for a specific pick.
+ */
+export const getViewCount = query({
+  args: {
+    pickId: v.string(),
+  },
+  returns: v.number(),
+  handler: async (ctx, { pickId }) => {
+    const pick = await ctx.db.get(pickId as any);
+    if (!pick) {
+      return 0;
+    }
+    return (pick as any).viewCount ?? 0;
+  },
+});

@@ -8,127 +8,127 @@
  * Each pick has structured fields for the event, odds, and result tracking.
  */
 
-import { defineSchema, defineTable } from 'convex/server';
-import { v } from 'convex/values';
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
 
 export default defineSchema({
-  /**
-   * Per-pick collaborator attribution and revenue split.
-   * MVP: no standing collaboration groups — collaborators are added per-pick.
-   * Max 5 collaborators per pick (enforced at mutation time).
-   */
-  pickCollaborators: defineTable({
-    tenantId: v.string(),
-    pickId: v.string(),
-    creatorId: v.string(),
-    role: v.string(), // "lead" | "contributor"
-    splitPercent: v.number(), // 0-100, revenue split for this pick
-    addedAt: v.number(),
-  })
-    .index('by_pick', ['pickId'])
-    .index('by_creator', ['creatorId'])
-    .index('by_tenant', ['tenantId'])
-    .index('by_pick_creator', ['pickId', 'creatorId']),
+    /**
+     * Per-pick collaborator attribution and revenue split.
+     * MVP: no standing collaboration groups — collaborators are added per-pick.
+     * Max 5 collaborators per pick (enforced at mutation time).
+     */
+    pickCollaborators: defineTable({
+        tenantId: v.string(),
+        pickId: v.string(),
+        creatorId: v.string(),
+        role: v.string(),                     // "lead" | "contributor"
+        splitPercent: v.number(),             // 0-100, revenue split for this pick
+        addedAt: v.number(),
+    })
+        .index("by_pick", ["pickId"])
+        .index("by_creator", ["creatorId"])
+        .index("by_tenant", ["tenantId"])
+        .index("by_pick_creator", ["pickId", "creatorId"]),
 
-  pickTails: defineTable({
-    tenantId: v.string(),
-    userId: v.string(), // subscriber who tailed the pick
-    pickId: v.string(), // reference to the pick being tailed
-    tailedAt: v.number(), // timestamp when the user tailed this pick
-    startingBankroll: v.optional(v.number()), // user's bankroll at time of tail
-  })
-    .index('by_user', ['userId'])
-    .index('by_pick', ['pickId'])
-    .index('by_tenant_user', ['tenantId', 'userId'])
-    .index('by_user_pick', ['userId', 'pickId']),
+    pickTails: defineTable({
+        tenantId: v.string(),
+        userId: v.string(),         // subscriber who tailed the pick
+        pickId: v.string(),         // reference to the pick being tailed
+        tailedAt: v.number(),       // timestamp when the user tailed this pick
+        startingBankroll: v.optional(v.number()), // user's bankroll at time of tail
+    })
+        .index("by_user", ["userId"])
+        .index("by_pick", ["pickId"])
+        .index("by_tenant_user", ["tenantId", "userId"])
+        .index("by_user_pick", ["userId", "pickId"]),
 
-  picks: defineTable({
-    tenantId: v.string(),
-    creatorId: v.string(),
+    picks: defineTable({
+        tenantId: v.string(),
+        creatorId: v.string(),
 
-    // Event / matchup info
-    event: v.string(), // e.g. "Lakers vs Celtics"
-    sport: v.string(), // e.g. "NBA", "NFL", "MLB", "Soccer", "NHL", "UFC", "Tennis", "Golf", "Other"
-    league: v.optional(v.string()), // e.g. "Western Conference", "Premier League"
+        // Event / matchup info
+        event: v.string(),         // e.g. "Lakers vs Celtics"
+        sport: v.string(),         // e.g. "NBA", "NFL", "MLB", "Soccer", "NHL", "UFC", "Tennis", "Golf", "Other"
+        league: v.optional(v.string()), // e.g. "Western Conference", "Premier League"
 
-    // Pick details
-    pickType: v.string(), // e.g. "spread", "moneyline", "total", "prop", "parlay_leg"
-    selection: v.string(), // e.g. "Lakers -3.5", "Over 220.5", "LeBron 25+ pts"
+        // Pick details
+        pickType: v.string(),      // e.g. "spread", "moneyline", "total", "prop", "parlay_leg"
+        selection: v.string(),     // e.g. "Lakers -3.5", "Over 220.5", "LeBron 25+ pts"
 
-    // Odds
-    oddsAmerican: v.string(), // e.g. "-110", "+150"
-    oddsDecimal: v.number(), // e.g. 1.91, 2.50
+        // Odds
+        oddsAmerican: v.string(),  // e.g. "-110", "+150"
+        oddsDecimal: v.number(),   // e.g. 1.91, 2.50
 
-    // Sizing & confidence
-    units: v.number(), // e.g. 1.0, 2.5, 5.0
-    confidence: v.string(), // "low", "medium", "high"
-    analysis: v.optional(v.string()), // Creator's write-up
+        // Sizing & confidence
+        units: v.number(),         // e.g. 1.0, 2.5, 5.0
+        confidence: v.string(),    // "low", "medium", "high"
+        analysis: v.optional(v.string()), // Creator's write-up
 
-    // Result tracking
-    result: v.string(), // "pending", "won", "lost", "push", "void"
-    resultAt: v.optional(v.number()),
-    gradedBy: v.optional(v.string()), // Who graded the result
+        // Result tracking
+        result: v.string(),        // "pending", "won", "lost", "push", "void"
+        resultAt: v.optional(v.number()),
+        gradedBy: v.optional(v.string()), // Who graded the result
 
-    // Scheduling
-    eventDate: v.optional(v.number()), // When the event starts
-    scheduledPublishAt: v.optional(v.number()), // Epoch ms — auto-publish draft at this time
-    publishedAt: v.optional(v.number()), // When the pick was actually published
-    status: v.string(), // "draft", "published", "archived"
+        // Scheduling
+        eventDate: v.optional(v.number()), // When the event starts
+        scheduledPublishAt: v.optional(v.number()), // Epoch ms — auto-publish draft at this time
+        publishedAt: v.optional(v.number()), // When the pick was actually published
+        status: v.string(),        // "draft", "published", "archived"
 
-    // Metadata
-    metadata: v.optional(v.any()),
+        // Metadata
+        metadata: v.optional(v.any()),
 
-    // View tracking
-    viewCount: v.optional(v.number()), // Denormalized view count, default 0
+        // View tracking
+        viewCount: v.optional(v.number()),  // Denormalized view count, default 0
 
-    // Moderation fields
-    moderationStatus: v.optional(v.string()), // "clean", "flagged", "under_review", "approved", "rejected", "hidden"
-    moderatedBy: v.optional(v.string()), // Admin who moderated
-    moderatedAt: v.optional(v.number()),
-    moderationNote: v.optional(v.string()), // Admin note explaining decision
-    reportCount: v.optional(v.number()), // Number of user reports
-  })
-    .index('by_tenant', ['tenantId'])
-    .index('by_creator', ['creatorId'])
-    .index('by_tenant_status', ['tenantId', 'status'])
-    .index('by_tenant_sport', ['tenantId', 'sport'])
-    .index('by_tenant_result', ['tenantId', 'result'])
-    .index('by_creator_status', ['creatorId', 'status'])
-    .index('by_event_date', ['tenantId', 'eventDate'])
-    .index('by_tenant_creator', ['tenantId', 'creatorId'])
-    .index('by_tenant_moderationStatus', ['tenantId', 'moderationStatus']),
+        // Moderation fields
+        moderationStatus: v.optional(v.string()),  // "clean", "flagged", "under_review", "approved", "rejected", "hidden"
+        moderatedBy: v.optional(v.string()),        // Admin who moderated
+        moderatedAt: v.optional(v.number()),
+        moderationNote: v.optional(v.string()),     // Admin note explaining decision
+        reportCount: v.optional(v.number()),        // Number of user reports
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_creator", ["creatorId"])
+        .index("by_tenant_status", ["tenantId", "status"])
+        .index("by_tenant_sport", ["tenantId", "sport"])
+        .index("by_tenant_result", ["tenantId", "result"])
+        .index("by_creator_status", ["creatorId", "status"])
+        .index("by_event_date", ["tenantId", "eventDate"])
+        .index("by_tenant_creator", ["tenantId", "creatorId"])
+        .index("by_tenant_moderationStatus", ["tenantId", "moderationStatus"]),
 
-  /**
-   * User reports on picks — tracks who reported what and why.
-   * One report per user per pick (enforced at mutation time).
-   */
-  pickReports: defineTable({
-    tenantId: v.string(),
-    pickId: v.string(),
-    reporterId: v.string(), // User who filed the report
-    reason: v.string(), // "fraud", "misleading", "spam", "inappropriate", "other"
-    details: v.optional(v.string()),
-    status: v.string(), // "pending", "reviewed", "dismissed"
-    reviewedBy: v.optional(v.string()),
-    reviewedAt: v.optional(v.number()),
-    reportedAt: v.number(),
-  })
-    .index('by_tenant', ['tenantId'])
-    .index('by_pick', ['pickId'])
-    .index('by_reporter_pick', ['reporterId', 'pickId'])
-    .index('by_tenant_status', ['tenantId', 'status']),
+    /**
+     * User reports on picks — tracks who reported what and why.
+     * One report per user per pick (enforced at mutation time).
+     */
+    pickReports: defineTable({
+        tenantId: v.string(),
+        pickId: v.string(),
+        reporterId: v.string(),       // User who filed the report
+        reason: v.string(),           // "fraud", "misleading", "spam", "inappropriate", "other"
+        details: v.optional(v.string()),
+        status: v.string(),           // "pending", "reviewed", "dismissed"
+        reviewedBy: v.optional(v.string()),
+        reviewedAt: v.optional(v.number()),
+        reportedAt: v.number(),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_pick", ["pickId"])
+        .index("by_reporter_pick", ["reporterId", "pickId"])
+        .index("by_tenant_status", ["tenantId", "status"]),
 
-  /**
-   * Pick views — deduplicated view tracking per user per pick.
-   * One view per userId+pickId pair (enforced at mutation time).
-   */
-  pickViews: defineTable({
-    tenantId: v.string(),
-    pickId: v.string(),
-    userId: v.string(), // User who viewed the pick
-    viewedAt: v.number(),
-  })
-    .index('by_user_pick', ['userId', 'pickId'])
-    .index('by_pick', ['pickId'])
-    .index('by_tenant', ['tenantId']),
+    /**
+     * Pick views — deduplicated view tracking per user per pick.
+     * One view per userId+pickId pair (enforced at mutation time).
+     */
+    pickViews: defineTable({
+        tenantId: v.string(),
+        pickId: v.string(),
+        userId: v.string(),       // User who viewed the pick
+        viewedAt: v.number(),
+    })
+        .index("by_user_pick", ["userId", "pickId"])
+        .index("by_pick", ["pickId"])
+        .index("by_tenant", ["tenantId"]),
 });
