@@ -91,6 +91,16 @@ crons.interval(
 );
 
 // ---------------------------------------------------------------------------
+// Scheduled Pick Publishing — Auto-publish draft picks (every minute)
+// ---------------------------------------------------------------------------
+
+crons.interval(
+    "processScheduledPickPublishing",
+    { minutes: 1 },
+    internal.cronFunctions.processScheduledPickPublishing
+);
+
+// ---------------------------------------------------------------------------
 // Listing Lifecycle — Expiration (daily at 01:00 UTC)
 // ---------------------------------------------------------------------------
 

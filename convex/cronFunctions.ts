@@ -6,7 +6,8 @@
  */
 
 import { internalMutation } from "./_generated/server";
-import { components, internal } from "./_generated/api";
+import { components } from "./_generated/api";
+import { emitEvent } from "./lib/eventBus";
 
 
 
@@ -97,6 +98,59 @@ export const processScheduledPublishing = internalMutation({
 
         if (published > 0 || unpublished > 0) {
             console.log(`Cron: scheduled publishing — ${published} published, ${unpublished} archived`);
+        }
+    },
+});
+
+// =============================================================================
+// SCHEDULED PICK PUBLISHING — Auto-publish draft picks
+// =============================================================================
+
+/**
+ * Auto-publish draft picks whose scheduledPublishAt has been reached.
+ * Emits picks.pick.created event for each auto-published pick so
+ * subscriber notifications fire as if the creator published manually.
+ *
+ * Runs every minute via crons.ts.
+ */
+export const processScheduledPickPublishing = internalMutation({
+    args: {},
+    handler: async (ctx) => {
+        const now = Date.now();
+
+        const scheduledPicks = (await ctx.runQuery(
+            components.picks.functions.scanScheduledForPublishing,
+            { now }
+        )) as any[];
+
+        let published = 0;
+        for (const pick of scheduledPicks) {
+            await ctx.runMutation(
+                components.picks.functions.update,
+                {
+                    id: pick._id,
+                    status: "published",
+                    publishedAt: now,
+                    scheduledPublishAt: undefined,
+                }
+            );
+            published++;
+
+            // Emit event so subscriber notifications fire
+            await emitEvent(ctx, "picks.pick.created", pick.tenantId, "picks", {
+                pickId: pick._id as string,
+                creatorId: pick.creatorId,
+                event: pick.event,
+                sport: pick.sport,
+                selection: pick.selection,
+                scheduledPublish: true,
+            });
+
+            console.log(`Cron: auto-published scheduled pick "${pick.event}" (${pick._id})`);
+        }
+
+        if (published > 0) {
+            console.log(`Cron: scheduled pick publishing — ${published} picks published`);
         }
     },
 });

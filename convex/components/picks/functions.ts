@@ -360,6 +360,25 @@ export const leaderboard = query({
   },
 });
 
+/**
+ * Scan draft picks with a scheduledPublishAt that has been reached.
+ * Used by the cron job to auto-publish scheduled picks.
+ */
+export const scanScheduledForPublishing = query({
+  args: { now: v.number() },
+  returns: v.array(v.any()),
+  handler: async (ctx, { now }) => {
+    const drafts = await ctx.db
+      .query('picks')
+      .filter((q) => q.eq(q.field('status'), 'draft'))
+      .collect();
+
+    return drafts.filter(
+      (p) => p.scheduledPublishAt !== undefined && p.scheduledPublishAt <= now
+    );
+  },
+});
+
 // =============================================================================
 // MUTATIONS
 // =============================================================================
@@ -382,6 +401,7 @@ export const create = mutation({
     confidence: v.string(),
     analysis: v.optional(v.string()),
     eventDate: v.optional(v.number()),
+    scheduledPublishAt: v.optional(v.number()),
     status: v.optional(v.string()),
     metadata: v.optional(v.any()),
   },
@@ -412,6 +432,9 @@ export const create = mutation({
       throw new Error('Decimal odds must be at least 1.01');
     }
 
+    // If scheduledPublishAt is set, force status to draft
+    const status = args.scheduledPublishAt ? 'draft' : (args.status ?? 'published');
+
     const pickId = await ctx.db.insert('picks', {
       tenantId: args.tenantId,
       creatorId: args.creatorId,
@@ -427,7 +450,8 @@ export const create = mutation({
       analysis: args.analysis,
       result: 'pending',
       eventDate: args.eventDate,
-      status: args.status ?? 'published',
+      scheduledPublishAt: args.scheduledPublishAt,
+      status,
       metadata: args.metadata ?? {},
     });
 
@@ -452,6 +476,8 @@ export const update = mutation({
     confidence: v.optional(v.string()),
     analysis: v.optional(v.string()),
     eventDate: v.optional(v.number()),
+    scheduledPublishAt: v.optional(v.number()),
+    publishedAt: v.optional(v.number()),
     status: v.optional(v.string()),
     metadata: v.optional(v.any()),
   },
