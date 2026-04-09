@@ -110,4 +110,8 @@ app.use(disputes);
 import discord from "./components/discord/convex.config";
 app.use(discord);
 
+// DigiPicks: emailCampaigns (transactional + marketing email campaigns)
+import emailCampaigns from "./components/emailCampaigns/convex.config";
+app.use(emailCampaigns);
+
 export default app;

@@ -91,6 +91,9 @@ import { HelpPage } from '@/routes/help';
 import { PicksPage } from '@/routes/picks';
 import { PickEditPage } from '@/routes/pick-edit';
 
+// DigiPicks — creator white-label branding
+import { CreatorBrandingPage } from '@/routes/creator-branding';
+
 // DigiPicks — broadcast messaging
 import { BroadcastsPage, BroadcastInboxPage } from '@/routes/broadcasts';
 import { BroadcastComposePage } from '@/routes/broadcast-compose';
@@ -300,6 +303,9 @@ function AppWithTheme() {
                                 <Route path="picks" element={<PicksPage />} />
                                 <Route path="picks/new" element={<PickEditPage />} />
                                 <Route path="picks/:id" element={<PickEditPage />} />
+
+                                {/* ─── DigiPicks: Creator white-label branding ─── */}
+                                <Route path="branding" element={<CreatorBrandingPage />} />
 
                                 {/* ─── DigiPicks: Broadcast messaging ─── */}
                                 <Route path="broadcasts" element={<BroadcastsPage />} />

@@ -17,8 +17,10 @@ import {
   Tag,
 } from '@digilist-saas/ds';
 import { useT } from '@digilist-saas/i18n';
-import { useCreatorProfile, usePublicTiers, useIsSubscribed, useSubscribe, type Pick as PickType } from '@digilist-saas/sdk';
+import { useCreatorProfile, usePublicTiers, useIsSubscribed, useSubscribe, useCreatorBranding, type Pick as PickType } from '@digilist-saas/sdk';
 import { env, useAuth } from '@digilist-saas/app-shell';
+import { useQuery } from 'convex/react';
+import { api } from '@digilist-saas/sdk/convex-api';
 import s from './creator-profile.module.css';
 
 // ---------------------------------------------------------------------------
@@ -92,6 +94,21 @@ export function CreatorProfilePage() {
   const { creatorId } = useParams<{ creatorId: string }>();
   const tenantId = env.tenantId;
   const auth = useAuth();
+
+  // Inject creator-level brand CSS (white-label theming)
+  useCreatorBranding(tenantId || undefined, creatorId);
+
+  // Fetch creator brand config + assets for custom header/logo
+  const creatorBrand = useQuery(
+    api.domain.tenantConfig.getCreatorBranding,
+    tenantId && creatorId ? { tenantId, creatorId } : 'skip'
+  );
+  const creatorAssets = useQuery(
+    api.domain.tenantConfig.listCreatorBrandAssets,
+    tenantId && creatorId ? { tenantId, creatorId } : 'skip'
+  );
+  const creatorLogo = creatorAssets?.find((a: any) => a.assetType === 'logo');
+  const creatorBanner = creatorAssets?.find((a: any) => a.assetType === 'banner');
 
   const { profile, isLoading } = useCreatorProfile(
     tenantId as any,
@@ -171,17 +188,48 @@ export function CreatorProfilePage() {
     );
   }
 
-  const displayName = profile.displayName || profile.name || profile.email || 'Creator';
+  // Use branded display name if creator has set one, else fall back to profile
+  const brandedName = creatorBrand?.displayName || profile.displayName || profile.name || profile.email || 'Creator';
+  const brandedTagline = creatorBrand?.tagline;
+  // Use creator logo if available, else fall back to avatar
+  const logoUrl = creatorLogo?.url;
   const stats = profile.stats;
+  const hasBranding = !!creatorBrand?.primaryColor;
 
   return (
     <div className={s.pageContainer}>
+      {/* Creator banner (white-label) */}
+      {creatorBanner?.url && (
+        <div
+          className={s.brandBanner}
+          style={{ backgroundImage: `url(${creatorBanner.url})` }}
+        />
+      )}
+
+      {/* Branded header bar (white-label) */}
+      {hasBranding && (
+        <div
+          className={s.brandHeader}
+          style={{ backgroundColor: 'var(--creator-brand-primary, var(--ds-color-accent-base-default))' }}
+        >
+          {logoUrl && (
+            <img src={logoUrl} alt={brandedName} className={s.brandLogo} />
+          )}
+          <div className={s.brandHeaderText}>
+            <span className={s.brandName}>{brandedName}</span>
+            {brandedTagline && (
+              <span className={s.brandTagline}>{brandedTagline}</span>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Profile header */}
       <div className={s.profileHeader}>
         {profile.avatarUrl ? (
           <img
             src={profile.avatarUrl}
-            alt={displayName}
+            alt={brandedName}
             className={s.avatar}
           />
         ) : (
@@ -192,11 +240,17 @@ export function CreatorProfilePage() {
 
         <div className={s.profileInfo}>
           <Heading level={1} data-size="lg" className={s.profileName}>
-            {displayName}
+            {brandedName}
           </Heading>
-          <Paragraph data-size="sm" className={s.profileRole}>
-            {t('creator.role', 'Creator')}
-          </Paragraph>
+          {brandedTagline ? (
+            <Paragraph data-size="sm" className={s.profileRole}>
+              {brandedTagline}
+            </Paragraph>
+          ) : (
+            <Paragraph data-size="sm" className={s.profileRole}>
+              {t('creator.role', 'Creator')}
+            </Paragraph>
+          )}
           <div className={s.recordLine}>
             <span className={s.recordItem}>
               {stats.wins}W - {stats.losses}L - {stats.pushes}P

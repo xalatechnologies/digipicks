@@ -634,6 +634,33 @@ export const processEvents = internalMutation({
                     // No async notification — handled in facade
 
                 // =============================================================
+                // PAYOUT EVENTS
+                // =============================================================
+
+                } else if (event.topic === "payouts.creator-payout.requested") {
+                    // No notification to creator yet — admin initiated, payout pending
+
+                } else if (event.topic === "payouts.creator-payout.completed") {
+                    // Notify creator that payout was completed
+                    if (payload.creatorId) {
+                        await ctx.runMutation(components.notifications.functions.create, {
+                            tenantId: event.tenantId,
+                            userId: payload.creatorId as string,
+                            type: "payout_completed",
+                            title: "Utbetaling fullført",
+                            body: `Du har mottatt en utbetaling på ${payload.netAmount ?? 0} øre.`,
+                            link: "/dashboard/payouts",
+                            metadata: { payoutId: payload.payoutId },
+                        });
+                    }
+
+                } else if (event.topic === "payouts.creator-payout.failed") {
+                    // Admin-only concern — no creator notification for failures
+
+                } else if (event.topic === "payouts.creator-payout.updated") {
+                    // Status update — no notification needed
+
+                // =============================================================
                 // CATCH-ALL — unhandled topics are no-ops
                 // =============================================================
 
@@ -643,7 +670,8 @@ export const processEvents = internalMutation({
                     event.topic.startsWith("subscriptions.") ||
                     event.topic.startsWith("resale.") ||
                     event.topic.startsWith("picks.") ||
-                    event.topic.startsWith("disputes.")
+                    event.topic.startsWith("disputes.") ||
+                    event.topic.startsWith("payouts.")
                 ) {
                     // Known domain prefix, no handler yet — no-op
                 }

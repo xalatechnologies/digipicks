@@ -269,3 +269,120 @@ export const removeThemeOverride = mutation({
         return { success: true };
     },
 });
+
+// =============================================================================
+// CREATOR BRAND MUTATIONS
+// =============================================================================
+
+export const updateCreatorBranding = mutation({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+        primaryColor: v.optional(v.string()),
+        secondaryColor: v.optional(v.string()),
+        accentColor: v.optional(v.string()),
+        fontFamily: v.optional(v.string()),
+        borderRadius: v.optional(v.string()),
+        darkMode: v.optional(v.boolean()),
+        customCSS: v.optional(v.string()),
+        displayName: v.optional(v.string()),
+        tagline: v.optional(v.string()),
+        customDomain: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+    },
+    returns: v.object({ id: v.string() }),
+    handler: async (ctx, { tenantId, creatorId, ...updates }) => {
+        // Validate custom domain uniqueness if provided
+        if (updates.customDomain) {
+            const existing = await ctx.db
+                .query("creatorBrandConfigs")
+                .withIndex("by_custom_domain", (q) => q.eq("customDomain", updates.customDomain!))
+                .first();
+
+            if (existing && existing.creatorId !== creatorId) {
+                throw new Error("Custom domain is already in use by another creator");
+            }
+        }
+
+        const existingConfig = await ctx.db
+            .query("creatorBrandConfigs")
+            .withIndex("by_creator", (q) =>
+                q.eq("tenantId", tenantId).eq("creatorId", creatorId)
+            )
+            .first();
+
+        const filteredUpdates = Object.fromEntries(
+            Object.entries(updates).filter(([_, v]) => v !== undefined)
+        );
+
+        if (existingConfig) {
+            await ctx.db.patch(existingConfig._id, filteredUpdates);
+            return { id: existingConfig._id as string };
+        }
+
+        const id = await ctx.db.insert("creatorBrandConfigs", {
+            tenantId,
+            creatorId,
+            ...filteredUpdates,
+        });
+
+        return { id: id as string };
+    },
+});
+
+export const uploadCreatorBrandAsset = mutation({
+    args: {
+        tenantId: v.string(),
+        creatorId: v.string(),
+        assetType: v.string(),
+        url: v.string(),
+        alt: v.optional(v.string()),
+        storageId: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+    },
+    returns: v.object({ id: v.string() }),
+    handler: async (ctx, args) => {
+        // Replace existing asset of same type (one per type per creator)
+        const existing = await ctx.db
+            .query("creatorBrandAssets")
+            .withIndex("by_type", (q) =>
+                q
+                    .eq("tenantId", args.tenantId)
+                    .eq("creatorId", args.creatorId)
+                    .eq("assetType", args.assetType)
+            )
+            .first();
+
+        if (existing) {
+            await ctx.db.patch(existing._id, {
+                url: args.url,
+                alt: args.alt,
+                storageId: args.storageId,
+                metadata: args.metadata,
+            });
+            return { id: existing._id as string };
+        }
+
+        const id = await ctx.db.insert("creatorBrandAssets", {
+            tenantId: args.tenantId,
+            creatorId: args.creatorId,
+            assetType: args.assetType,
+            url: args.url,
+            alt: args.alt,
+            storageId: args.storageId,
+            metadata: args.metadata,
+        });
+
+        return { id: id as string };
+    },
+});
+
+export const removeCreatorBrandAsset = mutation({
+    args: { id: v.id("creatorBrandAssets") },
+    returns: v.object({ success: v.boolean() }),
+    handler: async (ctx, { id }) => {
+        if (!await ctx.db.get(id)) throw new Error("Creator brand asset not found");
+        await ctx.db.delete(id);
+        return { success: true };
+    },
+});

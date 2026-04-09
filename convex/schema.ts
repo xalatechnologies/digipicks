@@ -296,6 +296,81 @@ export default defineSchema({
         .index("by_tenant", ["tenantId"]),
 
     // ===========================================================================
+    // PLATFORM FEE CONFIGURATION — Admin-managed fee settings per tenant
+    // ===========================================================================
+
+    platformFeeConfig: defineTable({
+        tenantId: v.id("tenants"),
+        feeType: v.union(
+            v.literal("percentage"),
+            v.literal("flat"),
+            v.literal("percentage_plus_flat"),
+        ),
+        percentageFee: v.optional(v.number()), // e.g. 15 = 15%
+        flatFee: v.optional(v.number()), // minor units (øre)
+        currency: v.string(),
+        isActive: v.boolean(),
+        effectiveFrom: v.number(),
+        updatedBy: v.optional(v.id("users")),
+        updatedAt: v.number(),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_active", ["tenantId", "isActive"]),
+
+    // ===========================================================================
+    // CREATOR PAYOUTS — Stripe transfers to creator Connect accounts
+    // ===========================================================================
+
+    creatorPayouts: defineTable({
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
+        amount: v.number(), // gross amount in minor units
+        platformFee: v.number(), // platform's cut
+        netAmount: v.number(), // amount after fee
+        currency: v.string(),
+        stripeTransferId: v.optional(v.string()),
+        stripeAccountId: v.string(), // creator's Stripe Connect account ID
+        status: v.union(
+            v.literal("pending"),
+            v.literal("processing"),
+            v.literal("completed"),
+            v.literal("failed"),
+        ),
+        periodStart: v.optional(v.number()),
+        periodEnd: v.optional(v.number()),
+        requestedAt: v.number(),
+        requestedBy: v.id("users"), // admin who initiated
+        processedAt: v.optional(v.number()),
+        failureReason: v.optional(v.string()),
+        notes: v.optional(v.string()),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_creator", ["tenantId", "creatorId"])
+        .index("by_status", ["tenantId", "status"])
+        .index("by_requested", ["tenantId", "requestedAt"]),
+
+    // ===========================================================================
+    // CREATOR EARNINGS — Revenue ledger per creator per period
+    // ===========================================================================
+
+    creatorEarnings: defineTable({
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
+        period: v.string(), // e.g. "2026-04"
+        grossRevenue: v.number(),
+        platformFees: v.number(),
+        netEarnings: v.number(),
+        subscriberCount: v.number(),
+        paidOutAmount: v.number(),
+        currency: v.string(),
+        updatedAt: v.number(),
+    })
+        .index("by_tenant", ["tenantId"])
+        .index("by_creator", ["tenantId", "creatorId"])
+        .index("by_period", ["tenantId", "period"])
+        .index("by_creator_period", ["tenantId", "creatorId", "period"]),
+
+    // ===========================================================================
     // EMAIL LOGIN CODES — Vend/FINN-style OTP Login
     // ===========================================================================
 

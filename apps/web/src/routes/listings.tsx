@@ -196,7 +196,7 @@ function HeroSection() {
         <p className={s.heroSubtitle}>
           {t(
             'landing.hero.subtitle',
-            'EdgePicks is the premium platform where sports betting creators build real businesses — with verified records, smart pricing, and professional tools.',
+            'EdgePicks is the premium platform where sports betting creators build real businesses \u2014 with verified records, smart pricing, and professional tools.',
           )}
         </p>
         <div className={s.heroCtas}>

@@ -42,6 +42,27 @@ export async function requireTenantMember(
 }
 
 /**
+ * Validate that a userId refers to a user with admin, owner, or superadmin role.
+ * Use in facade mutations that require elevated privileges (e.g. financial operations).
+ *
+ * @throws Error if user is not found, inactive, or lacks admin privileges.
+ */
+export async function requireAdmin(
+    ctx: MutationCtx | QueryCtx,
+    userId: Id<"users">
+): Promise<{ userId: Id<"users">; email: string; role: string }> {
+    const user = await ctx.db.get(userId);
+    if (!user || user.status !== "active") {
+        throw new Error("User not found or inactive");
+    }
+    const adminRoles = ["admin", "owner", "superadmin", "super_admin"];
+    if (!adminRoles.includes(user.role)) {
+        throw new Error("Insufficient permissions: admin role required");
+    }
+    return { userId: user._id, email: user.email, role: user.role };
+}
+
+/**
  * Look up the calling user's name and email for audit log enrichment.
  * Returns name and email if the user exists; falls back to empty strings.
  */
