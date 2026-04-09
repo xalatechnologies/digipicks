@@ -11,8 +11,8 @@ vi.mock("convex-helpers/server/rateLimit", () => ({
 import { RATE_LIMITS, rateLimitKeys } from "../rateLimits";
 
 describe("RATE_LIMITS", () => {
-  it("has exactly 52 rate limits defined", () => {
-    expect(Object.keys(RATE_LIMITS)).toHaveLength(52);
+  it("has exactly 54 rate limits defined", () => {
+    expect(Object.keys(RATE_LIMITS)).toHaveLength(54);
   });
 
   it("all rate limits have kind, rate, and period fields", () => {
