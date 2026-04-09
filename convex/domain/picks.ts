@@ -28,27 +28,10 @@ import { emitEvent } from "../lib/eventBus";
 /** 24-hour grace period after payment failure (in ms). */
 const GRACE_PERIOD_MS = 24 * 60 * 60 * 1000;
 
-/**
- * Check if a viewer has premium access to pick details.
- * Returns true when the viewer has an active subscription or is within
- * the 24-hour grace period after a payment failure (past_due status).
- * Returns true when viewerId is not provided (dashboard/creator context).
- */
-async function hasSubscriptionAccess(
-    ctx: QueryCtx,
-    viewerId: string | undefined,
-): Promise<boolean> {
-    if (!viewerId) return true;
-
-    const membership = await ctx.runQuery(
-        components.subscriptions.functions.getMembershipByUser,
-        { userId: viewerId },
-    );
-
+/** Check if a membership grants access (active, trialing, or within grace period). */
+function membershipGrantsAccess(membership: any): boolean {
     if (!membership) return false;
-    if (membership.status === "active") return true;
-
-    // Grace period: past_due with last payment within 24h
+    if (membership.status === "active" || membership.status === "trialing") return true;
     if (
         membership.status === "past_due" &&
         typeof membership.lastPaymentDate === "number" &&
@@ -56,6 +39,78 @@ async function hasSubscriptionAccess(
     ) {
         return true;
     }
+    return false;
+}
+
+/**
+ * Check if a viewer has premium access to a specific creator's picks.
+ * Per-creator gating: checks subscription to this specific creator.
+ * Returns true when viewerId is not provided (dashboard/creator context).
+ */
+async function hasSubscriptionAccess(
+    ctx: QueryCtx,
+    viewerId: string | undefined,
+    creatorId?: string,
+): Promise<boolean> {
+    if (!viewerId) return true;
+
+    if (creatorId) {
+        const membership = await ctx.runQuery(
+            components.subscriptions.functions.getMembershipByUserAndCreator,
+            { userId: viewerId, creatorId },
+        );
+        return membershipGrantsAccess(membership);
+    }
+
+    // Fallback: any active membership (legacy behavior)
+    const membership = await ctx.runQuery(
+        components.subscriptions.functions.getMembershipByUser,
+        { userId: viewerId },
+    );
+    return membershipGrantsAccess(membership);
+}
+
+/**
+ * Check co-post access: viewer subscribes to ANY collaborator on this pick.
+ * Uses batch query to avoid N+1.
+ */
+async function hasCoPostAccess(
+    ctx: QueryCtx,
+    viewerId: string | undefined,
+    pickId: string,
+): Promise<boolean> {
+    if (!viewerId) return true;
+
+    const collaborators = await ctx.runQuery(
+        components.picks.functions.listPickCollaborators,
+        { pickId },
+    );
+    if ((collaborators as any[]).length === 0) return false;
+
+    const creatorIds = (collaborators as any[]).map((c: any) => c.creatorId);
+    const memberships = await ctx.runQuery(
+        components.subscriptions.functions.listMembershipsByCreatorIds,
+        { userId: viewerId, creatorIds },
+    );
+    return (memberships as any[]).some((m: any) => membershipGrantsAccess(m));
+}
+
+/**
+ * Full pick access check: creator ownership, per-creator subscription, or co-post access.
+ */
+async function hasPickAccess(
+    ctx: QueryCtx,
+    viewerId: string | undefined,
+    pick: any,
+): Promise<boolean> {
+    if (!viewerId) return true;
+    if (pick.creatorId === viewerId) return true;
+
+    const directAccess = await hasSubscriptionAccess(ctx, viewerId, pick.creatorId);
+    if (directAccess) return true;
+
+    const pickId = pick._id ?? pick.id;
+    if (pickId) return hasCoPostAccess(ctx, viewerId, pickId as string);
 
     return false;
 }
@@ -110,8 +165,6 @@ export const list = query({
             limit,
         });
 
-        const hasAccess = await hasSubscriptionAccess(ctx, viewerId);
-
         // Batch fetch creator users
         const creatorIds = [...new Set((picks as any[]).map((p: any) => p.creatorId).filter(Boolean))];
         const users = await Promise.all(
@@ -119,23 +172,33 @@ export const list = query({
         );
         const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
 
-        return (picks as any[]).map((pick: any) => {
+        // Per-pick access check (per-creator + co-post)
+        const results = [];
+        for (const pick of picks as any[]) {
             const user = pick.creatorId ? userMap.get(pick.creatorId) : null;
+            const collaborators = await ctx.runQuery(
+                components.picks.functions.listPickCollaborators,
+                { pickId: pick._id as string },
+            );
             const enriched = {
                 ...pick,
                 creator: user
                     ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
                     : null,
+                collaborators: (collaborators as any[]).map((c: any) => ({
+                    creatorId: c.creatorId, role: c.role, splitPercent: c.splitPercent,
+                })),
             };
-            return hasAccess ? ungatePick(enriched) : gatePick(enriched);
-        });
+            const access = await hasPickAccess(ctx, viewerId, pick);
+            results.push(access ? ungatePick(enriched) : gatePick(enriched));
+        }
+        return results;
     },
 });
 
 /**
- * Get a single pick by ID. Enriches with creator data.
- * When `viewerId` is provided, checks subscription status and gates
- * premium pick fields for non-subscribers.
+ * Get a single pick by ID. Enriches with creator data and collaborators.
+ * Per-creator + co-post subscription gating.
  */
 export const get = query({
     args: {
@@ -145,19 +208,27 @@ export const get = query({
     handler: async (ctx, { id, viewerId }) => {
         const pick = await ctx.runQuery(components.picks.functions.get, { id });
 
-        const user = pick.creatorId
-            ? await ctx.db.get(pick.creatorId as Id<"users">).catch(() => null)
+        const user = (pick as any).creatorId
+            ? await ctx.db.get((pick as any).creatorId as Id<"users">).catch(() => null)
             : null;
+
+        const collaborators = await ctx.runQuery(
+            components.picks.functions.listPickCollaborators,
+            { pickId: id },
+        );
 
         const enriched = {
             ...pick,
             creator: user
                 ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
                 : null,
+            collaborators: (collaborators as any[]).map((c: any) => ({
+                creatorId: c.creatorId, role: c.role, splitPercent: c.splitPercent,
+            })),
         };
 
-        const hasAccess = await hasSubscriptionAccess(ctx, viewerId);
-        return hasAccess ? ungatePick(enriched) : gatePick(enriched);
+        const access = await hasPickAccess(ctx, viewerId, pick);
+        return access ? ungatePick(enriched) : gatePick(enriched);
     },
 });
 
@@ -208,8 +279,8 @@ export const creatorProfile = query({
             limit: 10,
         });
 
-        // 4. Gate picks based on viewer subscription
-        const hasAccess = await hasSubscriptionAccess(ctx, viewerId);
+        // 4. Gate picks based on viewer subscription (per-creator)
+        const hasAccess = await hasSubscriptionAccess(ctx, viewerId, creatorId);
 
         return {
             id: user._id,
@@ -389,45 +460,60 @@ export const feedForYou = query({
         );
         const userMap = new Map(users.filter(Boolean).map((u: any) => [u!._id, u]));
 
-        return (picks as any[]).map((pick: any) => {
-            const isUnlocked = !!(
-                userId &&
-                (pick.creatorId === userId || subscribedCreatorIds.has(pick.creatorId))
-            );
+        const results = [];
+        for (const pick of picks as any[]) {
             const user = pick.creatorId ? userMap.get(pick.creatorId) : null;
             const creator = user
                 ? { id: user._id, name: user.name, email: user.email, displayName: user.displayName }
                 : null;
 
-            if (isUnlocked) {
-                return { ...pick, isUnlocked: true, creator };
+            // Check per-creator subscription + co-post access
+            let isUnlocked = !!(
+                userId &&
+                (pick.creatorId === userId || subscribedCreatorIds.has(pick.creatorId))
+            );
+            if (!isUnlocked && userId) {
+                isUnlocked = await hasCoPostAccess(ctx, userId, pick._id as string);
             }
 
-            // Locked: redact sensitive pick details
-            return {
-                _id: pick._id,
-                _creationTime: pick._creationTime,
-                tenantId: pick.tenantId,
-                creatorId: pick.creatorId,
-                event: pick.event,
-                sport: pick.sport,
-                league: pick.league,
-                pickType: pick.pickType,
-                confidence: pick.confidence,
-                result: pick.result,
-                resultAt: pick.resultAt,
-                eventDate: pick.eventDate,
-                status: pick.status,
-                // Redacted fields for locked picks
-                selection: null,
-                oddsAmerican: null,
-                oddsDecimal: null,
-                units: null,
-                analysis: null,
-                isUnlocked: false,
-                creator,
-            };
-        });
+            // Enrich with collaborators
+            const collaborators = await ctx.runQuery(
+                components.picks.functions.listPickCollaborators,
+                { pickId: pick._id as string },
+            );
+            const collabData = (collaborators as any[]).map((c: any) => ({
+                creatorId: c.creatorId, role: c.role, splitPercent: c.splitPercent,
+            }));
+
+            if (isUnlocked) {
+                results.push({ ...pick, isUnlocked: true, creator, collaborators: collabData });
+            } else {
+                results.push({
+                    _id: pick._id,
+                    _creationTime: pick._creationTime,
+                    tenantId: pick.tenantId,
+                    creatorId: pick.creatorId,
+                    event: pick.event,
+                    sport: pick.sport,
+                    league: pick.league,
+                    pickType: pick.pickType,
+                    confidence: pick.confidence,
+                    result: pick.result,
+                    resultAt: pick.resultAt,
+                    eventDate: pick.eventDate,
+                    status: pick.status,
+                    selection: null,
+                    oddsAmerican: null,
+                    oddsDecimal: null,
+                    units: null,
+                    analysis: null,
+                    isUnlocked: false,
+                    creator,
+                    collaborators: collabData,
+                });
+            }
+        }
+        return results;
     },
 });
 
@@ -889,5 +975,193 @@ export const creatorStatsBySport = query({
             tenantId: tenantId as string,
             creatorId,
         });
+    },
+});
+
+// =============================================================================
+// CO-POST / COLLABORATION FACADES
+// =============================================================================
+
+/**
+ * Create a co-posted pick with collaborators.
+ * Creates the pick, then sets collaborators with validated splits.
+ */
+export const createCoPost = mutation({
+    args: {
+        tenantId: v.id("tenants"),
+        creatorId: v.id("users"),
+        event: v.string(),
+        sport: v.string(),
+        league: v.optional(v.string()),
+        pickType: v.string(),
+        selection: v.string(),
+        oddsAmerican: v.string(),
+        oddsDecimal: v.number(),
+        units: v.number(),
+        confidence: v.string(),
+        analysis: v.optional(v.string()),
+        eventDate: v.optional(v.number()),
+        status: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+        collaborators: v.array(v.object({
+            creatorId: v.string(),
+            role: v.string(),
+            splitPercent: v.number(),
+        })),
+    },
+    handler: async (ctx, args) => {
+        await requireActiveUser(ctx, args.creatorId);
+
+        await rateLimit(ctx, {
+            name: "createPick",
+            key: rateLimitKeys.user(args.creatorId as string),
+            throws: true,
+        });
+
+        // Create the pick
+        const result = await ctx.runMutation(components.picks.functions.create, {
+            tenantId: args.tenantId as string,
+            creatorId: args.creatorId as string,
+            event: args.event,
+            sport: args.sport,
+            league: args.league,
+            pickType: args.pickType,
+            selection: args.selection,
+            oddsAmerican: args.oddsAmerican,
+            oddsDecimal: args.oddsDecimal,
+            units: args.units,
+            confidence: args.confidence,
+            analysis: args.analysis,
+            eventDate: args.eventDate,
+            status: args.status,
+            metadata: args.metadata,
+        });
+
+        // Set collaborators (validates splits sum to 100%, max 5, etc.)
+        await ctx.runMutation(components.picks.functions.setPickCollaborators, {
+            tenantId: args.tenantId as string,
+            pickId: result.id,
+            collaborators: args.collaborators,
+        });
+
+        await withAudit(ctx, {
+            tenantId: args.tenantId as string,
+            userId: args.creatorId as string,
+            entityType: "pick",
+            entityId: result.id,
+            action: "co_post_created",
+            newState: {
+                event: args.event,
+                sport: args.sport,
+                collaboratorCount: args.collaborators.length,
+            },
+            sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.copost.created", args.tenantId as string, "picks", {
+            pickId: result.id,
+            creatorId: args.creatorId as string,
+            event: args.event,
+            sport: args.sport,
+            collaborators: args.collaborators.map((c) => ({
+                creatorId: c.creatorId,
+                role: c.role,
+                splitPercent: c.splitPercent,
+            })),
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Set collaborators on an existing pick. Only the lead creator can do this.
+ */
+export const setCollaborators = mutation({
+    args: {
+        pickId: v.string(),
+        callerId: v.id("users"),
+        collaborators: v.array(v.object({
+            creatorId: v.string(),
+            role: v.string(),
+            splitPercent: v.number(),
+        })),
+    },
+    handler: async (ctx, { pickId, callerId, collaborators }) => {
+        await requireActiveUser(ctx, callerId);
+
+        const pick = await ctx.runQuery(components.picks.functions.get, { id: pickId });
+
+        // Only the lead creator can set collaborators
+        if ((pick as any)?.creatorId !== (callerId as string)) {
+            throw new Error("Not authorized: only the pick creator can manage collaborators");
+        }
+
+        await rateLimit(ctx, {
+            name: "mutatePick",
+            key: rateLimitKeys.user(callerId as string),
+            throws: true,
+        });
+
+        const result = await ctx.runMutation(components.picks.functions.setPickCollaborators, {
+            tenantId: (pick as any)?.tenantId ?? "",
+            pickId,
+            collaborators,
+        });
+
+        await withAudit(ctx, {
+            tenantId: (pick as any)?.tenantId ?? "",
+            userId: callerId as string,
+            entityType: "pick",
+            entityId: pickId,
+            action: "collaborators_updated",
+            newState: { collaboratorCount: collaborators.length },
+            sourceComponent: "picks",
+        });
+
+        await emitEvent(ctx, "picks.copost.collaborators_updated", (pick as any)?.tenantId ?? "", "picks", {
+            pickId,
+            collaborators: collaborators.map((c) => ({
+                creatorId: c.creatorId, role: c.role, splitPercent: c.splitPercent,
+            })),
+        });
+
+        return result;
+    },
+});
+
+/**
+ * Get collaborators for a pick (public query).
+ */
+export const getCollaborators = query({
+    args: { pickId: v.string() },
+    handler: async (ctx, { pickId }) => {
+        const collaborators = await ctx.runQuery(
+            components.picks.functions.listPickCollaborators,
+            { pickId },
+        );
+
+        // Enrich with user data
+        const results = [];
+        for (const collab of collaborators as any[]) {
+            const user = await ctx.db.get(collab.creatorId as Id<"users">).catch(() => null);
+            results.push({
+                ...collab,
+                creator: user
+                    ? { id: user._id, name: user.name, displayName: user.displayName, avatarUrl: user.avatarUrl }
+                    : null,
+            });
+        }
+        return results;
+    },
+});
+
+/**
+ * Validate collaborator splits on a pick.
+ */
+export const validateSplits = query({
+    args: { pickId: v.string() },
+    handler: async (ctx, { pickId }) => {
+        return ctx.runQuery(components.picks.functions.validatePickSplits, { pickId });
     },
 });

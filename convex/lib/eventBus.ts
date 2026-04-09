@@ -16,7 +16,7 @@ import {
     internalMutation,
     internalQuery,
 } from "../_generated/server";
-import { components } from "../_generated/api";
+import { components, internal } from "../_generated/api";
 
 
 // =============================================================================
@@ -383,6 +383,35 @@ export const processEvents = internalMutation({
                 } else if (event.topic === "picks.pick.updated") {
                     // No subscriber notification for pick edits — creator-only action
 
+                } else if (event.topic === "picks.copost.created") {
+                    // Notify subscribers of ALL collaborators about the co-posted pick
+                    const collaborators = (payload.collaborators as any[]) ?? [];
+                    const notifiedUsers = new Set<string>();
+                    for (const collab of collaborators) {
+                        if (!collab.creatorId) continue;
+                        const subscribers = await ctx.runQuery(
+                            components.subscriptions.functions.listCreatorSubscribers,
+                            { creatorId: collab.creatorId as string, status: "active" }
+                        );
+                        for (const sub of subscribers as any[]) {
+                            if (sub.userId && !notifiedUsers.has(sub.userId as string)) {
+                                notifiedUsers.add(sub.userId as string);
+                                await ctx.runMutation(components.notifications.functions.create, {
+                                    tenantId: event.tenantId,
+                                    userId: sub.userId as string,
+                                    type: "copost_new_pick",
+                                    title: "Ny co-post pick!",
+                                    body: `${payload.sport ?? ""} ${payload.event ?? ""} — samarbeidspick`.trim(),
+                                    link: `/picks/${payload.pickId ?? ""}`,
+                                    metadata: { pickId: payload.pickId, sport: payload.sport, collaboratorCount: collaborators.length },
+                                });
+                            }
+                        }
+                    }
+
+                } else if (event.topic === "picks.copost.collaborators_updated") {
+                    // No subscriber notification for collaborator updates
+
                 // =============================================================
                 // SUBSCRIPTION EVENTS
                 // =============================================================
@@ -412,6 +441,12 @@ export const processEvents = internalMutation({
                             metadata: { membershipId: payload.membershipId, subscriberUserId: payload.userId },
                         });
                     }
+                    // Discord: assign role for new subscription
+                    await ctx.runMutation(internal.domain.discord.handleSubscriptionEvent, {
+                        tenantId: event.tenantId,
+                        topic: event.topic,
+                        payload,
+                    });
 
                 } else if (event.topic === "subscriptions.membership.cancelled") {
                     if (payload.userId) {
@@ -425,6 +460,12 @@ export const processEvents = internalMutation({
                             metadata: { membershipId: payload.membershipId },
                         });
                     }
+                    // Discord: remove role on cancellation
+                    await ctx.runMutation(internal.domain.discord.handleSubscriptionEvent, {
+                        tenantId: event.tenantId,
+                        topic: event.topic,
+                        payload,
+                    });
 
                 } else if (event.topic === "subscriptions.membership.renewed") {
                     if (payload.userId) {
@@ -451,6 +492,12 @@ export const processEvents = internalMutation({
                             metadata: { membershipId: payload.membershipId },
                         });
                     }
+                    // Discord: remove role on expiry
+                    await ctx.runMutation(internal.domain.discord.handleSubscriptionEvent, {
+                        tenantId: event.tenantId,
+                        topic: event.topic,
+                        payload,
+                    });
 
                 // =============================================================
                 // RESALE EVENTS

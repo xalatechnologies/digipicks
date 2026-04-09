@@ -106,4 +106,8 @@ app.use(broadcasts);
 import disputes from "./components/disputes/convex.config";
 app.use(disputes);
 
+// DigiPicks: discord (auto-assign roles by subscription status)
+import discord from "./components/discord/convex.config";
+app.use(discord);
+
 export default app;

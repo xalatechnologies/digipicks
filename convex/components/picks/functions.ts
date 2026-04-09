@@ -1170,3 +1170,183 @@ export const creatorStatsBySport = query({
             .sort((a, b) => b.totalPicks - a.totalPicks);
     },
 });
+
+// =============================================================================
+// PICK COLLABORATOR FUNCTIONS
+// =============================================================================
+
+const MAX_COLLABORATORS_PER_PICK = 5;
+
+/**
+ * Add a collaborator to a pick.
+ */
+export const addPickCollaborator = mutation({
+    args: {
+        tenantId: v.string(),
+        pickId: v.string(),
+        creatorId: v.string(),
+        role: v.string(),
+        splitPercent: v.number(),
+    },
+    returns: v.object({ id: v.string() }),
+    handler: async (ctx, { tenantId, pickId, creatorId, role, splitPercent }) => {
+        if (!["lead", "contributor"].includes(role)) {
+            throw new Error(`Invalid collaborator role: ${role}. Must be "lead" or "contributor".`);
+        }
+        if (splitPercent < 0 || splitPercent > 100) {
+            throw new Error("Split percent must be between 0 and 100.");
+        }
+
+        const pick = await ctx.db.get(pickId as any);
+        if (!pick) throw new Error("Pick not found");
+
+        const existing = await ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_pick_creator", (q) => q.eq("pickId", pickId).eq("creatorId", creatorId))
+            .first();
+        if (existing) throw new Error("Creator is already a collaborator on this pick.");
+
+        const current = await ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_pick", (q) => q.eq("pickId", pickId))
+            .collect();
+        if (current.length >= MAX_COLLABORATORS_PER_PICK) {
+            throw new Error(`Maximum ${MAX_COLLABORATORS_PER_PICK} collaborators per pick.`);
+        }
+
+        const id = await ctx.db.insert("pickCollaborators", {
+            tenantId, pickId, creatorId, role, splitPercent, addedAt: Date.now(),
+        });
+        return { id: id as string };
+    },
+});
+
+/**
+ * Remove a collaborator from a pick.
+ */
+export const removePickCollaborator = mutation({
+    args: { pickId: v.string(), creatorId: v.string() },
+    returns: v.object({ success: v.boolean() }),
+    handler: async (ctx, { pickId, creatorId }) => {
+        const collab = await ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_pick_creator", (q) => q.eq("pickId", pickId).eq("creatorId", creatorId))
+            .first();
+        if (!collab) throw new Error("Collaborator not found on this pick.");
+        await ctx.db.delete(collab._id);
+        return { success: true };
+    },
+});
+
+/**
+ * List all collaborators on a pick.
+ */
+export const listPickCollaborators = query({
+    args: { pickId: v.string() },
+    returns: v.array(v.any()),
+    handler: async (ctx, { pickId }) => {
+        return ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_pick", (q) => q.eq("pickId", pickId))
+            .collect();
+    },
+});
+
+/**
+ * List all picks where a creator is a collaborator.
+ */
+export const listPicksByCollaborator = query({
+    args: { tenantId: v.string(), creatorId: v.string() },
+    returns: v.array(v.any()),
+    handler: async (ctx, { tenantId, creatorId }) => {
+        const collabs = await ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_creator", (q) => q.eq("creatorId", creatorId))
+            .collect();
+
+        const picks = [];
+        for (const c of collabs) {
+            if (c.tenantId !== tenantId) continue;
+            const pick = await ctx.db.get(c.pickId as any);
+            if (pick) picks.push({ ...pick, collaboratorRole: c.role, collaboratorSplit: c.splitPercent });
+        }
+        return picks;
+    },
+});
+
+/**
+ * Validate that collaborator splits on a pick sum to exactly 100%.
+ */
+export const validatePickSplits = query({
+    args: { pickId: v.string() },
+    returns: v.object({ valid: v.boolean(), totalPercent: v.number(), collaboratorCount: v.number() }),
+    handler: async (ctx, { pickId }) => {
+        const collabs = await ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_pick", (q) => q.eq("pickId", pickId))
+            .collect();
+        const totalPercent = collabs.reduce((sum, c) => sum + c.splitPercent, 0);
+        return { valid: Math.abs(totalPercent - 100) < 0.01, totalPercent, collaboratorCount: collabs.length };
+    },
+});
+
+/**
+ * Set all collaborators on a pick at once (replace existing).
+ * Validates splits sum to 100% and max 5 collaborators.
+ */
+export const setPickCollaborators = mutation({
+    args: {
+        tenantId: v.string(),
+        pickId: v.string(),
+        collaborators: v.array(v.object({
+            creatorId: v.string(),
+            role: v.string(),
+            splitPercent: v.number(),
+        })),
+    },
+    returns: v.object({ success: v.boolean() }),
+    handler: async (ctx, { tenantId, pickId, collaborators }) => {
+        if (collaborators.length > MAX_COLLABORATORS_PER_PICK) {
+            throw new Error(`Maximum ${MAX_COLLABORATORS_PER_PICK} collaborators per pick.`);
+        }
+
+        const totalSplit = collaborators.reduce((sum, c) => sum + c.splitPercent, 0);
+        if (Math.abs(totalSplit - 100) > 0.01) {
+            throw new Error(`Collaborator splits must sum to 100%. Current total: ${totalSplit}%.`);
+        }
+
+        const creatorIds = collaborators.map((c) => c.creatorId);
+        if (new Set(creatorIds).size !== creatorIds.length) {
+            throw new Error("Duplicate creator in collaborators list.");
+        }
+
+        for (const c of collaborators) {
+            if (!["lead", "contributor"].includes(c.role)) {
+                throw new Error(`Invalid collaborator role: ${c.role}. Must be "lead" or "contributor".`);
+            }
+            if (c.splitPercent < 0 || c.splitPercent > 100) {
+                throw new Error("Split percent must be between 0 and 100.");
+            }
+        }
+
+        const pick = await ctx.db.get(pickId as any);
+        if (!pick) throw new Error("Pick not found");
+
+        // Remove existing
+        const existing = await ctx.db
+            .query("pickCollaborators")
+            .withIndex("by_pick", (q) => q.eq("pickId", pickId))
+            .collect();
+        for (const e of existing) await ctx.db.delete(e._id);
+
+        // Insert new
+        for (const c of collaborators) {
+            await ctx.db.insert("pickCollaborators", {
+                tenantId, pickId, creatorId: c.creatorId, role: c.role,
+                splitPercent: c.splitPercent, addedAt: Date.now(),
+            });
+        }
+
+        return { success: true };
+    },
+});
