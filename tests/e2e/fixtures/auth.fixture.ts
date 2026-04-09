@@ -16,58 +16,27 @@ const DASHBOARD_URL = process.env.TEST_DASHBOARD_URL || "http://localhost:5180";
 export const E2E_USERS = {
   superadmin: {
     id: "e2e-superadmin-user-id",
-    email: "e2e-superadmin@test.example.com",
+    email: "e2e-superadmin@digipicks.test",
     name: "E2E Superadmin",
     role: "superadmin",
   },
   admin: {
     id: "e2e-admin-user-id",
-    email: "e2e-admin@test.example.com",
+    email: "e2e-admin@digipicks.test",
     name: "E2E Admin",
     role: "admin",
   },
-  owner: {
-    id: "e2e-owner-user-id",
-    email: "e2e-owner@test.example.com",
-    name: "E2E Owner",
-    role: "owner",
+  creator: {
+    id: "e2e-creator-user-id",
+    email: "e2e-creator@digipicks.test",
+    name: "E2E Creator",
+    role: "creator",
   },
-  counter: {
-    id: "e2e-counter-user-id",
-    email: "e2e-counter@test.example.com",
-    name: "E2E Counter",
-    role: "counter",
-  },
-  finance: {
-    id: "e2e-finance-user-id",
-    email: "e2e-finance@test.example.com",
-    name: "E2E Finance",
-    role: "finance",
-  },
-  saksbehandler: {
-    id: "e2e-handler-user-id",
-    email: "e2e-handler@test.example.com",
-    name: "E2E Saksbehandler",
-    role: "saksbehandler",
-  },
-  arranger: {
-    id: "e2e-arranger-user-id",
-    email: "e2e-arranger@test.example.com",
-    name: "E2E Arranger",
-    role: "arranger",
-  },
-  user: {
-    id: "e2e-user-user-id",
-    email: "e2e-user@test.example.com",
-    name: "E2E User",
-    role: "user",
-  },
-  member: {
-    id: "e2e-member-user-id",
-    email: "e2e-member@test.example.com",
-    name: "E2E Member",
-    role: "user",
-    membership: "kulturhusvenn",
+  subscriber: {
+    id: "e2e-subscriber-user-id",
+    email: "e2e-subscriber@digipicks.test",
+    name: "E2E Subscriber",
+    role: "subscriber",
   },
 } as const;
 
@@ -105,15 +74,10 @@ async function setAuthForApp(
 
 /** Extended test fixtures with role-based auth. */
 export const test = base.extend<{
-  loginAsAdmin: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
   loginAsSuperadmin: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsOwner: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsCounter: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsFinance: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsSaksbehandler: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsArranger: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsUser: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
-  loginAsMember: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
+  loginAsAdmin: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
+  loginAsCreator: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
+  loginAsSubscriber: (app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
   loginAs: (role: E2ERole, app?: "web" | "backoffice" | "minside" | "dashboard") => Promise<void>;
 }>({
   loginAs: async ({ page }, use) => {
@@ -128,26 +92,11 @@ export const test = base.extend<{
   loginAsAdmin: async ({ loginAs }, use) => {
     await use(async (app = "dashboard") => loginAs("admin", app));
   },
-  loginAsOwner: async ({ loginAs }, use) => {
-    await use(async (app = "dashboard") => loginAs("owner", app));
+  loginAsCreator: async ({ loginAs }, use) => {
+    await use(async (app = "dashboard") => loginAs("creator", app));
   },
-  loginAsCounter: async ({ loginAs }, use) => {
-    await use(async (app = "dashboard") => loginAs("counter", app));
-  },
-  loginAsFinance: async ({ loginAs }, use) => {
-    await use(async (app = "dashboard") => loginAs("finance", app));
-  },
-  loginAsSaksbehandler: async ({ loginAs }, use) => {
-    await use(async (app = "dashboard") => loginAs("saksbehandler", app));
-  },
-  loginAsArranger: async ({ loginAs }, use) => {
-    await use(async (app = "dashboard") => loginAs("arranger", app));
-  },
-  loginAsUser: async ({ loginAs }, use) => {
-    await use(async (app = "web") => loginAs("user", app));
-  },
-  loginAsMember: async ({ loginAs }, use) => {
-    await use(async (app = "web") => loginAs("member", app));
+  loginAsSubscriber: async ({ loginAs }, use) => {
+    await use(async (app = "web") => loginAs("subscriber", app));
   },
 });
 

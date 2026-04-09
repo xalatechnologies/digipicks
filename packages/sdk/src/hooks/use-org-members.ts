@@ -32,7 +32,7 @@ export function useAddOrgMember() {
                 organizationId: args.organizationId,
                 email: args.email,
                 name: args.name,
-                role: args.role ?? "member",
+                role: args.role ?? "subscriber",
             } as any);
             return result;
         } catch (e) {

@@ -3,20 +3,20 @@ import { components, internal } from "../../_generated/api";
 import { createDomainTest, seedTestTenant } from "./testHelper.test-util";
 
 describe("auth/callback upsertUser backoffice provisioning", () => {
-    it("creates owner with tenant membership and RBAC permissions for backoffice appId", async () => {
+    it("creates creator with tenant membership and RBAC permissions for backoffice appId", async () => {
         const t = createDomainTest(["rbac"]);
         await seedTestTenant(t);
 
         const result = await t.mutation(internal.auth.callback.upsertUser, {
-            email: "oauth.backoffice@test.no",
-            name: "OAuth Owner",
+            email: "oauth.backoffice@digipicks.test",
+            name: "OAuth Creator",
             provider: "idporten",
             providerId: "idp-123",
             appId: "backoffice",
         });
 
         expect(result.isNewUser).toBe(true);
-        expect((result.user as any)?.role).toBe("owner");
+        expect((result.user as any)?.role).toBe("creator");
         expect((result.user as any)?.tenantId).toBeDefined();
         const tenantId = (result.user as any)?.tenantId as string;
 

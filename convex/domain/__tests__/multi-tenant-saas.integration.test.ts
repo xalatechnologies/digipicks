@@ -7,7 +7,7 @@
  *   3. Password hashing (PBKDF2-SHA512)
  *   4. Signup flow (checkEmailAvailable, signUp)
  *   5. Cross-tenant data isolation
- *   6. Owner role authorization
+ *   6. Creator role authorization
  */
 
 import { describe, it, expect } from "vitest";
@@ -85,10 +85,10 @@ async function seedPlatformData(t: ReturnType<typeof convexTest>) {
             metadata: {},
         });
 
-        const owner1 = await ctx.db.insert("users", {
-            email: "owner@test-city.no",
-            name: "Test City Owner",
-            role: "owner",
+        const creator1 = await ctx.db.insert("users", {
+            email: "creator@test-city.digipicks.test",
+            name: "Test City Creator",
+            role: "creator",
             status: "active",
             tenantId: tenant1,
             metadata: {},
@@ -124,14 +124,14 @@ async function seedPlatformData(t: ReturnType<typeof convexTest>) {
         // TenantUser memberships
         const now = Date.now();
         await ctx.db.insert("tenantUsers", { tenantId: tenant1, userId: admin1, status: "active", joinedAt: now });
-        await ctx.db.insert("tenantUsers", { tenantId: tenant1, userId: owner1, status: "active", joinedAt: now });
+        await ctx.db.insert("tenantUsers", { tenantId: tenant1, userId: creator1, status: "active", joinedAt: now });
         await ctx.db.insert("tenantUsers", { tenantId: tenant1, userId: user1, status: "active", joinedAt: now });
         await ctx.db.insert("tenantUsers", { tenantId: tenant2, userId: admin2, status: "active", joinedAt: now });
         await ctx.db.insert("tenantUsers", { tenantId: tenant3, userId: inactiveUser, status: "active", joinedAt: now });
 
         return {
             tenant1, tenant2, tenant3,
-            superAdmin, admin1, owner1, user1, admin2, inactiveUser,
+            superAdmin, admin1, creator1, user1, admin2, inactiveUser,
         };
     });
 }
@@ -266,14 +266,14 @@ describe("multi-tenant/tenantOnboarding", () => {
         expect(available.available).toBe(true);
     });
 
-    it("creates a tenant with owner", async () => {
+    it("creates a tenant with creator", async () => {
         const t = createMultiTenantTest();
 
         // Need a user first
         const userId = await t.run(async (ctx) => {
             return await ctx.db.insert("users", {
-                email: "newowner@test.no",
-                name: "New Owner",
+                email: "newcreator@digipicks.test",
+                name: "New Creator",
                 role: "user",
                 status: "active",
                 metadata: {},
@@ -289,11 +289,11 @@ describe("multi-tenant/tenantOnboarding", () => {
         expect(result.success).toBe(true);
         expect(result.tenantId).toBeDefined();
 
-        // Verify upgrade to owner
+        // Verify upgrade to creator
         const user = await t.run(async (ctx) => {
             return await ctx.db.get(userId);
         });
-        expect(user?.role).toBe("owner");
+        expect(user?.role).toBe("creator");
         expect(user?.tenantId).toBe(result.tenantId);
 
         // Verify tenant in DB
@@ -529,17 +529,17 @@ describe("multi-tenant/isolation", () => {
 });
 
 // =============================================================================
-// 6. OWNER ROLE
+// 6. CREATOR ROLE
 // =============================================================================
 
-describe("multi-tenant/ownerRole", () => {
-    it("createTenant upgrades user role to owner", async () => {
+describe("multi-tenant/creatorRole", () => {
+    it("createTenant upgrades user role to creator", async () => {
         const t = createMultiTenantTest();
 
         const userId = await t.run(async (ctx) => {
             return await ctx.db.insert("users", {
-                email: "become-owner@test.no",
-                name: "Future Owner",
+                email: "become-creator@digipicks.test",
+                name: "Future Creator",
                 role: "user",
                 status: "active",
                 metadata: {},
@@ -552,22 +552,22 @@ describe("multi-tenant/ownerRole", () => {
 
         // Create tenant
         await t.mutation(api.domain.tenantOnboarding.createTenantForOwner, {
-            name: "Owner Test Venue",
-            slug: "owner-test",
+            name: "Creator Test Venue",
+            slug: "creator-test",
             userId: userId,
         });
 
         // After
         const after = await t.run(async (ctx) => ctx.db.get(userId));
-        expect(after?.role).toBe("owner");
+        expect(after?.role).toBe("creator");
     });
 
-    it("owner user gets tenantId assigned", async () => {
+    it("creator user gets tenantId assigned", async () => {
         const t = createMultiTenantTest();
 
         const userId = await t.run(async (ctx) => {
             return await ctx.db.insert("users", {
-                email: "tenant-assign@test.no",
+                email: "tenant-assign@digipicks.test",
                 name: "Tenant Assign",
                 role: "user",
                 status: "active",
@@ -585,15 +585,15 @@ describe("multi-tenant/ownerRole", () => {
         expect(user?.tenantId).toBe(result.tenantId);
     });
 
-    it("owner role appears correctly in listAllUsers", async () => {
+    it("creator role appears correctly in listAllUsers", async () => {
         const t = createMultiTenantTest();
         await seedPlatformData(t);
 
         const users = await t.query(api.domain.platformAdmin.listAllUsers, {});
-        const owners = users.filter((u: any) => u.role === "owner");
+        const creators = users.filter((u: any) => u.role === "creator");
 
-        expect(owners.length).toBe(1);
-        expect(owners[0].email).toBe("owner@test-city.no");
-        expect(owners[0].tenantName).toBe("Test Municipality");
+        expect(creators.length).toBe(1);
+        expect(creators[0].email).toBe("creator@test-city.digipicks.test");
+        expect(creators[0].tenantName).toBe("Test Municipality");
     });
 });

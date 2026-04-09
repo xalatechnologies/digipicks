@@ -3,17 +3,17 @@ import { components, internal } from "../../_generated/api";
 import { createDomainTest, seedTestTenant } from "./testHelper.test-util";
 
 describe("auth/magicLink provisioning", () => {
-    it("creates owner role for new backoffice magic-link user", async () => {
+    it("creates creator role for new backoffice magic-link user", async () => {
         const t = createDomainTest(["auth", "rbac"]);
         await seedTestTenant(t);
 
         const result = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-            email: "new.backoffice@test.no",
+            email: "new.backoffice@digipicks.test",
             appId: "backoffice",
         });
 
         expect(result.isNewUser).toBe(true);
-        expect(result.user.role).toBe("owner");
+        expect(result.user.role).toBe("creator");
         expect(result.user.tenantId).toBeDefined();
 
         const permission = await (t as any).query(components.rbac.queries.checkPermission, {
@@ -24,7 +24,7 @@ describe("auth/magicLink provisioning", () => {
         expect(permission.hasPermission).toBe(true);
     });
 
-    it("upgrades existing non-admin user to owner for backoffice", async () => {
+    it("upgrades existing non-admin user to creator for backoffice", async () => {
         const t = createDomainTest(["auth", "rbac"]);
         await seedTestTenant(t);
 
@@ -34,7 +34,7 @@ describe("auth/magicLink provisioning", () => {
         });
 
         expect(result.isNewUser).toBe(false);
-        expect(result.user.role).toBe("owner");
+        expect(result.user.role).toBe("creator");
     });
 
     it("creates dedicated tenant and membership for existing user without tenant on backoffice login", async () => {
@@ -43,8 +43,8 @@ describe("auth/magicLink provisioning", () => {
 
         const userId = await t.run(async (ctx) => {
             return ctx.db.insert("users", {
-                email: "public.user@test.no",
-                role: "member",
+                email: "public.user@digipicks.test",
+                role: "subscriber",
                 status: "active",
                 metadata: {},
                 lastLoginAt: Date.now(),
@@ -52,12 +52,12 @@ describe("auth/magicLink provisioning", () => {
         });
 
         const result = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-            email: "public.user@test.no",
+            email: "public.user@digipicks.test",
             appId: "backoffice",
         });
 
         expect(result.isNewUser).toBe(false);
-        expect(result.user.role).toBe("owner");
+        expect(result.user.role).toBe("creator");
         expect(result.user.tenantId).toBeDefined();
 
         const membership = await t.run(async (ctx) => {
@@ -84,11 +84,11 @@ describe("auth/magicLink provisioning", () => {
         await seedTestTenant(t);
 
         const userA = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-            email: "owner.a@test.no",
+            email: "creator.a@digipicks.test",
             appId: "backoffice",
         });
         const userB = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-            email: "owner.b@test.no",
+            email: "creator.b@digipicks.test",
             appId: "backoffice",
         });
 
@@ -97,16 +97,16 @@ describe("auth/magicLink provisioning", () => {
         expect(userA.user.tenantId).not.toBe(userB.user.tenantId);
     });
 
-    it("keeps non-backoffice magic-link users as member", async () => {
+    it("keeps non-backoffice magic-link users as subscriber", async () => {
         const t = createDomainTest(["auth", "rbac"]);
         await seedTestTenant(t);
 
         const result = await t.mutation(internal.auth.magicLink.findOrCreateUser, {
-            email: "new.web@test.no",
+            email: "new.web@digipicks.test",
             appId: "web",
         });
 
         expect(result.isNewUser).toBe(true);
-        expect(result.user.role).toBe("member");
+        expect(result.user.role).toBe("subscriber");
     });
 });

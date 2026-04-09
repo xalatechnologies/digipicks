@@ -1,28 +1,28 @@
 /**
- * Owner User Journey — End-to-End Integration Tests
+ * Creator User Journey — End-to-End Integration Tests
  *
  * These tests simulate COMPLETE user journeys through the multi-tenant
  * system, testing the full sequence a real user would go through.
  *
- * Journey 1: "New User Becomes Owner"
+ * Journey 1: "New User Becomes Creator"
  *   Signup → checkEmail → create user → create tenant → verify role upgrade
- *   → verify tenant in admin view → verify owner's tenants list
+ *   → verify tenant in admin view → verify creator's tenants list
  *
- * Journey 2: "Owner Manages Listing Lifecycle"
- *   Owner creates resource → submits for review → (auto-approve path) →
- *   listing published → owner pauses → resumes → listing expires (simulated)
- *   → owner renews
+ * Journey 2: "Creator Manages Listing Lifecycle"
+ *   Creator creates resource → submits for review → (auto-approve path) →
+ *   listing published → creator pauses → resumes → listing expires (simulated)
+ *   → creator renews
  *
  * Journey 3: "Manual Moderation Flow"
- *   Owner submits listing → super admin sees it in queue → rejecting it →
- *   owner fixes and resubmits → super admin approves → listing published
+ *   Creator submits listing → super admin sees it in queue → rejecting it →
+ *   creator fixes and resubmits → super admin approves → listing published
  *
- * Journey 4: "User Reports a Listing"
- *   User reports listing → admin reviews report queue → admin resolves report
+ * Journey 4: "Subscriber Reports a Listing"
+ *   Subscriber reports listing → admin reviews report queue → admin resolves report
  *
- * Journey 5: "Multi-Owner Platform Growth"
- *   Two owners create tenants → platform admin sees both → stats reflect
- *   correct counts → each owner only sees their own tenants
+ * Journey 5: "Multi-Creator Platform Growth"
+ *   Two creators create tenants → platform admin sees both → stats reflect
+ *   correct counts → each creator only sees their own tenants
  */
 
 import { describe, it, expect } from "vitest";
@@ -81,10 +81,10 @@ async function createResource(
 }
 
 // =============================================================================
-// JOURNEY 1: New User Becomes Owner
+// JOURNEY 1: New User Becomes Creator
 // =============================================================================
 
-describe("journey/new-user-becomes-owner", () => {
+describe("journey/new-user-becomes-creator", () => {
     it("complete flow: signup → tenant creation → role upgrade → admin visibility", async () => {
         const t = createJourneyTest();
 
@@ -126,7 +126,7 @@ describe("journey/new-user-becomes-owner", () => {
 
         // ── Step 5: Verify role upgrade ─────────────────────────────────
         const userAfter = await t.run(async (ctx) => ctx.db.get(userId));
-        expect(userAfter?.role).toBe("owner");
+        expect(userAfter?.role).toBe("creator");
         expect(userAfter?.tenantId).toBe(tenantId);
 
         // ── Step 6: Verify slug is now taken ────────────────────────────
@@ -136,7 +136,7 @@ describe("journey/new-user-becomes-owner", () => {
         );
         expect(slugRechk.available).toBe(false);
 
-        // ── Step 7: Owner can see their tenant ──────────────────────────
+        // ── Step 7: Creator can see their tenant ─────────────────────────
         const myTenants = await t.query(
             api.domain.tenantOnboarding.listMyTenants,
             { userId }
@@ -162,26 +162,26 @@ describe("journey/new-user-becomes-owner", () => {
         expect(stats.tenants.total).toBe(1);
         expect(stats.tenants.active).toBe(1);
         expect(stats.users.total).toBe(1);
-        expect(stats.users.owners).toBe(1);
+        expect(stats.users.creators).toBe(1);
     });
 });
 
 // =============================================================================
-// JOURNEY 2: Owner Manages Listing Lifecycle
+// JOURNEY 2: Creator Manages Listing Lifecycle
 // =============================================================================
 
-describe("journey/owner-listing-lifecycle", () => {
+describe("journey/creator-listing-lifecycle", () => {
     it("auto-approve path: create → submit → auto-approve → pause → resume → renew", async () => {
         const t = createJourneyTest();
 
-        // ── Setup: Create owner with tenant ─────────────────────────────
-        const ownerId = await createUser(t, {
-            email: "venue@test.no",
-            name: "Venue Owner",
+        // ── Setup: Create creator with tenant ────────────────────────────
+        const creatorId = await createUser(t, {
+            email: "venue@digipicks.test",
+            name: "Venue Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "Test Venue", slug: "test-venue" }
+            { userId: creatorId, name: "Test Venue", slug: "test-venue" }
         );
 
         // ── Step 1: Create a resource (listing in draft) ────────────────
@@ -200,21 +200,21 @@ describe("journey/owner-listing-lifecycle", () => {
         expect(submitResult.success).toBe(true);
         expect(submitResult.autoApproved).toBe(true); // Low-risk category
 
-        // ── Step 3: Owner pauses the listing ────────────────────────────
+        // ── Step 3: Creator pauses the listing ───────────────────────────
         const pauseResult = await t.mutation(
             api.domain.listingModeration.pauseListing,
             { resourceId: resource.id, tenantId: tenantId! as string }
         );
         expect(pauseResult.success).toBe(true);
 
-        // ── Step 4: Owner resumes the listing ───────────────────────────
+        // ── Step 4: Creator resumes the listing ──────────────────────────
         const resumeResult = await t.mutation(
             api.domain.listingModeration.resumeListing,
             { resourceId: resource.id, tenantId: tenantId! as string }
         );
         expect(resumeResult.success).toBe(true);
 
-        // ── Step 5: Owner renews the listing ────────────────────────────
+        // ── Step 5: Creator renews the listing ───────────────────────────
         const renewResult = await t.mutation(
             api.domain.listingModeration.renewListing,
             { resourceId: resource.id, tenantId: tenantId! as string }
@@ -234,17 +234,17 @@ describe("journey/owner-listing-lifecycle", () => {
         const t = createJourneyTest();
 
         // ── Setup ───────────────────────────────────────────────────────
-        const ownerId = await createUser(t, {
-            email: "owner@venue.no",
-            name: "Venue Owner",
+        const creatorId = await createUser(t, {
+            email: "creator@venue.digipicks.test",
+            name: "Venue Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "My Venue", slug: "my-venue" }
+            { userId: creatorId, name: "My Venue", slug: "my-venue" }
         );
 
         const superAdminId = await createUser(t, {
-            email: "admin@test.example.com",
+            email: "admin@digipicks.test",
             name: "Super Admin",
             role: "super_admin",
         });
@@ -287,17 +287,17 @@ describe("journey/moderation-rejection-resubmission", () => {
         const t = createJourneyTest();
 
         // ── Setup ───────────────────────────────────────────────────────
-        const ownerId = await createUser(t, {
-            email: "owner@hall.no",
-            name: "Hall Owner",
+        const creatorId = await createUser(t, {
+            email: "creator@hall.digipicks.test",
+            name: "Hall Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "The Hall", slug: "the-hall" }
+            { userId: creatorId, name: "The Hall", slug: "the-hall" }
         );
 
         const adminId = await createUser(t, {
-            email: "mod@test.example.com",
+            email: "mod@digipicks.test",
             name: "Moderator",
             role: "super_admin",
         });
@@ -308,7 +308,7 @@ describe("journey/moderation-rejection-resubmission", () => {
             categoryKey: "eiendom",
         });
 
-        // ── Step 1: Owner submits ───────────────────────────────────────
+        // ── Step 1: Creator submits ──────────────────────────────────────
         const submit1 = await t.mutation(
             api.domain.listingModeration.submitForReview,
             { resourceId: resource.id, tenantId: tenantId! as string }
@@ -328,7 +328,7 @@ describe("journey/moderation-rejection-resubmission", () => {
         );
         expect(changeResult.success).toBe(true);
 
-        // ── Step 3: Owner "fixes" listing and resubmits ─────────────────
+        // ── Step 3: Creator "fixes" listing and resubmits ────────────────
         const submit2 = await t.mutation(
             api.domain.listingModeration.submitForReview,
             { resourceId: resource.id, tenantId: tenantId! as string }
@@ -351,17 +351,17 @@ describe("journey/moderation-rejection-resubmission", () => {
     it("submit → reject outright", async () => {
         const t = createJourneyTest();
 
-        const ownerId = await createUser(t, {
-            email: "suspicious@test.no",
+        const creatorId = await createUser(t, {
+            email: "suspicious@digipicks.test",
             name: "Suspicious User",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "Unknown Venue", slug: "unknown-venue" }
+            { userId: creatorId, name: "Unknown Venue", slug: "unknown-venue" }
         );
 
         const adminId = await createUser(t, {
-            email: "admin@platform.no",
+            email: "admin@platform.digipicks.test",
             name: "Admin",
             role: "super_admin",
         });
@@ -400,14 +400,14 @@ describe("journey/user-reports-listing", () => {
     it("user reports → admin sees reports → admin resolves", async () => {
         const t = createJourneyTest();
 
-        // ── Setup: Owner creates listing, another user reports it ────────
-        const ownerId = await createUser(t, {
-            email: "owner@venue.no",
-            name: "Venue Owner",
+        // ── Setup: Creator creates listing, a subscriber reports it ─────
+        const creatorId = await createUser(t, {
+            email: "creator@venue.digipicks.test",
+            name: "Venue Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "Nice Venue", slug: "nice-venue" }
+            { userId: creatorId, name: "Nice Venue", slug: "nice-venue" }
         );
 
         const resource = await createResource(t, tenantId! as string, {
@@ -417,12 +417,12 @@ describe("journey/user-reports-listing", () => {
         });
 
         const reporterId = await createUser(t, {
-            email: "reporter@test.no",
-            name: "Concerned User",
+            email: "reporter@digipicks.test",
+            name: "Concerned Subscriber",
         });
 
         const adminId = await createUser(t, {
-            email: "admin@test.example.com",
+            email: "admin@digipicks.test",
             name: "Admin",
             role: "super_admin",
         });
@@ -460,7 +460,7 @@ describe("journey/user-reports-listing", () => {
                     reportId: ourReport.id,
                     resolution: "user_warned",
                     adminId: adminId as string,
-                    note: "Owner warned to update images",
+                    note: "Creator warned to update images",
                 }
             );
             expect(resolveResult.success).toBe(true);
@@ -469,11 +469,11 @@ describe("journey/user-reports-listing", () => {
 });
 
 // =============================================================================
-// JOURNEY 5: Multi-Owner Platform Growth
+// JOURNEY 5: Multi-Creator Platform Growth
 // =============================================================================
 
-describe("journey/multi-owner-platform-growth", () => {
-    it("two owners create tenants → platform admin sees correct aggregates", async () => {
+describe("journey/multi-creator-platform-growth", () => {
+    it("two creators create tenants → platform admin sees correct aggregates", async () => {
         const t = createJourneyTest();
 
         // ── Super Admin already exists ──────────────────────────────────
@@ -483,25 +483,25 @@ describe("journey/multi-owner-platform-growth", () => {
             role: "super_admin",
         });
 
-        // ── Owner 1: Kulturhuset ────────────────────────────────────────
-        const owner1Id = await createUser(t, {
-            email: "erik@kulturhuset.no",
+        // ── Creator 1: Kulturhuset ───────────────────────────────────────
+        const creator1Id = await createUser(t, {
+            email: "erik@kulturhuset.digipicks.test",
             name: "Erik Johansen",
         });
         const tenant1 = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: owner1Id, name: "Kulturhuset", slug: "kulturhuset" }
+            { userId: creator1Id, name: "Kulturhuset", slug: "kulturhuset" }
         );
         expect(tenant1.success).toBe(true);
 
-        // ── Owner 2: Festlokalet ────────────────────────────────────────
-        const owner2Id = await createUser(t, {
-            email: "anna@festlokalet.no",
+        // ── Creator 2: Festlokalet ──────────────────────────────────────
+        const creator2Id = await createUser(t, {
+            email: "anna@festlokalet.digipicks.test",
             name: "Anna Svendsen",
         });
         const tenant2 = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: owner2Id, name: "Festlokalet", slug: "festlokalet" }
+            { userId: creator2Id, name: "Festlokalet", slug: "festlokalet" }
         );
         expect(tenant2.success).toBe(true);
 
@@ -509,23 +509,23 @@ describe("journey/multi-owner-platform-growth", () => {
         const stats = await t.query(api.domain.platformAdmin.platformStats);
         expect(stats.tenants.total).toBe(2);
         expect(stats.tenants.active).toBe(2);
-        expect(stats.users.total).toBe(3); // super admin + 2 owners
-        expect(stats.users.owners).toBe(2);
+        expect(stats.users.total).toBe(3); // super admin + 2 creators
+        expect(stats.users.creators).toBe(2);
 
-        // ── Each owner sees only their tenant ───────────────────────────
-        const owner1Tenants = await t.query(
+        // ── Each creator sees only their tenant ─────────────────────────
+        const creator1Tenants = await t.query(
             api.domain.tenantOnboarding.listMyTenants,
-            { userId: owner1Id }
+            { userId: creator1Id }
         );
-        expect(owner1Tenants.length).toBe(1);
-        expect(owner1Tenants[0].name).toBe("Kulturhuset");
+        expect(creator1Tenants.length).toBe(1);
+        expect(creator1Tenants[0].name).toBe("Kulturhuset");
 
-        const owner2Tenants = await t.query(
+        const creator2Tenants = await t.query(
             api.domain.tenantOnboarding.listMyTenants,
-            { userId: owner2Id }
+            { userId: creator2Id }
         );
-        expect(owner2Tenants.length).toBe(1);
-        expect(owner2Tenants[0].name).toBe("Festlokalet");
+        expect(creator2Tenants.length).toBe(1);
+        expect(creator2Tenants[0].name).toBe("Festlokalet");
 
         // ── Platform admin sees all ─────────────────────────────────────
         const allTenants = await t.query(
@@ -540,18 +540,18 @@ describe("journey/multi-owner-platform-growth", () => {
         );
         expect(allUsers.length).toBe(3);
 
-        // ── Owner 1 creates a listing, Owner 2 cannot see it ────────────
+        // ── Creator 1 creates a listing, Creator 2 cannot see it ────────
         await createResource(t, tenant1.tenantId! as string, {
             name: "Storsal A",
             slug: "storsal-a",
         });
 
-        // Owner 2's tenant listings should be empty
-        const owner2Listings = await t.query(
+        // Creator 2's tenant listings should be empty
+        const creator2Listings = await t.query(
             api.domain.listingModeration.listByTenantAndStatus,
             { tenantId: tenant2.tenantId! as string }
         );
-        expect(owner2Listings.length).toBe(0);
+        expect(creator2Listings.length).toBe(0);
     });
 });
 
@@ -563,14 +563,14 @@ describe("journey/onboarding-progress", () => {
     it("tracks tenant onboarding steps", async () => {
         const t = createJourneyTest();
 
-        // ── Create owner + tenant ───────────────────────────────────────
-        const ownerId = await createUser(t, {
-            email: "new@venue.no",
-            name: "New Owner",
+        // ── Create creator + tenant ──────────────────────────────────────
+        const creatorId = await createUser(t, {
+            email: "new@venue.digipicks.test",
+            name: "New Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "Fresh Venue", slug: "fresh-venue" }
+            { userId: creatorId, name: "Fresh Venue", slug: "fresh-venue" }
         );
 
         // ── Step 1: Initially at "tenant_created" ───────────────────────
@@ -606,21 +606,21 @@ describe("journey/onboarding-progress", () => {
 });
 
 // =============================================================================
-// JOURNEY 7: Owner Payout Flow
+// JOURNEY 7: Creator Payout Flow
 // =============================================================================
 
-describe("journey/owner-payout-flow", () => {
+describe("journey/creator-payout-flow", () => {
     it("add bank account → request payout → verify balance", async () => {
         const t = createJourneyTest();
 
-        // ── Setup: Create owner with tenant ─────────────────────────────
-        const ownerId = await createUser(t, {
-            email: "payout-owner@venue.no",
-            name: "Payout Owner",
+        // ── Setup: Create creator with tenant ────────────────────────────
+        const creatorId = await createUser(t, {
+            email: "payout-creator@venue.digipicks.test",
+            name: "Payout Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "Payout Venue", slug: "payout-venue" }
+            { userId: creatorId, name: "Payout Venue", slug: "payout-venue" }
         );
 
         // ── Step 1: No bank accounts initially ──────────────────────────
@@ -636,7 +636,7 @@ describe("journey/owner-payout-flow", () => {
             {
                 tenantId: tenantId!,
                 accountNumber: "1234.56.78901",
-                accountName: "Payout Owner",
+                accountName: "Payout Creator",
                 isDefault: true,
             }
         );
@@ -667,7 +667,7 @@ describe("journey/owner-payout-flow", () => {
                 tenantId: tenantId!,
                 amount: 5000,
                 bankAccountId: accounts[0]._id,
-                requestedBy: ownerId,
+                requestedBy: creatorId,
             }
         );
         expect(payoutResult.success).toBe(true);
@@ -730,14 +730,14 @@ describe("journey/license-lifecycle", () => {
     it("activate trial → check status → record billing", async () => {
         const t = createJourneyTest();
 
-        // ── Setup: Create owner with tenant ─────────────────────────────
-        const ownerId = await createUser(t, {
-            email: "license-owner@venue.no",
-            name: "License Owner",
+        // ── Setup: Create creator with tenant ────────────────────────────
+        const creatorId = await createUser(t, {
+            email: "license-creator@venue.digipicks.test",
+            name: "License Creator",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "License Venue", slug: "license-venue" }
+            { userId: creatorId, name: "License Venue", slug: "license-venue" }
         );
 
         // ── Step 1: Check initial license status ────────────────────────
@@ -818,13 +818,13 @@ describe("journey/license-lifecycle", () => {
     it("cannot activate trial twice", async () => {
         const t = createJourneyTest();
 
-        const ownerId = await createUser(t, {
-            email: "double-trial@venue.no",
+        const creatorId = await createUser(t, {
+            email: "double-trial@venue.digipicks.test",
             name: "Double Trial",
         });
         const { tenantId } = await t.mutation(
             api.domain.tenantOnboarding.createTenantForOwner,
-            { userId: ownerId, name: "Trial Venue", slug: "trial-venue" }
+            { userId: creatorId, name: "Trial Venue", slug: "trial-venue" }
         );
 
         // First trial activation

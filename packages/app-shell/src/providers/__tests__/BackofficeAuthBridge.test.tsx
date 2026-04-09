@@ -30,17 +30,17 @@ function Consumer() {
   );
 }
 
-describe("BackofficeAuthBridge owner mapping", () => {
+describe("BackofficeAuthBridge creator mapping", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("maps owner to privileged backoffice user with owner grant", () => {
+  it("maps creator to privileged backoffice user with creator grant", () => {
     mockUseAuth.mockReturnValue({
       user: {
         id: "u1",
-        email: "owner@test.no",
-        role: "owner",
+        email: "creator@digipicks.test",
+        role: "creator",
         tenantId: "t1",
       },
       isLoading: false,
@@ -58,14 +58,14 @@ describe("BackofficeAuthBridge owner mapping", () => {
 
     expect(screen.getByTestId("is-authenticated")).toHaveTextContent("true");
     expect(screen.getByTestId("role")).toHaveTextContent("admin");
-    expect(screen.getByTestId("granted-roles")).toHaveTextContent("owner");
+    expect(screen.getByTestId("granted-roles")).toHaveTextContent("creator");
   });
 
   it("maps superadmin role correctly with superadmin grant", () => {
     mockUseAuth.mockReturnValue({
       user: {
         id: "u2",
-        email: "super@test.no",
+        email: "super@digipicks.test",
         role: "superadmin",
         tenantId: "platform",
       },
@@ -88,12 +88,12 @@ describe("BackofficeAuthBridge owner mapping", () => {
     expect(["superadmin", "admin"]).toContain(roleText);
   });
 
-  it("maps arranger role preserving arranger identity", () => {
+  it("maps subscriber role preserving subscriber identity", () => {
     mockUseAuth.mockReturnValue({
       user: {
         id: "u3",
-        email: "arranger@test.no",
-        role: "arranger",
+        email: "subscriber@digipicks.test",
+        role: "subscriber",
         tenantId: "t1",
       },
       isLoading: false,
