@@ -1,0 +1,88 @@
+/* Creator Application Form — /apply */
+
+.applyPage {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--ds-size-6) var(--ds-size-4);
+}
+
+.formCard {
+  padding: var(--ds-size-6);
+}
+
+.sectionHeading {
+  margin-top: var(--ds-size-6);
+}
+
+.socialGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ds-size-3);
+}
+
+@media (max-width: 480px) {
+  .socialGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.submitRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ds-size-3);
+  margin-top: var(--ds-size-4);
+}
+
+.statusCard {
+  padding: var(--ds-size-5);
+  text-align: center;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: var(--ds-size-1) var(--ds-size-3);
+  border-radius: var(--ds-size-1);
+  font-weight: 500;
+}
+
+.statusPending {
+  background: var(--ds-color-warning-surface-default);
+  color: var(--ds-color-warning-text-default);
+}
+
+.statusApproved {
+  background: var(--ds-color-success-surface-default);
+  color: var(--ds-color-success-text-default);
+}
+
+.statusRejected {
+  background: var(--ds-color-danger-surface-default);
+  color: var(--ds-color-danger-text-default);
+}
+
+.statusMoreInfo {
+  background: var(--ds-color-info-surface-default);
+  color: var(--ds-color-info-text-default);
+}
+
+.reviewNote {
+  margin-top: var(--ds-size-3);
+  padding: var(--ds-size-3);
+  background: var(--ds-color-neutral-surface-default);
+  border-radius: var(--ds-size-1);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.loadingWrap {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-size-10);
+}
+
+.loginPrompt {
+  text-align: center;
+  padding: var(--ds-size-10) var(--ds-size-4);
+}

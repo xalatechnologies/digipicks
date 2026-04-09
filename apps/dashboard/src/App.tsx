@@ -94,6 +94,9 @@ import { PickEditPage } from '@/routes/pick-edit';
 // DigiPicks — creator white-label branding
 import { CreatorBrandingPage } from '@/routes/creator-branding';
 
+// DigiPicks — creator application admin review
+import { CreatorApplicationsPage } from '@/routes/creator-applications';
+
 // DigiPicks — broadcast messaging
 import { BroadcastsPage, BroadcastInboxPage } from '@/routes/broadcasts';
 import { BroadcastComposePage } from '@/routes/broadcast-compose';
@@ -311,6 +314,9 @@ function AppWithTheme() {
                                 <Route path="broadcasts" element={<BroadcastsPage />} />
                                 <Route path="broadcasts/compose" element={<BroadcastComposePage />} />
                                 <Route path="broadcasts/inbox" element={<BroadcastInboxPage />} />
+
+                                {/* ─── DigiPicks: Creator application review (admin) ─── */}
+                                <Route path="creator-applications" element={<ProtectedRouteConnected requiredRole="admin"><CreatorApplicationsPage /></ProtectedRouteConnected>} />
 
                                 {/* ─── DigiPicks: Stripe integration ─── */}
                                 <Route path="payouts" element={<PayoutsPage />} />

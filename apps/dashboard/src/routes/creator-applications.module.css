@@ -1,0 +1,45 @@
+/* Creator Applications Admin Review Queue */
+
+.loadingWrap {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-size-10);
+}
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ds-color-neutral-background-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialogCard {
+  padding: var(--ds-size-6);
+  max-width: 520px;
+  width: 100%;
+}
+
+.noteTextarea {
+  width: 100%;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-size-1) var(--ds-size-4);
+  align-items: baseline;
+}
+
+.detailLabel {
+  font-weight: 500;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.socialLinksList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-2);
+}

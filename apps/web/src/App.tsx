@@ -252,6 +252,7 @@ function ThemedApp() {
                       <Route path="/tracker" element={<PickTrackerPage />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
                       <Route path="/creators" element={<CreatorDiscoveryPage />} />
+                      <Route path="/apply" element={<ApplyPage />} />
 
                       {/* Min Side: redirect to minside app (apps/minside) - external redirect */}
                       <Route path="/min-side" element={<MinsideRedirect />} />
