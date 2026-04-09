@@ -5597,8 +5597,8 @@
   },
   "landing": {
     "hero": {
-      "title": "Build production-ready SaaS without rebuilding the same systems",
-      "subtitle": "Authentication, multi-tenancy, billing, automation, AI, and compliance — all built-in. A production-grade SaaS platform core for building scalable, multi-tenant, AI-ready applications.",
+      "title": "Sports picks you can actually trust",
+      "subtitle": "DigiPicks is the curated marketplace for premium sports-picks creators — verified records, transparent performance, and pro-grade tools.",
       "bullet1": "Multi-tenant architecture out of the box",
       "bullet2": "Realtime backend with zero API boilerplate",
       "bullet3": "Built-in billing, auth, and permissions",

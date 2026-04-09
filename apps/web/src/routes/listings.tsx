@@ -121,6 +121,79 @@ const FEATURED_CREATORS = [
 // Static data — Testimonials
 // ---------------------------------------------------------------------------
 
+const PRICING_TIERS = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: '$0',
+    period: '/mo',
+    desc: 'Browse verified creators and free picks.',
+    features: ['Browse all creators', 'View verified records', 'Free daily picks', 'Community access'],
+    cta: 'Get Started',
+    popular: false,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: '$29',
+    period: '/mo',
+    desc: 'Unlock premium picks from top creators.',
+    features: [
+      'Everything in Free',
+      'Access 20+ Pro creators',
+      'Real-time pick alerts',
+      'Advanced analytics',
+      'Discord Pro channels',
+    ],
+    cta: 'Start Pro Trial',
+    popular: true,
+  },
+  {
+    id: 'elite',
+    name: 'Elite',
+    price: '$99',
+    period: '/mo',
+    desc: 'The full edge. Every creator. Every sport.',
+    features: [
+      'Everything in Pro',
+      'All 500+ creators',
+      'Priority pick delivery',
+      '1-on-1 creator chat',
+      'Elite Discord lounge',
+      'Custom unit sizing',
+    ],
+    cta: 'Go Elite',
+    popular: false,
+  },
+];
+
+const FAQS = [
+  {
+    q: 'How does DigiPicks verify creator records?',
+    a: 'Every pick is logged before game time and graded automatically when the game finishes. No manual edits, no deleted losses. What you see is the complete history.',
+  },
+  {
+    q: 'Can I cancel my subscription anytime?',
+    a: 'Yes. Cancel any time from your dashboard. You keep access through the end of the current billing period, no questions asked.',
+  },
+  {
+    q: 'How do I become a DigiPicks creator?',
+    a: 'Applications are invite-only and manually reviewed. Apply with a link to your existing track record. We review within 48 hours.',
+  },
+  {
+    q: 'What sports are supported?',
+    a: 'NBA, NFL, MLB, NHL, UFC, Soccer, Tennis, Golf, and more. If a creator covers it, we track it.',
+  },
+  {
+    q: 'Is DigiPicks legal?',
+    a: 'DigiPicks is a content and analytics platform. We do not facilitate wagers. Sports betting laws vary by jurisdiction — always check your local laws.',
+  },
+  {
+    q: 'Do you offer refunds?',
+    a: 'We offer a 7-day money-back guarantee on Pro and Elite tiers for your first subscription.',
+  },
+];
+
 const TESTIMONIALS = [
   {
     id: '1',
@@ -170,6 +243,9 @@ function HeroSection() {
 
   return (
     <section className={s.hero}>
+      {/* Big blurred glow orbs */}
+      <div className={s.heroGlow1} aria-hidden="true" />
+      <div className={s.heroGlow2} aria-hidden="true" />
       {/* Floating sport icons for visual energy */}
       <div className={s.heroOrbs} aria-hidden="true">
         <span className={s.heroOrb} style={{ top: '12%', left: '8%', animationDelay: '0s' }}>
@@ -198,8 +274,9 @@ function HeroSection() {
           {t('landing.hero.label', 'Applications Now Open')}
         </div>
         <Heading level={1} className={s.heroTitle}>
-          {t('landing.hero.titleLine1', 'PICKS YOU CAN')}{' '}
-          <span className={s.heroTitleAccent}>{t('landing.hero.titleAccent', 'TRUST')}</span>
+          {t('landing.hero.titleLine1', 'PICKS YOU CAN')}
+          <br />
+          <span className={s.heroTitleAccent}>{t('landing.hero.titleAccent', 'ACTUALLY TRUST')}</span>
         </Heading>
         <Paragraph className={s.heroSubtitle}>
           {t(
@@ -248,6 +325,10 @@ function HeroSection() {
           <div className={s.heroStatItem}>
             <div className={s.heroStatValue}>+12.4%</div>
             <Paragraph className={s.heroStatLabel}>{t('landing.hero.statRoi', 'Avg. Creator ROI')}</Paragraph>
+          </div>
+          <div className={s.heroStatItem}>
+            <div className={s.heroStatValue}>12K+</div>
+            <Paragraph className={s.heroStatLabel}>{t('landing.hero.statSubs', 'Active Subscribers')}</Paragraph>
           </div>
         </div>
       </div>
@@ -560,6 +641,60 @@ function CreatorDiscoverySection() {
   );
 }
 
+function HowItWorksSection() {
+  const t = useT();
+
+  const steps = [
+    {
+      n: '01',
+      title: t('landing.how.discover.title', 'Discover'),
+      body: t(
+        'landing.how.discover.body',
+        'Browse vetted creators ranked by ROI, win rate, and streak. Filter by sport.',
+      ),
+    },
+    {
+      n: '02',
+      title: t('landing.how.subscribe.title', 'Subscribe'),
+      body: t(
+        'landing.how.subscribe.body',
+        'Pick a creator and unlock their premium picks. Cancel anytime — no lock-in.',
+      ),
+    },
+    {
+      n: '03',
+      title: t('landing.how.track.title', 'Track results'),
+      body: t('landing.how.track.body', 'Every pick auto-graded. Follow your edge in real time and measure your ROI.'),
+    },
+  ];
+
+  return (
+    <section className={s.section}>
+      <div className={s.sectionInner}>
+        <div className={s.sectionHeader}>
+          <Heading level={2} className={s.sectionTitle}>
+            {t('landing.how.title', 'How it works')}
+          </Heading>
+          <Paragraph className={s.sectionSubtitle}>
+            {t('landing.how.subtitle', 'Three steps to start following the sharps.')}
+          </Paragraph>
+        </div>
+        <div className={s.howGrid}>
+          {steps.map((step) => (
+            <div key={step.n} className={s.howCard}>
+              <div className={s.howNumber}>{step.n}</div>
+              <Heading level={3} className={s.howCardTitle}>
+                {step.title}
+              </Heading>
+              <Paragraph className={s.howCardBody}>{step.body}</Paragraph>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function TestimonialsSection() {
   const t = useT();
 
@@ -590,6 +725,122 @@ function TestimonialsSection() {
   );
 }
 
+function PricingTiersSection() {
+  const t = useT();
+  const navigate = useNavigate();
+
+  return (
+    <section className={s.section}>
+      <div className={s.sectionInner}>
+        <div className={s.sectionHeader}>
+          <Heading level={2} className={s.sectionTitle}>
+            {t('landing.pricing.title', 'Pick Your Edge')}
+          </Heading>
+          <Paragraph className={s.sectionSubtitle}>
+            {t('landing.pricing.subtitle', 'Start free. Upgrade when you are ready to win.')}
+          </Paragraph>
+        </div>
+        <div className={s.pricingGrid}>
+          {PRICING_TIERS.map((tier) => (
+            <div key={tier.id} className={`${s.pricingCard} ${tier.popular ? s.pricingCardPopular : ''}`}>
+              {tier.popular && <div className={s.pricingBadge}>{t('landing.pricing.popular', 'Most Popular')}</div>}
+              <Heading level={3} className={s.pricingName}>
+                {tier.name}
+              </Heading>
+              <div className={s.pricingPriceRow}>
+                <span className={s.pricingPrice}>{tier.price}</span>
+                <span className={s.pricingPeriod}>{tier.period}</span>
+              </div>
+              <Paragraph className={s.pricingDesc}>{tier.desc}</Paragraph>
+              <ul className={s.pricingFeatures}>
+                {tier.features.map((f) => (
+                  <li key={f} className={s.pricingFeature}>
+                    <span className={s.pricingCheck}>✓</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Button
+                onClick={() => navigate('/register')}
+                data-size="md"
+                color="accent"
+                variant={tier.popular ? 'primary' : 'secondary'}
+                className={s.pricingCta}
+              >
+                {tier.cta}
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DiscordBandSection() {
+  const t = useT();
+  const navigate = useNavigate();
+
+  return (
+    <section className={s.discordBand}>
+      <div className={s.discordInner}>
+        <div className={s.discordAvatars} aria-hidden="true">
+          <div className={s.discordAvatar}>MT</div>
+          <div className={s.discordAvatar}>SK</div>
+          <div className={s.discordAvatar}>JL</div>
+          <div className={s.discordAvatar}>RA</div>
+          <div className={s.discordAvatarMore}>+12K</div>
+        </div>
+        <div className={s.discordText}>
+          <Heading level={2} className={s.discordTitle}>
+            {t('landing.discord.title', 'Join 12,000+ sharp bettors in our Discord')}
+          </Heading>
+          <Paragraph className={s.discordDesc}>
+            {t('landing.discord.desc', 'Live pick alerts, creator Q&A, lineup reactions, and community edges — 24/7.')}
+          </Paragraph>
+        </div>
+        <Button onClick={() => navigate('/register')} data-size="lg" color="accent">
+          {t('landing.discord.cta', 'Join Discord')}
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+function FaqSection() {
+  const t = useT();
+
+  return (
+    <section className={s.section}>
+      <div className={s.sectionInnerNarrow}>
+        <div className={s.sectionHeader}>
+          <Heading level={2} className={s.sectionTitle}>
+            {t('landing.faq.title', 'Frequently Asked Questions')}
+          </Heading>
+          <Paragraph className={s.sectionSubtitle}>
+            {t('landing.faq.subtitle', 'Everything you need to know before you join.')}
+          </Paragraph>
+        </div>
+        <div className={s.faqList}>
+          {FAQS.map((item, idx) => (
+            <details key={idx} className={s.faqItem}>
+              <summary className={s.faqSummary}>
+                <Heading level={3} className={s.faqQuestion}>
+                  {item.q}
+                </Heading>
+                <span className={s.faqIcon} aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <Paragraph className={s.faqAnswer}>{item.a}</Paragraph>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCtaSection() {
   const t = useT();
   const navigate = useNavigate();
@@ -597,9 +848,10 @@ function FinalCtaSection() {
 
   return (
     <section className={s.finalCta}>
+      <div className={s.finalCtaGlow} aria-hidden="true" />
       <div className={s.finalCtaInner}>
         <Heading level={2} className={s.finalCtaTitle}>
-          {t('landing.finalCta.title', 'READY TO BUILD YOUR PICKS BUSINESS?')}
+          {t('landing.finalCta.title', 'READY TO FIND YOUR EDGE?')}
         </Heading>
         <Paragraph className={s.finalCtaSubtitle}>
           {t(
@@ -645,13 +897,10 @@ export function ListingsPage(): React.ReactElement {
   return (
     <>
       <HeroSection />
-      <LiveEventsStrip />
-      <WhySwitchSection />
-      <ToolsSection />
-      <PlatformPreviewSection />
-      <CommandCenterSection />
       <CreatorDiscoverySection />
-      <TestimonialsSection />
+      <HowItWorksSection />
+      <PricingTiersSection />
+      <FaqSection />
       <FinalCtaSection />
     </>
   );

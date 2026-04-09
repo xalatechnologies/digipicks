@@ -5606,8 +5606,8 @@
   },
   "landing": {
     "hero": {
-      "title": "Bygg produksjonsklar SaaS uten a gjenoppbygge de samme systemene",
-      "subtitle": "Autentisering, multi-tenancy, fakturering, automatisering, AI og samsvar — alt innebygd. En produksjonsklar SaaS-plattformkjerne for skalerbare, multi-tenant, AI-klare applikasjoner.",
+      "title": "Sportstips du faktisk kan stole på",
+      "subtitle": "DigiPicks er den kuraterte markedsplassen for premium sportstipsere — med verifiserte resultater, åpen historikk og profesjonelle verktøy.",
       "bullet1": "Multi-tenant-arkitektur ut av boksen",
       "bullet2": "Sanntids-backend uten API-boilerplate",
       "bullet3": "Innebygd fakturering, auth og tilgangsstyring",
