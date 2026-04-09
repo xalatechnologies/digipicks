@@ -39,6 +39,7 @@ async function seedMembership(
         status: string;
         lastPaymentDate: number;
         failedPaymentCount: number;
+        creatorId: string;
     }> = {}
 ) {
     // Create a tier first
@@ -68,6 +69,7 @@ async function seedMembership(
             tenantId,
             userId,
             tierId: tier.id,
+            creatorId: overrides.creatorId,
             memberNumber: "M-001",
             status: "active",
             startDate: Date.now(),
@@ -547,6 +549,7 @@ describe("domain/picks — subscription gating", () => {
 
         await seedMembership(t, tenantId as string, subscriberId as string, {
             status: "active",
+            creatorId: userId as string,
         });
 
         const picks = await t.query(api.domain.picks.list, {
@@ -583,6 +586,7 @@ describe("domain/picks — subscription gating", () => {
             status: "past_due",
             lastPaymentDate: Date.now() - 12 * 60 * 60 * 1000, // 12h ago
             failedPaymentCount: 1,
+            creatorId: userId as string,
         });
 
         const picks = await t.query(api.domain.picks.list, {
@@ -616,6 +620,7 @@ describe("domain/picks — subscription gating", () => {
             status: "past_due",
             lastPaymentDate: Date.now() - 48 * 60 * 60 * 1000, // 48h ago
             failedPaymentCount: 2,
+            creatorId: userId as string,
         });
 
         const picks = await t.query(api.domain.picks.list, {
@@ -673,6 +678,7 @@ describe("domain/picks — subscription gating", () => {
 
         await seedMembership(t, tenantId as string, subscriberId as string, {
             status: "active",
+            creatorId: userId as string,
         });
 
         const pick = await t.query(api.domain.picks.get, {
@@ -780,6 +786,7 @@ describe("domain/picks — creatorProfile", () => {
 
         await seedMembership(t, tenantId as string, subscriberId as string, {
             status: "active",
+            creatorId: userId as string,
         });
 
         const profile = await t.query(api.domain.picks.creatorProfile, {

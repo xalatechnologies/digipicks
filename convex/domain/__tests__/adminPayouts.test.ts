@@ -32,7 +32,7 @@ describe("adminPayouts — setFeeConfig", () => {
 
         expect(id).toBeDefined();
 
-        const config = await t.query(api.domain.adminPayouts.getFeeConfig, { tenantId });
+        const config = await t.query(api.domain.adminPayouts.getFeeConfig, { tenantId, userId: adminId });
         expect(config).not.toBeNull();
         expect(config!.feeType).toBe("percentage");
         expect(config!.percentageFee).toBe(15);
@@ -58,13 +58,13 @@ describe("adminPayouts — setFeeConfig", () => {
             updatedBy: adminId,
         });
 
-        const active = await t.query(api.domain.adminPayouts.getFeeConfig, { tenantId });
+        const active = await t.query(api.domain.adminPayouts.getFeeConfig, { tenantId, userId: adminId });
         expect(active!.feeType).toBe("percentage_plus_flat");
         expect(active!.percentageFee).toBe(12);
         expect(active!.flatFee).toBe(500);
 
         // History should have both
-        const allConfigs = await t.query(api.domain.adminPayouts.listFeeConfigs, { tenantId });
+        const allConfigs = await t.query(api.domain.adminPayouts.listFeeConfigs, { tenantId, userId: adminId });
         expect(allConfigs.length).toBe(2);
         const inactiveConfigs = allConfigs.filter((c) => !c.isActive);
         expect(inactiveConfigs.length).toBe(1);
@@ -81,7 +81,7 @@ describe("adminPayouts — setFeeConfig", () => {
             updatedBy: adminId,
         });
 
-        const config = await t.query(api.domain.adminPayouts.getFeeConfig, { tenantId });
+        const config = await t.query(api.domain.adminPayouts.getFeeConfig, { tenantId, userId: adminId });
         expect(config!.feeType).toBe("flat");
         expect(config!.flatFee).toBe(2500);
     });
@@ -101,6 +101,7 @@ describe("adminPayouts — calculateFee", () => {
 
         const result = await t.query(api.domain.adminPayouts.calculateFee, {
             tenantId,
+            userId: adminId,
             amount: 100000, // 1000.00 NOK in øre
         });
 
@@ -121,6 +122,7 @@ describe("adminPayouts — calculateFee", () => {
 
         const result = await t.query(api.domain.adminPayouts.calculateFee, {
             tenantId,
+            userId: adminId,
             amount: 100000,
         });
 
@@ -142,6 +144,7 @@ describe("adminPayouts — calculateFee", () => {
 
         const result = await t.query(api.domain.adminPayouts.calculateFee, {
             tenantId,
+            userId: adminId,
             amount: 100000,
         });
 
@@ -151,10 +154,11 @@ describe("adminPayouts — calculateFee", () => {
 
     it("returns zero fee when no config exists", async () => {
         const t = setup();
-        const { tenantId } = await seedTestTenant(t);
+        const { tenantId, adminId } = await seedTestTenant(t);
 
         const result = await t.query(api.domain.adminPayouts.calculateFee, {
             tenantId,
+            userId: adminId,
             amount: 100000,
         });
 
@@ -171,7 +175,7 @@ describe("adminPayouts — calculateFee", () => {
 describe("adminPayouts — recordEarnings", () => {
     it("creates an earnings record for a new creator-period", async () => {
         const t = setup();
-        const { tenantId, userId } = await seedTestTenant(t);
+        const { tenantId, adminId, userId } = await seedTestTenant(t);
 
         const result = await t.mutation(api.domain.adminPayouts.recordEarnings as any, {
             tenantId,
@@ -186,6 +190,7 @@ describe("adminPayouts — recordEarnings", () => {
 
         const earnings = await t.query(api.domain.adminPayouts.listCreatorEarnings, {
             tenantId,
+            userId: adminId,
             creatorId: userId,
             period: "2026-04",
         });
@@ -199,7 +204,7 @@ describe("adminPayouts — recordEarnings", () => {
 
     it("accumulates earnings for same creator-period", async () => {
         const t = setup();
-        const { tenantId, userId } = await seedTestTenant(t);
+        const { tenantId, adminId, userId } = await seedTestTenant(t);
 
         await t.mutation(api.domain.adminPayouts.recordEarnings as any, {
             tenantId,
@@ -221,6 +226,7 @@ describe("adminPayouts — recordEarnings", () => {
 
         const earnings = await t.query(api.domain.adminPayouts.listCreatorEarnings, {
             tenantId,
+            userId: adminId,
             creatorId: userId,
             period: "2026-04",
         });
@@ -236,7 +242,7 @@ describe("adminPayouts — recordEarnings", () => {
 describe("adminPayouts — getCreatorEarningsSummary", () => {
     it("aggregates earnings across periods", async () => {
         const t = setup();
-        const { tenantId, userId } = await seedTestTenant(t);
+        const { tenantId, adminId, userId } = await seedTestTenant(t);
 
         await t.mutation(api.domain.adminPayouts.recordEarnings as any, {
             tenantId,
@@ -256,6 +262,7 @@ describe("adminPayouts — getCreatorEarningsSummary", () => {
 
         const summary = await t.query(api.domain.adminPayouts.getCreatorEarningsSummary, {
             tenantId,
+            userId: adminId,
             creatorId: userId,
         });
 
@@ -291,6 +298,7 @@ describe("adminPayouts — getDashboardStats", () => {
 
         const stats = await t.query(api.domain.adminPayouts.getDashboardStats, {
             tenantId,
+            userId: adminId,
             period: "2026-04",
         });
 
@@ -335,6 +343,8 @@ describe("adminPayouts — requestCreatorPayout", () => {
 
         const payout = await t.query(api.domain.adminPayouts.getCreatorPayout, {
             payoutId: id,
+            tenantId,
+            userId: adminId,
         });
 
         expect(payout.status).toBe("pending");
@@ -401,6 +411,8 @@ describe("adminPayouts — updateCreatorPayoutStatus", () => {
 
         const payout = await t.query(api.domain.adminPayouts.getCreatorPayout, {
             payoutId: id,
+            tenantId,
+            userId: adminId,
         });
 
         expect(payout.status).toBe("completed");
@@ -429,6 +441,8 @@ describe("adminPayouts — updateCreatorPayoutStatus", () => {
 
         const payout = await t.query(api.domain.adminPayouts.getCreatorPayout, {
             payoutId: id,
+            tenantId,
+            userId: adminId,
         });
 
         expect(payout.status).toBe("failed");
@@ -459,6 +473,7 @@ describe("adminPayouts — listCreatorPayouts", () => {
 
         const payouts = await t.query(api.domain.adminPayouts.listCreatorPayouts, {
             tenantId,
+            userId: adminId,
         });
 
         expect(payouts.length).toBe(2);
@@ -486,6 +501,7 @@ describe("adminPayouts — listCreatorPayouts", () => {
 
         const payouts = await t.query(api.domain.adminPayouts.listCreatorPayouts, {
             tenantId,
+            userId: adminId,
             creatorId: userId,
         });
 
@@ -522,6 +538,7 @@ describe("adminPayouts — listCreatorPayouts", () => {
 
         const pending = await t.query(api.domain.adminPayouts.listCreatorPayouts, {
             tenantId,
+            userId: adminId,
             status: "pending",
         });
 
@@ -553,6 +570,8 @@ describe("adminPayouts — internal payout lifecycle", () => {
 
         const payout = await t.query(api.domain.adminPayouts.getCreatorPayout, {
             payoutId: id,
+            tenantId,
+            userId: adminId,
         });
 
         expect(payout.status).toBe("processing");
@@ -577,6 +596,8 @@ describe("adminPayouts — internal payout lifecycle", () => {
 
         const payout = await t.query(api.domain.adminPayouts.getCreatorPayout, {
             payoutId: id,
+            tenantId,
+            userId: adminId,
         });
 
         expect(payout.status).toBe("completed");
@@ -603,6 +624,8 @@ describe("adminPayouts — internal payout lifecycle", () => {
 
         const payout = await t.query(api.domain.adminPayouts.getCreatorPayout, {
             payoutId: id,
+            tenantId,
+            userId: adminId,
         });
 
         expect(payout.status).toBe("failed");
