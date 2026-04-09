@@ -1573,3 +1573,50 @@ export const moderationStats = query({
         });
     },
 });
+
+// =============================================================================
+// VIEW TRACKING
+// =============================================================================
+
+/**
+ * Track a view on a pick. Deduplicates per user — each user counts once.
+ * Emits picks.pick.viewed event for analytics.
+ */
+export const trackView = mutation({
+    args: {
+        tenantId: v.id("tenants"),
+        userId: v.id("users"),
+        pickId: v.string(),
+    },
+    handler: async (ctx, { tenantId, userId, pickId }) => {
+        await requireActiveUser(ctx, userId);
+
+        const result = await ctx.runMutation(components.picks.functions.trackView, {
+            tenantId: tenantId as string,
+            pickId,
+            userId: userId as string,
+        });
+
+        // Only emit event and audit on first view (not duplicates)
+        if (!result.alreadyViewed) {
+            await emitEvent(ctx, "picks.pick.viewed", tenantId as string, "picks", {
+                pickId,
+                userId: userId as string,
+            });
+        }
+
+        return result;
+    },
+});
+
+/**
+ * Get the view count for a specific pick.
+ */
+export const getViewCount = query({
+    args: {
+        pickId: v.string(),
+    },
+    handler: async (ctx, { pickId }) => {
+        return ctx.runQuery(components.picks.functions.getViewCount, { pickId });
+    },
+});

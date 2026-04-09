@@ -885,6 +885,8 @@ export {
     useIsTailed,
     useTailPick,
     useUntailPick,
+    useTrackPickView,
+    usePickViewCount,
 } from './use-pick-tracker';
 
 export type {
