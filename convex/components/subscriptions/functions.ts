@@ -367,6 +367,52 @@ export const getMembershipByUser = query({
 });
 
 /**
+ * Get active membership for a user with a specific creator.
+ * Used for per-creator subscription gating.
+ */
+export const getMembershipByUserAndCreator = query({
+    args: { userId: v.string(), creatorId: v.string() },
+    returns: v.any(),
+    handler: async (ctx, { userId, creatorId }) => {
+        const memberships = await ctx.db
+            .query("memberships")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .collect();
+
+        const forCreator = memberships.filter((m) => m.creatorId === creatorId);
+        const priority = ["active", "trialing", "past_due", "pending", "paused"];
+        for (const status of priority) {
+            const match = forCreator.find((m) => m.status === status);
+            if (match) return match;
+        }
+        return null;
+    },
+});
+
+/**
+ * Batch check: for a given user, return all active/trialing/past_due memberships
+ * matching any of the provided creator IDs. Avoids N+1 queries for co-post access.
+ */
+export const listMembershipsByCreatorIds = query({
+    args: { userId: v.string(), creatorIds: v.array(v.string()) },
+    returns: v.array(v.any()),
+    handler: async (ctx, { userId, creatorIds }) => {
+        if (creatorIds.length === 0) return [];
+
+        const memberships = await ctx.db
+            .query("memberships")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .collect();
+
+        const creatorSet = new Set(creatorIds);
+        const accessStatuses = new Set(["active", "trialing", "past_due"]);
+        return memberships.filter(
+            (m) => m.creatorId && creatorSet.has(m.creatorId) && accessStatuses.has(m.status)
+        );
+    },
+});
+
+/**
  * List memberships due for renewal before a given date.
  */
 export const listDueForRenewal = query({

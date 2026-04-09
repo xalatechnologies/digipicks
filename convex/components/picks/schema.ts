@@ -12,6 +12,24 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+    /**
+     * Per-pick collaborator attribution and revenue split.
+     * MVP: no standing collaboration groups — collaborators are added per-pick.
+     * Max 5 collaborators per pick (enforced at mutation time).
+     */
+    pickCollaborators: defineTable({
+        tenantId: v.string(),
+        pickId: v.string(),
+        creatorId: v.string(),
+        role: v.string(),                     // "lead" | "contributor"
+        splitPercent: v.number(),             // 0-100, revenue split for this pick
+        addedAt: v.number(),
+    })
+        .index("by_pick", ["pickId"])
+        .index("by_creator", ["creatorId"])
+        .index("by_tenant", ["tenantId"])
+        .index("by_pick_creator", ["pickId", "creatorId"]),
+
     pickTails: defineTable({
         tenantId: v.string(),
         userId: v.string(),         // subscriber who tailed the pick
