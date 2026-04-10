@@ -12,6 +12,17 @@
   background-color: var(--ds-color-neutral-background-default);
 }
 
+/* Frosted glass sticky header */
+.web-layout-root > header,
+.web-layout-root header[role='banner'],
+.web-layout-root [data-ds-app-header] {
+  background: rgba(14, 14, 15, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: none !important;
+  box-shadow: 0 1px 0 rgba(72, 72, 73, 0.12) !important;
+}
+
 /* Container - max-width, centered, side padding */
 .ds-container {
   max-width: var(--ds-container-max-width, 1600px) !important;
@@ -184,20 +195,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ds-color-neutral-text-default);
+  color: var(--ds-color-neutral-text-subtle);
   text-decoration: none;
   font-size: var(--ds-font-size-sm);
   font-weight: var(--ds-font-weight-semibold);
   padding: var(--ds-size-2) var(--ds-size-4);
   border-radius: var(--digilist-radius-md, 8px);
-  background-color: var(--ds-color-neutral-surface-default);
-  box-shadow: var(--ds-shadow-sm);
+  background-color: transparent;
   transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .header-nav-link:hover {
-  background-color: var(--ds-color-neutral-surface-hover);
+  background-color: var(--ds-color-neutral-surface-tinted);
+  color: var(--ds-color-neutral-text-default);
 }
 
 .header-nav-link.active,

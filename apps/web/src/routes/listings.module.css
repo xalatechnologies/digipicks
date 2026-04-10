@@ -99,7 +99,6 @@
   text-transform: uppercase;
   color: var(--ds-color-accent-text-default);
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   padding: var(--ds-size-2) var(--ds-size-4);
   border-radius: 9999px;
   margin-bottom: var(--ds-size-6);
@@ -176,7 +175,6 @@
   justify-content: center;
   margin-top: var(--ds-size-10);
   padding-top: var(--ds-size-8);
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
   flex-wrap: wrap;
 }
 
@@ -186,18 +184,8 @@
   min-width: 140px;
 }
 
-.heroStatItem + .heroStatItem::before {
-  content: '';
-  position: absolute;
-  left: calc(var(--ds-size-5) * -1);
-  top: 10%;
-  bottom: 10%;
-  width: 1px;
-  background: var(--ds-color-neutral-border-subtle);
-}
-
 .heroStatValue {
-  font-family: var(--ds-font-family-mono, ui-monospace, monospace);
+  font-family: var(--ds-font-family-display, 'Space Grotesk', 'Inter', sans-serif);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   background: var(--ds-gradient-primary);
@@ -222,8 +210,6 @@
 
 .eventsStrip {
   background-color: var(--ds-color-neutral-surface-default);
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
-  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
   padding: var(--ds-size-6) 0;
   overflow: hidden;
 }
@@ -253,8 +239,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #ef4444;
-  box-shadow: 0 0 12px #ef4444;
+  background-color: var(--ds-color-danger-base-default);
+  box-shadow: 0 0 12px var(--ds-color-danger-base-default);
   animation: livePulse 2s ease-in-out infinite;
 }
 
@@ -279,9 +265,8 @@
 .eventsLiveCount {
   font-size: var(--ds-font-size-xs, 0.75rem);
   font-weight: 600;
-  color: #fca5a5;
-  background-color: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--ds-color-danger-text-default);
+  background-color: var(--ds-color-danger-surface-default);
   padding: var(--ds-size-1) var(--ds-size-2);
   border-radius: 9999px;
   letter-spacing: 0.08em;
@@ -316,7 +301,6 @@
   min-width: 240px;
   scroll-snap-align: start;
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-4);
   display: flex;
@@ -324,19 +308,22 @@
   gap: var(--ds-size-1);
   transition:
     transform 0.2s,
-    border-color 0.2s,
+    background-color 0.2s,
     box-shadow 0.2s;
 }
 
 .eventCard:hover {
   transform: translateY(-2px);
-  border-color: var(--ds-color-accent-base-default);
+  background-color: var(--ds-color-neutral-surface-hover);
   box-shadow: var(--ds-shadow-lg);
 }
 
 .eventCardLive {
-  border-color: rgba(239, 68, 68, 0.4);
-  background: linear-gradient(135deg, var(--ds-color-neutral-surface-tinted) 0%, rgba(239, 68, 68, 0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-neutral-surface-tinted) 0%,
+    var(--ds-color-danger-surface-tinted) 100%
+  );
 }
 
 .eventSport {
@@ -365,7 +352,7 @@
   gap: var(--ds-size-1);
   font-size: var(--ds-font-size-xs, 0.75rem);
   font-weight: 700;
-  color: #ef4444;
+  color: var(--ds-color-danger-base-default);
   letter-spacing: 0.08em;
 }
 
@@ -428,20 +415,19 @@
 
 .painCard {
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-6);
   box-shadow: var(--ds-shadow-md);
   transition:
     transform 0.25s,
     box-shadow 0.25s,
-    border-color 0.25s;
+    background-color 0.25s;
 }
 
 .painCard:hover {
   transform: translateY(-4px);
-  box-shadow: var(--ds-shadow-lg);
-  border-color: var(--ds-color-accent-base-default);
+  box-shadow: var(--ds-shadow-glow-accent);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .painCardIcon {
@@ -484,24 +470,23 @@
 .howCard {
   position: relative;
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-8) var(--ds-size-6) var(--ds-size-6);
   box-shadow: var(--ds-shadow-md);
   transition:
     transform 0.25s,
     box-shadow 0.25s,
-    border-color 0.25s;
+    background-color 0.25s;
 }
 
 .howCard:hover {
   transform: translateY(-4px);
   box-shadow: var(--ds-shadow-glow-accent);
-  border-color: var(--ds-color-accent-base-default);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .howNumber {
-  font-family: var(--ds-font-family-mono);
+  font-family: var(--ds-font-family-display, 'Space Grotesk', sans-serif);
   font-size: clamp(2.25rem, 4vw, 3rem);
   font-weight: 800;
   line-height: 1;
@@ -540,7 +525,6 @@
 
 .toolCard {
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-6);
   text-align: center;
@@ -548,13 +532,13 @@
   transition:
     transform 0.25s,
     box-shadow 0.25s,
-    border-color 0.25s;
+    background-color 0.25s;
 }
 
 .toolCard:hover {
   transform: translateY(-4px);
   box-shadow: var(--ds-shadow-glow-accent-strong);
-  border-color: var(--ds-color-accent-base-default);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .toolIcon {
@@ -582,7 +566,6 @@
 
 .previewContainer {
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-8);
   display: grid;
@@ -615,7 +598,6 @@
 
 .previewMockup {
   background-color: var(--ds-color-neutral-background-default);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-5);
   min-height: 240px;
@@ -627,7 +609,6 @@
   gap: var(--ds-size-2);
   margin-bottom: var(--ds-size-5);
   padding-bottom: var(--ds-size-3);
-  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
 }
 
 .mockupDot {
@@ -684,7 +665,6 @@
 
 .creatorCard {
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-6);
   display: flex;
@@ -695,13 +675,13 @@
   transition:
     transform 0.25s,
     box-shadow 0.25s,
-    border-color 0.25s;
+    background-color 0.25s;
 }
 
 .creatorCard:hover {
   transform: translateY(-6px);
   box-shadow: var(--ds-shadow-glow-accent-strong);
-  border-color: var(--ds-color-accent-base-default);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .creatorCardHeader {
@@ -741,7 +721,6 @@
   display: flex;
   gap: var(--ds-size-3);
   padding-top: var(--ds-size-3);
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
 }
 
 .creatorStat {
@@ -752,7 +731,7 @@
 }
 
 .creatorStatValue {
-  font-family: var(--ds-font-family-mono, ui-monospace, monospace);
+  font-family: var(--ds-font-family-display, 'Space Grotesk', sans-serif);
   font-size: var(--ds-font-size-lg, 1.125rem);
   font-weight: 700;
   color: var(--ds-color-neutral-text-default);
@@ -781,14 +760,14 @@
 
 .testimonialCard {
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-6);
   box-shadow: var(--ds-shadow-md);
   position: relative;
   transition:
     transform 0.25s,
-    box-shadow 0.25s;
+    box-shadow 0.25s,
+    background-color 0.25s;
 }
 
 .testimonialCard::before {
@@ -806,6 +785,7 @@
 .testimonialCard:hover {
   transform: translateY(-4px);
   box-shadow: var(--ds-shadow-lg);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .testimonialQuote {
@@ -862,7 +842,6 @@
 .pricingCard {
   position: relative;
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-8) var(--ds-size-6);
   display: flex;
@@ -872,20 +851,20 @@
   transition:
     transform 0.25s,
     box-shadow 0.25s,
-    border-color 0.25s;
+    background-color 0.25s;
 }
 
 .pricingCard:hover {
   transform: translateY(-4px);
   box-shadow: var(--ds-shadow-lg);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .pricingCardPopular {
-  border: 1px solid var(--ds-color-accent-base-default);
   background: linear-gradient(
     180deg,
-    var(--ds-color-neutral-surface-tinted) 0%,
-    var(--ds-color-neutral-surface-default) 100%
+    var(--ds-color-accent-surface-tinted) 0%,
+    var(--ds-color-neutral-surface-tinted) 100%
   );
   box-shadow: var(--ds-shadow-glow-accent-strong);
   transform: translateY(-8px);
@@ -893,6 +872,11 @@
 
 .pricingCardPopular:hover {
   transform: translateY(-12px);
+  background: linear-gradient(
+    180deg,
+    var(--ds-color-accent-surface-hover) 0%,
+    var(--ds-color-neutral-surface-tinted) 100%
+  );
 }
 
 .pricingBadge {
@@ -925,7 +909,7 @@
 }
 
 .pricingPrice {
-  font-family: var(--ds-font-family-mono, ui-monospace, monospace);
+  font-family: var(--ds-font-family-display, 'Space Grotesk', sans-serif);
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
   background: var(--ds-gradient-primary);
@@ -955,7 +939,6 @@
   flex-direction: column;
   gap: var(--ds-size-2);
   flex: 1;
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
   padding-top: var(--ds-size-4);
 }
 
@@ -990,8 +973,6 @@
     var(--ds-color-neutral-surface-default) 0%,
     var(--ds-color-neutral-surface-tinted) 100%
   );
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
-  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
 }
 
 .discordInner {
@@ -1069,17 +1050,16 @@
 
 .faqItem {
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   border-radius: var(--ds-border-radius-card);
   padding: var(--ds-size-5) var(--ds-size-6);
   transition:
-    border-color 0.2s,
+    background-color 0.2s,
     box-shadow 0.2s;
 }
 
 .faqItem[open] {
-  border-color: var(--ds-color-accent-base-default);
   box-shadow: var(--ds-shadow-glow-accent);
+  background-color: var(--ds-color-neutral-surface-hover);
 }
 
 .faqSummary {
@@ -1121,7 +1101,6 @@
   line-height: 1.65;
   margin: var(--ds-size-3) 0 0;
   padding-top: var(--ds-size-3);
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1134,7 +1113,6 @@
   text-align: center;
   background-color: var(--ds-color-neutral-background-default);
   overflow: hidden;
-  border-top: 1px solid var(--ds-color-neutral-border-subtle);
 }
 
 .finalCtaGlow {
@@ -1207,8 +1185,7 @@
   gap: var(--ds-size-2);
   padding: var(--ds-size-2) var(--ds-size-4);
   border-radius: 9999px;
-  background-color: color-mix(in srgb, var(--ds-color-accent-base-default) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--ds-color-accent-base-default) 35%, transparent);
+  background-color: var(--ds-color-accent-surface-default);
   color: var(--ds-color-accent-text-default);
   font-family: var(--ds-font-family-mono);
   font-size: var(--ds-font-size-xs, 0.75rem);
@@ -1285,7 +1262,6 @@
   padding: var(--ds-size-2) var(--ds-size-4);
   border-radius: 9999px;
   background-color: var(--ds-color-neutral-surface-tinted);
-  border: 1px solid var(--ds-color-neutral-border-subtle);
   color: var(--ds-color-neutral-text-default);
   font-size: var(--ds-font-size-sm, 0.875rem);
   font-weight: 500;

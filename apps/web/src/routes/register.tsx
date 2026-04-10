@@ -357,7 +357,6 @@ export function RegisterPage(): React.ReactElement {
             description={t('web.register.magicLinkDesc', 'Get a login link sent to your inbox — no password needed')}
             onClick={() => {
               setShowMagicLink(true);
-              setShowPhone(false);
             }}
           />
 
